@@ -52,8 +52,9 @@ Drop the folders into `public/assets/` and the game runs unchanged — the asset
 `src/content/assets.ts` are relative to that directory. Music and the code to regenerate both
 live here, so the folder only needs to supply the painted art.
 
-Missing images fail soft: the game boots with a console warning and draws empty scenes rather than
-crashing, which is what the test suite runs against.
+Missing images fail soft: the asset loader warns and continues, and the renderer skips absent
+images rather than crashing, so the game still boots and can be walked around. (The test suite
+has not been run against a tree with the art removed.)
 
 To regenerate any asset from its prompt, see `tools/generate.py` (requires `RUNCOMFY_API`).
 
