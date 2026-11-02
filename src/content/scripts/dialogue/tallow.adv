@@ -1,0 +1,15 @@
+dialogue tallow
+  node root tallow "Shop's shut! Unless you're customs. Are you customs?"
+    > "I'm a customs clerk." -> customs
+    > "Just browsing." -> browsing
+  node customs tallow "Then for pity's sake settle my invoices. Three years on that spike, waiting for a harbour stamp. Stamp them paid and you can have anything in the shop."
+    > "Anything?" -> anything
+    > "Do you keep ships' manifests?" -> manifests
+    > "Good night, Mr Tallow." -> bye
+  node anything tallow "Anything that isn't the cat. The cat is not for sale. The cat has made that clear."
+    > "Do you keep ships' manifests?" -> manifests
+    > "Good night." -> bye
+  node manifests tallow "A copy of every ship I provision. It's the law, and the law is very bad for business. Stamp my invoices and I'll find you any one you like."
+    > "Good night, Mr Tallow." -> bye
+  node browsing tallow "Browse quietly. The rope is asleep."
+  node bye tallow "Good night! Mind you don't knock the… there it goes. Never mind."

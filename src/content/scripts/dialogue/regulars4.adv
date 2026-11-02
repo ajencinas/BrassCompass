@@ -1,0 +1,9 @@
+# The regulars, who bet against the Marrow.
+dialogue regulars4
+  node owe regular "Don't look at us, clerk. The slate says “when she comes back”. She's out there, granted. But she hasn't come back, has she? Not legally. Not by the book."
+  node pay regular "She's back. Legally, stamped, the lot. Three years' wages, lads. Turn your pockets out."
+    -> paid
+  node paid narrator "They pay me in coins, IOUs, a share in a goat and, from one man, a very sincere apology. I give the lot to Marta, for the first round."
+    -> rest
+  node rest marta "And the second. And I know exactly what to do with the rest. Don't ask. Bramwick, don't you ask either."
+  node after regular "Paid in full, clerk. It's the first bet we've lost gladly. Don't make a habit of it."

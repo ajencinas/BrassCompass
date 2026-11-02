@@ -1,0 +1,74 @@
+# Bramwick, suspended, at Rook's table.
+dialogue bramwick4
+  node root bramwick "Fenn. You came back. Good. I've been suspended, which is the first evening off I've had in thirty years. I'm spending it badly."
+    > "Cray says you were suspended for conduct." if not seen:bramwick4.conduct -> conduct
+    > "How do we get you reinstated?" if not seen:bramwick4.paper -> reg2
+    > "The ledger's chained to its desk." if seen:bramwick4.paper and not ledger_taken -> chain
+    > "Where would Cray keep his insurance books?" if seen:bramwick4.paper and not has claims_book -> counting
+    > "Who would preside over an inquiry?" if seen:bramwick4.paper and not seen:bramwick4.preside -> preside
+    > "Goodnight, sir." -> bye
+  node conduct bramwick "Conduct unbecoming. He asked me to enter the Marrow as lost before she was even late, and I refused. Apparently that was very unbecoming. He had it signed by supper."
+    -> conduct2
+  node conduct2 rook "First time he's said no to Cray in three years. He's been insufferable about it."
+  node reg2 bramwick "Regulation two, Fenn. A harbourmaster suspended by a party to fraud is reinstated on proof of the fraud."
+    -> proof
+  node proof bramwick "Proof. Not a story; Marta has stories. Paper. Before the bell."
+    > "What paper?" -> paper
+  node paper bramwick "My ledger, with my own lie in it. Whatever Cray's counting house keeps on its insurance. And a man who was there when it happened."
+    -> look
+  node look narrator "He doesn't look at Rook. Very carefully, he doesn't look at Rook."
+  node chain bramwick "I chained it there myself. Regulation thirty-one: the harbour ledger shall not leave the loft. …I wrote regulation thirty-one, Fenn. I can't think why. Bring something heavy."
+  node counting bramwick "Cray & Co., up Chandler's Lane. He'll have left his clerk there; he leaves clerks the way other men leave a lamp on. Nothing comes out of that office without a requisition, stamped."
+  node preside bramwick "Not me; I'm a party. Not Cray; he's the other party. Someone who owns licensed premises and hates an unfinished story."
+    -> presided
+  node presided narrator "He looks at Marta. Marta looks at the ceiling, as if it owes her money."
+  node bye bramwick "Goodnight, Fenn. Don't let him write anyone down. Not tonight. Not ever, ideally."
+  # After the inquiry, before he has his stamp.
+  node after bramwick "Reinstated, Fenn, by acclamation of licensed premises. It isn't in any regulation. It ought to be. Now, when you're ready: I'll need my stamp."
+  # Giving the stamp back (rooms_act4.ts): the quarantine comes down.
+  node stamp narrator "I put the harbour stamp in his hand. He weighs it, the way you weigh something you'd already decided was lost."
+    -> notice
+  node notice narrator "“Notice to all shipping,” says Bramwick. He turns Cray's quarantine order over, writes on the back, and stamps it: QUARANTINE LIFTED."
+    -> hate
+  node hate bramwick "There. On the back of his own paper. He'll mind that more than the cell."
+    -> boom
+  node boom narrator "A boy runs it down to the boom. Out on the black water the yellow flag comes down, and a hundred and thirty people on the Marrow cheer, and one of them, slightly late, is my father."
+    -> took
+  node took marta "Took you long enough."
+    -> crying
+  node crying narrator "She's crying. Everyone in the Salty Keel can see she's crying."
+    -> lemons
+  node lemons marta "It's the lemons. Somebody's been cutting lemons."
+    -> back
+  node back bramwick "One entry still wants correcting, Fenn, and it shouldn't be in my hand. Use it. Then bring it back. Clerks always bring them back."
+  # The IOU: talking to him once the quarantine is lifted.
+  node debt bramwick "Fenn. I have a debt to settle, and I need a witness. Clerks make excellent witnesses. Nobody suspects them of having feelings."
+    > "The IOU in your drawer." if seen_iou -> read
+    > "What debt?" if not seen_iou -> fished
+  node read bramwick "You read it."
+    > "Including the small writing." -> small
+  node small bramwick "…Then you know what I owe."
+    -> lay
+  node fished bramwick "Thirty years it lived in my drawer. Cray had the drawer emptied into a sack. I went through his rubbish on my knees tonight, Fenn. Don't put that in the ledger."
+    -> lay
+  node lay narrator "He lays a creased slip on the bar in front of Marta. IOU, ONE GAME OF CARDS, UNPAID. She reads it. Then she reads the small writing, which takes longer, because she reads it twice."
+    -> everything
+  node everything marta "“And everything else.” Thirty years, you old fool."
+    -> paying
+  node paying bramwick "I'm paying it."
+    -> shuffle
+  node shuffle narrator "Marta takes a pack of cards from her apron pocket, where it has evidently been waiting for thirty years, and shuffles."
+    -> hand
+  node hand marta "One more hand. For the debt."
+    -> else
+  node else bramwick "And everything else?"
+    set iou_paid
+    -> deal
+  node deal marta "Deal."
+    > "You'd have found it right at the front of the drawer." if seen:tavernkeeper.front -> front
+    > "Shall I keep score?" -> score
+    > "(Leave them to it.)" -> END
+  node front marta "Right at the front. I've thought about nothing else for three days. Now get out of my tavern, clerk, before I start liking you again."
+  node score marta "You'll keep your nose out of it, is what you'll keep. Thirty years I've waited to lose this one properly."
+  # Afterwards, at cards.
+  node cards bramwick "Shh, Fenn. I've a pair of threes, and this time it's a strategy."

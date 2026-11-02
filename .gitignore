@@ -1,0 +1,26 @@
+node_modules/
+dist/
+/*.mp4
+# Story cinematics are generated, not source: ~20 MB, rebuilt from cinematic/.
+public/assets/video/*.mp4
+cinematic/.hyperframes/
+cinematic/.media/
+cinematic/cinematic.mp4
+cinematic/renders/
+.env
+.gencache.json
+.playwright-mcp/
+__pycache__/
+*.pyc
+*.local
+.DS_Store
+.genraw/
+reference/screens/cal/
+cinematic/.thumbnails/
+cinematic/.waveform-cache/
+
+# Art is published separately (see README: "Art and audio"). The repo carries code and content;
+# the generated scenes, character art and props live in the shared asset folder.
+public/assets/scenes/
+public/assets/characters/
+public/assets/props/

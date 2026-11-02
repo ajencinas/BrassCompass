@@ -1,0 +1,116 @@
+# Pike: the forms war.
+dialogue pike
+  node halt pike "Halt! Quarantine station. No admittance without a Bill of Health: fumigated, stamped, countersigned and dated."
+    -> beams
+  node beams narrator "He beams at me, as if he's waited his whole life for someone to say no to."
+    -> love
+  node love pike "I love this job."
+    > "Where would I get a Bill of Health?" if not has bill -> need
+    > "What does a Bill of Health need, exactly?" if has bill -> need
+    > "What's regulation six?" if seen:pike.need and not bill_dated -> six
+      set pike_reading
+    > "Who's in quarantine?" -> who
+    > "Do you like it here, Pike?" if not seen:pike.like -> like
+      add aff 1
+    > "Good day, Pike." -> bye
+  node again pike "Sir! Back already. Is it paperwork? Please say it's paperwork."
+    > "Where would I get a Bill of Health?" if not has bill -> need
+    > "What does a Bill of Health need, exactly?" if has bill -> need
+    > "What's regulation six?" if seen:pike.need and not bill_dated -> six
+      set pike_reading
+    > "Who's in quarantine?" -> who
+    > "Do you like it here, Pike?" if not seen:pike.like -> like
+      add aff 1
+    > "Good day, Pike." -> bye
+  node need pike "Every captain carries blank bills, sir. It's fumigated at my brazier, stamped by a harbour officer, countersigned by a ship's officer and dated. Regulations three to six."
+    > "What's regulation six?" if not bill_dated -> six
+      set pike_reading
+    > "Does anyone ever manage all four?" -> four
+  node four pike "Stamped, lots. Signed, often. But you'd be amazed how many people forget the date, sir. Everybody, is how many."
+    > "What's regulation six?" if not bill_dated -> six
+      set pike_reading
+    > "I'll bear it in mind." -> bye
+  node six narrator "Pike closes his eyes, lifts his chin, and puts one hand on his heart. It's the posture of a man who has been saving this for a very long time."
+    -> recite
+  node recite pike "“Regulation six. The Dating of Bills. Six, a: every bill shall bear the day's date, as shown upon the station calendar, which is kept in the hut, which is mine. Six, b…”"
+    -> drone
+  node drone narrator "There are, by the sound of it, a great many letters after b. His eyes are shut. His hut is open. I find I've taken a step toward it."
+  node who pike "Sailors, sir. Six crews. Very sick. They look well, but that's the illness; it's ever so sneaky."
+    > "Who says they're sick?" -> says
+    > "I see." -> bye
+  node says pike "The form, sir. Cray and Company, quarantine dues paid in full. You can't argue with paid in full. I've tried. It just says it again."
+  node like pike "I do, sir. Everyone else I worked for shouted. Here there's a form for everything, and if you fill it in, things happen. …Nobody ever fills them in, mind."
+    -> like2
+  node like2 narrator "Behind me, Quill makes a small noise that in anyone else I'd call sympathy."
+  node bye pike "Good day, sir! Come back with your paperwork. I'll be here. I'm always here."
+  # The finished bill (rooms_act3.ts, key_gate).
+  node passed narrator "He reads it twice, moving his lips, and once more with his finger."
+    -> four2
+  node four2 pike "Fumigated. Stamped. Countersigned. Dated."
+    -> tear
+  node tear narrator "He wipes his eye with the corner of his armband."
+    -> beautiful
+  node beautiful pike "It's beautiful. Nobody ever does the dating."
+    > "Thank you, Pike." -> open
+    > "Will you have it framed?" -> framed
+  node framed pike "Better than framed, sir. Filed. …No, keep it on you. Inspections are random."
+    -> open
+  node open pike "Gate's open, sir. Mind the Weather Works. They're not a form sort of people."
+  # In the salt camp, after the halyard (rooms_act3.ts, salt_camp scene).
+  node landed narrator "We come down in a salt pan, in a heap, in a spray of white. When I can see again, Pike is standing over us with his clipboard. He has run all the way round."
+    -> rope
+  node rope pike "Arrival by rope! Arrival by rope is not an approved means of entry, sir!"
+    -> bearer
+  node bearer pike "You're all right, sir: you're inspected, you've a bill. But she hasn't. Unaccompanied cargo is held pending inspection."
+    -> goes
+  node goes quill "Cargo. He called me cargo. …Fine. I'll go quietly. Clerk? This is your department."
+    -> locked
+  node locked narrator "She lets him walk her to the store hut, which frightens me more than the Weather did. The padlock goes click. Pike looks sorry, and then looks at his clipboard, and stops."
+    -> camp
+  node camp pike "Camp duty, sir. It's very like gate duty, only more people are sad at me."
+    > "What would release her?" if not knows_form9 -> nine
+    > "Pike, I need you to look the other way." if not seen:pike.twelve -> twelve
+    > "About the Form 9." if knows_form9 -> how
+    > "Who are all these people?" -> crews
+    > "Never mind." -> sorry
+  node nine pike "A Form 9, sir. Release of Detained Person Upon Inspection."
+    -> none
+  node none pike "Only we haven't got any Form 9s. We've never had any Form 9s. Nobody's ever been released."
+    > "Then I'll write one." -> write
+      set knows_form9
+    > "Nobody? In three years?" -> nobody
+  node nobody pike "Not once, sir. I did wonder. But wondering isn't a form."
+    > "Then I'll write one." -> write
+      set knows_form9
+  node write pike "You can't just write a form, sir."
+    -> can
+  node can narrator "I'm a clerk of the Port Vela customs house. Writing forms is the only thing I can just do. All I need is paper, and the stamp."
+  node how pike "A proper Form 9 is written out clean and stamped by a harbour officer, sir. On any paper. Even the back of something, at a pinch."
+  node twelve pike "There's a form for that too, sir. Form 12. We haven't got any of those either."
+  node crews pike "Six crews, sir, raking salt. Pending inspection. Some of them have been pending a very long time."
+  node sorry pike "Sorry about the lady, sir. It's nothing personal. It's regulations, which is worse."
+  # Form 9 (rooms_act3.ts, salt_camp).
+  node form9 narrator "Pike reads Form 9 with his finger, mouthing the long words."
+    -> real
+  node real pike "That's… that's a real form."
+    -> plural
+  node plural pike "Release of Detained Persons. Persons, sir. With an s."
+    > "Yes. I wrote it in the plural." -> everybody
+    > "Is that a problem?" -> everybody
+  node everybody narrator "He looks out over the salt pans at six crews of sailors, all raking, all pending. You can watch the sum arrive on his face."
+    -> inspected
+  node inspected pike "…That's everybody, sir. (He blows his whistle.) Inspection's over! Everybody's… everybody's inspected!"
+    -> rakes
+  node rakes narrator "A hundred and thirty rakes stop at once. Pike unlocks the store hut. Quill comes out into the glare with salt on her shoulders, looks at the form, and then at me."
+    -> wrote
+  node wrote quill "You wrote a form."
+    > "I wrote a very good form." -> kiss
+    > "I'd have written a hundred." -> kiss
+      add aff 1
+  node kiss narrator "She takes my face in both hands, salt and all, and kisses me. There is no form for this. There doesn't need to be."
+    -> ansel
+  node ansel ansel "Ah. Good. I'll come back."
+    -> turn
+  node turn narrator "A sunburnt man with a needle in his lapel and a flag under his arm has stopped in the middle of the salt pan. He turns to go. He turns back. He drops the flag."
+  # Talking to Pike after he's been out-formed.
+  node done pike "I've filed it, sir. In my hat; it's the safest place on the key. …Is this what being on the right side feels like? It's very windy."

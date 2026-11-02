@@ -1,0 +1,85 @@
+room alley "Chandler's Lane"
+  bg bg_alley_wide
+  width 2560
+  music music_dock
+  perspective horizon 380 ref 875 height 330
+  walk (60,875) (90,700) (2430,690) (2520,875)
+  entry 2200,800
+  arrive dock 2320,800
+  arrive chandlery 2150,800
+  arrive warehouse 300,790
+  arrive counting_house 900,740
+
+  sprite npc_silas_body at 1380,806 size 1 flip idle speaker silas for silas grade "saturate(0.85) brightness(0.88)"
+
+  hotspot silas "man in a good coat"
+    show if act 1
+    area 1290,420 190x300
+    stand 1180,810
+    look "Good coat, better boots, and the expression of a man who has never once carried his own luggage. He's waiting for someone, and he's decided it's me."
+    talk "He's already turning to face me. He's been waiting."
+      talk silas
+    give "He takes only what he's asked for, and he asks for a great deal."
+    state if silas_refused = true
+      name "Silas Cray"
+      look "Silas Cray. He hasn't moved, and he hasn't stopped watching my coat pocket."
+      talk "He doesn't turn round. “Still no? Then say it quickly. I bill by the hour.”"
+    state if silas_offer = true
+      name "Silas Cray"
+      look "Silas Cray, being patient at me from across the lane."
+      talk "“Back already,” he says. “I told you you'd come round.”"
+    state if seen:silas.root
+      name "Silas Cray"
+
+  hotspot chandlery_door "the chandler's"
+    area 1900,230 490x500
+    stand 2150,800
+    exit chandlery
+    look "The chandler's window, lit and full of rope. Rope, pitch, canvas, and the answer to every question a ship ever asks. Open late, because ships are always leaving."
+    open "I push the door. A bell somewhere in the shop regrets it."
+
+  hotspot warehouse_stairs "loft stairs"
+    area 110,150 290x390
+    stand 300,790
+    look "A wooden stair up to the harbour loft, shut off by a shutter bolted from this side. Bolts. The eternal enemy of the curious."
+    open "Bolted. The shutter has opinions about clerks."
+      sound deny
+    push "It doesn't move. It has been bolted by a man who meant it."
+      sound deny
+    use "I'd need something to lever the shutter. Something with a bad attitude."
+    pull "Bolted from this side, which is the wrong side for me."
+    state if loft_open = true
+      name "open loft stairs"
+      look "The loft stairs, shutter folded back. The dark up there smells of paper."
+
+  hotspot loft_stairs_open "open loft stairs"
+    show if loft_open = true
+    area 110,150 290x390
+    stand 300,790
+    exit warehouse
+    look "The stairs up to the loft, shutter folded back. The dark smells of paper."
+    open "I go up."
+
+  hotspot to_dock "back to the docks"
+    area 2400,320 160x400
+    stand 2340,800
+    exit dock
+    look "The lane runs back down to the waterfront."
+
+  hotspot crates "stacked crates"
+    area 20,560 300x210
+    nowalk
+    look "Crates waiting to go up to the loft, stencilled with a little cloud. Cray & Co. Whatever's in them, it's been paid for by someone who doesn't like to be asked."
+
+  hotspot counting_door "Cray & Co."
+    show if act 4
+    area 730,300 340x380
+    stand 900,730
+    exit counting_house
+    look "Further up the lane, past where Cray used to stand and wait for me: a brass plate, a polished door, a little cloud. CRAY & CO., FACTORS. There's a light on."
+    open "I go up the lane to Cray & Co. The brass plate has been polished so hard it's nearly gone."
+
+  use crowbar on warehouse_stairs
+    "I get the crowbar behind the shutter and lean. The bolts give one at a time, complaining in the way of things that have been doing their job too long."
+    set loft_open
+    sound door

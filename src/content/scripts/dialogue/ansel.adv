@@ -1,0 +1,67 @@
+# Ansel Fenn: comic, then not, then comic.
+dialogue ansel
+  node taller ansel "You're taller. Is that regulation?"
+    > "Hello, Father." -> hello
+      add aff 1
+    > "You left the compass on the hall table." -> table
+  node hello ansel "Hello, son."
+    -> wait
+  node wait ansel "I left it on the table because I knew you'd bring it. I didn't know it would take three years. …I'm sorry I made you wait."
+    -> flags
+  node table ansel "I did! On purpose! Cray wanted it, and I thought: my son has a desk and a stamp. He can't possibly get into trouble."
+    -> look
+  node look narrator "He looks at me properly: the salt, the stamp, the pirate standing next to me."
+    -> lookat
+  node lookat ansel "…Look at you."
+    -> flags
+  node flags ansel "Fifteen flags. I kept thinking, one of these mornings somebody will look up."
+    > "I read the log. The L is for her." -> lise
+    > "Your sewing is terrible." -> sewing
+  node lise ansel "She always said I couldn't sew. Fifteen flags, and she's still right. …I think she'd have liked that best."
+    -> you
+  node sewing ansel "Your mother said exactly that, in exactly that voice. Fifteen flags, and I still haven't proved her wrong. Don't tell her. Well. You know."
+    -> you
+  node you ansel "And you are?"
+    -> nav
+  node nav quill "The navigator."
+    -> course
+  node course ansel "(delighted) Of course you are."
+    -> log
+  node log ansel "I'd say I didn't see anything just now, but I'm a captain. We see everything. We just log it later."
+    -> dare
+  node dare quill "Don't you dare log it."
+    -> crews
+  node crews ansel "Pike says everybody's inspected. A hundred and thirty sailors, and the Weather took every boat that floats. I'm not leaving without every one of them."
+    > "There's a ship outside the Needle, waiting for a new flag." -> sixteen
+      give flag16
+      set ansel_met
+      sound pickup
+    > "You won't have to. I've brought a ship. Well. A ship brought me." -> sixteen
+      give flag16
+      set ansel_met
+      sound pickup
+  node sixteen ansel "Then she wants sixteen. I was putting it up this morning. …Here. With an L in the corner. For your mother."
+    -> colour
+  node colour ansel "She'd have hated the colour."
+    > "Then why that colour?" -> why
+      add aff 1
+    > "I'll run it up." -> run
+  node why ansel "So she'd have to come back and complain about it. …It hasn't worked yet. I'm a very patient sewer."
+    -> run
+  node run ansel "The wreck's halyard, on the mainmast. Across the flats: follow the stakes, not me. I always go wrong at the third one. I'll get the lads to the beach."
+  # Afterwards.
+  node hub ansel "Still here? The flag won't raise itself. I've asked it. Nicely, and then not."
+    > "What did the Weather do with you?" -> receipt
+    > "Rook's alive. He's in Port Vela." if not seen:ansel.rook -> rook
+    > "Why keep raising flags?" -> why2
+    > "I'm going." -> go
+  node receipt ansel "Polite men. They gave every one of us a receipt for himself. I've still got mine. “One captain, used.” I'd argue with “used”."
+  node rook ansel "Rook! The old— they told us he'd… (He stops.) Is he well?"
+    -> drunk
+  node drunk ansel "Don't answer that. Is he drunk?"
+    > "Very." -> well
+    > "He's been waiting for you. He just did it in a tavern." -> well
+      add aff 1
+  node well ansel "Then he's well. Good. I'll want my navigator back. He owes me a reef."
+  node why2 ansel "Every time they tore one down, somebody had to write down that they'd torn it down. I like to think I ruined a lot of afternoons."
+  node go ansel "Go on, then. Follow the stakes. Not me. Never me."

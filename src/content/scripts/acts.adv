@@ -1,0 +1,78 @@
+# Act structure. An act is a self-contained run of rooms with its own opening and closing
+# cinematic; finishing one carries the inventory and flags forward and drops you into the next.
+
+act 1 "A Licence to Sail"
+  start dock
+  intro "/assets/video/intro.mp4"
+  outro "/assets/video/act-i-outro.mp4"
+  inventory compass
+  caption "Three years stamping other people's voyages. At dawn the Marrow sails for the Straits, where my father's ship vanished — and she only takes licensed hands."
+
+act 2 "The Vela Straits"
+  start marrow_deck
+  intro "/assets/video/act-ii-intro.mp4"
+  outro "/assets/video/act-ii-outro.mp4"
+  inventory compass stamp manifest crowbar
+  caption "Dawn, and the Marrow is mine to stand on. The crew have already decided what I am: a clerk with a licence and no sea legs. The compass in my pocket is still pointing somewhere that isn't north."
+
+act 3 "Tidy Weather"
+  start reef_wreck
+  intro "/assets/video/act-iii-intro.mp4"
+  outro "/assets/video/act-iii-outro.mp4"
+  inventory compass stamp
+  caption "Quill rows. I hold the compass. Neither of us says that the flag on the wreck is the first thing I've wanted to see since I was twenty."
+  on start
+    say "On the coral, Quill fishes something out of the bilge and holds it up by one end: my crowbar. “You packed a crowbar.” A pause. “Of course you did.” She drops it in my lap."
+    give crowbar
+
+act 4 "All Hands Returned"
+  start dock at 880,830
+  intro "/assets/video/act-iv-intro.mp4"
+  outro "/assets/video/act-iv-outro.mp4"
+  inventory compass stamp crowbar ansel_log
+  caption "Port Vela, the night after. Cray's cutter got home first. At the dawn bell he means to write us all down as lost, and this time he's holding the pen."
+  on start
+    talk quill4
+
+ending "ALL HANDS RETURNED"
+  title if ending_pirate
+    "THE PURSER OF THE MARROW"
+  title if ending_desk
+    "THE HONEST LEDGER"
+  # the pirate ending: dawn from the crow's nest
+  line if ending_pirate
+    "Dawn, from the Marrow's crow's nest. Quill points. “That's the Liar. It moves.” “I'll write it down.” “You do that.”"
+  line if ending_pirate and aff >= 14
+    "Her hand is in mine before the Liar has even set. Neither of us writes that down."
+  line if ending_pirate and not (aff >= 14)
+    "She doesn't hold my hand. She does stand close enough that it would be very easy to."
+  line if ending_pirate
+    "Flag sixteen flies at the masthead. My mother would have hated the colour."
+  # the desk ending: the customs-house window, a year on
+  line if ending_desk
+    "A year later, at the customs-house window: a sail on the horizon, a patchwork flag at her masthead. I stamp her ARRIVED before she's even rounded the light."
+  line if ending_desk and aff >= 14
+    "She comes up the quay at a run, as she does every season, with a new star for me. I've written down four. One of them moves."
+  line if ending_desk and aff >= 14 and night_watch
+    "Every one of them is underlined."
+  line if ending_desk and not (aff >= 14)
+    "She still calls me cargo. She brings a new star every season, and lets me write it down."
+  # the epilogue, for both
+  line
+    "Quill was named navigator of the Marrow. She had it written into the articles, then read out, then read out again."
+  line
+    "Captain Vane's storm claim was paid at last, with three years' interest. She uses the letter as a bookmark."
+  line
+    "Rook went back to sea, sober. Mostly. On weekdays, and twice on Tuesdays."
+  line if wager
+    "Bramwick and Marta were married in the spring, paid for by a betting slate and a clerk who backed the right ship."
+  line if not wager
+    "Bramwick and Marta are still playing for it, one hand a night. He loses on purpose. She lets him think she can't tell."
+  line
+    "My father opened an instrument shop on the quay. Every compass in it points at Port Vela. He says that isn't a fault; it's a feature, and the feature is home."
+  line if kelp_read
+    "The last of Cray's kelp went on the Salty Keel's fire. For a week the whole harbour smelled of fog, and laughed."
+  line
+    "Silas Cray filed an appeal from his cell, in triplicate, as is his right. Nib stamped all three copies without reading them."
+  line
+    "ARCADIA: returned. All hands."

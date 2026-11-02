@@ -1,0 +1,31 @@
+# Act I
+dialogue rook
+  node root rook "You've got his eyes. Don't look so pleased about it. They never once helped him find the bar."
+    > "You knew my father." -> knew
+    > "Who are you?" -> who
+    > "Sorry. I'm in a hurry." -> bye
+  node who rook "Rook. Navigator. Retired, the way a ship's retired when it's on the bottom. I took the Arcadia out of this harbour on her last run."
+    > "You sailed with my father?" -> knew
+  node knew rook "I steered for him for eleven years. Best captain on the Straits run and the worst at cards. I was aboard the Arcadia when she went missing, boy, and she did not sink while I was looking."
+    > "Then how are you here?" -> fog
+    > "The ledger says she was lost." -> ledger
+  node fog rook "Fog came down out of a clear sky. Men rowed out under a yellow flag. Quarantine, they said, ever so polite. They took me off first, paid me, put me on a fruit boat. I've been drunk ever since and it's still the strangest thing I've seen."
+    > "Paid you?" -> purse
+    > "And the ledger?" -> ledger
+  node purse rook "A purse with a seal on it. I never opened it. Seemed like the one decent thing left to do, and I've been very careful not to do any others."
+    > "And the ledger?" -> ledger
+  node ledger rook "When I got home she was already written in as lost. Three days before she was even late. Ink does what the man holding the pen is paid to. It's all in the harbour ledger, up in the loft over the chandler's."
+    > "The loft's shutter is bolted." if looked:alley.warehouse_stairs -> locked
+    > "Who paid?" -> cray
+    > "What do I do with it?" -> advice
+  node locked rook "Bolted from the lane side, which is the trusting side. A crowbar will talk it round. Crowbars are very persuasive. So I'm told. By crowbars."
+    > "Who paid?" -> cray
+    > "Thank you." -> thanks
+  node cray rook "Silas Cray. Factor. He'll be in the lane, being expensive at someone. If he offers to buy that compass, ask yourself why a man who owns everything wants the one thing in Vela that points the wrong way."
+    > "What do I do with the ledger?" -> advice
+    > "Thank you." -> thanks
+  node advice rook "Read it. Then say it to Bramwick's face, at his own desk. Shame works on men like him. On me it only works on Tuesdays."
+    > "Who paid for the entry?" -> cray
+    > "Thank you." -> thanks
+  node thanks rook "Go on, then. Be a better navigator than me. The bar's low and I'm under it. And boy: don't let them write you down as lost."
+  node bye rook "A hurry. I remember those. Went everywhere in one, once."

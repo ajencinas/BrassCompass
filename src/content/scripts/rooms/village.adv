@@ -1,0 +1,78 @@
+# Upper Town — exploration only. No puzzle, no gate, nothing missable.
+room village "Upper Town"
+  bg bg_village_wide
+  width 2560
+  music music_tavern
+  perspective horizon 380 ref 875 height 340
+  walk (60,875) (110,700) (2450,700) (2520,875)
+  entry 200,815
+  arrive dock 210,815
+
+  sprite npc_nell_body at 700,812 size 1 idle speaker nell for nell grade "saturate(0.85) brightness(0.9)"
+  sprite npc_tam_body at 1200,822 size 0.72 idle speaker tam for tam grade "saturate(0.85) brightness(0.9)"
+  sprite npc_onn_body at 1900,815 size 0.95 idle speaker onn for onn grade "saturate(0.8) brightness(0.86)"
+
+  hotspot nell "Nell"
+    area 620,490 165x325
+    stand 830,812
+    look "Nell, behind a stall of rope and dried fish, with the expression of a woman who has already decided what you're going to buy."
+    talk "She's looking at me the way she looks at weather."
+      talk nell
+    give "She takes goods, not charity."
+    open "Nell is not a stall, though she has been mistaken for one."
+
+  hotspot tam "Tam"
+    area 1140,585 120x240
+    stand 1060,822
+    look "A boy of about ten with a cap two sizes too big, watching the sky above the roofs like it owes him something."
+    talk "He's already turned round. He was waiting for someone to talk to."
+      talk tam
+    give "He looks at my hands and decides they're empty."
+    open "He is not a cupboard. He'd probably fit in one."
+
+  hotspot onn "Old Onn"
+    area 1835,505 140x315
+    stand 2010,815
+    look "An old woman sweeping a step that was already clean. She has the look of someone who has outlived the reason for the sweeping and kept the habit."
+    talk "She stops sweeping before I say anything. She knows what I'm going to ask."
+      talk onn
+    give "She waves it away. She's done taking things from this harbour."
+    open "She is not a door, and she'd have something to say about being asked."
+
+  hotspot well "the well"
+    area 120,590 290x290
+    nowalk
+    look "A stone well with a windlass and a bucket. The water down there is older than the harbour and doesn't care about any of it."
+    use "I draw a bucket. It's cold and tastes of stone and it's the best thing I've had all night."
+    talk "I say hello down the well. The well says nothing back, which is more than most conversations in this town."
+    pull "The windlass turns. Somewhere below, a bucket fills."
+
+  hotspot stalls "market stalls"
+    area 480,450 300x250
+    nowalk
+    look "Striped awnings, crates of dried fish, rope by the fathom and lamp oil by the jug. Everything a ship needs and nothing a ship's owner will pay for."
+    use "I've no money and no need. Two things that rarely arrive together."
+
+  hotspot shrine "the shrine"
+    area 930,470 160x220
+    nowalk
+    look "A niche in the wall with a painted figure and a shelf of candle stubs. Somebody still lights them. There are a lot of names scratched into the stone under the shelf."
+    use "I put a coin in the box. It feels like the least I can do and it is exactly that."
+    open "The niche is open, as niches are."
+    pull "I'm not going to rifle a shrine. I have some standards and they're mostly about that."
+
+  hotspot washing "washing line"
+    area 1050,330 250x120
+    nowalk
+    look "A line of shirts strung between two houses, drying in the dark. Nine of them. Somebody on this street is still washing for a man who isn't coming home."
+
+  hotspot cottages "the houses"
+    area 1600,250 320x280
+    nowalk
+    look "Cottages leaning on each other, shutters open to the warm night. Half the windows are dark. That's not the hour — that's the town now."
+
+  hotspot steps_down "way down to the harbour"
+    area 0,380 165x470
+    stand 210,820
+    exit dock
+    look "The top of the steps, and below them the harbour with its lamps on."

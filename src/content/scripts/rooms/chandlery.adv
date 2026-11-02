@@ -1,0 +1,52 @@
+room chandlery "The Chandler's"
+  bg bg_chandlery_wide
+  width 2560
+  music music_office
+  perspective horizon 200 ref 875 height 430
+  walk (120,875) (170,834) (2380,834) (2500,875)
+  entry 1500,856
+  arrive alley 1600,856
+
+  hotspot counter "the counter"
+    area 900,520 900x200
+    stand 1350,856
+    look "A long counter with a brass scale, a pot of tallow, and a spike of invoices that has not been reduced since the last century."
+    open "The invoices are spiked, not filed. It amounts to the same thing at sea."
+    use "Unpaid invoices, waiting for a harbour stamp. I could stamp one of these."
+    state if act 4
+      look "The counter. Every invoice on the spike is stamped PAID now. Mr Tallow has framed the first one and hung it over the till."
+    state if chandler_paid = true
+      name "the counter"
+      look "The counter, lighter by one unpaid invoice. The chandler will sleep better."
+
+  hotspot shelves "the shelves"
+    area 300,120 400x470
+    nowalk
+    look "Coils of rope, blocks and tackle, a lantern for every weather, and one shelf of things that look like they were invented on a dare."
+
+  hotspot back_room "back room"
+    area 2390,60 170x520
+    stand 2300,856
+    thing
+    look "A dark doorway to the back room. Somebody in there is counting something, out loud, and losing."
+    talk "I call into the back room."
+      talk tallow
+    open "I'm not barging into a man's back room. That's how you meet his cat."
+    state if act 4
+      look "The back room is dark. A note on the door, in Mr Tallow's harassed capitals: GONE TO THE KEEL. CAT IN CHARGE."
+      talk "Nobody answers. Mr Tallow has gone to the Keel, and the cat has gone with him, in charge."
+        nothing
+      open "It's his back room. Even with the cat out, I'm not that sort of clerk."
+
+  hotspot door_out "door to the lane"
+    area 20,260 120x480
+    stand 240,856
+    exit alley
+    look "The lane, wet and honest."
+
+  use stamp on counter if act 4
+    "Everything's paid. Stamping it again would just be showing off, and Mr Tallow isn't here to see."
+  use stamp on counter
+    "I stamp the oldest invoice PAID. A cheer from the back room, then a thump, then “Anything you like, clerk!” I ask for the Arcadia's manifest. A copy sails out through the doorway and lands at my feet. The cat follows it, to supervise."
+    give manifest
+    set chandler_paid

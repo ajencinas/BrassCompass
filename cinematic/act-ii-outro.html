@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #070b14; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: #070b14; }
+      .o2-scene { position: absolute; inset: 0; overflow: hidden; }
+      /* The bow, pushing in slowly toward the reef on the right. */
+      .o2-camera { position: absolute; inset: 0; overflow: hidden; transform-origin: 72% 52%; }
+      .o2-bow { position: absolute; left: -900px; top: 0; width: 3142px; height: 1080px; max-width: none; }
+      /* Fog: three soft banks that drift and thin out. */
+      .o2-fog { position: absolute; left: -400px; width: 2720px; border-radius: 50%; filter: blur(70px); }
+      .o2-fog-a { top: 80px; height: 900px; background: radial-gradient(ellipse at 50% 50%, rgba(214, 224, 236, .96) 0%, rgba(200, 212, 228, .85) 55%, rgba(190, 204, 222, 0) 100%); }
+      .o2-fog-b { top: 260px; height: 700px; background: radial-gradient(ellipse at 40% 50%, rgba(226, 232, 240, .9) 0%, rgba(210, 220, 232, .7) 50%, rgba(200, 212, 228, 0) 100%); }
+      .o2-fog-c { top: -120px; height: 760px; background: radial-gradient(ellipse at 60% 50%, rgba(232, 236, 244, .85) 0%, rgba(214, 222, 234, .6) 50%, rgba(200, 212, 228, 0) 100%); }
+      .o2-shade { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(7, 11, 20, 0) 45%, rgba(7, 11, 20, .78) 100%); }
+      .o2-title { position: absolute; left: 50%; bottom: 150px; width: 1500px; margin-left: -750px; text-align: center; font-family: "EB Garamond", Georgia, serif; }
+      .o2-kicker { display: block; color: #e8c98a; font-size: 30px; letter-spacing: .5em; padding-left: .5em; }
+      .o2-rule { width: 120px; height: 2px; margin: 22px auto 26px; background: #e8c98a; opacity: .7; }
+      .o2-line { color: #f0e8d6; font-size: 62px; font-weight: 400; font-style: italic; line-height: 1.15; letter-spacing: .01em; text-shadow: 0 2px 18px rgba(0, 0, 0, .6); }
+      .o2-black { position: absolute; inset: 0; background: #000; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="act2outro" data-start="0" data-duration="8" data-fps="30" data-width="1920" data-height="1080">
+      <section id="o2-scene" class="clip o2-scene" data-start="0" data-duration="8" data-track-index="0" data-track-kind="graphics">
+        <div class="o2-camera" data-layout-allow-overflow><img class="o2-bow" src="assets/bow.webp" /></div>
+        <div class="o2-fog o2-fog-a" data-layout-allow-overflow></div>
+        <div class="o2-fog o2-fog-b" data-layout-allow-overflow></div>
+        <div class="o2-fog o2-fog-c" data-layout-allow-overflow></div>
+        <div class="o2-shade"></div>
+        <div class="o2-title">
+          <span class="o2-kicker">THE VELA STRAITS</span>
+          <div class="o2-rule"></div>
+          <p class="o2-line">Inside the reef, a ship that should not exist.</p>
+        </div>
+        <div class="o2-black" data-layout-allow-overlap></div>
+      </section>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo(".o2-camera", { scale: 1.02, x: 0 }, { scale: 1.14, x: -90, duration: 8, ease: "none" }, 0);
+      tl.fromTo(".o2-black", { opacity: 1 }, { opacity: 0, duration: 0.8, ease: "power1.out" }, 0);
+      // The fog tears open: each bank drifts off its own way and thins.
+      tl.fromTo(".o2-fog-a", { opacity: 1, x: 0 }, { opacity: 0.08, x: -520, duration: 4.2, ease: "power2.inOut" }, 0.6);
+      tl.fromTo(".o2-fog-b", { opacity: 1, x: 0 }, { opacity: 0.12, x: 640, duration: 4.0, ease: "power2.inOut" }, 0.9);
+      tl.fromTo(".o2-fog-c", { opacity: 0.9, y: 0 }, { opacity: 0.1, y: -220, duration: 4.4, ease: "power2.inOut" }, 0.7);
+      tl.fromTo(".o2-kicker", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.9, ease: "power2.out" }, 3.6);
+      tl.fromTo(".o2-rule", { opacity: 0, scaleX: 0 }, { opacity: .7, scaleX: 1, duration: 0.9, ease: "power2.out" }, 3.8);
+      tl.fromTo(".o2-line", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 1.1, ease: "power2.out" }, 4.0);
+      tl.to(".o2-black", { opacity: 1, duration: 0.9, ease: "power1.in" }, 7.05);
+      window.__timelines["act2outro"] = tl;
+    </script>
+  </body>
+</html>

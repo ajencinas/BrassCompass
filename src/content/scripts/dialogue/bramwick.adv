@@ -1,0 +1,46 @@
+dialogue bramwick
+  node root bramwick "Fenn. It's past the night bell. If you're here to work, I admire it. If you're here to ask for something, I don't."
+    > "I want to sign on with the Marrow." if not has licence -> berth
+    > "I have my licence, sir." if has licence -> licence
+    > "Just finishing the ledgers, sir." -> loiter
+    > "Goodnight, sir." -> bye
+  node loiter bramwick "Good man. The ledger is never finished, Fenn. That is what I love about it."
+    > "Actually, sir, about the Marrow…" if not has licence -> berth
+    > "Goodnight, sir." -> bye
+  node berth bramwick "The Marrow. Licensed piracy, bound for the Straits. Every hand who sails from Vela carries a Seafarer's Licence with the harbour stamp on it. Pirates included. Pirates especially. We are a well-run port."
+    -> form
+  node form bramwick "I cannot stamp anything after the night bell. Regulation fourteen. However, any clerk of this house may stamp in the Harbourmaster's absence. And after the bell, Fenn, I am, legally, absent."
+    > "So I could stamp it myself?" -> self
+    > "Where is the stamp?" -> key
+      set knows_key
+    > "Is there a berth left?" -> claim
+  node self bramwick "I said no such thing. I recited several regulations, loudly. The forms are on my desk. The stamp is in my drawer."
+    > "And the drawer is…?" -> key
+      set knows_key
+  node key bramwick "Locked. The key is with Marta at the Salty Keel. I lost it to her at cards. A man of my standing does not discuss it further."
+    > "Is there a berth left?" -> claim
+    > "Right. Marta." -> bye
+  node claim bramwick "One. Claimed and paid for by Mr Cray's office. A claim stands, Fenn, unless the claimant has defrauded this harbour. Mr Cray is a very respectable man."
+    > "That sounded like a hint, sir." -> hint
+    > "Why are you helping me?" -> care
+  node hint bramwick "It was a regulation. I am full of them tonight. Get your licence first. Then we'll see what else you can find."
+    > "Where is the stamp?" if not knows_key -> key
+      set knows_key
+    > "Goodnight, sir." -> bye
+  node care bramwick "Three years you've kept my ledgers without a blot. Your father sailed for the Straits, and I won't be the man who kept his son ashore. I have been enough of a man like that already."
+    > "Where is the stamp?" if not knows_key -> key
+      set knows_key
+    > "Thank you, sir." -> bye
+  node licence bramwick "Do you. I can't stamp it, Fenn, but I can certainly read it. Hand it over."
+    > "Here it is. And the Arcadia's manifest." if ledger_read and has manifest -> confess
+    > "Here it is." if (not ledger_read or not has manifest) -> deferred
+  node deferred bramwick "A fine licence. The berth is still Mr Cray's. Bring me the Arcadia's manifest copy; the chandler keeps one of every ship he provisions. And read the harbour ledger yourself, Fenn. Don't let me read it to you."
+    > "Yes, sir." -> bye
+  node confess fenn "The Arcadia, entered as lost three days before she was late, in your hand. A fee paid by Cray & Co. And a navigator discharged at sea, who is drinking in the Salty Keel."
+    -> confess2
+  node confess2 bramwick "I was paid. I told myself it was a kindness: a quick line in the book instead of a long wait at the window. It was not a kindness. It was three hundred crowns."
+    -> confess3
+  node confess3 bramwick "Mr Cray's claim is void. Regulation two. Your name is on the Marrow's manifest. She sails at dawn, Fenn. Don't make me write you down as lost."
+    > "I won't, sir." -> END
+      act 1
+  node bye bramwick "Goodnight, Fenn. Don't stamp anything I'd regret."

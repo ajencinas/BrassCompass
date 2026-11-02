@@ -1,0 +1,30 @@
+dialogue dorrit
+  node root dorrit "Ah. A colleague. Customs, twenty-two years, then the sea, for my nerves. Nothing leaves this galley uninspected, clerk. Not a biscuit."
+    > "Then why isn't dinner served?" -> stamp
+    > "You must miss it. Customs." -> miss
+    > "Good day, Mr Dorrit." -> bye
+  node stamp dorrit "The stew has not been passed. I have no stamp. I left it in Port Vela with my pension."
+    > "Couldn't you just… serve it?" -> serve
+    > "I have a harbour stamp." if has stamp -> harbour
+  node serve dorrit "Unpassed? I have seen what unpassed food does to a crew, clerk. I have seen what it did to a herring."
+    > "I have a harbour stamp." if has stamp -> harbour
+    > "Good day." -> bye
+  node harbour dorrit "A harbour stamp. Aboard. In a galley. …Then why are we talking? The pot is on the stove, man. Regulation ink only."
+  node miss dorrit "Every day. The sea has no forms, clerk. Things simply happen out here, unrecorded, one after another. It's barbaric."
+    > "Then why isn't dinner served?" -> stamp
+    > "Good day." -> bye
+  node bye dorrit "Good day. Wipe your feet. Both of them. I'll be checking."
+  # Stamping the stew (rooms.ts, below_decks).
+  node passed dorrit "PASSED FOR CONSUMPTION. In purple. On a potato. …Beautiful. Regulation ink."
+    > "You're welcome." -> gong
+      set dinner
+      sound chime
+    > "I've stamped worse. Never better." -> gong
+      set dinner
+      sound chime
+  node gong narrator "He strikes the gong. The whole ship arrives at once, Hobb first, and the bosun's place by Pell's chest is suddenly very empty."
+  node fed dorrit "Seconds are available on application. Thirds require a countersignature."
+    > "Where did you learn to cook?" -> cook
+    > "Thank you, Mr Dorrit." -> welcome
+  node cook dorrit "I didn't. I learned to inspect. The stew simply knows it's being watched."
+  node welcome dorrit "Thank the stamp. I merely recognised its authority."

@@ -1,0 +1,75 @@
+dialogue vane
+  node root vane "Clerks don't steer. Say what you came to say and be off my deck."
+    > "About your three terms." if vane_terms -> count
+    > "Your course is the long way round." if looked:marrow_cabin.chart and not vane_terms -> course
+    > "What happened to the other ships?" -> ships
+    > "Where's your navigator?" if not seen:vane.pell -> pell
+    > "Nothing, captain." -> bye
+  node pell vane "Pell. Forty years at sea. Died in his hammock last winter, mid-sentence. I'd give a great deal to know how that sentence ended."
+    > "What happened to the other ships?" -> ships
+    > "I'm sorry." -> bye
+  node course vane "We sail Pell's line, north of the reef. Two days longer and nobody's ever been lost on it. Nobody runs the south side. Nobody who comes back."
+    > "What if there's a way through?" -> through
+    > "Understood, captain." -> bye
+  node through vane "Then show me on the chart, clerk, with something better than hope. I've a hold full of hope already and it pays terribly."
+    > "Yes, captain." -> bye
+  node ships vane "Six ships in three years. Found drifting, sails set, holds empty, not a soul aboard. The insurers paid out for weather. That same year they refused my claim for a real storm. Funny thing, weather."
+    > "Where's your navigator?" if not seen:vane.pell -> pell
+    > "I see." -> bye
+  node count vane "A navigator, a crew, and a reason Pell would have. Count them for me, clerk. Slowly."
+    > "Quill has sworn to the line." if quill_navigator -> quill
+    > "The crew will sail it." if crew_agree -> crew
+    > "Still counting." -> counting
+  node quill vane "Quill. Pell said she had the best eyes he ever saw and the worst patience. He'd have liked this. He'd have pretended not to."
+    > "The crew will sail it." if crew_agree -> crew
+    > "That's one." -> counting
+  node crew vane "Hobb told me. He rolled up his sleeve to do it. In nine years I've never seen his whole arm."
+    > "That's two." -> counting
+  node counting vane "And the third is the one you can't fetch from a sea-chest, clerk. Off you go."
+  node bye vane "Off my deck, clerk."
+  # The compass on the chart (rooms.ts) opens here.
+  node compass vane "Through the reef. There is no way through the reef, clerk. That's what a reef is."
+    > "My father found one." -> father
+  node father vane "And who is your father, that he finds holes in reefs?"
+    > "Ansel Fenn. Of the Arcadia." -> ansel
+  node ansel vane "Ansel Fenn ran the Straits in half the time of anyone alive and never told a soul how. So. That's how."
+    -> needle
+  node needle narrator "She looks at the needle for a long moment. The needle looks back, unrepentant."
+    -> no
+  node no vane "No. A dead man's compass and a clerk's word. I've buried one navigator this year; I won't drown a ship for another."
+    > "Then what would it take?" -> terms
+      set vane_terms
+    > "I could fill in a form." -> form
+      set vane_terms
+  node form vane "If a form could get a ship through that reef, clerk, Silas Cray would own the reef by now. …No. Here's what it would take."
+    -> terms
+  node terms vane "Three things. A navigator who'll swear to that line. A crew who'll sail it."
+    -> terms2
+  node terms2 vane "And a reason Pell would have. Pell never dared the south side, clerk. Give me a reason he would have."
+    > "Yes, captain." -> END
+    > "Three things. I've done harder lists before breakfast." -> lists
+  node lists vane "It's past breakfast. Go and eat something; Dorrit's been sulking at the stew since Port Vela."
+  # Pell's log, given once the other two terms are met (rooms.ts, marrow_cabin).
+  node log fenn "Pell's last entry. It doesn't finish."
+    -> there
+  node there vane "I know. I was there."
+    > "You said you'd give a great deal to know how it ended." if seen:vane.pell -> read
+    > "May I read it to you?" -> read
+  node read fenn "“If Ansel's boy ever comes aboard with the old man's compass, tell the captain she should…”"
+    -> silence
+  node silence narrator "Vane is quiet for so long that the ship's timbers start talking to fill the gap."
+    -> trust
+  node trust vane "Trust the boy. That's how it ends. Pell always said I never trusted anyone."
+    -> hat
+  node hat narrator "She stands, and puts on her hat, which I gather is serious."
+    -> coward
+  node coward vane "Fine. You old coward, you were going to say it."
+    -> orders
+  node orders vane "Get to the bow, clerk. Quill takes the wheel. You call the bearings. And if you're wrong, call them louder."
+    > "Aye, captain." -> END
+      take pell_log
+      set vane_convinced
+    > "I've never said “aye” before." -> aye
+      take pell_log
+      set vane_convinced
+  node aye vane "You'll get the hang of it. Most people do by the second reef."

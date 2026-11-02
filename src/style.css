@@ -1,0 +1,113 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: #05070f;
+  overflow: hidden;
+  font-family: Georgia, "Times New Roman", serif;
+  color: #e8e2d0;
+}
+
+#stage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 40%, #101a2e 0%, #05070f 70%);
+}
+
+#game {
+  display: block;
+  cursor: default;
+  image-rendering: auto;
+  box-shadow: 0 0 80px rgba(0, 0, 0, 0.9);
+}
+
+#game:focus-visible {
+  outline: 2px solid rgba(232, 201, 138, 0.75);
+  outline-offset: 2px;
+}
+
+/* ---- boot overlay ---- */
+#boot {
+  position: fixed;
+  inset: 0;
+  background: #05070f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s ease;
+  z-index: 10;
+}
+#boot.gone { opacity: 0; pointer-events: none; }
+
+.boot-inner { text-align: center; }
+.boot-title {
+  font-size: clamp(22px, 3.2vw, 46px);
+  letter-spacing: 0.34em;
+  color: #d8b978;
+  margin-bottom: 14px;
+  text-indent: 0.34em;
+}
+.boot-sub {
+  font-size: clamp(12px, 1.1vw, 16px);
+  letter-spacing: 0.18em;
+  color: #6f7f99;
+  text-transform: uppercase;
+  margin-bottom: 22px;
+}
+.boot-bar {
+  width: min(360px, 60vw);
+  height: 3px;
+  background: #1a2338;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.boot-bar i {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #8a6a2f, #e8c98a);
+  transition: width 0.25s ease;
+}
+
+.settings[hidden] { display: none; }
+.settings {
+  position: fixed; inset: 0; z-index: 30; display: grid; place-items: center;
+  background: rgba(3, 8, 16, .88); padding: 20px; overflow: auto;
+}
+.settings section {
+  width: min(480px, 100%); padding: 32px; background: #101d29;
+  border: 1px solid #9b7c46; box-shadow: 0 24px 80px #0009;
+}
+.settings h1 { color: #f3d99e; font-size: 30px; margin: 10px 0; }
+.settings p, .settings small { color: #bdc7ce; line-height: 1.5; }
+.settings .eyebrow { color: #c6a365; font: 12px system-ui; letter-spacing: .2em; }
+.settings button {
+  display: block; width: 100%; padding: 13px; margin: 12px 0;
+  background: #1a3040; border: 1px solid #65726f; color: #f3e7cb;
+  font: 17px Georgia, serif; cursor: pointer;
+}
+.settings button:hover, .settings button:focus-visible { background: #304651; outline: 2px solid #dfbf7d; }
+.settings label { display: grid; gap: 10px; margin: 18px 0; }
+.settings input { width: 100%; accent-color: #d6b46c; }
+.settings small { display: block; margin-top: 18px; font: 12px/1.5 system-ui; }
+
+.cinematic[hidden] { display: none; }
+.cinematic {
+  position: fixed; inset: 0; z-index: 40; display: flex; align-items: center;
+  justify-content: center; background: #02040a; cursor: pointer;
+}
+.cinematic video { width: 100%; height: 100%; object-fit: contain; }
+.cinematic-skip {
+  position: absolute; right: 24px; bottom: 24px; padding: 12px 20px;
+  border: 1px solid #c9a24a; background: rgba(5, 13, 22, .9); color: #f3d99e;
+  font: 17px Georgia, serif; cursor: pointer;
+}
+.cinematic-skip:hover, .cinematic-skip:focus-visible { outline: 2px solid #fff3cf; }
+.cinematic p {
+  position: absolute; left: 24px; bottom: 30px; margin: 0; color: #bdc7ce;
+  font: 14px Georgia, serif; pointer-events: none;
+}

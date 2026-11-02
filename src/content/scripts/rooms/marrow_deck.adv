@@ -1,0 +1,112 @@
+# ACT II — the voyage
+room marrow_deck "The Marrow — Main Deck"
+  bg bg_deck_wide
+  width 2560
+  music music_dock
+  perspective horizon 230 ref 875 height 330
+  # The quarterdeck stairs and their banisters fill x≈1340–1880; they are an exit, not floor.
+  walk (80,875) (110,690) (1320,690) (1320,875)
+  entry 700,800
+  arrive marrow_quarterdeck 1250,820
+  arrive below_decks 955,790
+  arrive bow_fog 820,710
+  arrive crows_nest 660,720
+
+  sprite npc_quill_body at 560,800 size 0.98 idle speaker quill for quill grade "saturate(0.85) brightness(0.92)"
+  sprite prop_spyglass at 300,838 size 0.24 for spyglass
+
+  hotspot rail "the sea"
+    area 1000,330 600x190
+    nowalk
+    look "Open water, going gold at the edge. Three years I've watched this from the quay. It looks exactly the same from out here, which is either reassuring or an insult."
+    talk "I say good morning to the sea. It has heard better."
+    use "The compass says the Straits are that way. The sea says nothing at all."
+
+  hotspot forward "the foredeck"
+    area 560,320 430x230
+    stand 820,710
+    look "The foredeck and the bow. Fog is sitting on the water ahead of us like a hen on an egg, and the Marrow is steering politely round it."
+    open "Hobb has roped off the bow until the captain says otherwise. The rope has a knot in it that looks like an opinion."
+    walk "Hobb's rope across the foredeck says no. So, in fairness, does Hobb."
+    state if vane_convinced
+      exit bow_fog
+      look "The foredeck, and past it the bow, already half gone in the fog. That's my post."
+      open "I go forward, into the fog."
+
+  hotspot shrouds "the shrouds"
+    area 470,0 200x330
+    stand 660,720
+    look "The shrouds: rope ladders up to the crow's nest. Lookout's territory. I'd get as far as the second rung before Quill had me down by the collar."
+    use "Not yet. Up there is for crew who know where they're looking."
+    pickup "They're attached to the mast. Firmly. That's rather the point of them."
+    state if quill_navigator
+      look "The shrouds, rung by rope rung up to the crow's nest. Quill keeps the night watch up there now."
+      use "I wait for dark and climb. Quill watches me reach the second ratline, then comes down to fetch me before I land on the cook. We keep the watch at the foot of the mast."
+        go crows_nest
+      open: go crows_nest
+
+  hotspot crates "lashed crates"
+    area 200,340 400x300
+    stand 420,760
+    look "Crates lashed down for sea. Someone stencilled QUARANTINE STN, G.K. on them and then painted over it with a little cloud, badly, which is how you know the mark mattered."
+    open "The lids are nailed. Somebody wanted them to stay shut. I may have a tool for that."
+    state if kelp_seen
+      look "Kelp briquettes for a quarantine station, sealed with Cray's cloud. Who ships smoke? And who needs that much of it?"
+      open "I've seen inside one. That was plenty."
+
+  hotspot hatch "hatch to below decks"
+    area 790,805 330x75
+    stand 955,790
+    exit below_decks
+    look "The main hatch, propped open. A smell of tar, hammocks and something that wants very badly to be stew comes up out of it."
+    open "I go below. The ladder is steeper than it looks, and it looks steep."
+
+  hotspot quill "Quill"
+    show if not quill_navigator
+    area 470,420 190x240
+    stand 720,800
+    look "Quill, the lookout, with her back to the rail and her eyes on me rather than the horizon. She has the posture of someone guarding a door that isn't there."
+    talk "She's already looking. I get the feeling she's been looking for a while."
+      talk quill
+    give "She doesn't take things from cargo."
+
+  hotspot spyglass "spyglass"
+    show if not has spyglass and not quill_helped
+    area 240,780 140x80
+    stand 420,810
+    item spyglass
+    look "A brass spyglass, wedged between two crates where the sea put it. Dented twice."
+    pickup "I pocket the spyglass. Somebody on this deck is missing it badly."
+
+  hotspot stairs_up "quarterdeck steps"
+    show if quill_helped = true
+    area 1340,520 540x340
+    stand 1290,820
+    exit marrow_quarterdeck
+    look "The steps up to the quarterdeck. Nobody's stopping me now."
+    open "I go up."
+
+  hotspot stairs_blocked "quarterdeck steps"
+    show if not quill_helped
+    area 1340,520 540x340
+    stand 1290,820
+    look "The steps up to the quarterdeck. Quill is standing where the rail meets them, which is not an accident."
+    open "Quill puts a hand on the rail. “Crew aft of the mast. You're not crew.”"
+    use "Not while she's standing there, I'm not."
+    walk "Quill shakes her head before I've taken a step."
+
+  use crowbar on crates if not kelp_seen
+    "I lever up a lid. No cargo: dried kelp, pressed into bricks, each one stamped with a little cloud. Cray's cloud. Who ships smoke? I nail it back before anyone asks me."
+    set kelp_seen
+    sound pickup
+  use crowbar on crates
+    "Once was enough. The kelp isn't going to explain itself a second time."
+  use sextant on quill if vane_terms
+    "I hold out Pell's sextant. Quill looks at it, and then at me, and doesn't take it straight away."
+    talk quill at sextant
+  use sextant on quill
+    "She turns it over and hands it back. “Pell's. What am I meant to navigate, cargo? Your feelings?”"
+  use manifest on quill
+    "She skims it. “Twenty-two names and a navigator who wasn't drowned. Show it to someone who's lost somebody, cargo. Not me.”"
+  use pell_log on quill
+    "She won't open it. “That's the captain's to read. Pell would've said so, if he'd finished saying things.”"

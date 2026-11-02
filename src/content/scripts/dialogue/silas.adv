@@ -1,0 +1,21 @@
+dialogue silas
+  node root silas "The clerk. Silas Cray, of Cray & Co. I ship things, I insure things, and now and then I collect things. You're after the last berth on the Marrow. I've bought it."
+    > "I still haven't come round." if silas_offer = true and not silas_refused -> refuse
+    > "The berth isn't yours to sell." -> hard
+    > "What do you want for it?" -> compass
+    > "Excuse me." -> bye
+  node compass silas "Your compass. Your grandfather made it, your father hid it, and you carry it about like a pocket watch that's lost its nerve. Give it to me and the berth is yours."
+    > "Why do you want it?" -> why
+    > "No." -> refuse
+  node why silas "Because it points somewhere, and I collect things that point. Other men collect beetles. Mine is the more profitable hobby."
+    > "You'd take it anyway." -> hard
+    > "No." -> refuse
+  node hard silas "Take? Taking leaves a record, and I'm very fond of the ledger as it is. No, I'll wait. Men who want to sail always come round."
+    > "Then I'll swim." -> swim
+    > "We'll see." -> bye
+  node swim silas "Swim, then. The Straits are lovely this time of year. Ask your father."
+    set silas_refused
+  node refuse silas "No. Your father said that too. Such a family for one-syllable answers. Good night, clerk."
+    set silas_refused
+  node bye silas "Run along. The bell won't wait, and neither will I. Well. I will. I'm very patient."
+    set silas_offer

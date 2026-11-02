@@ -1,0 +1,130 @@
+room salt_camp "Gullet Key — the Salt Camp"
+  bg bg_saltcamp_wide
+  width 2560
+  music music_dock
+  perspective horizon 312 ref 875 height 380
+  walk (60,878) (120,760) (1100,740) (1500,690) (1940,700) (1950,815) (2470,815) (2500,878)
+  entry 1500,800
+  arrive weather_works 1500,800
+  arrive reef_wreck 260,820
+
+  sprite npc_tamhobb_body at 520,790 size 1.05 idle speaker tamhobb for tamhobb grade "saturate(0.88) brightness(0.95)"
+  sprite npc_pike_body at 1700,760 size 0.95 flip idle speaker pike for pike grade "saturate(0.45) brightness(0.95)"
+  sprite npc_ansel_body at 1150,780 size 1 idle speaker ansel for ansel grade "saturate(0.88) brightness(0.95)"
+  sprite npc_quill_body at 1880,810 size 0.98 flip idle speaker quill for quill grade "saturate(0.88) brightness(0.95)"
+
+  scene if not cell_scene
+    set cell_scene
+    talk pike at landed
+
+  hotspot pans "the salt pans"
+    area 0,480 1150x260
+    nowalk
+    look "Salt pans, raked white in the sun. A hundred and thirty sailors have spent three years turning the sea into something you can sell. Cray sells it."
+    pickup "I lick a finger and taste. Salt. Three years of it."
+
+  hotspot tents "the tents"
+    area 690,350 1290x270
+    nowalk
+    look "Patched tents in rows, neat as a ledger. Somebody has sewn a name over every doorway, so nobody forgets whose is whose. Or who they are."
+
+  hotspot washing "the washing"
+    area 1000,430 680x140
+    nowalk
+    look "Shirts on a line. Every few days one goes missing and turns up later as part of a flag. Nobody complains. I gather it's an honour."
+
+  hotspot flats "the reef flats"
+    area 0,300 560x180
+    stand 260,820
+    look "The reef flats, running out to the lagoon in a mile of coral and sudden deep pockets. Somebody who'd crossed them a hundred times might know the way."
+    open "Not without somebody who knows where the holes are. The holes are very patient."
+    walk "Not without somebody who knows where the holes are. The holes are very patient."
+    state if ansel_met
+      exit reef_wreck
+      look "The reef flats, staked across to the wreck at low tide. My father's road. He goes wrong at the third stake."
+      open "We cross the flats, stake by stake. At the third one I don't follow my father."
+
+  hotspot hut "the store hut"
+    area 1990,280 570x520
+    stand 2100,840
+    look "A stout store hut with a barred window and a padlock the size of a ham. Inside, pending inspection, a navigator, looking out at me through the bars."
+    open "Padlocked. Pike has the key on a string round his neck, next to his whistle."
+    talk "I go to the bars."
+      talk quill3 at hut
+    pull "The padlock is not open to argument. Pike, on the other hand, is open to paperwork."
+    state if quill_free
+      look "The store hut, open now, empty but for salt fish and a tremendous sense of anticlimax."
+      talk "Nobody in there now but the fish."
+        nothing
+
+  hotspot tamhobb "Tam Hobb"
+    area 440,470 170x320
+    stand 700,800
+    look "A big man raking salt, with a shaved head and a black beard and a face I've already seen, older and sadder, at the Marrow's mess table."
+    talk "He leans on his rake and looks at me as if I'm a knot somebody tied badly."
+      talk tamhobb
+    give "“Nothing in here's mine to keep, clerk. Hang on to it.”"
+
+  hotspot pike "Pike"
+    area 1620,480 160x280
+    stand 1560,790
+    look "Pike, on camp duty, clutching his clipboard and avoiding Quill's eye through the bars. He looks like a man who has done his job and hates it."
+    talk "He snaps to attention, slightly less snappily than before."
+      talk pike at camp
+    give "“Only forms, sir. Sorry, sir.”"
+    state if quill_free
+      talk: talk pike at done
+
+  hotspot ansel "Ansel Fenn"
+    show if quill_free
+    area 1060,450 190x330
+    stand 1300,790
+    look "My father. Sunburnt to the colour of a ship's biscuit, beard like a burst mattress, a needle in his lapel and an L on his cuff. He looks exactly the same and nothing like."
+    talk "He's grinning. He hasn't stopped since he dropped the flag."
+      talk ansel
+    give "“For me? Is it a flag? It's not a flag. Pity.”"
+    state if ansel_met
+      talk: talk ansel at hub
+
+  hotspot quill "Quill"
+    show if quill_free
+    area 1800,520 170x290
+    stand 1740,800
+    look "Quill, free, with salt in her hair and a look on her face I'd like to file somewhere safe."
+    talk "She's already looking at me. She's been looking at me since the boat."
+      talk quill3 at camp
+    give "“Keep it, cargo. You're the one with pockets.”"
+    state if has flag16
+      talk: talk quill3 at flag
+
+  use stamp on bill if knows_form9 and not form9
+    "I turn the Bill of Health over and write on the back, in my best customs hand: FORM 9. RELEASE OF DETAINED PERSONS UPON INSPECTION. Then I stamp it, which makes it true."
+    set form9
+    sound chime
+  use stamp on bill if form9
+    "Both sides stamped. Any more and it'll be mostly stamp."
+  use bill on pike if form9 and not quill_free
+    "I hand Pike the Bill of Health, back side up."
+    take bill
+    set quill_free
+    sound chime
+    talk pike at form9
+  use bill on pike if knows_form9 and not quill_free
+    "“That's your Bill of Health, sir. It's lovely. It isn't a Form 9.” He looks at its blank back, and then at me, hopefully."
+  use bill on pike
+    "“You're inspected, sir. You're fine. It's the lady who's pending.”"
+  use bill on hut
+    "The padlock can't read. Pike can."
+  use crowbar on hut
+    "I measure the crowbar against the padlock. Then I look at Pike's whistle, and at the forty Weather men it would fetch. A form, then."
+  use flag16 on ansel
+    "“Not to me, son. Up the mast. That's what they're for.”"
+  use compass on ansel
+    "He laughs out loud. “Still pointing at the Old Nail. Some of us are very loyal.”"
+  use ansel_log on ansel
+    "He reads the last page and hands it back rather quickly. “You weren't meant to read that one. …I'm glad you did. Keep it.”"
+  use stamp on pike
+    "He holds out his hand to be stamped, hopefully. I'm tempted. I'm a professional."
+  use ansel_log on tamhobb
+    "He finds his own name in it and taps it twice. “Still here, Captain,” he says to the page."
+  combos quill_combos

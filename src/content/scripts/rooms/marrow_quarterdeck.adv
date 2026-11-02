@@ -1,0 +1,64 @@
+room marrow_quarterdeck "The Marrow — Quarterdeck"
+  bg bg_quarterdeck_wide
+  width 2560
+  music music_dock
+  perspective horizon 250 ref 875 height 320
+  walk (100,875) (150,690) (2380,700) (2500,875)
+  entry 300,800
+  arrive marrow_deck 1700,790
+  arrive marrow_cabin 2250,800
+
+  # Quill, navigator, taking her sights by the binnacle.
+  sprite npc_quill_body at 1300,720 size 0.98 flip idle speaker quill for quill grade "saturate(0.85) brightness(0.92)"
+  # Vane comes up to the wheel once she has decided.
+  sprite npc_vane_body at 560,720 size 1 idle speaker vane for vane grade "saturate(0.85) brightness(0.9)"
+
+  hotspot seas "the Straits"
+    area 1400,180 900x280
+    nowalk
+    look "The Straits, ahead and to starboard, grey where the weather sits on them. Six ships in three years went in there. None of them came out with a crew."
+    use "I hold the compass up. The needle settles, patient as a dog at a door."
+
+  hotspot wheel "the wheel"
+    area 600,50 320x360
+    stand 800,790
+    look "The wheel, lashed to the captain's heading. It's bigger than it looks from the quay, like most things that matter."
+    use "I put a hand on it. The ship doesn't notice, but I do."
+    turnon "There's nothing to turn on. The ship is already doing it."
+
+  hotspot binnacle "the binnacle"
+    area 980,170 200x330
+    stand 1080,790
+    look "The binnacle. A proper ship's compass in brass and glass, swinging slow and honest. I take out my father's and hold them side by side. They disagree."
+    use "The ship's compass points north. Mine points at the Straits. One of them is wrong, and the ship's compass has never lost a ship."
+    open "Sealed. You don't open a binnacle any more than you open a doctor."
+
+  hotspot cabin_door "companionway to the cabin"
+    area 2300,350 200x380
+    stand 2250,800
+    exit marrow_cabin
+    look "A companionway at the stern, down to the captain's cabin and the charts."
+    open "I go down, knocking on the way. A licence entitles me to knock."
+
+  hotspot stairs_down "steps to the deck"
+    area 40,520 220x300
+    stand 300,810
+    exit marrow_deck
+    look "The steps back down to the main deck."
+
+  hotspot quill "Quill"
+    show if quill_navigator
+    area 1210,420 180x280
+    stand 1450,780
+    look "Quill, navigator, with Pell's sextant on a cord round her neck. She keeps touching it to make sure it's still there and pretending she isn't."
+    talk "She looks up from her figures as if she'd heard me coming a mile off. She probably had."
+      talk quill at nav
+    give "“If it isn't a star or a bearing, cargo, I don't need it.”"
+
+  hotspot vane "Captain Vane"
+    show if vane_convinced
+    area 470,400 190x300
+    stand 760,780
+    look "Captain Vane at the head of her quarterdeck, hat on, watching the fog come to meet us."
+    talk "“Why are you still aft, clerk? The bow. The fog won't wait, and neither will the reef.”"
+    give "“The only thing I want from you now is bearings.”"

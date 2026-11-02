@@ -1,0 +1,41 @@
+# The night watch (crows_nest). Optional; no puzzle, just the two of them and three stars.
+dialogue watch
+  node root quill "Took you long enough. Most cargo is sick on the second ratline."
+    > "I was sick on the first. I'm efficient." -> laugh
+    > "I wanted to see what you see up here." -> stars
+      add aff 1
+  node laugh narrator "She laughs, despite herself, and then looks annoyed with both of us."
+    -> stars
+  node stars quill "Three stars. The Hook, the Lantern, and the one Pell called the Liar because it moves. Learn those and you'll never be lost."
+    > "Which one's the Liar?" -> liar
+    > "What do you see, when you look out?" -> see
+  node liar quill "That one. No. That one. …See? Liar."
+    > "What do you see, when you look out?" -> see
+  node see quill "Everywhere I haven't been yet. …What do you see?"
+    > "Ink. Every ship I ever stamped out of Vela. I used to wonder where they went." -> ink
+      add aff 1
+    > "Mostly the mast. It's very close." -> mast
+  node ink quill "Well. Now you're one of them."
+    -> father
+  node mast quill "It does that."
+    -> father
+  node father quill "Your father. You think he's alive."
+    > "He left the compass for me. You don't do that if you're planning to be dead." -> we
+      add aff 1
+    > "He owes me three years of birthdays. I intend to collect." -> collect
+  node collect quill "With interest. You're a clerk; you'll have worked it out to the penny."
+    -> we
+  node we quill "Then we'll find out. …We. Don't read into it."
+    > "I'm a clerk. I only read what's written." -> written
+      set night_watch
+    > "(Say nothing. Watch the Liar.)" -> quiet
+      set night_watch
+      add aff 1
+  node written quill "Then don't write it down either. …Go to bed, cargo. The Liar will still be here. Roughly."
+  node quiet narrator "We watch the Liar for a long time. It moves, as advertised. Neither of us mentions that she's stopped calling me cargo for the last hour."
+  node after quill "Still here? The stars don't need supervising, clerk. Well. Not by you."
+    > "Show me the Hook again." -> hook
+    > "Goodnight, Quill." -> night
+  node hook quill "There. Like a question mark somebody forgot to finish. You'd hate it."
+    > "Goodnight, Quill." -> night
+  node night quill "Night, cargo. Mind the second ratline."

@@ -1,0 +1,29 @@
+# Silas Cray, Acting Harbourmaster, in Bramwick's chair.
+dialogue cray4
+  node root silas "The clerk! Back from the dead, or at least from the sea, which in my experience is worse. I'm Acting Harbourmaster. Bramwick was suspended for, let me see… “conduct”. Do sit."
+    -> hub
+  node hub silas "Well? I bill by the hour, and tonight the harbour's paying, so do take your time."
+    > "You emptied six ships." if not seen:cray4.six -> six
+    > "You'll never get the compass." if not seen:cray4.compass -> compass
+    > "What happens at the dawn bell?" if not seen:cray4.bell -> bell
+    > "Where's Bramwick?" if not seen:cray4.where -> where
+    > "You told me to swim." if silas_refused and not seen:cray4.swim -> swim
+    > "I've got the harbour ledger." if has ledger and not seen:cray4.ledger -> ledger
+    > "Goodnight, Acting Harbourmaster." -> bye
+  node six silas "I insured six ships. The weather emptied them. I have the paperwork."
+    -> smile
+  node smile narrator "He smiles, the way a locked drawer smiles."
+    -> always
+  node always silas "I always have the paperwork, clerk. That's the difference between us. You file it. I write it."
+    -> hub
+  node compass silas "I don't need it now. You've shown the whole Straits where it points. A secret everybody knows isn't a treasure, clerk. It's geography."
+    -> hub
+  node bell silas "At the bell I close the book. The Marrow: lost, all hands, plague. Nobody questions a plague ship. They're too frightened of catching the answer."
+    -> hub
+  node where silas "Drinking at the Keel with an old navigator. Suspended men find each other, like odd socks. I let him keep his hat. I'm not a monster; I'm an administrator."
+    -> hub
+  node swim silas "And you took a pirate ship instead. Less heroic, but drier, and your licence was impeccable. I checked. I check everything."
+    -> hub
+  node ledger silas "My dues, in Bramwick's hand. Bring it to the Keel at dawn, clerk. I'll be raising a glass to the Marrow's memory, and you can raise that."
+    -> hub
+  node bye silas "Mind the bell, clerk. It rings for everyone, but this morning I've asked it to ring mostly for you."

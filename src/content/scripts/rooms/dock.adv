@@ -1,0 +1,190 @@
+room dock "Vela Docks"
+  bg bg_dock_wide
+  width 2560
+  music music_dock
+  ambience gulls
+  # Calibrated against the tavern door (~2.1 m) and the near bollards.
+  perspective horizon 335 ref 875 height 345
+  # Pier edge and bollards on the left; the rail, customs steps and raised platform on the
+  # right. The dark scaffold beyond x=2290 is foreground, not floor.
+  walk (720,875) (860,805) (965,712) (1075,555) (1640,550) (1720,600) (1820,640) (2080,675) (2290,750) (2290,875)
+  entry 1100,800
+  arrive tavern 1390,600
+  arrive office 2000,700
+  arrive alley 1560,700
+  arrive village 1800,720
+  arrive pier_end 1110,575
+
+  sprite prop_crate at 1000,835 size 0.42 for crate
+  sprite prop_crowbar at 885,812 size 0.5 for crowbar
+  # On the Marrow's foredeck, behind her rail; the hull (occluder) hides them below the waist.
+  sprite npc_quill_body at 505,448 size 1.9 flip idle speaker quill for quill_rail grade "saturate(0.85) brightness(1)"
+  sprite npc_ansel_body at 395,446 size 1.9 flip idle speaker ansel for ansel_rail grade "saturate(0.85) brightness(1)"
+  # The quarantine flag on the harbour boom, until Bramwick has it down.
+  sprite prop_qflag at 700,478 size 0.9 for boom grade "saturate(0.8) brightness(0.8)" if not quarantine_lifted
+  # On the pier once the quarantine's lifted.
+  sprite npc_quill_body at 975,835 size 0.98 idle speaker quill for quill_pier grade "saturate(0.85) brightness(0.9)"
+
+  # The Marrow's bulwark and hull, below her rail.
+  occluder floor 452 (250,398) (420,401) (560,410) (600,432) (580,540) (250,560)
+
+  hotspot ship "the Marrow"
+    area (0,0) (650,0) (700,550) (0,600)
+    stand 880,830
+    look "The Marrow. A licensed pirate brig, which in Port Vela is a perfectly respectable thing to be. She sails for the Straits at dawn."
+    talk "I call up to the deck. Someone calls back: “Licence first, clerk!” Even our pirates have standards."
+    open "I'm not opening a ship. Ships open themselves, usually at the worst moment."
+    pickup "She's a little big for my satchel."
+    state if act 4 and quarantine_lifted
+      name "the Marrow"
+      look "The Marrow, warped in to the pier now the boom's open. Her crew are ashore, being hugged by people who'd stopped expecting to hug anybody."
+      talk "Everyone I'd want to talk to has come ashore."
+        nothing
+    state if act 4
+      name "the Marrow"
+      look "The Marrow, at anchor past the boom with a hundred and thirty people aboard who were written down as lost. Close enough to shout to. Not close enough to step onto."
+      talk "I call up to the rail."
+        talk quill4 at rail
+
+  hotspot crate "crate of lemons"
+    show if act 1
+    area 925,695 150x145
+    stand 1110,840
+    look "Lemons for the Marrow's galley, packed so tight they've become a single yellow opinion. Not one will come out by hand."
+    open "It's already open. The lemons are the problem. They won't budge."
+    pickup "I try to prise one loose. The lemons hold ranks like a press gang."
+      sound deny
+    push "It shifts an inch. The lemons inside make a sound like applause."
+    pull "I pull. The crate remains, smugly, where it is."
+    state if crate_open = true
+      name "crate of lemons"
+      look "There's a lemon-shaped gap where my lemon used to be. The rest are holding ranks."
+      open "One lemon is enough. I'm a clerk, not a quartermaster."
+      pickup "One lemon is enough. I'm a clerk, not a quartermaster."
+
+  hotspot crowbar "crowbar"
+    show if act 1 and not has crowbar
+    area 830,650 110x170
+    stand 915,792
+    item crowbar
+    look "A crowbar, leaning against a bollard as though it works here."
+    pickup "I take the crowbar. Nobody on a pier at night asks why."
+
+  hotspot office_door "customs house"
+    area 2080,190 140x350
+    stand 2000,700
+    exit office
+    look "The customs house. My desk is in there, and my employer, and my future — in roughly that order."
+    use "I'd rather go in than explain myself out here."
+    open "I go in. Paperwork waits for no man."
+    state if act 4 and not inquiry_done
+      look "The customs house. A lamp is burning in Bramwick's window, and the man under it isn't Bramwick."
+
+  hotspot tavern_door "tavern"
+    area 1310,320 160x200
+    stand 1390,600
+    exit tavern
+    look "The Salty Keel. Warm light, loud voices, and half the harbour drinking to the Marrow's voyage."
+    use "A drink would be sensible. I have never been accused of that."
+    open "I push the door. It gives, the way tavern doors always do."
+    state if act 4
+      look "The Salty Keel. Somebody inside is singing a song about the Marrow. Somebody else is telling him she isn't dead yet, so it's the wrong song."
+
+  hotspot alley_mouth "Chandler's Lane"
+    area 1540,330 170x250
+    stand 1560,700
+    exit alley
+    look "A gap between two warehouses that the town calls a lane and the rain calls a river. It leads to the chandler's, and to the loft above it."
+    open "I turn into the lane. It smells of rope and old rain."
+
+  hotspot village_steps "steps to Upper Town"
+    show if act 1
+    area 1730,300 190x280
+    stand 1800,700
+    exit village
+    look "A flight of stone steps going up between two warehouses, to the houses above the waterfront. Somebody's washing is up there and somebody's lamp is lit."
+    open "I go up the steps into the town."
+
+  hotspot water "harbour water"
+    area 0,250 760x630
+    nowalk
+    look "Black water holding the town's lights. Past the headland it becomes the Straits, where my father's ship was last seen. His compass is in my pocket. It has never once pointed north, and it isn't starting tonight."
+    talk "I tell the water I'm coming. It doesn't seem worried."
+    use "I could drink it. I have had worse from the tavern."
+    state if act 4
+      look "Black water, and the Marrow on it. Quarantine is a very precise distance: exactly too far to jump. The compass in my pocket points out past her, at a reef I've actually seen."
+      talk "I tell the water I'm not done yet. It laps, unconvinced."
+
+  hotspot quill_rail "Quill"
+    show if act 4 and not quarantine_lifted
+    area 465,305 85x100
+    stand 880,830
+    look "Quill, on the Marrow's rail, elbows on the bulwark, watching the town as if it owes her something. Every so often she checks that I'm still here."
+    talk "I cup my hands and call up to her."
+      talk quill4 at rail
+    give "“Throw it, cargo. No. Don't throw it. You throw like a clerk.”"
+    state if not farewell
+      talk: talk quill4
+
+  hotspot ansel_rail "Ansel Fenn"
+    show if act 4 and not quarantine_lifted
+    area 350,305 90x100
+    stand 880,830
+    look "My father, at the rail beside Quill, waving at the town in general. The town, in general, doesn't know yet."
+    talk "I call up. He waves with both arms, as though I might otherwise miss him."
+      talk ansel4
+    give "“Keep it, son! I'm contagious. Allegedly.”"
+
+  hotspot boom "the quarantine flag"
+    show if act 4
+    area 640,380 120x110
+    nowalk
+    look "A yellow flag on the harbour boom. Quarantine: nobody lands, by order of the Acting Harbourmaster. The ink on that order is about an hour old, and so is his title."
+    pull "It's across fifty yards of water. And a regulation. The regulation is the wider of the two."
+    pickup "Not from here. Flags like that come down with a stamp, not a swim."
+    state if quarantine_lifted
+      name "the harbour boom"
+      look "The harbour boom, swung open. The yellow flag's gone. Somebody has run a pair of long johns up in its place, which I gather is a local tradition."
+
+  hotspot pier_way "the pier end"
+    show if act 4
+    area 850,455 230x120
+    stand 1100,570
+    exit pier_end
+    look "The pier runs on past the lamp to the pier end and the lighthouse, where the deep-water boats tie up. Lanterns are moving out there. Somebody's unloading at this hour."
+    open "I walk out along the pier, toward the light."
+
+  hotspot steps_shut "steps to Upper Town"
+    show if act 4
+    area 1730,300 190x280
+    stand 1800,700
+    look "The steps up to Upper Town. Nine shirts on a line up there, and an old woman sweeping a clean step. I'm not knocking on anybody's door with “nearly”."
+    open "Not yet. When I go up those steps I want to be carrying the ledger, corrected."
+    walk "Not yet. When I go up those steps I want to be carrying the ledger, corrected."
+
+  hotspot quill_pier "Quill"
+    show if act 4 and quarantine_lifted
+    area 915,530 125x300
+    stand 1110,830
+    look "Quill, ashore at last, standing on the pier as if it might pitch at any moment. She's keeping one hand on a bollard, in case."
+    talk "She's already turned round."
+      talk quill4 at pier
+    give "“Give me something when you've finished, cargo. The book first.”"
+    state if ledger_written
+      talk: talk quill4 at dawn
+
+  use ledger on quill_rail
+    "I hold up the ledger. Quill holds up a thumb, then, after a moment, the other one."
+  use compass on quill_rail
+    "I hold up the compass. She points past me, out to sea, at the Old Nail, and shrugs: same as ever."
+  use ansel_log on ansel_rail
+    "I hold up his log. He salutes it. Then he salutes me, slightly less formally."
+  use stamp on boom
+    "The stamp's no good to me out here. It's the harbourmaster's stamp that lifts a quarantine, and the harbourmaster's suspended."
+  use ledger on quill_pier if ledger_written
+    "She reads my entry upside down, and nods at it once, the way she'd nod at a good bearing."
+  use crowbar on crate if not crate_open
+    "I work the crowbar between the lemons and lean. One pops free like a cork. The Marrow's cook will never miss it, and if he does, he's a pirate."
+    give lemon
+    set crate_open
+    sound pickup

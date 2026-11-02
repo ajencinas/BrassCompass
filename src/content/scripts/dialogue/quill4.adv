@@ -1,0 +1,85 @@
+# Quill, on the Marrow's rail; then the pier at dawn.
+dialogue quill4
+  node farewell quill "Yellow flag on the harbour boom, cargo. Quarantine. Nobody off the Marrow sets foot in Port Vela, and the harbour guns have been told so. In writing."
+    -> farewell2
+  node farewell2 quill "And if she's still at anchor when the dawn bell rings, Cray writes her down as a plague ship, and the guns get to practise. So we sail at dawn. Either way."
+    > "Then I have until dawn." -> until
+      add aff 1
+    > "I got a licence, a berth and a pirate captain in one night. Dawn's ages away." -> ages
+    > "Come ashore. I'll write you a pass." -> pass
+  node ages quill "That was the easy night, cargo. Nobody was trying to drown you on paper."
+    -> until
+  node pass quill "Signed by who? There's a lamp burning in Bramwick's window, and it isn't Bramwick. He's been up there since we dropped anchor. Writing."
+    -> until
+  node until quill "You have until dawn."
+    -> beat
+  node beat narrator "She looks at me a moment longer than the harbour needs."
+    -> name
+  node name quill "Fenn."
+    -> noticed
+  node noticed narrator "It's the first time she has ever said it. She sees me notice. I see her see me notice, and she glares at the lighthouse as if it started it."
+    set farewell
+    -> late
+  node late quill "Don't be late."
+    > "I'm never late. I'm a civil servant." -> civil
+    > "Say it again." -> again
+      add aff 1
+    > "(Nod, and go.)" -> END
+  node civil quill "You're never early either. I've noticed. Go."
+  node again quill "No. It's rationed. …Go on. The dawn isn't getting any later."
+  # Talking up to the rail afterwards.
+  node rail quill "Still here, cargo? The bell won't wait because you look worried. I've asked bells. They don't."
+    > "We did it. Cray's finished." if inquiry_done -> done
+    > "How's my father?" if not seen:quill4.dad -> dad
+    > "How do I beat a man who writes everything down?" if not inquiry_done -> plan
+    > "Show me the Liar again." if night_watch and not seen:quill4.liar -> liar
+      add aff 1
+    > "I'll be back before dawn." -> back
+  node done quill "I heard. The whole harbour heard; Hobb cried on the capstan. Now get that flag off the boom, cargo. I want to stand on something that doesn't move."
+  node dad quill "Up and down the rail. He's moved flag sixteen to our masthead so the town can see it. Vane let him. I've never seen Vane let anybody do anything."
+  node plan quill "You're asking the lookout? Fine. He lies on paper, so you beat him on paper. Find every page he wrote and hold it up to the light. Start with Bramwick; he's the one who knows the rules."
+  node liar quill "There. Low over the lighthouse. …It's moved since I showed you. It always moves. I like that about it. Go on. Go and be a clerk at somebody."
+  node back quill "I know. I'm counting on it. I'm also counting the bells, so don't test me."
+  # On the pier, once the quarantine's lifted and before the ledger's put right.
+  node pier quill "Solid ground. I hate it. It just sits there. …The book, cargo. Fix the book, then come and find me."
+    > "You came ashore." -> ashore
+    > "On my way." -> END
+  node ashore quill "Vane said stretch my legs. I've stretched them as far as this bollard. It's a good bollard. I'm keeping it."
+  # Dawn, on the pier: the choice.
+  node dawn narrator "The sky over the headland has gone the colour of weak tea. Quill is sitting on a bollard at the end of the pier, swinging one bare foot over the water, waiting for me as if she isn't."
+    -> sea
+  node sea quill "Well, cargo. Sea or desk?"
+    > "You called me Fenn. Earlier." if not seen:quill4.once -> once
+    > "Sign me on. Purser. I'll keep the books and you'll keep the stars." -> purser
+    > "Someone has to keep the ledger honest. Come back every season?" -> season
+  node once quill "Once. It's rationed, I told you. I'm saving the rest for when you've earned them."
+    -> sea2
+  node sea2 quill "So. Sea or desk? The tide doesn't care. I do. Don't tell the tide."
+    > "Sign me on. Purser. I'll keep the books and you'll keep the stars." -> purser
+    > "Someone has to keep the ledger honest. Come back every season?" -> season
+  node purser narrator "She tries very hard not to smile, and loses by a distance."
+    -> biscuits
+  node biscuits quill "Purser. Vane will make you count the biscuits."
+    > "Then I'll count them beautifully." -> aboard
+    > "(Kiss her.)" if aff >= 14 -> pkiss
+  node pkiss narrator "I kiss her, on the pier, in front of the customs house, the lighthouse, and my father, who has found a reason to coil a rope very slowly nearby."
+    -> logging
+  node logging ansel "Don't mind me. I'm logging it."
+    -> aboard
+  node aboard quill "Get aboard, then, cargo. The tide's turning. So, apparently, are you."
+    > "(Go aboard.)" -> END
+      set ending_pirate
+      act 4
+  node season narrator "She looks at the customs house for a long moment, and then back at me."
+    -> every
+  node every quill "Every season. I'll bring you a new star each time. You can write it down."
+    > "I'll underline it." if night_watch -> quay
+      add aff 1
+    > "I'll stamp it." -> quay
+    > "(Kiss her.)" if aff >= 14 -> dkiss
+  node dkiss narrator "I kiss her. Behind us the customs-house window bangs open, Bramwick says “Regulation—”, Marta says “Shut that window, you old fool”, and he does. Slowly."
+    -> quay
+  node quay quill "Be on the quay when we come in. Don't be late."
+    > "(Watch her go.)" -> END
+      set ending_desk
+      act 4

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The Brass Compass</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="stage">
+      <canvas id="game" tabindex="0" aria-label="The Brass Compass adventure game. Tab cycles interactive targets, arrow keys move focus, Enter activates, and Escape pauses."></canvas>
+    </div>
+    <div id="boot">
+      <div class="boot-inner">
+        <div class="boot-title">THE BRASS COMPASS</div>
+        <div class="boot-sub">loading the harbour…</div>
+        <div class="boot-bar"><i id="bootbar"></i></div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

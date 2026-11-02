@@ -1,0 +1,17 @@
+# Ansel: on the rail, then ashore with Rook.
+dialogue ansel4
+  node root ansel "Son! I'd come down, but I've been told I'm contagious. I feel wonderful. Apparently that's a symptom."
+    > "Rook's in the Salty Keel." if not seen:ansel4.rook -> rook
+    > "Cray means to write you down as lost again." -> again
+    > "How are the crews?" if not seen:ansel4.crews -> crews
+    > "Goodnight, Father." -> night
+  node rook ansel "Rook! Tell him he owes me a reef. No. Tell him… (he stops) tell him I'm glad. Then tell him about the reef."
+  node again ansel "Again? He'll wear the page out. He'll have to argue with my log first; you've still got it? Hold it up at anyone who disagrees. It's mostly about weather, but the weather was him."
+  node crews ansel "A hundred and thirty sailors who can see their own front doors from the deck. Nobody's sleeping. Tam Hobb tried to swim for it. His brother sat on him."
+  node night ansel "Goodnight, son. Mind the third plank on the pier; it's been loose since before you were born. I keep meaning to report it. To you, I suppose, now."
+  # Ashore, at Rook's table, after the quarantine's lifted.
+  node ashore ansel "Son! Rook owes me a reef, and he's paying in rum, which isn't legal tender. I'm not proud."
+    > "What will you do now?" -> shop
+    > "(Leave them to it.)" -> leave
+  node shop ansel "Open a shop, I think. Compasses. Every one will point at the Old Nail and be useless anywhere else. I'll sell them as souvenirs of home."
+  node leave rook "Go on, boy. Your captain and I have three years of lying to catch up on."

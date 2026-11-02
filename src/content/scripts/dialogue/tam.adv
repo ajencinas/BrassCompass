@@ -1,0 +1,21 @@
+dialogue tam
+  node root tam "You're the one going on the Marrow. Everyone says so. Is it true?"
+    > "How does everyone know?" -> know
+    > "What do you do up here?" -> do
+    > "Have you seen anything strange?" -> strange
+    > "Maybe. Goodnight." -> bye
+  node know tam "I sit on the wall and count the ships. That's my job. Everyone comes past the wall and everyone talks, and I'm small, so they forget I'm there."
+    > "What do they say?" -> strange
+    > "Good job." -> bye
+  node do tam "I count the ships. Used to be nine or ten a week. Now it's three, and two of those are the same boat going back and forth because nobody else will."
+    > "Which boat?" -> strange
+    > "That's a good tally." -> bye
+  node strange tam "The Arcadia was the biggest one ever came in here. My dad said she was so wide they had to bring her alongside in the morning light. She never came back."
+    > "Lots of ships don't." -> dad
+    > "I'm sorry." -> dad
+  node dad tam "Dad went with her. So did nine others off this street. Mum says I'm not to talk about it, so I talk about it to strangers instead."
+    > "I'll look for her." -> promise
+    > "Goodnight, Tam." -> bye
+  node promise tam "Will you? If you find her, tell them the tally's still running. Tell them I kept counting."
+    > "I'll tell them." -> bye
+  node bye tam "Watch the step. Mum says it's a killer. It's just a step."

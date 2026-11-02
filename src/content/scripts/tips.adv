@@ -1,0 +1,119 @@
+# Tips: one plain line telling the player what to do next. The first entry whose conditions
+# hold is the current tip, so each act's list runs from its last step back to its first.
+# Shown by the Tip button or H, and always on screen in tip mode.
+#
+# The compass's look text (items.ts) gives the same nudge in character; these are the
+# no-nonsense version.
+
+# Act I
+tip if act 1 and has licence and has manifest and ledger_read
+  "You have everything. Give the licence to Bramwick in the customs house."
+tip if act 1 and has licence and loft_open and not ledger_read
+  "Go up to the loft from Chandler's Lane and open the harbour ledger on the desk."
+tip if act 1 and has licence and not ledger_read
+  "The harbour ledger is in the loft above the chandler's. Use the crowbar on the bolted shutter in Chandler's Lane."
+tip if act 1 and has licence and not has manifest
+  "The chandler keeps manifest copies. Use the harbour stamp on his counter to pay his invoices."
+tip if act 1 and has licence
+  "Show Bramwick your licence: give it to him in the customs house."
+tip if act 1 and has stamp and has licence_form
+  "Use the harbour stamp on the licence form."
+tip if act 1 and has stamp
+  "Pick up a blank licence form from Bramwick's desk."
+tip if act 1 and has drawer_key
+  "Use the drawer key on Bramwick's drawer in the customs house."
+tip if act 1 and has lemon and knows_key
+  "Give the lemon to Marta in the Salty Keel."
+tip if act 1 and has lemon
+  "Ask Bramwick how a clerk could stamp a licence. Somebody in town wants a lemon."
+tip if act 1 and knows_key and has crowbar
+  "Marta wants a lemon. Use the crowbar on the lemon crate on the pier."
+tip if act 1 and knows_key
+  "Marta wants a lemon from the crate on the pier. Pick up the crowbar by the bollard first."
+tip if act 1
+  "Talk to Bramwick in the customs house (the stone building on the right) about signing on."
+# Act II
+tip if act 2 and vane_convinced
+  "Go forward to the bow (the foredeck, at the back of the main deck) and use the compass on the fog. Call the side the needle swings to."
+tip if act 2 and quill_navigator and crew_agree
+  "Give Pell's log to Captain Vane in her cabin."
+tip if act 2 and has sextant
+  "Give Pell's sextant to Quill on the main deck."
+tip if act 2 and vane_terms and dinner and not chest_open
+  "Hobb has gone to dinner. Open Pell's sea-chest below decks."
+tip if act 2 and vane_terms and dinner and not crew_agree
+  "Give the Arcadia's manifest to Hobb at the mess table below decks."
+tip if act 2 and vane_terms and not dinner
+  "Go below decks (the hatch on the main deck). Use the harbour stamp on Dorrit's stew."
+tip if act 2 and quill_helped
+  "Go up the quarterdeck steps and down the companionway to the captain's cabin. Use the compass on her chart."
+tip if act 2 and has spyglass
+  "Talk to Quill, ask how to get past, and give her back her spyglass."
+tip if act 2 and seen:quill.what
+  "Quill dropped her spyglass on deck. Look between the crates on the left."
+tip if act 2
+  "Talk to Quill, the lookout: ask her how to get past to the captain."
+# Act III
+tip if act 3 and has flag16
+  "Cross the reef flats (left of the salt camp) to the wreck, and use flag sixteen on the halyard."
+tip if act 3 and quill_free
+  "Talk to your father, Ansel, in the salt camp."
+tip if act 3 and form9
+  "Give the Bill of Health (now Form 9) to Pike."
+tip if act 3 and knows_form9
+  "Use the harbour stamp on the Bill of Health to write Form 9 on its back."
+tip if act 3 and fog_down
+  "Talk to Pike in the salt camp and ask what would release Quill."
+tip if act 3 and gate_open and has bucket_water
+  "Go through the gate to the Weather Works and use the bucket of lagoon on the great brazier."
+tip if act 3 and gate_open and has bucket
+  "Fill the bucket at the lagoon (the shore or the wreck), then use it on the great brazier."
+tip if act 3 and gate_open
+  "Pick up the bucket in the Arcadia's cabin and fill it at the lagoon."
+tip if act 3 and has bill and bill_smoked and bill_stamped and bill_signed and bill_dated
+  "Give the finished Bill of Health to Pike at the gate."
+tip if act 3 and has calendar_leaf
+  "Use the calendar leaf on the Bill of Health."
+tip if act 3 and has bill and not bill_smoked
+  "Use the Bill of Health on the fumigation brazier beside the gate."
+tip if act 3 and has bill and not bill_stamped
+  "Use the harbour stamp on the Bill of Health."
+tip if act 3 and has bill and not bill_signed
+  "Give the Bill of Health to Quill to countersign."
+tip if act 3 and has bill and pike_reading
+  "Pike's eyes are shut: pick up the calendar in his hut."
+tip if act 3 and has bill and not bill_dated
+  "Ask Pike what regulation six is, then take the calendar from his hut while he recites."
+tip if act 3 and log_read
+  "Pick up a blank Bill of Health from the pigeonholes on the desk in the Arcadia's cabin."
+tip if act 3 and hatch_open
+  "Go down the hatch and read your father's log on the desk."
+tip if act 3
+  "Use the crowbar on the jammed hatch on the wreck's deck."
+# Act IV
+tip if act 4 and ledger_written
+  "Go back to the docks and talk to Quill on the pier. Sea or desk?"
+tip if act 4 and quarantine_lifted and not iou_paid
+  "Talk to Bramwick in the Salty Keel: he has a debt to pay."
+tip if act 4 and quarantine_lifted
+  "Use the harbour stamp on the harbour ledger, in the Salty Keel."
+tip if act 4 and inquiry_done
+  "Give the harbour stamp back to Bramwick in the Salty Keel."
+tip if act 4 and has ledger and has purse and has claims_book
+  "You have the evidence. Talk to Cray in the Salty Keel and hold your inquiry."
+tip if act 4 and has requisition and req_stamped
+  "Give the stamped requisition to Nib in the counting house."
+tip if act 4 and has requisition
+  "Use the harbour stamp on the requisition."
+tip if act 4 and seen:nib.claims2 and not has claims_book
+  "Pick up a requisition from the tray on Nib's desk."
+tip if act 4 and seen:bramwick4.paper and not purse_given
+  "Talk to Old Rook in the Salty Keel: tell him his captain is alive."
+tip if act 4 and seen:bramwick4.paper and not ledger_taken
+  "The ledger is in the loft above Chandler's Lane. Use the crowbar on it to break its chain."
+tip if act 4 and seen:bramwick4.paper and not has claims_book
+  "Cray & Co. is up Chandler's Lane. Ask Nib, the clerk, for the insurance claims book."
+tip if act 4 and farewell
+  "Talk to Bramwick in the Salty Keel: ask how to get him reinstated."
+tip if act 4
+  "Talk to Quill on the Marrow's rail (the ship on the left)."

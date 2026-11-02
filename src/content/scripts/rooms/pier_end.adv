@@ -1,0 +1,85 @@
+# The far end of the harbour pier: the lighthouse, and Cray's cutter, unloading kelp.
+room pier_end "The Pier End"
+  bg bg_pierend_wide
+  width 2560
+  music music_dock
+  ambience gulls
+  perspective horizon 455 ref 875 height 330
+  walk (545,875) (560,790) (760,770) (1010,705) (1230,672) (1420,640) (1800,600) (1560,760) (1300,875)
+  entry 640,830
+
+  # Wilf, loading the hand cart; Bartle, by the lamp, whose turn it supposedly is.
+  sprite npc_weather_body at 885,765 size 1 idle speaker weather for wilf grade "saturate(0.6) brightness(0.72)" if not inquiry_done
+  sprite npc_weather_body at 1330,662 size 1 flip idle speaker weather2 for bartle grade "saturate(0.6) brightness(0.72)" if not inquiry_done
+
+  hotspot town "back along the pier"
+    area 0,360 520x120
+    stand 600,840
+    exit dock
+    look "Back along the pier, the lights of Port Vela, and somewhere among them the Salty Keel, singing."
+
+  hotspot cutter "Cray's cutter"
+    area (540,290) (900,300) (1010,480) (990,600) (780,640) (420,600) (400,520)
+    stand 830,770
+    look "A grey cutter with a cloud on her furled sail: the one that ran out of the lagoon ahead of us. Fast, neat, and built for getting home first, which is the whole of Cray's business."
+    open "There's nothing aboard but the smell of kelp and the feeling of being watched by a gangplank."
+    talk "I say something cutting to the cutter. It's the best I can do at this hour."
+
+  hotspot wilf "Weather man"
+    show if not inquiry_done
+    area 830,540 110x225
+    stand 1010,760
+    look "One of Cray's men, grey coat, yellow armband, carrying a crate of kelp to the cart as if it were a sleeping child. He is very polite and very large."
+    talk "He sets the crate down on the cart and touches his hat."
+      talk weather4
+    give "“Can't take anything without a docket, sir. Mr Cray's very strict.”"
+
+  hotspot bartle "Weather man"
+    show if not inquiry_done
+    area 1285,465 100x195
+    stand 1250,700
+    look "Another of Cray's men, by the lamp, holding a crate and a grudge. The grudge is about whose turn it is."
+    talk "He nods at his colleague. “Talk to Wilf, sir. Wilf's on menacing.”"
+      talk weather4
+    give "“Docket first, sir.”"
+
+  hotspot crates "kelp crates"
+    area 940,530 270x150
+    stand 1180,700
+    look "Crates stencilled QUARANTINE STN, G.K., with a little cloud painted over the stencil, badly, which is how you know the stencil mattered."
+    open "Nailed shut, and two large men are standing next to them, being polite in my direction."
+    state if kelp_seen
+      look "The same crates as on the Marrow's deck: QUARANTINE STN, G.K., with a cloud painted over it. I've seen what's inside. It burns like a lie."
+
+  hotspot kelp_manifest "manifest on the crate"
+    show if not has kelp_manifest and not kelp_read
+    area 990,525 150x45
+    stand 1180,700
+    item kelp_manifest
+    look "A manifest, tacked to the top crate for whoever signs for it. Nobody's signing for it. They're too busy deciding whose turn it is to be menacing."
+    pickup "While they argue about whose turn it is to be menacing, I lift the manifest off the crate. I'm customs. Manifests come to me the way cats come to people who don't want cats."
+      set kelp_proof
+
+  hotspot stack "stacked crates"
+    area 170,590 370x240
+    nowalk
+    look "More of Cray's kelp, stacked for the cart, sacked and stencilled. Enough fog for a month of Tuesdays."
+
+  hotspot lighthouse "the lighthouse"
+    area 2110,90 170x450
+    nowalk
+    look "The Vela light, turning over the harbour mouth. Three years I watched ships leave by it. Last night I came home by it. It looks smaller from the sea, which I'm told is the point."
+
+  hotspot sea "the harbour mouth"
+    area 1900,560 660x320
+    nowalk
+    look "The harbour mouth, black and moving, and past it the Straits. They don't look any different. I am, I think."
+
+  use crowbar on crates if kelp_seen
+    "I've already seen inside one of these, on the Marrow. Once was plenty. Kelp smells exactly like a lie on fire."
+  use crowbar on crates
+    "One of the Weather men clears his throat, politely, and shifts a crate to his other arm, so his hand is free. I put the crowbar away."
+  use stamp on wilf
+    "“Customs, Wilf,” says one. “Told you,” says the other. Neither of them stops unloading."
+  use kelp_manifest on wilf
+    "“You keep that, sir. It's only kelp.” He thinks about it. “Don't keep it too hard.”"

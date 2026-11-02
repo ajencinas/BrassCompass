@@ -1,0 +1,17 @@
+# The ledger, corrected at the bar.
+dialogue ledger4
+  node open narrator "I open the harbour ledger on the bar, at the page I've known by heart for three years. ARCADIA. LOST AT SEA. In Bramwick's hand, three days early."
+    -> quiet
+  node quiet narrator "The room goes quiet. Bramwick takes his hat off. Rook takes his off too, finds he isn't wearing one, and holds his mug to his chest instead."
+    > "(Write.)" -> write
+      set ledger_written
+  node write narrator "Underneath, in my best customs hand, I write: ARCADIA: returned. All hands."
+    -> stamp
+  node stamp narrator "Then I stamp it. The stamp comes down on the page like a door closing behind somebody who has come home."
+    sound chime
+    -> ending
+  node ending marta "Now that's an ending."
+    > "Not quite. There's a ship sailing at dawn." -> dawn
+    > "(Close the book.)" -> closed
+  node dawn marta "Then go and catch it, you daft article. Or don't. But go and say so to her face."
+  node closed narrator "I close the book. For the first time in three years I don't know what the next page says, and I find I like it."

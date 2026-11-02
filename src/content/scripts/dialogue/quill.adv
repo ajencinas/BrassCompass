@@ -1,0 +1,94 @@
+# Act II
+dialogue quill
+  node root quill "You're the clerk. Licence and everything. Don't get comfortable."
+    > "I'm crew now." -> crew
+    > "I need to see the captain." if not quill_helped -> captain
+    > "You must be the lookout who spots lies at two miles." if seen:tavernkeeper.crew and not seen:quill.marta -> marta
+    > "I found your spyglass." if has spyglass and seen:quill.what -> lost
+    > "What's ahead of us?" -> ahead
+    > "Nothing. Carry on." -> bye
+  node crew quill "Crew is what the captain writes in the book. You're cargo with opinions."
+    > "I need to see the captain." if not quill_helped -> captain
+    > "Fair enough." -> bye
+  node marta quill "Marta. Of course. Did she mention compliments?"
+    > "(Say nothing.)" -> learn
+      add aff 1
+    > "She said you bite." -> bite
+  node learn quill "Good. You learn fast, for cargo."
+    > "I need to see the captain." if not quill_helped -> captain
+    > "I'll leave you to the horizon." -> bye
+  node bite quill "Only cargo. Keeps the weight down."
+    > "I need to see the captain." if not quill_helped -> captain
+    > "Noted. From a safe distance." -> bye
+  node captain quill "She's aft. Past me. Crew only, and see above regarding cargo."
+    > "What would get me past?" -> what
+    > "I found your spyglass." if has spyglass and seen:quill.what -> lost
+    > "I'll find a way." -> bye
+  node what quill "Be useful. Or find my spyglass. I dropped it somewhere on deck in the dark last watch, and I've been squinting at the horizon like a mole with ambitions."
+    > "Is this it?" if has spyglass -> lost
+    > "I'll keep an eye out." -> bye
+  node lost quill "That's mine. Where did you… never mind. Give it here, and I'll forget I ever saw a clerk aft of the mast."
+    > "Here. (give the spyglass)" -> thanks
+      take spyglass
+      set quill_helped
+    > "Not yet." -> bye
+  node thanks quill "There she is. Dented twice, still honest. …You're blurrier up close. Go on, then. Captain's down the companionway at the stern."
+    > "Thank you, Quill." -> thanked
+      add aff 1
+    > "I'll put in a good word with the captain." -> goodword
+  node thanked quill "Don't thank me. Thank the deck for not eating it. And clerk? Don't tell her I lost it."
+  node goodword quill "Put in a good word for yourself. You'll need it more. And not a word about the spyglass."
+  node ahead quill "Fog, then the Straits. Then whatever's been emptying ships out there. The insurers call it weather."
+    > "And you?" -> you
+    > "Good to know." -> bye
+  node you quill "I call it rude. Weather doesn't take the crew and leave the dinner on the stove. But I'm only the lookout. For now."
+    > "For now?" -> ambition
+    > "Good to know." -> bye
+  node ambition quill "Our navigator died last winter. Somebody has to read the stars. Might as well be somebody who can see them."
+    > "Good luck." -> bye
+  node bye quill "Off you go. And stop standing like that. You're making the mast nervous."
+  # Pell's sextant, given with the captain's terms in hand (rooms.ts, marrow_deck).
+  node sextant narrator "She takes the sextant in both hands, the way you hold something that might be taken back."
+    -> swear
+  node swear quill "Pell's. …You want me to swear to your line."
+    > "I want the captain to hear it from a navigator." -> lookout
+    > "I want somebody to check my sums. You seem the type." -> sums
+  node sums quill "I am the type. But Vane won't take a lookout's word on the reef, and I'm a lookout."
+    > "Not in the log, you're not." -> write
+      add aff 1
+    > "You're the best eyes on this ship." -> eyes
+  node lookout quill "I'm a lookout."
+    > "Not in the log, you're not." -> write
+      add aff 1
+    > "You're the best eyes on this ship." -> eyes
+  node write narrator "I open the Marrow's log at today's page and write, in my best customs hand: “Quill, navigator.”"
+    -> stupid
+  node stupid quill "That's the stupidest thing I've ever heard."
+    -> underline
+  node underline quill "…Underline it."
+    -> sight
+  node eyes quill "I know. It's nice to hear it from somebody with handwriting."
+    -> sight
+  node sight narrator "She brings the sun down to the horizon in the mirror, reads it off twice, and lays the figures on my father's line. They agree with it."
+    -> sworn
+  node sworn quill "The Old Nail lines up with the gap, and your needle lines up with the Old Nail. I'll swear to it. Tell the captain she has a navigator."
+    > "I'll tell her." -> END
+      take sextant
+      set quill_navigator
+    > "Tell her yourself. You've earned the look on her face." -> earned
+      take sextant
+      set quill_navigator
+      add aff 1
+  node earned quill "I'll tell her. You tell the bosun. He likes you better; you haven't stepped on his feet yet."
+  # On the quarterdeck, once she's navigator.
+  node nav quill "Navigator. It says so in the log, in a clerk's hand, so it must be true."
+    > "Will you show me the stars?" if not night_watch -> tonight
+    > "You've been crying." if vane_convinced -> salt
+    > "What happens at the reef?" if not vane_convinced -> reef
+    > "Carry on, navigator." -> carry
+  node tonight quill "Tonight. I keep the watch from the crow's nest now. Climb the shrouds when it's dark, and bring your stomach. You'll want it back."
+    > "It's a date. …A watch. It's a watch." -> carry
+  node reef quill "If the captain says yes, I steer and you stand at the bow shouting at a compass. If she says no, we go the long way and nobody ever finds out if you were right."
+    > "Then she'll have to say yes." -> carry
+  node salt quill "It's the sextant. It's got salt in it. …Get to the bow, cargo. I'll be on the wheel."
+  node carry quill "Go on. I've a sky to check, and it's bigger than you."

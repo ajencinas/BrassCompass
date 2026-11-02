@@ -1,0 +1,63 @@
+room marrow_cabin "The Marrow — Captain's Cabin"
+  bg bg_cabin_wide
+  width 2560
+  music music_office
+  perspective horizon 200 ref 875 height 430
+  # The stern window's sill and step run from x≈1840 to the right wall; keep Fenn on the
+  # planking in front of them rather than standing in the open window.
+  walk (80,875) (140,700) (1800,700) (1840,820) (2380,820) (2420,875)
+  entry 1900,845
+  arrive marrow_quarterdeck 2300,845
+
+  sprite npc_vane_body at 1520,806 size 1 idle speaker vane for vane grade "saturate(0.85) brightness(0.9)"
+
+  hotspot chart "chart table"
+    area 940,310 800x260
+    stand 1150,810
+    look "The Straits, inked at a scale that makes them look manageable. A pencil line runs north of the reef, the long way round: Pell's line, and the captain's course."
+    use "I'd need something to take a bearing with. Something that points where it likes."
+    state if vane_terms
+      look "Pell's pencil line, north of the reef. And beside it, faint and new, somebody has ruled a second line straight through. Not me. Vane."
+
+  hotspot windows "stern windows"
+    area 1150,30 780x270
+    nowalk
+    look "The wake, going back the way we came, all the way to a harbour I can no longer see. Somewhere in that white water is every reason I took this berth."
+
+  hotspot bunk "the bunk"
+    area 0,180 330x440
+    nowalk
+    look "A bunk, made with the corners of a woman who has done it herself for a long time. Under the pillow, a romance novel, face down and well read. Its bookmark is a letter from an insurance office, which says something about both."
+
+  hotspot door_out "door to the quarterdeck"
+    area 2400,200 160x560
+    stand 2340,845
+    exit marrow_quarterdeck
+    look "The door back out to the quarterdeck."
+
+  # After the chart table, so it wins where she stands in front of it.
+  hotspot vane "Captain Vane"
+    show if not vane_convinced
+    area 1430,380 190x300
+    stand 1690,800
+    look "Captain Vane. She has the coat of a woman who has been rich and the eyes of one who has been poor since."
+    talk "She looks up from the chart with the expression of someone interrupting herself."
+      talk vane
+    give "She looks at it, then at me, and waits for me to put it away."
+
+  use compass on chart if not vane_terms
+    "I set the compass on the chart. The needle swings past north as if north had insulted it, and settles on a line straight through the reef. Vane comes round the table very slowly."
+    talk vane at compass
+  use compass on chart
+    "The needle still points straight through the reef. Vane doesn't need to see it again. She needs three reasons."
+  use pell_log on vane if vane_terms and quill_navigator and crew_agree
+    "I put Pell's log on the chart table, open at the last page. Vane doesn't look down at it. She knows the handwriting from here."
+    talk vane at log
+  use pell_log on vane if vane_terms
+    "She puts a hand flat on the log without opening it. “Not yet, clerk. A navigator and a crew first. Then you can break my heart.”"
+  use pell_log on vane
+    "Her face shuts like a hatch. “That's Pell's. Put it back where you found it.”"
+  use sextant on vane
+    "“Pell's sextant.” She doesn't take it. “Give it to someone who can use it. I have someone in mind. So, I suspect, do you.”"
+  use manifest on vane
+    "She reads the names and hands it back. “Twenty-two. I know where you're going with that, clerk. Take it below, to someone who'll go there with you.”"

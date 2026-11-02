@@ -1,0 +1,68 @@
+# The fog run at the bow (rooms.ts, bow_fog). Wrong calls scrape the reef and loop back.
+dialogue bearings
+  node fog narrator "The fog closes over the bow like a lid. Somewhere aft, Quill has the wheel, and Dorrit stands halfway between us to pass the word."
+    -> one
+  node one narrator "The needle swings hard to the left of the bowsprit."
+    > "“Port!”" -> oneOk
+    > "“Starboard!”" -> oneBad
+  node oneBad dorrit "He says starboard!"
+    -> oneBad2
+  node oneBad2 hobb "He means port!"
+    -> oneBad3
+  node oneBad3 vane "He means whatever doesn't sink us!"
+    -> oneScrape
+  node oneScrape narrator "Something long and patient scrapes down the hull, from the bow to the stern, taking its time."
+    -> oneRock
+  node oneRock quill "That was a rock, cargo."
+    -> one
+  node oneOk quill "Port! Port it is!"
+    -> two
+  node two narrator "Dead ahead. The needle is perfectly still, and so is everyone."
+    > "“Steady as she goes.”" -> twoOk
+    > "“Port again!”" -> twoBad
+    > "“Is anyone else's heart doing this?”" -> heart
+  node heart hobb "Yes."
+    -> two
+  node twoBad dorrit "Port again, he says! Is that a request or a regulation?"
+    -> twoBad2
+  node twoBad2 vane "Port is where the rocks are, Mr Dorrit! Port is all rocks!"
+    -> twoScrape
+  node twoScrape narrator "The Marrow leans away from a rock close enough to sign for. Something in the galley breaks."
+    -> twoRock
+  node twoRock quill "Eyes on the needle, cargo! Not on the rocks. The rocks are my job."
+    -> two
+  node twoOk quill "Steady!"
+    -> who
+  node who vane "Who taught him that?"
+    > "(Listen.)" if night_watch -> me
+    > "(Listen.)" if not night_watch -> natural
+  node me quill "Me. Last night."
+    -> three
+  node natural quill "Nobody. He reads it off a compass like it's a form. Don't tell him."
+    -> three
+  node three narrator "Right, gently. The needle leans a hair to the right, and the rocks are close enough to read."
+    > "“Starboard, a little.”" -> threeOk
+    > "“Starboard, a lot!”" -> threeBad
+  node threeBad hobb "How much is a lot?"
+    -> threeBad2
+  node threeBad2 vane "Less than that!"
+    -> threeScrape
+  node threeScrape narrator "The bowsprit swings past the gap and back again, like a man who's forgotten which door is his."
+    -> three
+  node threeOk quill "Good!"
+    -> good
+  node good quill "That was “good”, cargo. Write it down."
+    > "Already written." -> lifts
+    > "Underlined." -> lifts
+      add aff 1
+  node lifts narrator "The fog tears open like a curtain. Inside the reef: a lagoon as flat as glass, and a ship on the rocks, heeled over, masts up."
+    -> flag
+  node flag narrator "At her masthead, somebody has run up a flag made of shirts."
+    -> vane
+  node vane vane "That's a wreck. And somebody's still flying her colours."
+    > "That's the Arcadia." -> END
+      act 2
+    > "(Look back at Quill.)" if aff >= 4 -> look
+  node look narrator "At the wheel, Quill is looking at the wreck. Then, for one second, she's looking at me."
+    > "That's the Arcadia." -> END
+      act 2
