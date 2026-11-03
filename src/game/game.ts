@@ -20,6 +20,7 @@ import type {
 import { ROOMS, START_ROOM, START_POS } from "../content/rooms";
 import { ACTS, ENDING, FIRST_ACT } from "../content/acts";
 import { defaultLine, noComboLine, itemAloneLine, targetOf, phrase, type Target } from "./lines";
+import { personHeightAt } from "./scale";
 import { ITEMS } from "../content/items";
 import { DIALOGUES } from "../content/dialogue";
 import { GLOBAL_COMBOS } from "../content/combos";
@@ -1591,10 +1592,9 @@ export class Game {
     drawText(ctx, name, x, y, { size: 20, color: "#fff3cf", align: "center", shadow: false });
   }
 
-  /** Height in pixels of a standing adult whose feet are at `y`, from the room's perspective. */
+  /** Height in pixels of a standing adult whose feet are at `y` (measured curve, else perspective). */
   private personHeight(y: number): number {
-    const p = this.room.perspective;
-    return Math.max(1, (p.refH * (y - p.horizon)) / (p.refY - p.horizon));
+    return personHeightAt(this.room, y);
   }
 
   /**

@@ -204,7 +204,7 @@ function combo(w: W, depth: number, c: Combo, scope: string): void {
  * combos is written as one `combos <group>` line.
  */
 export function room(r: Room, groupOf: (c: Combo) => { name: string; size: number } | undefined = () => undefined, comments?: Comments): string {
-  only(r, ["id", "name", "bg", "music", "walk", "entry", "arrive", "perspective", "hotspots", "combos",
+  only(r, ["id", "name", "bg", "music", "walk", "entry", "arrive", "perspective", "scale", "hotspots", "combos",
     "sprites", "occluders", "onEnter", "scenes", "ambience", "grade", "stars", "width"], "room");
   const w = new W(comments);
   w.comment(0, `room:${r.id}`);
@@ -218,6 +218,9 @@ export function room(r: Room, groupOf: (c: Combo) => { name: string; size: numbe
   const p = r.perspective;
   w.comment(1, `perspective:${r.id}`);
   w.line(1, `perspective horizon ${num(p.horizon)} ref ${num(p.refY)} height ${num(p.refH)}`);
+  for (const k of [...(r.scale ?? [])].sort((a, b) => a.y - b.y)) {
+    w.line(1, `scale ${num(k.y)} ${num(k.h)}`);
+  }
   w.comment(1, `walk:${r.id}`);
   for (const wp of r.walk) w.line(1, `walk ${poly(wp)}`);
   w.line(1, `entry ${pt(r.entry)}`);

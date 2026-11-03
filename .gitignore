@@ -24,3 +24,6 @@ cinematic/.waveform-cache/
 public/assets/scenes/
 public/assets/characters/
 public/assets/props/
+
+# Depth caches for tools/calibrate.py
+.calibration/

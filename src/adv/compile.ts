@@ -503,6 +503,13 @@ export function compile(files: SourceFile[], options: CompileOptions = {}): Comp
           room.perspective = at({ horizon, refY, refH }, lineLoc(child));
           perspective = true; leaf(); break;
         }
+        case "scale": {
+          const y = cc.num("a floor y");
+          const h = cc.num("the height in pixels of a standing adult at that y");
+          (room.scale ??= []).push({ y, h });
+          room.scale = room.scale.sort((a, b) => a.y - b.y);
+          leaf(); break;
+        }
         case "walk": (room.walk ??= []).push(poly(cc)); leaf(); break;
         case "entry": room.entry = point(cc, false); entry = true; leaf(); break;
         case "arrive": {

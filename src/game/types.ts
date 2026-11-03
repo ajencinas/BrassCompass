@@ -121,6 +121,13 @@ export interface Room {
    * depth agrees on one scale.
    */
   perspective: { horizon: number; refY: number; refH: number };
+  /**
+   * Optional measured scale curve: pixel height of a standing adult at a given floor y.
+   * When present it overrides `perspective`, which cannot fit art whose furniture and figures
+   * were not drawn on a single vanishing point. Two or more knots; interpolated linearly and
+   * extrapolated from the end segments.
+   */
+  scale?: { y: number; h: number }[];
   hotspots: Hotspot[];
   combos?: Combo[];
   /** Props and standing NPC figures composited over the background. */

@@ -4,6 +4,9 @@ room tavern "The Salty Keel"
   music music_tavern
   # Calibrated against the bar (~1.1 m), the barrels and the seated regulars.
   perspective horizon 450 ref 875 height 440
+  scale 705 268
+  scale 792 426
+  scale 880 585
   # Stops in front of the barrels, the regulars' table and the foot of the bar, which runs
   # diagonally from (1330,712) to (1800,880).
   walk (470,875) (640,790) (820,772) (850,705) (985,705) (1000,736) (1320,738) (1735,880)
