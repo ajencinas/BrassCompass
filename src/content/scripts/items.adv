@@ -3,14 +3,14 @@
 item crowbar "crowbar"
   look "A crowbar with ambitions well beyond leaning on bollards."
 
-item lemon "lemon"
-  look "A lemon from the Marrow's galley stores. Bright, sour, and currently the most valuable thing I own."
+item mushroom "jet-caps"
+  look "Jet-caps. Black-capped, wet, and worth more than they look. They grow in timber the fog has been at, and Marta will not serve her broth without them."
 
 item licence_form "licence form"
   look "A blank Seafarer's Licence. Name, rank, and a box marked “previous piracy, if any”. Worthless until it carries the harbour stamp."
 
 item drawer_key "drawer key"
-  look "Bramwick's drawer key. Lost at cards, traded for a lemon. A distinguished career, for a key."
+  look "Bramwick's drawer key. Lost at cards, traded for a handful of mushrooms. A distinguished career, for a key."
 
 item stamp "harbour stamp"
   look "The harbour stamp. Brass, heavy, and far more powerful than it looks."
@@ -30,10 +30,10 @@ item compass "brass compass"
     look "A harbour stamp and a clerk who knows where the licence forms are. Even the needle can see where this is going."
   state if act 1 and has drawer_key
     look "Bramwick's drawer key. The needle points at the customs house, or at least doesn't object to it."
-  state if act 1 and has lemon
-    look "Someone in Port Vela wanted something sour. The needle swings toward the tavern, thirsty."
+  state if act 1 and has mushroom
+    look "Someone in Port Vela wants what grows under the pier. The needle swings toward the tavern, and waits."
   state if act 1 and knows_key
-    look "Marta has the drawer key and wants a lemon. There's a galley crate of them on the pier."
+    look "Marta has the drawer key and wants jet-caps. They come up under the stacked crate on the pier."
   state if act 1
     look "My father's compass. It has never once pointed north. Tonight it leans toward the customs house: Bramwick will know how a clerk gets a licence."
   state if act 2 and vane_convinced

@@ -110,7 +110,7 @@ try {
   // Apply hot-swaps new content without touching the game state.
   await evaluate(`(() => { const ta = document.querySelector("#adv textarea");
     ta.value = ta.value.replace("    lok \\"Marta, who", "    look \\"EDITED. Marta, who"); ta.dispatchEvent(new Event("input")); })()`);
-  await evaluate("window.__game.devGoRoom('tavern'); window.__game.devGive('lemon'); window.__game.devSetFlag('knows_key', true)");
+  await evaluate("window.__game.devGoRoom('tavern'); window.__game.devGive('mushroom'); window.__game.devSetFlag('knows_key', true)");
   const before = await evaluate("JSON.stringify((({ room, inventory, flags, act }) => ({ room, inventory, flags, act }))(window.__game.devState()))");
   assert.equal(await evaluate("window.__editor.apply()"), true);
   const after = await evaluate("JSON.stringify((({ room, inventory, flags, act }) => ({ room, inventory, flags, act }))(window.__game.devState()))");
@@ -150,7 +150,7 @@ try {
   await evaluate(`(() => { const g = window.__game;
     g.sentence = { verb: "look", a: { kind: "hotspot", id: "marta", name: "Marta" }, b: null }; g.execute(); })()`);
   await ff(200);
-  await evaluate(`window.__game.runCombo("give", "lemon", { kind: "hotspot", id: "marta", name: "Marta" })`);
+  await evaluate(`window.__game.runCombo("give", "mushroom", { kind: "hotspot", id: "marta", name: "Marta" })`);
   await ff(300);
   await evaluate(`window.__game.runEffects([{ k: "talk", tree: "tavernkeeper" }])`);
   await ff(60);
@@ -178,7 +178,7 @@ try {
   await pause(300);
   const nodes = await evaluate("document.querySelectorAll('.adv-map .node').length");
   assert.ok(nodes > 40, `the act I map has nodes (${nodes})`);
-  assert.ok(await evaluate("Boolean(document.querySelector('.adv-map [data-key=\"item:lemon\"]'))"));
+  assert.ok(await evaluate("Boolean(document.querySelector('.adv-map [data-key=\"item:mushroom\"]'))"));
   assert.match(await evaluate("document.querySelector('.adv-issues').textContent"), /^No problems/, "the puzzle map finds no problems in the shipped content");
   await shot("editor-map.png");
   await evaluate(`document.querySelector('.adv-map [data-key="item:drawer_key"]').dispatchEvent(new MouseEvent("click", { bubbles: true }))`);
@@ -202,7 +202,7 @@ try {
     return ROOMS.dock.hotspots.find((h) => h.id === "crate").stand; })()`);
   assert.deepEqual(crate, { x: 1150, y: 820 }, "the drag moves the live stand point");
   const dockBuf = await evaluate("window.__editor.buffers.get('rooms/dock.adv').text");
-  assert.match(dockBuf, /hotspot crate "crate of lemons"\n(?:.*\n){2}    stand 1150,820\n/, "the drag rewrites the script line");
+  assert.match(dockBuf, /hotspot crate "stacked crate"\n(?:.*\n){2}    stand 1150,820\n/, "the drag rewrites the script line");
   await evaluate("window.__game.devHandle = { x: 1150, y: 820 }; window.__game.render()");
   await shot("editor-overlay.png");
   // Put it back without saving.

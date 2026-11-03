@@ -37,8 +37,8 @@ dialogue bramwick4
   node took marta "Took you long enough."
     -> crying
   node crying narrator "She's crying. Everyone in the Salty Keel can see she's crying."
-    -> lemons
-  node lemons marta "It's the lemons. Somebody's been cutting lemons."
+    -> onions
+  node onions marta "It's the onions. Somebody's been cutting onions."
     -> back
   node back bramwick "One entry still wants correcting, Fenn, and it shouldn't be in my hand. Use it. Then bring it back. Clerks always bring them back."
   # The IOU: talking to him once the quarantine is lifted.

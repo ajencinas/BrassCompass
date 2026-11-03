@@ -124,8 +124,8 @@ room office "Customs House"
     talk bramwick at confess
   use licence on bramwick
     "Bramwick reads the licence and approves of it. “The licence is fine. The berth is Mr Cray's.” He slides it back. “The Arcadia's manifest copy, Fenn; the chandler keeps one. And read the harbour ledger yourself. Don't let me read it to you.”"
-  use lemon on bramwick
-    "He looks at the lemon. “I am not buying fruit. I am a harbourmaster.”"
+  use mushroom on bramwick
+    "He looks at the mushrooms. “I am not buying produce. I am a harbourmaster.”"
   use licence_form on bramwick
     "“It wants the harbour stamp, Fenn, which I cannot apply after the bell.” He stares very hard at his own drawer."
   use stamp on bramwick

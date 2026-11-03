@@ -444,7 +444,7 @@ try {
   await click(390, 960); // Use
   await clickItem("crowbar");
   await clickHotspot("crate");
-  await has("lemon");
+  await has("mushroom");
   assert.equal(await evaluate("window.__game.rejection"), 0);
   await clickHotspot("tavern_door", "left", 0);
   assert.equal(await evaluate("window.__game.pendingRoom"), null);
@@ -470,7 +470,7 @@ try {
   assert.equal(await evaluate("window.__game.dialogue.nodeId"), "favour"); // she wants to know what for
   await click(960, 760, "right"); // close dialogue
   await click(220, 960); // Give
-  await clickItem("lemon");
+  await clickItem("mushroom");
   await clickHotspot("marta");
   await has("drawer_key");
   await click(250, 800);
@@ -1201,19 +1201,19 @@ try {
   await key("Escape");
   assert.equal(await evaluate("window.__game.roomMenu"), false);
   await evaluate("window.__game.explore = false; window.__game.title = true");
-  // Second solutions: trade the lemon and present the licence in conversation instead of Give.
+  // Second solutions: trade the mushrooms and present the licence in conversation instead of Give.
   const alt = await evaluate(`(() => {
     const g = window.__game;
     g.title = false; g.newGame();
     g.narration = null; // the opening line has been read
-    g.inventory = ["lemon"];
+    g.inventory = ["mushroom"];
     g.flags = { knows_key: true };
     g.runEffects([{ k: "talk", tree: "tavernkeeper" }]);
     const opening = g.visibleChoices().map((c) => c.text);
     g.pickChoice(1);
     const asked = g.dialogue.nodeId;
     g.pickChoice(0);
-    const traded = g.inventory.includes("drawer_key") && !g.inventory.includes("lemon") && g.flags.marta_paid === true;
+    const traded = g.inventory.includes("drawer_key") && !g.inventory.includes("mushroom") && g.flags.marta_paid === true;
     g.dialogue = null;
     g.runEffects([{ k: "talk", tree: "tavernkeeper" }]);
     const after = g.visibleChoices().map((c) => c.text);
@@ -1233,8 +1233,8 @@ try {
     for (let i = 0; i < 4 && g.cinematic.active; i++) g.cinematic.skip();
     g.title = false; g.newGame(); g.narration = null;
     const hintStart = g.itemLook("compass");
-    g.inventory.push("lemon");
-    const hintLemon = g.itemLook("compass");
+    g.inventory.push("mushroom");
+    const hintFungus = g.itemLook("compass");
     g.inventory = ["compass"];
     g.speak("Marta looks up.");
     g.runEffects([{ k: "talk", tree: "tavernkeeper" }]);
@@ -1264,7 +1264,7 @@ try {
     const quick = g.dialogue?.tree.id;
     g.dialogue = null;
     const tip = g.currentTip();
-    return { waited, opened, hint, pending, person: carry.person, hintStart, hintLemon, suggest, suggestLine, quick, tip };
+    return { waited, opened, hint, pending, person: carry.person, hintStart, hintFungus, suggest, suggestLine, quick, tip };
   })()`);
   assert.equal(fixes.waited, true);
   assert.equal(fixes.opened, true);
@@ -1272,7 +1272,7 @@ try {
   assert.equal(fixes.pending, "counter");
   assert.equal(fixes.person, true);
   assert.match(fixes.hintStart, /customs house/);
-  assert.match(fixes.hintLemon, /tavern/);
+  assert.match(fixes.hintFungus, /tavern/);
   assert.equal(fixes.suggest, "talk");
   assert.equal(fixes.suggestLine, "Talk to Marta");
   assert.equal(fixes.quick, "tavernkeeper");

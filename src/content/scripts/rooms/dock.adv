@@ -46,21 +46,21 @@ room dock "Vela Docks"
       talk "I call up to the rail."
         talk quill4 at rail
 
-  hotspot crate "crate of lemons"
+  hotspot crate "stacked crate"
     show if act 1
     area 925,695 150x145
     stand 1110,840
-    look "Lemons for the Marrow's galley, packed so tight they've become a single yellow opinion. Not one will come out by hand."
-    open "It's already open. The lemons are the problem. They won't budge."
-    pickup "I try to prise one loose. The lemons hold ranks like a press gang."
+    look "A fish crate, nailed shut, stacked here so long the planks beneath it have gone black. Something has been growing in that dark, and growing well."
+    open "Nailed. Whatever is underneath has had three years to get comfortable."
+    pickup "I try to lift it. The crate has become furniture."
       sound deny
-    push "It shifts an inch. The lemons inside make a sound like applause."
-    pull "I pull. The crate remains, smugly, where it is."
+    push "It shifts an inch and the whole stack complains."
+    pull "I pull. The crate declines, politely, the way nailed things do."
     state if crate_open = true
-      name "crate of lemons"
-      look "There's a lemon-shaped gap where my lemon used to be. The rest are holding ranks."
-      open "One lemon is enough. I'm a clerk, not a quartermaster."
-      pickup "One lemon is enough. I'm a clerk, not a quartermaster."
+      name "stacked crate"
+      look "The crate, shifted aside. The timbers under it are black and wet, and the jet-caps have been picked clean."
+      open "Open ground now, and a good deal wetter than it was."
+      pickup "I've had my share of them."
 
   hotspot crowbar "crowbar"
     show if act 1 and not has crowbar
@@ -184,7 +184,7 @@ room dock "Vela Docks"
   use ledger on quill_pier if ledger_written
     "She reads my entry upside down, and nods at it once, the way she'd nod at a good bearing."
   use crowbar on crate if not crate_open
-    "I work the crowbar between the lemons and lean. One pops free like a cork. The Marrow's cook will never miss it, and if he does, he's a pirate."
-    give lemon
+    "I get the bar under the crate and walk it round. The stack groans, gives, and comes away — and underneath, in the black wet timber where the fog gets in, there is a stand of jet-caps, thick as shillings."
+    give mushroom
     set crate_open
     sound pickup

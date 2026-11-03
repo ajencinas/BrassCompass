@@ -24,21 +24,21 @@ dialogue tavernkeeper
   node front marta "Does he. …Get out of my tavern, clerk, before I start liking you."
   node straits marta "Six ships in three years. Your father's was the first. They find the hulls drifting, sails set, nobody aboard. Not so much as a cat. You're not thinking of signing on? …You are. He had that exact look."
     > "Goodnight, Marta." -> bye
-  node favour marta "A clerk asking favours after the bell. Come back when you know what you want, and bring something sour. My punch is as flat as a ledger."
+  node favour marta "A clerk asking favours after the bell. Come back when you know what you want, and bring something worth the trade. My broth is as thlat as a ledger."
     > "Something sour. Noted." -> bye
-  node key marta "Won it off him at cards. He bet it on a pair of threes, the old fool. It's yours in trade. My punch is as flat as a ledger tonight. Bring me a lemon."
-    > "I've got one right here." if has lemon -> traded
-      take lemon
+  node key marta "Won it off him at cards. He bet it on a pair of threes, the old fool. It's yours in trade. My broth is as thin as a ledger tonight. Bring me a handful of jet-caps."
+    > "I've got some right here." if has mushroom -> traded
+      take mushroom
       give drawer_key
       set marta_paid
-      note marta_key "Marta won Bramwick's drawer key and would not give it back for nothing. One lemon, for the punch, is apparently the rate."
+      note marta_key "Marta won Bramwick's drawer key and would not give it back for nothing. A handful of jet-caps, for the broth, is apparently the rate."
       sound pickup
-    > "One lemon. Done." if not has lemon -> bye
-    > "Where do I find a lemon at this hour?" if not has lemon -> nolemon
-  node nolemon marta "There's a crate on the pier for the Marrow's galley. Packed so tight you'd want a crowbar to get one out. Pirates pack the way they plunder."
+    > "A handful. Done." if not has mushroom -> bye
+    > "Where do I find jet-caps at this hour?" if not has mushroom -> nofungus
+  node nofungus marta "Under the pier, mostly. There's a crate on the quay nobody's shifted in years, and they come up thick in the black timber beneath it. You'd want a crowbar the way they plunder."
     > "A crowbar. Noted." -> bye
-  node traded marta "A lemon! The punch lives. Here's his key. And tell him a pair of threes is not a strategy."
+  node traded marta "Jet-caps! The broth lives. Here's his key. And tell him a pair of threes is not a strategy."
     > "Goodnight, Marta." -> bye
-  node thanks marta "Thank the lemon. And Fenn: whatever's out in those Straits, come back and tell me. I hate an unfinished story."
+  node thanks marta "Thank the mushrooms. And Fenn: whatever's out in those Straits, come back and tell me. I hate an unfinished story."
     > "I will." -> bye
   node bye marta "Mind the step. It's been drinking too."

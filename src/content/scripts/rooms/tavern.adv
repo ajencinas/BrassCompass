@@ -195,9 +195,9 @@ room tavern "The Salty Keel"
     "She reads “for fog”, and laughs out loud, once, like a cork. “Keep that for afters.”"
   use ledger on cray_t
     "He raises his glass to it. “To the ledger. Long may it say what it says.”"
-  use lemon on marta
-    "“A lemon!” Marta holds it to the lantern like a jeweller. “The punch lives. Here, his key. Tell Bramwick he can win it back when he learns to bluff.”"
-    take lemon
+  use mushroom on marta
+    "“Jet-caps!” Marta takes them off me and holds one up to the lantern. “The broth lives, and so does the room. Here — his key. Tell Bramwick he can win it back when he learns to bluff.”"
+    take mushroom
     give drawer_key
     set marta_paid
     sound pickup

@@ -285,7 +285,7 @@ export function compile(files: SourceFile[], options: CompileOptions = {}): Comp
     const t = c.peek();
     if (!t) c.fail("expected a condition");
     if (t.t === "p" && t.v === "(") return group(c);
-    if (t.t !== "id") c.fail("expected a condition, like has lemon, not knows_key or aff >= 14");
+    if (t.t !== "id") c.fail("expected a condition, like has mushroom, not knows_key or aff >= 14");
     c.next();
     switch (t.v) {
       case "has": return { has: c.id("an item") };
