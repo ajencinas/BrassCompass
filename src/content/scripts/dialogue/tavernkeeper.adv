@@ -31,6 +31,7 @@ dialogue tavernkeeper
       take lemon
       give drawer_key
       set marta_paid
+      note marta_key "Marta won Bramwick's drawer key and would not give it back for nothing. One lemon, for the punch, is apparently the rate."
       sound pickup
     > "One lemon. Done." if not has lemon -> bye
     > "Where do I find a lemon at this hour?" if not has lemon -> nolemon

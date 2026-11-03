@@ -11,6 +11,7 @@ dialogue rook
     > "The ledger says she was lost." -> ledger
   node fog rook "Fog came down out of a clear sky. Men rowed out under a yellow flag. Quarantine, they said, ever so polite. They took me off first, paid me, put me on a fruit boat. I've been drunk ever since and it's still the strangest thing I've seen."
     > "Paid you?" -> purse
+      note rook_paid "Rook was paid off the night the Arcadia was taken: a purse with Cray's seal on it, and a lie about quarantine. He never opened it."
     > "And the ledger?" -> ledger
   node purse rook "A purse with a seal on it. I never opened it. Seemed like the one decent thing left to do, and I've been very careful not to do any others."
     > "And the ledger?" -> ledger

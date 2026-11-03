@@ -111,3 +111,39 @@ html, body {
   position: absolute; left: 24px; bottom: 30px; margin: 0; color: #bdc7ce;
   font: 14px Georgia, serif; pointer-events: none;
 }
+
+/* ---- casebook ---- */
+.casebook[hidden] { display: none; }
+.casebook {
+  position: fixed; inset: 0; z-index: 35; display: grid; place-items: center;
+  background: rgba(3, 8, 16, .9); padding: 20px; overflow: auto;
+}
+.casebook section {
+  width: min(760px, 100%); max-height: min(84vh, 900px); display: flex; flex-direction: column;
+  background: #101d29; border: 1px solid #9b7c46; box-shadow: 0 24px 80px #0009;
+}
+.casebook header { padding: 28px 32px 16px; border-bottom: 1px solid #2b3a44; position: relative; }
+.casebook h1 { color: #f3d99e; font-size: 28px; margin: 8px 0 6px; }
+.casebook .lede { color: #9fb0bd; font-size: 15px; margin: 0; }
+.casebook .eyebrow { color: #c6a365; font: 11px system-ui; letter-spacing: .24em; margin: 0; }
+.casebook-count {
+  position: absolute; right: 32px; top: 30px; margin: 0;
+  color: #7d8b95; font: 11px system-ui; letter-spacing: .16em; text-transform: uppercase;
+}
+.casebook-body { padding: 8px 32px 24px; overflow-y: auto; flex: 1; }
+.casebook-body h2 {
+  color: #c6a365; font: 11px system-ui; letter-spacing: .24em; text-transform: uppercase;
+  margin: 24px 0 10px;
+}
+.casebook-entry {
+  color: #dfe4e0; font: 16px/1.6 Georgia, serif; margin: 0 0 14px;
+  padding-left: 16px; border-left: 2px solid #2f4653;
+}
+.casebook-empty { color: #8b98a3; font: italic 16px Georgia, serif; }
+.casebook footer { padding: 16px 32px 24px; border-top: 1px solid #2b3a44; }
+.casebook button {
+  width: 100%; padding: 12px; background: #1a3040; border: 1px solid #65726f;
+  color: #f3e7cb; font: 16px Georgia, serif; cursor: pointer;
+}
+.casebook button:hover, .casebook button:focus-visible { background: #304651; outline: 2px solid #dfbf7d; }
+.casebook footer small { display: block; margin-top: 12px; color: #7d8b95; font: 11px system-ui; text-align: center; }

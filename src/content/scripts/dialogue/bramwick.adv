@@ -13,6 +13,7 @@ dialogue bramwick
     > "So I could stamp it myself?" -> self
     > "Where is the stamp?" -> key
       set knows_key
+      note stamp_drawer "The licence needs the harbour stamp. It lives in Bramwick's desk drawer, and he lost the key to Marta at cards."
     > "Is there a berth left?" -> claim
   node self bramwick "I said no such thing. I recited several regulations, loudly. The forms are on my desk. The stamp is in my drawer."
     > "And the drawer is…?" -> key

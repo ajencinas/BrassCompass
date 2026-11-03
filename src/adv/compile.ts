@@ -347,7 +347,7 @@ export function compile(files: SourceFile[], options: CompileOptions = {}): Comp
 
   const effect = (ln: Line, c = new Cur(ln)): Effect => {
     const first = c.peek();
-    const kw = c.id("an effect, like say, set, give, take, go or talk");
+    const kw = c.id("an effect, like say, set, give, take, go, talk or note");
     let e: Effect;
     switch (kw) {
       case "say": e = { k: "say", text: c.str() }; break;
@@ -379,6 +379,12 @@ export function compile(files: SourceFile[], options: CompileOptions = {}): Comp
         break;
       }
       case "music": e = { k: "music", track: c.id("a music track") }; break;
+      case "note": {
+        const noteId = c.id("a casebook entry id");
+        const text = c.str("the entry, in quotes");
+        e = { k: "note", id: noteId, text };
+        break;
+      }
       default:
         return c.fail(`'${kw}' isn't an effect (say, set, add, give, take, go, talk, act, win, sound, music)`, first);
     }

@@ -5,6 +5,7 @@ dialogue ledger4
   node quiet narrator "The room goes quiet. Bramwick takes his hat off. Rook takes his off too, finds he isn't wearing one, and holds his mug to his chest instead."
     > "(Write.)" -> write
       set ledger_written
+      note wrote_it_down "I wrote it all into the harbour ledger and signed my name under it, which is either the bravest or the most clerical thing I have ever done."
   node write narrator "Underneath, in my best customs hand, I write: ARCADIA: returned. All hands."
     -> stamp
   node stamp narrator "Then I stamp it. The stamp comes down on the page like a door closing behind somebody who has come home."

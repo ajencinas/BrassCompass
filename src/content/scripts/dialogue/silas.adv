@@ -15,6 +15,7 @@ dialogue silas
     > "We'll see." -> bye
   node swim silas "Swim, then. The Straits are lovely this time of year. Ask your father."
     set silas_refused
+    note cray_offer "Cray offered me the last berth for my father's compass. He knows it points somewhere useful, and he would rather buy it than take it. I said no."
   node refuse silas "No. Your father said that too. Such a family for one-syllable answers. Good night, clerk."
     set silas_refused
   node bye silas "Run along. The bell won't wait, and neither will I. Well. I will. I'm very patient."

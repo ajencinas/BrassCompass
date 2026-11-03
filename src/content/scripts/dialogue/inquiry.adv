@@ -132,6 +132,7 @@ dialogue inquiry
   node surplus rook "Surplus. I've been called worse. Mostly by me."
     > "(Show the kelp manifest.)" if has kelp_manifest -> c5
       set kelp_read
+      note kelp_fog "The fog is not weather. It is dried kelp, burned by the forkful in iron braziers, and Vane has been shipping it out in the Marrow's own crates."
     > "That's everything." -> stands
   # The fifth, optional: the kelp from the pier end.
   node c5 narrator "I lay the kelp manifest on the bar and read it out, the way I've read ten thousand manifests: QUARANTINE STN, G.K. Briquettes, kelp, four hundred. Purpose: for fog."

@@ -37,7 +37,9 @@ export type Effect =
   /** Narrate a line. Waits for the previous line to be read first. */
   | { k: "say"; text: string }
   | { k: "sound"; id: "click" | "pickup" | "chime" | "deny" | "door" | "gulls" }
-  | { k: "music"; track: string };
+  | { k: "music"; track: string }
+  /** Record an entry in Fenn's casebook. Ignored if the same id is already filed. */
+  | { k: "note"; id: string; text: string };
 
 export interface Hotspot {
   id: string;

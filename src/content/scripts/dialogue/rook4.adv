@@ -21,6 +21,7 @@ dialogue rook4
     > "You could look at it now." -> now
       give purse
       set purse_given
+      note purse_seal "The purse they paid Rook off with still carries Cray's seal. Unopened, three years. He kept it the way a man keeps a wound he is not ready to look at."
       sound pickup
     > "(Take the purse.)" -> take
       give purse

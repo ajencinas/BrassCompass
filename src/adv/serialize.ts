@@ -95,6 +95,7 @@ export function effect(e: Effect): string {
     case "win": return "win";
     case "sound": return `sound ${id(e.id)}`;
     case "music": return `music ${id(e.track)}`;
+    case "note": only(e, ["k", "id", "text"], "note"); return `note ${id(e.id)} ${str(e.text)}`;
   }
   throw new Error(`can't write effect ${JSON.stringify(e)}`);
 }

@@ -1341,8 +1341,35 @@ try {
   assert.equal(cast.four.alley.includes("counting_door"), true);
   assert.equal(cast.one.dock.includes("crowbar"), true);
   assert.equal(cast.one.alley.includes("silas"), true);
+  // Casebook: an entry is filed once, attributed to the act it was earned in, survives a save,
+  // and opens as a real overlay.
+  const casebook = await evaluate(`(() => {
+    const g = window.__game;
+    g.title = false; g.cinematic.skip(); g.setPaused(false);
+    g.act = 3;
+    g.notes = [];
+    g.runEffects([{ k: "note", id: "test_note", text: "A test entry." }]);
+    g.runEffects([{ k: "note", id: "test_note", text: "A test entry." }]);
+    const deduped = g.notes.length === 1;
+    const act = g.notes[0]?.act;
+    g.persist();
+    const saved = JSON.parse(localStorage.getItem("brasscompass.save.v3") ?? "{}").notes?.length;
+    g.casebook.show(g.notes);
+    const el = document.querySelector(".casebook");
+    const opened = el && el.hidden === false;
+    const rendered = el.querySelectorAll(".casebook-entry").length;
+    g.casebook.hide();
+    return { deduped, act, saved, opened, rendered, closed: el.hidden === true };
+  })()`);
+  assert.equal(casebook.deduped, true);
+  assert.equal(casebook.act, 3);
+  assert.equal(casebook.saved, 1);
+  assert.equal(casebook.opened, true);
+  assert.equal(casebook.rendered, 1);
+  assert.equal(casebook.closed, true);
+
   assert.deepEqual(runtimeErrors, []);
-  console.log("Act I (both routes, IOU, wager), all of Act II (both branches, night watch, fog run), all of Act III (the bill in any order, the halyard, Form 9, the reunion, the signal), all of Act IV (the farewell, Cray, the purse, the requisition, the ledger, the kelp, the inquiry with a wrong answer, the stamp, the IOU, the ledger entry, the pirate ending; the desk ending scripted; who appears in which act), placement, movement, camera, cinematics, keyboard, dialogue, and save/load passed");
+  console.log("casebook, Act I (both routes, IOU, wager), all of Act II (both branches, night watch, fog run), all of Act III (the bill in any order, the halyard, Form 9, the reunion, the signal), all of Act IV (the farewell, Cray, the purse, the requisition, the ledger, the kelp, the inquiry with a wrong answer, the stamp, the IOU, the ledger entry, the pirate ending; the desk ending scripted; who appears in which act), placement, movement, camera, cinematics, keyboard, dialogue, and save/load passed");
 } finally {
   socket?.close();
   for (const child of [browser, server]) {

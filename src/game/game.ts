@@ -21,6 +21,7 @@ import { ROOMS, START_ROOM, START_POS } from "../content/rooms";
 import { ACTS, ENDING, FIRST_ACT } from "../content/acts";
 import { defaultLine, noComboLine, itemAloneLine, targetOf, phrase, type Target } from "./lines";
 import { personHeightAt } from "./scale";
+import { Casebook, type CaseNote } from "./casebook";
 import { ITEMS } from "../content/items";
 import { DIALOGUES } from "../content/dialogue";
 import { GLOBAL_COMBOS } from "../content/combos";
@@ -66,6 +67,8 @@ interface SaveData {
   inventory: string[];
   /** Which act the save belongs to. Older saves without one are treated as Act I. */
   act: number;
+  /** Casebook entries filed so far. */
+  notes?: CaseNote[];
 }
 
 const SAVE_KEY = "brasscompass.save.v3";
@@ -108,6 +111,8 @@ export class Game {
   private flags: Record<string, unknown> = {};
   /** Current act. Drives the start room, the cinematics and what "continue" restores. */
   private act = FIRST_ACT;
+  /** Casebook entries, in the order Fenn wrote them. */
+  private notes: CaseNote[] = [];
 
   private dialogue: { tree: DialogueTree; nodeId: string; shown: number } | null = null;
 
@@ -128,6 +133,7 @@ export class Game {
   private paused = false;
   private settings: Settings;
   private cinematic: CinematicPlayer;
+  private casebook: Casebook;
 
   constructor(
     private view: View,
@@ -147,6 +153,9 @@ export class Game {
     });
     try { this.tipMode = localStorage.getItem(TIPS_KEY) === "on"; } catch { this.tipMode = false; }
     this.cinematic = new CinematicPlayer(() => this.audio);
+    const titles: Record<number, string> = {};
+    for (const [n, a] of Object.entries(ACTS)) titles[Number(n)] = `${a.title}`;
+    this.casebook = new Casebook(titles, () => this.persist());
   }
   /** Tip mode keeps the current tip on screen. Remembered per browser, separate from saves. */
   private tipMode = false;
@@ -228,6 +237,12 @@ export class Game {
       return;
     }
     if (k.toLowerCase() === "m") { this.audio.toggleMute(); return; }
+    if (k.toLowerCase() === "j" && !this.title && !this.won && !this.cinematic.active) {
+      event.preventDefault();
+      if (this.casebook.open) this.casebook.hide(); else this.casebook.show(this.notes);
+      return;
+    }
+    if (this.casebook.open) return;
     if ((k === "h" || k === "H") && !this.title && !this.won && !this.dialogue && !this.queue) {
       this.showTip();
       return;
@@ -435,13 +450,16 @@ export class Game {
   }
 
   private onClick(x: number, y: number, button: number): void {
-    if (this.paused || this.cinematic.active) return;
+    if (this.paused || this.cinematic.active || this.casebook.open) return;
     if (this.roomMenu) { this.roomMenuClick(x, y); return; }
     this.audio.unlock();
     this.keyboardFocus = null;
     this.focusCameraX = null;
 
-    if (!this.title && !this.won && x >= 1710 && y <= 64) { this.setPaused(true); return; }
+    if (!this.title && !this.won && y <= 64) {
+      if (x >= 1670) { this.setPaused(true); return; }
+      if (x >= 1470 && x <= 1660) { this.casebook.show(this.notes); return; }
+    }
     if (!this.title && !this.won && !this.dialogue && x >= 1530 && x < 1700 && y <= 64) {
       this.showTip();
       return;
@@ -830,6 +848,11 @@ export class Game {
         case "music":
           this.audio.playMusic(e.track);
           break;
+        case "note":
+          if (!this.notes.some((n) => n.id === e.id)) {
+            this.notes.push({ id: e.id, text: e.text, act: this.act });
+          }
+          break;
       }
     }
     this.persist();
@@ -1167,6 +1190,7 @@ export class Game {
       flags: this.flags,
       inventory: this.inventory,
       act: this.act,
+      notes: this.notes,
     };
     try {
       localStorage.setItem(SAVE_KEY, JSON.stringify(data));
@@ -1191,6 +1215,7 @@ export class Game {
       this.flags = d.flags;
       this.facing = d.facing === -1 ? -1 : 1;
       this.act = typeof d.act === "number" && ACTS[d.act] ? d.act : FIRST_ACT;
+      this.notes = Array.isArray(d.notes) ? d.notes.filter((n) => n && typeof n.text === "string") : [];
       this.loadRoom(d.room, { x: d.x, y: d.y });
     } catch {
       this.newGame();
@@ -1283,6 +1308,7 @@ export class Game {
     this.inventory = [];
     this.inventoryPage = 0;
     this.flags = {};
+    this.notes = [];
   }
 
   private newGame(): void {
@@ -1476,11 +1502,14 @@ export class Game {
     ctx.fillStyle = "rgba(5,13,22,0.8)";
     ctx.fillRect(24, 18, 400, 44);
     drawText(ctx, this.room.name, 40, 29, { size: 22, color: "#e8c98a", shadow: false });
-    ctx.fillRect(1710, 18, 186, 44);
-    drawText(ctx, "Pause / Esc", 1728, 29, { size: 20, color: "#e8c98a", shadow: false });
+    ctx.fillRect(1690, 18, 206, 44);
+    drawText(ctx, "Pause / Esc", 1710, 29, { size: 20, color: "#e8c98a", shadow: false });
     ctx.fillStyle = "rgba(5,13,22,0.8)";
-    ctx.fillRect(1530, 18, 170, 44);
-    drawText(ctx, "Tip  (H)", 1615, 29, { size: 20, color: "#e8c98a", align: "center", shadow: false });
+    ctx.fillRect(1470, 18, 190, 44);
+    drawText(ctx, "Casebook (J)", 1565, 29, { size: 20, color: "#e8c98a", align: "center", shadow: false });
+    ctx.fillStyle = "rgba(5,13,22,0.8)";
+    ctx.fillRect(1300, 18, 160, 44);
+    drawText(ctx, "Tip  (H)", 1380, 29, { size: 20, color: "#e8c98a", align: "center", shadow: false });
     if (this.tipMode && !this.dialogue && !this.won) {
       const tip = this.currentTip();
       ctx.save();

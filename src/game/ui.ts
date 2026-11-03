@@ -239,7 +239,7 @@ function drawSentence(ctx: CanvasRenderingContext2D, model: PanelModel): void {
       size: 20, color: "#b6c9d0", shadow: false,
     });
   } else {
-    drawText(ctx, "Click to walk · Choose a verb to interact", SENT_X, SENT_Y + 6, {
+    drawText(ctx, "Click to walk · Choose a verb · J — casebook", SENT_X, SENT_Y + 6, {
       size: 22,
       color: "#a9bac7",
       weight: "normal",

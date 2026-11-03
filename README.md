@@ -70,6 +70,7 @@ To regenerate any asset from its prompt, see `tools/generate.py` (requires `RUNC
 | Two-object verbs (`Use`, `Give`) | Pick the verb, click the item, then click the target |
 | Walk somewhere | Click the floor with no verb selected; click a doorway to enter |
 | Cancel action or close dialogue | Right-click |
+| Casebook — everything you've learned | `J`, or the Casebook button |
 | Pause / settings | `Escape` or the Pause button |
 | Restart / return to title | Pause menu |
 | Master volume | Slider in pause menu; settings are remembered |

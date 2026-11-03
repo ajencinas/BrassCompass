@@ -16,6 +16,7 @@ room warehouse "Harbour Loft"
     look "The harbour ledger. Every arrival, every departure, every ship this town has ever lost, in one hand."
     open "The Arcadia: lost at sea, in Bramwick's hand, three days before she was even late. Beside it, a fee: “Paid, Cray & Co., factors.” Nobody pays harbour dues on a wreck. Bramwick didn't just write my father off. He was paid to."
       set ledger_read
+      note ledger_read "The Arcadia was entered as lost at sea three days before she was due. Under the entry, a harbour fee paid in full by a factor's office. Nobody pays harbour dues on a wreck."
       sound chime
     use "The Arcadia: lost at sea, in Bramwick's hand, three days before she was even late. Beside it, a fee: “Paid, Cray & Co., factors.” Nobody pays harbour dues on a wreck. Bramwick didn't just write my father off. He was paid to."
       set ledger_read
