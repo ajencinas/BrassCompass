@@ -374,11 +374,12 @@ MANIFEST = [
 
     # ---------------- props & on-screen figures ----------------
     ("prop_crate", "image", BG_MODEL,
-     {"prompt": "A single wooden galley crate, lid prised open, packed tight with lemons, matte "
-                "aged weathered planks with iron corner straps, muted natural colours, "
-                "oil-painted digital illustration with visible brushwork, not a 3D render, no "
-                "gloss, three-quarter view, soft side lighting, flat solid magenta background "
-                "(#FF00FF), no shadow, no ground, no text",
+     {"prompt": "A single old fish crate on a quayside, nailed shut, weathered grey planks with "
+                "iron corner straps and a painted white shipping mark, the wood at its base dark "
+                "and wet, two black-capped mushrooms with pale stems growing out of the damp "
+                "timber against the crate, matte, oil-painted digital illustration with visible "
+                "brushwork, not a 3D render, no gloss, three-quarter view, soft side lighting, "
+                "flat solid magenta background (#FF00FF), no shadow, no ground, no text",
       "resolution": "1728x2304 (3:4)", "output_format": "png"}, "props/crate.png"),
 
     ("prop_crowbar", "image", BG_MODEL,

@@ -169,6 +169,9 @@ export class Game {
   /** Tip mode keeps the current tip on screen. Remembered per browser, separate from saves. */
   private tipMode = false;
   private saveBroken = false;
+  /** Respect the OS setting: no typewriter, no breathing, no twinkle, no pulsing outline. */
+  private reduced = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  private live: HTMLElement | null = null;
   /** Seconds spent waiting for a room's art to arrive. */
   private roomWait = 0;
   private saveWarning: string | null = null;
@@ -914,6 +917,7 @@ export class Game {
     this.narration = null;
     this.keyboardFocus = null;
     this.hoverChoice = -1;
+    this.announceNode();
   }
 
   /** `seen:<tree>.<node>` lets later options appear only once the player has heard something. */
@@ -926,6 +930,15 @@ export class Game {
   private currentNode(): DialogueNode | null {
     if (!this.dialogue) return null;
     return this.dialogue.tree.nodes[this.dialogue.nodeId] ?? null;
+  }
+
+  /** Read the current dialogue node, and its options, into the live region. */
+  private announceNode(): void {
+    const node = this.currentNode();
+    if (!node) return;
+    const who = characterOf(node.speaker).name;
+    const options = this.visibleChoices().map((c, i) => `${i + 1}. ${c.text}`).join(". ");
+    this.announce(`${who ? who + ": " : ""}${node.text}${options ? ". " + options : ""}`);
   }
 
   private visibleChoices(): { text: string; index: number }[] {
@@ -1007,8 +1020,15 @@ export class Game {
 
   private speak(text: string): void {
     this.trace?.({ kind: "say", text });
-    this.narration = { text, shown: 0 };
+    this.narration = { text, shown: this.reduced ? text.length : 0 };
     this.narrationClock = 0;
+    this.announce(text);
+  }
+
+  /** Mirror the current line into an aria-live region: the canvas is opaque to a screen reader. */
+  private announce(text: string): void {
+    if (!this.live && typeof document !== "undefined") this.live = document.getElementById("sr");
+    if (this.live) this.live.textContent = text;
   }
 
   private reject(text: string): void {
@@ -1113,16 +1133,14 @@ export class Game {
     // narration typewriter
     if (this.narration) {
       this.narrationClock += dt;
-      const speed = NARRATION_SPEED;
-      this.narration.shown = Math.min(
-        this.narration.text.length,
-        Math.floor(this.narrationClock * speed) + 1
-      );
+      this.narration.shown = this.reduced
+        ? this.narration.text.length
+        : Math.min(this.narration.text.length, Math.floor(this.narrationClock * NARRATION_SPEED) + 1);
     }
 
     // dialogue typewriter
     if (this.dialogue) {
-      this.dialogue.shown += dt * 70;
+      this.dialogue.shown = this.reduced ? 1e6 : this.dialogue.shown + dt * 70;
     }
 
     if (this.queue && (!this.narration || this.narrationClock >= this.queueDue)) {
@@ -1533,7 +1551,9 @@ export class Game {
       if (hs?.showIf && !hs.showIf.every((c) => this.check(c))) continue;
       if (s.showIf && !s.showIf.every((c) => this.check(c))) continue;
       const talking = this.currentNode()?.speaker === s.speaker;
-      const breath = s.idle ? Math.sin(this.time * (talking ? 5 : 1.8) + s.x) * (talking ? 0.006 : 0.0025) : 0;
+      const breath = s.idle && !this.reduced
+        ? Math.sin(this.time * (talking ? 5 : 1.8) + s.x) * (talking ? 0.006 : 0.0025)
+        : 0;
       drawables.push({ y: s.y, draw: () => this.drawSprite(ctx, s.key, s.x, s.y, s.size * (1 + breath), s.visible ?? 1, Boolean(s.speaker), s.flip, this.figureGrade(s.grade)) });
     }
     drawables.push({ y: this.y, draw: () => this.drawPlayer(ctx) });
@@ -1627,7 +1647,7 @@ export class Game {
     const hs = this.room.hotspots.find((h) => h.id === this.hoverHotspot);
     if (!hs) return;
 
-    const pulse = 0.55 + 0.25 * Math.sin(this.time * 5);
+    const pulse = this.reduced ? 0.7 : 0.55 + 0.25 * Math.sin(this.time * 5);
     ctx.save();
     ctx.beginPath();
     if ("rect" in hs.area) {
@@ -1643,7 +1663,7 @@ export class Game {
     ctx.strokeStyle = `rgba(232,201,138,${0.55 * pulse})`;
     ctx.lineWidth = 2.5;
     ctx.setLineDash([10, 8]);
-    ctx.lineDashOffset = -this.time * 26;
+    ctx.lineDashOffset = this.reduced ? 0 : -this.time * 26;
     ctx.stroke();
     ctx.restore();
   }
