@@ -12,7 +12,7 @@ act 2 "The Vela Straits"
   start marrow_deck
   intro "/assets/video/act-ii-intro.mp4"
   outro "/assets/video/act-ii-outro.mp4"
-  inventory compass stamp manifest crowbar
+  inventory compass stamp manifest crowbar licence
   caption "Dawn, and the Marrow is mine to stand on. The crew have already decided what I am: a clerk with a licence and no sea legs. The compass in my pocket is still pointing somewhere that isn't north."
 
 act 3 "Tidy Weather"

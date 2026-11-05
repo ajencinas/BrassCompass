@@ -78,7 +78,7 @@ dialogue pike
   node none pike "Only we haven't got any Form 9s. We've never had any Form 9s. Nobody's ever been released."
     > "Then I'll write one." -> write
       set knows_form9
-      note form9 "Form 9 is the paper that makes a ship officially lost. File it and the loss becomes a fact the harbour must honour. Cray has filed a great many."
+      note form9 "Form 9 is a Release of Detained Persons Upon Inspection. One signature and the quarantine has to let them go. Pike has never had one, which is not an accident."
     > "Nobody? In three years?" -> nobody
   node nobody pike "Not once, sir. I did wonder. But wondering isn't a form."
     > "Then I'll write one." -> write

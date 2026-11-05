@@ -39,7 +39,8 @@ room salt_camp "Gullet Key — the Salt Camp"
     look "The reef flats, running out to the lagoon in a mile of coral and sudden deep pockets. Somebody who'd crossed them a hundred times might know the way."
     open "Not without somebody who knows where the holes are. The holes are very patient."
     walk "Not without somebody who knows where the holes are. The holes are very patient."
-    state if ansel_met
+    # Crossable once Quill is out: you came over them, and Ansel is a bonus, not a gate.
+    state if quill_free
       exit reef_wreck
       look "The reef flats, staked across to the wreck at low tide. My father's road. He goes wrong at the third stake."
       open "We cross the flats, stake by stake. At the third one I don't follow my father."

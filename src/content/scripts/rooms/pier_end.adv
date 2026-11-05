@@ -59,6 +59,7 @@ room pier_end "The Pier End"
     look "A manifest, tacked to the top crate for whoever signs for it. Nobody's signing for it. They're too busy deciding whose turn it is to be menacing."
     pickup "While they argue about whose turn it is to be menacing, I lift the manifest off the crate. I'm customs. Manifests come to me the way cats come to people who don't want cats."
       set kelp_proof
+      set kelp_read
 
   hotspot stack "stacked crates"
     area 170,590 370x240

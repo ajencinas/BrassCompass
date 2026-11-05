@@ -118,15 +118,17 @@ room tavern "The Salty Keel"
     talk "He straightens up as though I'm an inspection."
       talk bramwick4
     give "“I can't accept anything, Fenn. I'm suspended. I can barely accept this drink.”"
-    state if iou_paid
-      name "Harbourmaster Bramwick"
-      talk: talk bramwick4 at cards
-    state if quarantine_lifted
+    # Order matters: an unpaid IOU must stay reachable even after the inquiry, and the
+    # post-reinstatement scene must be reachable once the IOU is settled.
+    state if quarantine_lifted and not iou_paid
       name "Harbourmaster Bramwick"
       talk: talk bramwick4 at debt
     state if inquiry_done
       name "Harbourmaster Bramwick"
       talk: talk bramwick4 at after
+    state if iou_paid
+      name "Harbourmaster Bramwick"
+      talk: talk bramwick4 at cards
 
   hotspot ansel_t "Ansel Fenn"
     show if act 4 and quarantine_lifted

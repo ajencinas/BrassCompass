@@ -138,7 +138,7 @@ both more authentic and far cheaper.
 - Multi-act state: finishing an act carries inventory, flags and the act number into the next,
   and the save survives so "Continue" resumes mid-story
 - Skippable cinematics: Act I opening, Act I outro, and an Act II title card
-- Act I chain: crowbar → crate → lemon → Marta → key → drawer → stamp → licence →
+- Act I chain: crowbar → crate → jet-caps → Marta → key → drawer → stamp → licence →
   manifest → loft → ledger → Bramwick
 - Act II spine: spyglass → Quill → quarterdeck → cabin → compass on the chart
 

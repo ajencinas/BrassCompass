@@ -24,7 +24,7 @@ dialogue tavernkeeper
   node front marta "Does he. …Get out of my tavern, clerk, before I start liking you."
   node straits marta "Six ships in three years. Your father's was the first. They find the hulls drifting, sails set, nobody aboard. Not so much as a cat. You're not thinking of signing on? …You are. He had that exact look."
     > "Goodnight, Marta." -> bye
-  node favour marta "A clerk asking favours after the bell. Come back when you know what you want, and bring something worth the trade. My broth is as thlat as a ledger."
+  node favour marta "A clerk asking favours after the bell. Come back when you know what you want, and bring something worth the trade. My broth is as thin as a ledger."
     > "Something sour. Noted." -> bye
   node key marta "Won it off him at cards. He bet it on a pair of threes, the old fool. It's yours in trade. My broth is as thin as a ledger tonight. Bring me a handful of jet-caps."
     > "I've got some right here." if has mushroom -> traded

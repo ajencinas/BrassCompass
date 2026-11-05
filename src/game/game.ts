@@ -69,7 +69,16 @@ interface SaveData {
   act: number;
   /** Casebook entries filed so far. */
   notes?: CaseNote[];
+  /**
+   * False when the save was written at the act boundary, before `startAct` ran the act's
+   * opening effects. Those give items (Act III's crowbar) that the act cannot be finished
+   * without, so a resume has to run them.
+   */
+  actStarted?: boolean;
 }
+
+/** Top-bar buttons: one definition, used for both drawing and hit-testing. */
+const BAR = { y: 18, h: 44, tip: [1300, 160], casebook: [1470, 190], pause: [1690, 206] } as const;
 
 const SAVE_KEY = "brasscompass.save.v3";
 /** Saves from before the story rewrite: restarted at the beginning of their act. */
@@ -159,6 +168,8 @@ export class Game {
   }
   /** Tip mode keeps the current tip on screen. Remembered per browser, separate from saves. */
   private tipMode = false;
+  private saveBroken = false;
+  private saveWarning: string | null = null;
   private setTipMode(on: boolean): void {
     this.tipMode = on;
     try { localStorage.setItem(TIPS_KEY, on ? "on" : "off"); } catch { /* ignore */ }
@@ -230,6 +241,12 @@ export class Game {
   private onKey(k: string, event: KeyboardEvent): void {
     if (this.paused || this.cinematic.active) return;
     if (this.explore && this.exploreKey(k, event)) return;
+    if (this.casebook.open) {
+      // The overlay has focus of its own; never let a stray key reach the game behind it.
+      event.preventDefault();
+      if (k === "Escape" || k.toLowerCase() === "j") this.casebook.hide();
+      return;
+    }
     this.audio.unlock();
     if (k === "Escape" && !this.won) {
       event.preventDefault();
@@ -239,10 +256,9 @@ export class Game {
     if (k.toLowerCase() === "m") { this.audio.toggleMute(); return; }
     if (k.toLowerCase() === "j" && !this.title && !this.won && !this.cinematic.active) {
       event.preventDefault();
-      if (this.casebook.open) this.casebook.hide(); else this.casebook.show(this.notes);
+      this.casebook.show(this.notes);
       return;
     }
-    if (this.casebook.open) return;
     if ((k === "h" || k === "H") && !this.title && !this.won && !this.dialogue && !this.queue) {
       this.showTip();
       return;
@@ -456,9 +472,11 @@ export class Game {
     this.keyboardFocus = null;
     this.focusCameraX = null;
 
-    if (!this.title && !this.won && y <= 64) {
-      if (x >= 1670) { this.setPaused(true); return; }
-      if (x >= 1470 && x <= 1660) { this.casebook.show(this.notes); return; }
+    if (!this.title && !this.won && y <= BAR.y + BAR.h) {
+      const inBar = (b: readonly [number, number]) => x >= b[0] && x <= b[0] + b[1];
+      if (inBar(BAR.pause)) { this.setPaused(true); return; }
+      if (inBar(BAR.casebook)) { this.casebook.show(this.notes); return; }
+      if (inBar(BAR.tip)) { this.showTip(); return; }
     }
     if (!this.title && !this.won && !this.dialogue && x >= 1530 && x < 1700 && y <= 64) {
       this.showTip();
@@ -1072,6 +1090,12 @@ export class Game {
 
     if (this.title) return;
 
+    if (this.saveWarning && !this.dialogue && !this.narration) {
+      const line = this.saveWarning;
+      this.saveWarning = null;
+      this.speak(line);
+    }
+
     // narration typewriter
     if (this.narration) {
       this.narrationClock += dt;
@@ -1179,7 +1203,7 @@ export class Game {
   // ------------------------------------------------------------ save
 
   /** `at` overrides where the save puts the player (used when an act ends mid-cinematic). */
-  private persist(at?: { room: string; pos?: { x: number; y: number } }): void {
+  private persist(at?: { room: string; pos?: { x: number; y: number }; actStarted?: boolean }): void {
     if (this.title || this.explore) return;
     const pos = at ? (at.pos ?? ROOMS[at.room].entry) : { x: this.x, y: this.y };
     const data: SaveData = {
@@ -1191,11 +1215,21 @@ export class Game {
       inventory: this.inventory,
       act: this.act,
       notes: this.notes,
+      actStarted: at?.actStarted ?? true,
     };
     try {
       localStorage.setItem(SAVE_KEY, JSON.stringify(data));
       this.hasSave = true;
-    } catch { /* storage full or blocked */ }
+      this.saveBroken = false;
+    } catch {
+      // Quota or blocked storage. Say so once, in character, rather than losing the voyage quietly.
+      if (!this.saveBroken) {
+        this.saveBroken = true;
+        this.saveWarning =
+          "I try to write the day down and the page won't take ink. Something is wrong with the " +
+          "ledger — my progress is not being saved.";
+      }
+    }
   }
 
   private loadGame(): void {
@@ -1217,8 +1251,20 @@ export class Game {
       this.act = typeof d.act === "number" && ACTS[d.act] ? d.act : FIRST_ACT;
       this.notes = Array.isArray(d.notes) ? d.notes.filter((n) => n && typeof n.text === "string") : [];
       this.loadRoom(d.room, { x: d.x, y: d.y });
+      // A save written at the act boundary has not run the act's opening effects yet.
+      if (d.actStarted === false) {
+        const def = ACTS[this.act];
+        if (def?.onStart) this.runEffects(def.onStart);
+        this.persist();
+      }
     } catch {
+      // Keep the unreadable save instead of overwriting it, and tell the player.
+      try { localStorage.setItem(SAVE_KEY + ".corrupt", raw); } catch { /* nothing else to do */ }
+      try { localStorage.removeItem(SAVE_KEY); } catch { /* ignore */ }
       this.newGame();
+      this.saveWarning =
+        "The last page of my notebook is ruined — the save couldn't be read. I've kept it aside " +
+        "and started a fresh page.";
     }
   }
 
@@ -1261,7 +1307,7 @@ export class Game {
     // Save at the next act's start, so quitting during the cinematics resumes there.
     this.act = n + 1;
     if (next.inventory) this.inventory = [...next.inventory];
-    this.persist(next.start);
+    this.persist({ room: next.start.room, pos: next.start.pos, actStarted: false });
 
     const enter = (): void => {
       if (next.intro) this.cinematic.play(next.intro, () => this.startAct(n + 1));
@@ -1502,14 +1548,16 @@ export class Game {
     ctx.fillStyle = "rgba(5,13,22,0.8)";
     ctx.fillRect(24, 18, 400, 44);
     drawText(ctx, this.room.name, 40, 29, { size: 22, color: "#e8c98a", shadow: false });
-    ctx.fillRect(1690, 18, 206, 44);
-    drawText(ctx, "Pause / Esc", 1710, 29, { size: 20, color: "#e8c98a", shadow: false });
-    ctx.fillStyle = "rgba(5,13,22,0.8)";
-    ctx.fillRect(1470, 18, 190, 44);
-    drawText(ctx, "Casebook (J)", 1565, 29, { size: 20, color: "#e8c98a", align: "center", shadow: false });
-    ctx.fillStyle = "rgba(5,13,22,0.8)";
-    ctx.fillRect(1300, 18, 160, 44);
-    drawText(ctx, "Tip  (H)", 1380, 29, { size: 20, color: "#e8c98a", align: "center", shadow: false });
+    const bar = (b: readonly [number, number], label: string, centred: boolean) => {
+      ctx.fillStyle = "rgba(5,13,22,0.8)";
+      ctx.fillRect(b[0], BAR.y, b[1], BAR.h);
+      drawText(ctx, label, centred ? b[0] + b[1] / 2 : b[0] + 20, BAR.y + 11, {
+        size: 20, color: "#e8c98a", align: centred ? "center" : "left", shadow: false,
+      });
+    };
+    bar(BAR.pause, "Pause / Esc", false);
+    bar(BAR.casebook, "Casebook (J)", true);
+    bar(BAR.tip, "Tip  (H)", true);
     if (this.tipMode && !this.dialogue && !this.won) {
       const tip = this.currentTip();
       ctx.save();

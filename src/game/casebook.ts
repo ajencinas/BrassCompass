@@ -31,7 +31,7 @@ export class Casebook {
           <h1 id="casebook-heading">What I know so far</h1>
           <p class="lede">Everything worth writing down, in the order I wrote it.</p>
         </header>
-        <div class="casebook-body"></div>
+        <div class="casebook-body" tabindex="0"></div>
         <footer>
           <button data-action="close">Close</button>
           <small>J or Escape to close · the casebook is kept with your save</small>
@@ -53,6 +53,15 @@ export class Casebook {
       if (event.key === "Escape" || event.key.toLowerCase() === "j") {
         event.preventDefault();
         this.hide();
+        return;
+      }
+      if (event.key === "Tab") {
+        // Keep focus inside the dialog: body -> button -> body.
+        const stops = [this.body, this.overlay.querySelector<HTMLElement>("button")!];
+        const at = stops.indexOf(document.activeElement as HTMLElement);
+        const next = (at + (event.shiftKey ? -1 : 1) + stops.length) % stops.length;
+        event.preventDefault();
+        stops[next].focus();
       }
     });
 
@@ -92,8 +101,8 @@ export class Casebook {
     this.count.textContent = notes.length === 1 ? "1 entry" : `${notes.length} entries`;
 
     this.overlay.hidden = false;
-    this.body.scrollTop = this.body.scrollHeight;
-    this.overlay.querySelector<HTMLButtonElement>("button")!.focus();
+    this.body.scrollTop = 0;
+    this.body.focus();
   }
 
   hide(): void {

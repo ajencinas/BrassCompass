@@ -3,10 +3,12 @@ room alley "Chandler's Lane"
   width 2560
   music music_dock
   perspective horizon 380 ref 875 height 330
-  walk (60,875) (90,700) (2430,690) (2520,875)
-  entry 2200,800
-  arrive dock 2320,800
-  arrive chandlery 2150,800
+  # The chandler's display window sits on the right above the cobbles, so the band drops
+  # below it past x 1800.
+  walk (60,875) (90,700) (1800,700) (1900,845) (2430,845) (2520,875)
+  entry 2050,862
+  arrive dock 2320,862
+  arrive chandlery 2050,862
   arrive warehouse 300,790
   arrive counting_house 900,740
 
@@ -33,7 +35,7 @@ room alley "Chandler's Lane"
 
   hotspot chandlery_door "the chandler's"
     area 1900,230 490x500
-    stand 2150,800
+    stand 2050,862
     exit chandlery
     look "The chandler's window, lit and full of rope. Rope, pitch, canvas, and the answer to every question a ship ever asks. Open late, because ships are always leaving."
     open "I push the door. A bell somewhere in the shop regrets it."
@@ -62,7 +64,7 @@ room alley "Chandler's Lane"
 
   hotspot to_dock "back to the docks"
     area 2400,320 160x400
-    stand 2340,800
+    stand 2340,862
     exit dock
     look "The lane runs back down to the waterfront."
 
