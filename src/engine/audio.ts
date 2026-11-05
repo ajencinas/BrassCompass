@@ -14,6 +14,9 @@ export class AudioEngine {
   muted = false;
 
   private master: GainNode | null = null;
+  /** A looping environmental bed: sea, wind or a room full of people. */
+  private ambience: { src: AudioBufferSourceNode; gain: GainNode } | null = null;
+  private ambienceKind: string | null = null;
   constructor(private assets: Assets) {
     try {
       const saved = JSON.parse(localStorage.getItem("brasscompass.audio.v1") || "{}");
@@ -31,6 +34,67 @@ export class AudioEngine {
     try { localStorage.setItem("brasscompass.audio.v1", JSON.stringify({ muted: this.muted, volume: this.volume })); } catch {}
   }
 
+  /**
+   * Start, change or stop the room's ambience bed. Synthesised from filtered noise so it costs
+   * nothing and loops seamlessly; the gain is modulated slowly so it breathes.
+   */
+  setAmbience(kind: "sea" | "wind" | "tavern" | null): void {
+    if (this.ambienceKind === kind) return;
+    this.ambienceKind = kind;
+
+    const ctx = this.ctx;
+    if (!ctx) return;
+
+    if (this.ambience) {
+      const old = this.ambience;
+      this.ambience = null;
+      old.gain.gain.cancelScheduledValues(ctx.currentTime);
+      old.gain.gain.setTargetAtTime(0, ctx.currentTime, 0.4);
+      setTimeout(() => { try { old.src.stop(); } catch { /* already stopped */ } }, 1400);
+    }
+    if (!kind) return;
+
+    const seconds = 4;
+    const len = Math.floor(ctx.sampleRate * seconds);
+    const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    let last = 0;
+    for (let i = 0; i < len; i++) {
+      const white = Math.random() * 2 - 1;
+      last = (last + 0.02 * white) / 1.02;    // brown-ish noise: softer, more natural
+      data[i] = last * 3.2;
+    }
+
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.loop = true;
+
+    const filter = ctx.createBiquadFilter();
+    const gain = ctx.createGain();
+    if (kind === "sea") {
+      filter.type = "lowpass"; filter.frequency.value = 620;
+      gain.gain.value = 0.10;
+    } else if (kind === "wind") {
+      filter.type = "bandpass"; filter.frequency.value = 520; filter.Q.value = 0.6;
+      gain.gain.value = 0.07;
+    } else {
+      filter.type = "lowpass"; filter.frequency.value = 380;
+      gain.gain.value = 0.055;
+    }
+
+    // slow swell, so it does not sit flat
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    lfo.frequency.value = kind === "sea" ? 0.09 : 0.05;
+    lfoGain.gain.value = gain.gain.value * 0.45;
+    lfo.connect(lfoGain).connect(gain.gain);
+    lfo.start();
+
+    src.connect(filter).connect(gain).connect(this.master ?? ctx.destination);
+    src.start();
+    this.ambience = { src, gain };
+  }
+
   /** Must be called from a user gesture (browser autoplay policy). */
   unlock(): void {
     if (!this.ctx) {
@@ -44,6 +108,12 @@ export class AudioEngine {
       }
     }
     void this.ctx?.resume();
+    // A room's ambience may have been requested before the first gesture unlocked audio.
+    if (this.ambienceKind && !this.ambience) {
+      const kind = this.ambienceKind;
+      this.ambienceKind = null;
+      this.setAmbience(kind as "sea" | "wind" | "tavern");
+    }
     if (this.current?.paused) void this.current.play().catch(() => {});
   }
 

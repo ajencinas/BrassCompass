@@ -2,7 +2,7 @@ room lagoon_shore "Gullet Key — the Lagoon Shore"
   bg bg_shore_wide
   width 2560
   music music_sea
-  ambience gulls
+  ambience sea
   perspective horizon 470 ref 875 height 310
   walk (60,875) (140,770) (900,762) (1350,690) (2000,650) (2450,690) (2520,875)
   entry 950,800

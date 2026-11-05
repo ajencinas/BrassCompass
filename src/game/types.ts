@@ -145,7 +145,7 @@ export interface Room {
    * A scene sets a flag that its own conditions exclude, so it plays once.
    */
   scenes?: { if: Cond[]; do: Effect[] }[];
-  ambience?: "gulls";
+  ambience?: "gulls" | "sea" | "wind" | "tavern";
   /**
    * CSS filter applied to the background (and its occluders), e.g. a night grade that lets one
    * painting serve as another time of day. A grade also dims the figures to a moonlit cast.

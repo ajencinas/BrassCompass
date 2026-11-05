@@ -4,7 +4,7 @@ room pier_end "The Pier End"
   width 2560
   music music_sea
   grade "brightness(0.95) saturate(0.85)"
-  ambience gulls
+  ambience sea
   perspective horizon 455 ref 875 height 330
   walk (545,875) (560,790) (760,770) (1010,705) (1230,672) (1420,640) (1800,600) (1560,760) (1300,875)
   entry 640,830

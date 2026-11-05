@@ -2,6 +2,7 @@ room marrow_quarterdeck "The Marrow — Quarterdeck"
   bg bg_quarterdeck_wide
   width 2560
   music music_sea
+  ambience sea
   perspective horizon 250 ref 875 height 320
   walk (100,875) (150,690) (2380,700) (2500,875)
   entry 300,800

@@ -497,8 +497,10 @@ export function compile(files: SourceFile[], options: CompileOptions = {}): Comp
         case "music": room.music = cc.id("a music track"); leaf(); break;
         case "ambience": {
           const a = cc.id("an ambience");
-          if (a !== "gulls") cc.fail("the only ambience is gulls");
-          room.ambience = "gulls"; leaf(); break;
+          if (a !== "gulls" && a !== "sea" && a !== "wind" && a !== "tavern") {
+            cc.fail("ambience is gulls, sea, wind or tavern");
+          }
+          room.ambience = a as Room["ambience"]; leaf(); break;
         }
         case "grade": room.grade = cc.str("a CSS filter in quotes"); leaf(); break;
         case "stars": room.stars = { y: cc.num() }; leaf(); break;

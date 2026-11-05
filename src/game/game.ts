@@ -1217,6 +1217,7 @@ export class Game {
     this.hoverHotspot = null;
     if (room.music) this.audio.playMusic(room.music);
     if (room.ambience === "gulls") setTimeout(() => this.audio.gulls(), 900);
+    this.audio.setAmbience(room.ambience && room.ambience !== "gulls" ? room.ambience : null);
     this.persist();
     if (room.onEnter) this.runEffects(room.onEnter);
     // Story scenes belong to the voyage, not to Explore Scenes.
