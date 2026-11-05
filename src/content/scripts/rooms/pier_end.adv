@@ -2,7 +2,7 @@
 room pier_end "The Pier End"
   bg bg_pierend_wide
   width 2560
-  music music_dock
+  music music_sea
   grade "brightness(0.95) saturate(0.85)"
   ambience gulls
   perspective horizon 455 ref 875 height 330

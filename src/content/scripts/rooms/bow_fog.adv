@@ -2,7 +2,7 @@
 room bow_fog "The Marrow — The Bow"
   bg bg_bow_wide
   width 2560
-  music music_dock
+  music music_fog
   # Calibrated against the deck rail (~1 m) and the coils of rope.
   perspective horizon 555 ref 875 height 430
   # The deck between the rope coils, running back to the waist; the rail and the bowsprit

@@ -1,7 +1,7 @@
 room salt_camp "Gullet Key — the Salt Camp"
   bg bg_saltcamp_wide
   width 2560
-  music music_dock
+  music music_fog
   perspective horizon 312 ref 875 height 380
   walk (60,878) (120,760) (1100,740) (1500,690) (1940,700) (1950,815) (2470,815) (2500,878)
   entry 1500,800

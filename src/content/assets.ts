@@ -67,5 +67,7 @@ export const MANIFEST = {
     music_dock: "/assets/audio/dock.mp3",
     music_office: "/assets/audio/office.mp3",
     music_tavern: "/assets/audio/tavern.mp3",
+    music_sea: "/assets/audio/sea.mp3",
+    music_fog: "/assets/audio/fog.mp3",
   },
 };

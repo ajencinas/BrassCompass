@@ -2,7 +2,7 @@
 room reef_wreck "The Arcadia, on the Reef"
   bg bg_reef_wide
   width 2560
-  music music_dock
+  music music_fog
   ambience gulls
   perspective horizon 440 ref 875 height 300
   # The beach right of the boat, running out onto the coral flats under the wreck.

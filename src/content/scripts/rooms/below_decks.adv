@@ -1,7 +1,7 @@
 room below_decks "The Marrow — Below Decks"
   bg bg_below_wide
   width 2560
-  music music_tavern
+  music music_office
   perspective horizon 470 ref 875 height 560
   # The plank floor in front of the sea-chest, the mess table and the galley stove.
   walk (60,875) (120,845) (700,845) (760,808) (1180,808) (1200,815) (1440,815) (1480,770) (1580,770) (1600,850) (2060,865) (2100,875)

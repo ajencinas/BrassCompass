@@ -2,7 +2,7 @@
 room marrow_deck "The Marrow — Main Deck"
   bg bg_deck_wide
   width 2560
-  music music_dock
+  music music_sea
   perspective horizon 230 ref 875 height 330
   # The quarterdeck stairs and their banisters fill x≈1340–1880; they are an exit, not floor.
   walk (80,875) (110,690) (1320,690) (1320,875)

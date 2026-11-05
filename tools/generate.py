@@ -779,6 +779,16 @@ MANIFEST = [
               "slow 6/8, atmospheric, instrumental, loopable",
       "lyrics": "[instrumental]", "duration": 48, "seed": 7}, "audio/dock.mp3"),
 
+    ("music_sea", "audio", "acestep-ai/ace-step-1.5/text-to-audio",
+     {"tags": "open sea at dawn, wide and hopeful, gentle strings and accordion over a slow swell, "
+              "no percussion, instrumental, loopable",
+      "lyrics": "[instrumental]", "duration": 44, "seed": 23}, "audio/sea.mp3"),
+
+    ("music_fog", "audio", "acestep-ai/ace-step-1.5/text-to-audio",
+     {"tags": "fog bank and a silent wreck, uneasy and sparse, low sustained strings, distant metal, "
+              "no melody to hold on to, instrumental, loopable",
+      "lyrics": "[instrumental]", "duration": 44, "seed": 31}, "audio/fog.mp3"),
+
     ("music_tavern", "audio", "acestep-ai/ace-step-1.5/text-to-audio",
      {"tags": "rowdy dockside tavern, fiddle and concertina, stomping jig, warm and humorous, "
               "mid tempo, instrumental, loopable",

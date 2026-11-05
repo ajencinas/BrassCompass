@@ -1,7 +1,7 @@
 room weather_works "Gullet Key — the Weather Works"
   bg bg_works_wide
   width 2560
-  music music_office
+  music music_fog
   perspective horizon 380 ref 875 height 300
   walk (60,878) (90,800) (2420,800) (2480,878)
   entry 260,840
