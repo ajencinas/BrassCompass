@@ -80,3 +80,29 @@ Press `D` in the game (or add `?debug` to the URL). The overlay draws a 1.75 m s
 sample points across the floor, labelled with its height in pixels, alongside the walk polygon,
 occluder floor lines, hotspot rectangles and the horizon. If the figure is not the height of the
 furniture beside it, the curve is wrong.
+
+## Finding floating characters
+
+`tools/audit_placement.py` tests whether a walkable spot is really floor.
+
+Depth gives disparity (larger = nearer). On a floor, looking up the screen means looking further
+away, so disparity must fall as `y` decreases. On a vertical face — a counter front, a wall, the
+side of a crate — it barely changes. A point whose disparity is flat over 30 px of height is a
+point where a character will read as hovering in front of the surface.
+
+```bash
+python3 tools/audit_placement.py            # every room
+python3 tools/audit_placement.py chandlery  # one room
+```
+
+It reports the share of each room's walkable area that fails the test, and names the entry,
+arrival and stand points that fail.
+
+**The tool is honest about when it cannot tell.** The test assumes the depth map behaves like a
+ground plane, so it first fits each room's horizon and, if r² is below 0.65, prints
+`depth unreliable here — check by eye` instead of a verdict. About eight of the twenty-one rooms
+land there: their art is painted with a strong central perspective or heavy occlusion, and the
+depth model cannot separate floor from furniture. Those need the `D` overlay and a look.
+
+Current state: thirteen rooms measurable and clean (0–7% vertical); eight unmeasurable, checked by
+eye at every entry and stand, no floats found.

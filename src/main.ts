@@ -20,12 +20,21 @@ async function boot(): Promise<void> {
 
   window.addEventListener("resize", () => view.resize());
 
-  await assets.load(MANIFEST, (p) => {
+  // Boot on the title art and the player only. The rest is ~86 MB, and nothing on the title
+  // screen needs it: it streams in while the opening cinematic plays.
+  const BOOT = new Set(["bg_dock_wide", "char_elias", "char_walk_v2", "char_walk_vertical"]);
+  const pick = (keep: boolean) =>
+    Object.fromEntries(Object.entries(MANIFEST.images).filter(([k]) => BOOT.has(k) === keep));
+
+  await assets.load({ images: pick(true), audio: MANIFEST.audio }, (p) => {
     if (bar) bar.style.width = `${Math.round(p * 100)}%`;
   });
 
   const game = new Game(view, input, assets, audio);
   game.start();
+
+  // Everything else in the background, at low priority.
+  void assets.load({ images: pick(false), audio: {} }, () => { /* no progress UI */ });
 
   // The Adventure Editor (F2): dev server only, never part of the production bundle.
   if (import.meta.env.DEV) void import("./editor/editor").then((m) => m.install(game, view));

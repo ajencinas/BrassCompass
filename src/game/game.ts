@@ -169,6 +169,8 @@ export class Game {
   /** Tip mode keeps the current tip on screen. Remembered per browser, separate from saves. */
   private tipMode = false;
   private saveBroken = false;
+  /** Seconds spent waiting for a room's art to arrive. */
+  private roomWait = 0;
   private saveWarning: string | null = null;
   private setTipMode(on: boolean): void {
     this.tipMode = on;
@@ -1088,6 +1090,18 @@ export class Game {
       this.fadeTarget = 0;
     }
 
+    // Hold the curtain while a room's art is still streaming in, but never forever: a missing
+    // file must not lock the screen black.
+    if (!this.title && !this.roomReady()) {
+      this.roomWait += dt;
+      if (this.roomWait < 8) {
+        this.fade = 1;
+        this.fadeTarget = 0;
+      }
+    } else {
+      this.roomWait = 0;
+    }
+
     if (this.title) return;
 
     if (this.saveWarning && !this.dialogue && !this.narration) {
@@ -1483,6 +1497,15 @@ export class Game {
     }
     drawCursor(ctx, this.input.x, this.input.y, label, this.rejection > 0);
     this.renderFade(ctx);
+  }
+
+  /** Whether the current room's background and sprites have all arrived. */
+  private roomReady(): boolean {
+    const room = this.room;
+    if (!room) return true;
+    if (!this.assets.img(room.bg)) return false;
+    for (const s of room.sprites ?? []) if (!this.assets.img(s.key)) return false;
+    return true;
   }
 
   private renderScene(ctx: CanvasRenderingContext2D): void {

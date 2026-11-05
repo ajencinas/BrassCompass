@@ -60,9 +60,16 @@ def parse_room(path: str) -> dict | None:
     if not (bg and walk):
         return None
     pts = [(float(a), float(b)) for a, b in re.findall(r"\((-?[\d.]+),(-?[\d.]+)\)", walk.group(1))]
+    entry = re.search(r"^\s*entry\s+(-?[\d.]+),(-?[\d.]+)", src, re.M)
+    arrives = dict(
+        (m.group(1), (float(m.group(2)), float(m.group(3))))
+        for m in re.finditer(r"^\s*arrive\s+(\w+)\s+(-?[\d.]+),(-?[\d.]+)", src, re.M)
+    )
     return {
         "path": path,
         "id": os.path.basename(path)[:-4],
+        "entry": (float(entry.group(1)), float(entry.group(2))) if entry else None,
+        "arrive": arrives,
         "bg": bg.group(1),
         "width": int(width.group(1)) if width else 1920,
         "perspective": tuple(float(x) for x in persp.groups()) if persp else None,
