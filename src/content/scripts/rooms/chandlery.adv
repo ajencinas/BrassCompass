@@ -2,6 +2,7 @@ room chandlery "The Chandler's"
   bg bg_chandlery_wide
   width 2560
   music music_office
+  grade "brightness(0.95) saturate(0.85)"
   perspective horizon 200 ref 875 height 430
   walk (120,875) (170,834) (2380,834) (2500,875)
   entry 1500,856

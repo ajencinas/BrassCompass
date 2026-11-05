@@ -3,6 +3,7 @@ room village "Upper Town"
   bg bg_village_wide
   width 2560
   music music_tavern
+  grade "brightness(0.95) saturate(0.85)"
   perspective horizon 380 ref 875 height 340
   # The well stands at x 120-410, so the floor starts clear of it.
   walk (440,875) (470,700) (2450,700) (2520,875)

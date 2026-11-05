@@ -2,6 +2,7 @@ room alley "Chandler's Lane"
   bg bg_alley_wide
   width 2560
   music music_dock
+  grade "brightness(0.95) saturate(0.85)"
   perspective horizon 380 ref 875 height 330
   # The chandler's display window sits on the right above the cobbles, so the band drops
   # below it past x 1800.

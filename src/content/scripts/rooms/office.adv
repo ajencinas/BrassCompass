@@ -2,6 +2,7 @@ room office "Customs House"
   bg bg_office_wide
   width 2560
   music music_office
+  grade "brightness(0.95) saturate(0.85)"
   # A close, shallow room. The desk is a tall clerk's standing desk, so it reads chest-high on
   # a person standing at it; figures are large and shrink little across the floor.
   perspective horizon -200 ref 875 height 560

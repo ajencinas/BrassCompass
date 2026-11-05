@@ -2,6 +2,7 @@ room tavern "The Salty Keel"
   bg bg_tavern_wide
   width 2560
   music music_tavern
+  grade "brightness(0.95) saturate(0.85)"
   # Calibrated against the bar (~1.1 m), the barrels and the seated regulars.
   perspective horizon 450 ref 875 height 440
   scale 705 268

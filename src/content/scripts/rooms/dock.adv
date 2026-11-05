@@ -2,6 +2,7 @@ room dock "Vela Docks"
   bg bg_dock_wide
   width 2560
   music music_dock
+  grade "brightness(0.95) saturate(0.85)"
   ambience gulls
   # Calibrated against the tavern door (~2.1 m) and the near bollards.
   perspective horizon 335 ref 875 height 345

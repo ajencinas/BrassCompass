@@ -1499,6 +1499,16 @@ export class Game {
     this.renderFade(ctx);
   }
 
+  /**
+   * A room's grade belongs to the figures, not the background: the plate is already painted at
+   * the right time of day, and filtering it again just muddies it. Sprites keep their own grade
+   * and inherit the room's on top.
+   */
+  private figureGrade(extra?: string): string {
+    const parts = [this.room.grade, extra].filter((g): g is string => !!g && g !== "none");
+    return parts.length ? parts.join(" ") : "none";
+  }
+
   /** Whether the current room's background and sprites have all arrived. */
   private roomReady(): boolean {
     const room = this.room;
@@ -1513,12 +1523,7 @@ export class Game {
     const worldWidth = this.room.width ?? LOGICAL_W;
     ctx.save();
     ctx.translate(-this.cameraX, 0);
-    const grade = this.room.grade ?? "none";
-    if (bg) {
-      ctx.filter = grade;
-      ctx.drawImage(bg, 0, 0, worldWidth, SCENE_H);
-      ctx.filter = "none";
-    }
+    if (bg) ctx.drawImage(bg, 0, 0, worldWidth, SCENE_H);
 
     // Depth-sorted drawables: static props/NPCs and the player share one list.
     const drawables: { y: number; draw: () => void }[] = [];
@@ -1529,7 +1534,7 @@ export class Game {
       if (s.showIf && !s.showIf.every((c) => this.check(c))) continue;
       const talking = this.currentNode()?.speaker === s.speaker;
       const breath = s.idle ? Math.sin(this.time * (talking ? 5 : 1.8) + s.x) * (talking ? 0.006 : 0.0025) : 0;
-      drawables.push({ y: s.y, draw: () => this.drawSprite(ctx, s.key, s.x, s.y, s.size * (1 + breath), s.visible ?? 1, Boolean(s.speaker), s.flip, s.grade) });
+      drawables.push({ y: s.y, draw: () => this.drawSprite(ctx, s.key, s.x, s.y, s.size * (1 + breath), s.visible ?? 1, Boolean(s.speaker), s.flip, this.figureGrade(s.grade)) });
     }
     drawables.push({ y: this.y, draw: () => this.drawPlayer(ctx) });
     // Occluders sort by where they meet the floor: they cover what stands behind them only.
@@ -1537,19 +1542,12 @@ export class Game {
       drawables.push({ y: o.y, draw: () => {
         ctx.save(); ctx.beginPath();
         o.area.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y));
-        ctx.closePath(); ctx.clip(); ctx.filter = grade; ctx.drawImage(bg, 0, 0, worldWidth, SCENE_H); ctx.restore();
+        ctx.closePath(); ctx.clip(); ctx.drawImage(bg, 0, 0, worldWidth, SCENE_H); ctx.restore();
       } });
     }
     drawables.sort((a, b) => a.y - b.y);
     for (const d of drawables) d.draw();
-    if (this.room.grade) {
-      // Figures keep their daylight colours, so a graded room pulls everything to moonlight.
-      ctx.save();
-      ctx.globalCompositeOperation = "multiply";
-      ctx.fillStyle = "rgb(170,185,228)";
-      ctx.fillRect(0, 0, worldWidth, SCENE_H);
-      ctx.restore();
-    }
+
     if (this.room.stars) this.drawStars(ctx, worldWidth, this.room.stars.y);
     if (this.debugOverlay) this.drawDebugOverlay(ctx);
     ctx.restore();
@@ -1761,7 +1759,7 @@ export class Game {
     const walking = this.path.length > 0;
     const vertical = this.moveDirection === "up" || this.moveDirection === "down";
     const cycle = this.walkPhase / STRIDE;
-    const grade = "saturate(0.85) brightness(0.9)";
+    const grade = this.figureGrade("saturate(0.85) brightness(0.9)");
 
     this.drawShadow(ctx, this.x, this.y, height * 0.26, 0.38);
 

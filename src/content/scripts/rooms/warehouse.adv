@@ -2,6 +2,7 @@ room warehouse "Harbour Loft"
   bg bg_warehouse_wide
   width 2560
   music music_office
+  grade "brightness(0.95) saturate(0.85)"
   perspective horizon 250 ref 875 height 400
   # The crate stack on the left stands on the floor up to y≈790: walk only in front of it.
   # The ledger desk's footprint (x≈1060–1620) is notched out, so Fenn passes in front.
