@@ -22,7 +22,7 @@ interface Ambience {
 }
 
 interface ToneOptions {
-  /** Where to send the sound; defaults to master. */
+  /** Where to send the sound; defaults to the effects bus. */
   dest?: AudioNode;
   /** Start this many seconds from now. */
   delay?: number;
@@ -34,9 +34,14 @@ export class AudioEngine {
   private ctx: AudioContext | null = null;
   private current: HTMLAudioElement | null = null;
   volume = 0.55;
+  /** Music and effects (SFX and ambience) each have their own level under the master. */
+  musicVolume = 1;
+  sfxVolume = 1;
   muted = false;
 
   private master: GainNode | null = null;
+  private musicBus: GainNode | null = null;
+  private sfxBus: GainNode | null = null;
   /** Per-track gain, created once per element (createMediaElementSource may only run once). */
   private trackGain = new Map<HTMLAudioElement, GainNode | null>();
   private stopTimers = new Map<HTMLAudioElement, number>();
@@ -52,7 +57,11 @@ export class AudioEngine {
     try {
       const saved = JSON.parse(localStorage.getItem("brasscompass.audio.v1") || "{}");
       this.muted = saved.muted === true;
-      if (typeof saved.volume === "number" && Number.isFinite(saved.volume)) this.volume = Math.max(0, Math.min(1, saved.volume));
+      const unit = (v: unknown, fallback: number) =>
+        typeof v === "number" && Number.isFinite(v) ? Math.max(0, Math.min(1, v)) : fallback;
+      this.volume = unit(saved.volume, this.volume);
+      this.musicVolume = unit(saved.music, this.musicVolume);
+      this.sfxVolume = unit(saved.sfx, this.sfxVolume);
     } catch { /* settings are optional */ }
     if (typeof document !== "undefined") {
       document.addEventListener("visibilitychange", () => {
@@ -64,6 +73,16 @@ export class AudioEngine {
 
   setVolume(value: number): void {
     this.volume = Math.max(0, Math.min(1, value));
+    this.syncSettings();
+  }
+
+  setMusicVolume(value: number): void {
+    this.musicVolume = Math.max(0, Math.min(1, value));
+    this.syncSettings();
+  }
+
+  setSfxVolume(value: number): void {
+    this.sfxVolume = Math.max(0, Math.min(1, value));
     this.syncSettings();
   }
 
@@ -82,10 +101,19 @@ export class AudioEngine {
       const g = this.master.gain;
       g.cancelScheduledValues(this.ctx.currentTime);
       g.setTargetAtTime(this.level, this.ctx.currentTime, 0.015);
+      for (const [bus, v] of [[this.musicBus, this.musicVolume], [this.sfxBus, this.sfxVolume]] as const) {
+        if (!bus) continue;
+        bus.gain.cancelScheduledValues(this.ctx.currentTime);
+        bus.gain.setTargetAtTime(v, this.ctx.currentTime, 0.015);
+      }
     }
     // Before the context exists a track may be playing unrouted (autoplay allowed): use .volume.
-    if (this.current && !this.trackGain.get(this.current)) this.current.volume = this.level;
-    try { localStorage.setItem("brasscompass.audio.v1", JSON.stringify({ muted: this.muted, volume: this.volume })); } catch {}
+    if (this.current && !this.trackGain.get(this.current)) this.current.volume = this.level * this.musicVolume;
+    try {
+      localStorage.setItem("brasscompass.audio.v1", JSON.stringify({
+        muted: this.muted, volume: this.volume, music: this.musicVolume, sfx: this.sfxVolume,
+      }));
+    } catch {}
   }
 
   /** Must be called from a user gesture (browser autoplay policy). Cheap and idempotent. */
@@ -98,6 +126,12 @@ export class AudioEngine {
         this.master = context.createGain();
         this.master.gain.value = this.level;
         this.master.connect(context.destination);
+        this.musicBus = context.createGain();
+        this.musicBus.gain.value = this.musicVolume;
+        this.musicBus.connect(this.master);
+        this.sfxBus = context.createGain();
+        this.sfxBus.gain.value = this.sfxVolume;
+        this.sfxBus.connect(this.master);
         // A track requested before the first gesture: route it in at full track level.
         if (this.current) {
           const g = this.route(this.current);
@@ -142,7 +176,7 @@ export class AudioEngine {
       const src = ctx.createMediaElementSource(el);
       gain = ctx.createGain();
       gain.gain.value = 0;
-      src.connect(gain).connect(this.master);
+      src.connect(gain).connect(this.musicBus ?? this.master);
       el.volume = 1;   // level is now the graph's job
     } catch {
       gain = null;     // fall back to element volume for this track
@@ -192,7 +226,7 @@ export class AudioEngine {
 
     const gNext = this.route(next);
     if (gNext) this.ramp(gNext.gain, 1, fadeMs);
-    else next.volume = this.level;   // no context yet: nothing to crossfade against
+    else next.volume = this.level * this.musicVolume;   // no context yet: nothing to crossfade against
     if (!this.hidden) void next.play().catch(() => { /* autoplay still blocked; retried on unlock */ });
 
     if (old) {
@@ -285,7 +319,7 @@ export class AudioEngine {
     out.gain.setValueAtTime(0, now);
     out.gain.linearRampToValueAtTime(1, now + 1.2);
 
-    src.connect(filter).connect(swell).connect(out).connect(this.master ?? ctx.destination);
+    src.connect(filter).connect(swell).connect(out).connect(this.sfxBus ?? this.master ?? ctx.destination);
     lfo.start();
     src.start(now, offset);
 
@@ -385,7 +419,7 @@ export class AudioEngine {
     g.gain.setValueAtTime(0, t0);
     g.gain.linearRampToValueAtTime(gain, t0 + attack);
     g.gain.exponentialRampToValueAtTime(0.0001, t0 + Math.max(dur, attack + 0.02));
-    o.connect(g).connect(opts.dest ?? this.master ?? ctx.destination);
+    o.connect(g).connect(opts.dest ?? this.sfxBus ?? this.master ?? ctx.destination);
     o.onended = () => { o.disconnect(); g.disconnect(); };
     o.start(t0);
     o.stop(t0 + Math.max(dur, attack + 0.02) + 0.02);
@@ -417,7 +451,7 @@ export class AudioEngine {
     f.frequency.value = filterHz;
     const g = ctx.createGain();
     g.gain.value = gain;
-    src.connect(f).connect(g).connect(dest ?? this.master ?? ctx.destination);
+    src.connect(f).connect(g).connect(dest ?? this.sfxBus ?? this.master ?? ctx.destination);
     src.onended = () => { src.disconnect(); f.disconnect(); g.disconnect(); };
     src.start();
   }
