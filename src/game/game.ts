@@ -1337,6 +1337,9 @@ export class Game {
     this.onArrive = null;
     this.persist();
     this.audio.door();
+    // Fetch the next room's art while the curtain falls.
+    const next = ROOMS[id];
+    if (next) this.assets.prioritize([next.bg, ...(next.sprites ?? []).map((s) => s.key)]);
     this.fadeTarget = 1;
     this.pendingRoom = id;
   }
@@ -1646,8 +1649,9 @@ export class Game {
   private roomReady(): boolean {
     const room = this.room;
     if (!room) return true;
-    if (!this.assets.img(room.bg)) return false;
-    for (const s of room.sprites ?? []) if (!this.assets.img(s.key)) return false;
+    // A failed image counts as arrived: a missing file must not hold the curtain.
+    if (!this.assets.isReady(room.bg)) return false;
+    for (const s of room.sprites ?? []) if (!this.assets.isReady(s.key)) return false;
     return true;
   }
 
