@@ -31,3 +31,6 @@ public/assets/props/
 
 # Depth caches for tools/calibrate.py
 .calibration/
+
+# Untouched art and video, kept by tools/optimize_assets.py before it shrinks anything.
+.asset-originals/

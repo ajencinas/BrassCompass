@@ -53,9 +53,15 @@ export function drawText(
   ctx.textAlign = style.align ?? "left";
   ctx.textBaseline = "top";
   if (style.shadow !== false) {
-    ctx.shadowColor = "rgba(0,0,0,0.85)";
-    ctx.shadowBlur = 6;
-    ctx.shadowOffsetY = 2;
+    // A soft drop shadow, faked: a wide translucent stroke and a darker fill, both 2px down.
+    // Looks like the 6px shadowBlur it replaces, at a fraction of the cost (a canvas blur is a
+    // full filter pass per call, and the UI draws dozens of lines a frame).
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = "rgba(0,0,0,0.22)";
+    ctx.lineWidth = Math.max(3, style.size * 0.2);
+    ctx.strokeText(text, x, y + 2);
+    ctx.fillStyle = "rgba(0,0,0,0.55)";
+    ctx.fillText(text, x, y + 2);
   }
   ctx.fillStyle = style.color;
   ctx.fillText(text, x, y);
