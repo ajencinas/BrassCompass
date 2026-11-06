@@ -952,7 +952,7 @@ export class Game {
         return;
       }
 
-      const fallback = defaultLine(verb, this.hotspotTarget(hs), verb + hs.id);
+      const fallback = defaultLine(verb, this.hotspotTarget(hs), verb + hs.id, this.act);
       if (line || effects) this.speak(line ?? fallback);
       else this.reject(fallback);
 

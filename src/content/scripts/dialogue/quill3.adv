@@ -18,7 +18,7 @@ dialogue quill3
   node rowing quill "I didn't row for you. I rowed because you row like you're signing something in triplicate. …You're welcome."
     > "What did the captain say, exactly?" -> plan
     > "Shall we?" -> after
-  node plan quill "Find anyone alive, run a new flag up the wreck's mast, and she brings the Marrow in through the Needle. If fifteen's still up when the fog lifts, we're dead and she's very sorry."
+  node plan quill "Find anyone alive, run a new flag up the wreck's mast, and she brings the Marrow in through the Needle. If the old rag's still up when the fog lifts, we're dead and she's very sorry."
     > "She said “very sorry”?" -> sorry
     > "Then we'd better not be dead." -> after
   node sorry quill "She said “sorry”. I added the “very”. I'm navigator now; I'm allowed to round up."
