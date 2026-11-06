@@ -122,11 +122,14 @@ room office "Customs House"
     "The key turns. Inside: the harbour stamp, a pot of ink, and an IOU to Marta for one game of cards, unpaid. I take the stamp."
     give stamp
     set drawer_open
+  use licence on bramwick if ledger_read = true and has manifest and met_rook
+    "I put the licence on the desk, and the Arcadia's manifest beside it. Bramwick reads the manifest first. Then he puts down his pen, which I have never seen him do."
+    talk bramwick at confess_rook
   use licence on bramwick if ledger_read = true and has manifest
     "I put the licence on the desk, and the Arcadia's manifest beside it. Bramwick reads the manifest first. Then he puts down his pen, which I have never seen him do."
     talk bramwick at confess
   use licence on bramwick
-    "Bramwick reads the licence and approves of it. “The licence is fine. The berth is Mr Cray's.” He slides it back. “The Arcadia's manifest copy, Fenn; the chandler keeps one. And read the harbour ledger yourself. Don't let me read it to you.”"
+    "Bramwick reads it and slides it back. “A fine licence. The berth is still Mr Cray's. The manifest, Fenn. And the ledger, in your own eyes.”"
   use mushroom on bramwick
     "He looks at the mushrooms. “I am not buying produce. I am a harbourmaster.”"
   use licence_form on bramwick
@@ -136,7 +139,7 @@ room office "Customs House"
   use drawer_key on bramwick
     "“I don't want it back tonight. Tonight I am, legally, elsewhere.”"
   use crowbar on drawer if act 1 and not drawer_open
-    "I fit the crowbar to the drawer. Bramwick doesn't look up. “That drawer is harbour property, Fenn, and for the next eleven minutes so am I.”"
+    "I fit the crowbar to the drawer. Bramwick doesn't look up. “That drawer is harbour property, Fenn. I, being absent, cannot stop you. I can, however, disapprove from here.”"
   use crowbar on drawer if act 1
     "It's open. The crowbar is disappointed in both of us."
   use crowbar on drawer

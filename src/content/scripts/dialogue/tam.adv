@@ -8,17 +8,25 @@ dialogue tam
     > "What do they say?" -> strange
     > "Good job." -> bye
   node do tam "I count the ships. Used to be nine or ten a week. Now it's three, and two of those are the same boat going back and forth because nobody else will."
-    > "Which boat?" -> strange
+    > "Which boat?" -> which
     > "That's a good tally." -> bye
-  node strange tam "The Arcadia was the biggest one ever came in here. My dad said she was so wide they had to bring her alongside in the morning light. She never came back."
-    > "Lots of ships don't." -> dad
-    > "I'm sorry." -> dad
-  node dad tam "Dad went with her. Tam Hobb, able seaman. I'm Tam as well, after him; Mum says that way she only has to shout once. Nine others went with him off this street. Mum says I'm not to talk about it, so I talk about it to strangers instead."
-    > "I'll look for her." -> promise
+  node which tam "The Marrow. Uncle Hobb's her bosun. He's got Dad on his arm, in ink."
+    > "Where's your dad?" -> strange
     > "Goodnight, Tam." -> bye
-  node promise tam "Will you? If you find her, tell them the tally's still running. Tell them I kept counting."
-    > "I'll tell them." -> bye
-  node bye tam "Watch the step. Mum says it's a killer. It's just a step."
+  node strange tam "The Arcadia was the fastest thing that ever came round the headland. I timed her. Then she stopped coming round."
+    > "She was my father's ship." -> captain
+    > "I'm sorry." -> dad
+    > "Lots of ships don't." -> dad
+  node captain tam "You're the captain's? …Then you're not a stranger. You're on the tally."
+    -> dad
+  node dad tam "Dad went with her. Tam Hobb, able seaman. I'm Tam too; Mum says that way she only has to shout once."
+    -> dad2
+  node dad2 tam "Mum says I'm not to talk about it, so I tell strangers."
+    > "I'll look for them. All of them." -> promise
+    > "Goodnight, Tam." -> bye
+  node promise tam "If you find Dad, tell him the tally's still running. Tell him I kept counting."
+    > "I'll tell him." -> bye
+  node bye tam "Goodnight. That's you counted."
   # Act IV: his father, home.
   node home tam "You found her! Dad came up the steps an hour ago. I counted him. Then I made him go down and come up again so I could count him twice."
     > "Did you tell him you kept counting?" if seen:tam.promise -> kept

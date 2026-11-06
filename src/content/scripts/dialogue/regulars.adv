@@ -4,7 +4,7 @@ dialogue regulars
   node slate narrator "I bring the harbour stamp down on the betting slate, under SHE COMES BACK. Three years' wages, officially witnessed by me."
     -> book
   node book regular "A clerk betting on pirates! Put it in the book, Marta, before he sobers up."
-    > "I am entirely sober. It's the pirates you should worry about." -> sober
+    > "I am entirely sober. So is the stamp." -> sober
       set wager
     > "And put me down for the first round when she docks." -> round
       set wager

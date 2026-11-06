@@ -14,13 +14,16 @@ room warehouse "Harbour Loft"
     show if not ledger_taken
     area 1210,470 270x130
     stand 1430,858
-    look "The harbour ledger. Every arrival, every departure, every ship this town has ever lost, in one hand."
-    open "The Arcadia: lost at sea, in Bramwick's hand, three days before she was even late. Beside it, a fee: “Paid, Cray & Co., factors.” Nobody pays harbour dues on a wreck. Bramwick didn't just write my father off. He was paid to."
+    look "The harbour ledger. The Harbourmaster's own book; clerks keep the day-books and aren't allowed up here. I've wanted to read one page of it for three years."
+    open "The Arcadia. “Lost at sea”, in Bramwick's hand, three days before she was even late."
+      say "Beside it: “Quarantine dues, Gullet Key station. Paid, Cray & Co.” Nobody pays dues on a wreck. He wasn't writing my father off. He was being paid to."
       set ledger_read
-      note ledger_read "The Arcadia was entered as lost at sea three days before she was due. Under the entry, a harbour fee paid in full by a factor's office. Nobody pays harbour dues on a wreck."
+      note ledger_read "The Arcadia was entered as lost in Bramwick's hand, three days before she was due. Beside it: “Quarantine dues, Gullet Key station. Paid, Cray & Co.” Quarantine where? For a ship nobody had seen?"
       sound chime
-    use "The Arcadia: lost at sea, in Bramwick's hand, three days before she was even late. Beside it, a fee: “Paid, Cray & Co., factors.” Nobody pays harbour dues on a wreck. Bramwick didn't just write my father off. He was paid to."
+    use "The Arcadia. “Lost at sea”, in Bramwick's hand, three days before she was even late."
+      say "Beside it: “Quarantine dues, Gullet Key station. Paid, Cray & Co.” Nobody pays dues on a wreck. He wasn't writing my father off. He was being paid to."
       set ledger_read
+      note ledger_read "The Arcadia was entered as lost in Bramwick's hand, three days before she was due. Beside it: “Quarantine dues, Gullet Key station. Paid, Cray & Co.” Quarantine where? For a ship nobody had seen?"
       sound chime
     pull "It's chained to the desk. Of course it is."
     state if act 4

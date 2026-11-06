@@ -13,14 +13,14 @@ dialogue nell
     > "It looks peaceful." -> peaceful
   node peaceful nell "It is. That's what worries me. A harbour town should sound like a harbour."
     > "Goodnight, Nell." -> bye
-  node odd nell "Six ships in three years, and every one found empty with the sails still set. The insurers call it weather. Weather doesn't tie off a wheel."
-    > "Weather doesn't tie off a wheel?" -> wheel
+  node odd nell "Six ships in three years. Five found drifting, sails set, nobody aboard; the sixth not found at all. The insurers call it weather. Weather doesn't tie off a wheel."
+    > "You've seen one of them." -> wheel
     > "You think someone took them." -> taken
-  node wheel nell "Lashed. Every one. They come back with the wheel lashed amidships and the boats still hanging. Whatever happened, they weren't fighting it at the end."
+  node wheel nell "I sold rope to the men who towed them in. Wheel lashed amidships, every one, boats still hanging. Whatever happened, they weren't fighting it."
     > "That isn't weather." -> taken
   node taken nell "No. It isn't. But I sell rope, clerk, not answers. Ask the old woman on the steps — she lost people, and she isn't afraid to say so."
     > "I will. Goodnight." -> bye
-  node bye nell "Mind how you go. It's all steps and wet stone up here."
+  node bye nell "Go on. Hear anything out there, I'm buying. News, I mean. Not rope."
   # Act IV: the news, arriving at a run.
   node news nell "Clerk! They're saying the Marrow came in with a hundred and thirty dead men aboard, and the dead men are buying drinks. Tell me it's true. I've sold it twice already."
     > "It's true. All of it." -> true

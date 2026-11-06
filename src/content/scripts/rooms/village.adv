@@ -90,9 +90,9 @@ room village "Upper Town"
   hotspot washing "washing line"
     area 1050,330 250x120
     nowalk
-    look "A line of shirts strung between two houses, drying in the dark. Nine of them. Somebody on this street is still washing for a man who isn't coming home."
+    look "A line of shirts strung between two houses, drying in the dark. Ten of them. Somebody on this street is still washing for a man who isn't coming home."
     state if act 4
-      look "The washing line. Nine shirts, and a tenth, pegged up still dripping, big enough to sail a dinghy. Somebody on this street is washing for a man who came home."
+      look "The washing line. Ten shirts, all of them dripping, one big enough to sail a dinghy. This street is washing for men who came home."
 
   hotspot cottages "the houses"
     area 1600,250 320x280

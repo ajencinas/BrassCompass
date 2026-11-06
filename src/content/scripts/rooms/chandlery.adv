@@ -23,7 +23,8 @@ room chandlery "The Chandler's"
   hotspot shelves "the shelves"
     area 300,120 400x470
     nowalk
-    look "Coils of rope, blocks and tackle, a lantern for every weather, and one shelf of things that look like they were invented on a dare."
+    look "Coils of rope, bolts of sailcloth, a lantern for every weather, and one shelf of things that look like they were invented on a dare."
+    use "Sailcloth. My mother sewed it for a living. She could tell good canvas from bad by the sound it made tearing. I can't."
 
   hotspot back_room "back room"
     area 2390,60 170x520
@@ -50,6 +51,6 @@ room chandlery "The Chandler's"
   use stamp on counter if chandler_paid
     "One invoice paid is a kindness. Two is a precedent, and Mr Tallow would never stop sending them."
   use stamp on counter
-    "I stamp the oldest invoice PAID. A cheer from the back room, then a thump, then “Anything you like, clerk!” I ask for the Arcadia's manifest. A copy sails out through the doorway and lands at my feet. The cat follows it, to supervise."
+    "I stamp the oldest invoice PAID. “Anything you like, clerk!” The Arcadia's manifest sails out of the back room and lands at my feet. The cat follows, to supervise."
     give manifest
     set chandler_paid

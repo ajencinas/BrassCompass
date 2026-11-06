@@ -15,6 +15,11 @@ room alley "Chandler's Lane"
 
   sprite npc_silas_body at 1380,806 size 1 flip idle speaker silas for silas grade "saturate(0.85) brightness(0.88)"
 
+  # Act I: Cray steps out to meet Fenn the first time he turns into the lane.
+  scene if act 1 and not seen:silas.root
+    say "A man in a good coat steps out of a doorway, as if he's been rehearsing it."
+    talk silas
+
   hotspot silas "man in a good coat"
     show if act 1
     area 1290,420 190x300

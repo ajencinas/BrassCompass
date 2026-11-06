@@ -7,9 +7,13 @@ dialogue bramwick
   node loiter bramwick "Good man. The ledger is never finished, Fenn. That is what I love about it."
     > "Actually, sir, about the Marrow…" if not has licence -> berth
     > "Goodnight, sir." -> bye
-  node berth bramwick "The Marrow. Licensed piracy, bound for the Straits. Every hand who sails from Vela carries a Seafarer's Licence with the harbour stamp on it. Pirates included. Pirates especially. We are a well-run port."
+  node berth bramwick "The Marrow, for the Straits. Every hand who sails from Vela carries a Seafarer's Licence, with the harbour stamp on it."
+    -> berth2
+  node berth2 bramwick "Pirates included. Pirates especially. We are a well-run port."
     -> form
-  node form bramwick "I cannot stamp anything after the night bell. Regulation fourteen. However, any clerk of this house may stamp in the Harbourmaster's absence. And after the bell, Fenn, I am, legally, absent."
+  node form bramwick "I cannot stamp anything after the night bell. Regulation fourteen."
+    -> form2
+  node form2 bramwick "However, any clerk of this house may stamp in the Harbourmaster's absence. And after the bell, Fenn, I am, legally, absent."
     > "So I could stamp it myself?" -> self
     > "Where is the stamp?" -> key
       set knows_key
@@ -28,20 +32,34 @@ dialogue bramwick
     > "Where is the stamp?" if not knows_key -> key
       set knows_key
     > "Goodnight, sir." -> bye
-  node care bramwick "Three years you've kept my ledgers without a blot. Your father sailed for the Straits, and I won't be the man who kept his son ashore. I have been enough of a man like that already."
+  node care bramwick "Three years you've kept my day-books without a blot. Your father sailed for the Straits, and I won't be the man who kept his son ashore."
+    -> care2
+  node care2 bramwick "I have been enough of a man like that already."
     > "Where is the stamp?" if not knows_key -> key
       set knows_key
-    > "Thank you, sir." -> bye
+    > "Thank you, sir. I'll try to blot something, for old times' sake." -> bye
   node licence bramwick "Do you. I can't stamp it, Fenn, but I can certainly read it. Hand it over."
-    > "Here it is. And the Arcadia's manifest." if ledger_read and has manifest -> confess
+    > "Here it is. And the Arcadia's manifest." if ledger_read and has manifest and not met_rook -> confess
+    > "Here it is. And the Arcadia's manifest." if ledger_read and has manifest and met_rook -> confess_rook
     > "Here it is." if (not ledger_read or not has manifest) -> deferred
-  node deferred bramwick "A fine licence. The berth is still Mr Cray's. Bring me the Arcadia's manifest copy; the chandler keeps one of every ship he provisions. And read the harbour ledger yourself, Fenn. Don't let me read it to you."
-    > "Yes, sir." -> bye
-  node confess fenn "The Arcadia, entered as lost three days before she was late, in your hand. A fee paid by Cray & Co. And a navigator discharged at sea, who is drinking in the Salty Keel."
+    > "On second thoughts, sir, it needs another read." -> bye
+  node deferred bramwick "A fine licence. The berth is still Mr Cray's. Bring me the Arcadia's manifest copy; the chandler keeps one of every ship he provisions."
+    -> deferred2
+  node deferred2 bramwick "And read the harbour ledger yourself, Fenn. Don't let me read it to you."
+    > "Yes, sir. I'll read it myself. In good light. Twice." -> bye
+  node confess fenn "The Arcadia: lost three days before she was late, in your hand. Quarantine dues, paid by Cray & Co. And a navigator 'discharged at sea'. By whom, sir, in the middle of the sea?"
+    -> confess2
+  node confess_rook fenn "The Arcadia: lost three days before she was late, in your hand. Quarantine dues, paid by Cray & Co. And a navigator 'discharged at sea', now drinking in the Salty Keel."
     -> confess2
   node confess2 bramwick "I was paid. I told myself it was a kindness: a quick line in the book instead of a long wait at the window. It was not a kindness. It was three hundred crowns."
     -> confess3
-  node confess3 bramwick "Mr Cray's claim is void. Regulation two. Your name is on the Marrow's manifest. She sails at dawn, Fenn. Don't make me write you down as lost."
+  node confess3 bramwick "Mr Cray's claim is void, regulation two, and you're on the Marrow. I wrote your father down, Fenn. I never once saw him go under. Don't make me write you down as lost."
     > "I won't, sir." -> END
       act 1
+    > "You wrote him down, sir. Three days early." -> early
+    > "You told me to read it. Thank you for that." -> thanked
+  node early bramwick "I did. I have read that line every morning since. It does not improve."
+    act 1
+  node thanked bramwick "Don't thank me, Fenn. I bolted that loft from the lane side for three years, hoping someone would notice. Sail."
+    act 1
   node bye bramwick "Goodnight, Fenn. Don't stamp anything I'd regret."

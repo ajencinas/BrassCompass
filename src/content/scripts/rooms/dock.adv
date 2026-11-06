@@ -29,11 +29,33 @@ room dock "Vela Docks"
   # The Marrow's bulwark and hull, below her rail.
   occluder floor 452 (250,398) (420,401) (560,410) (600,432) (580,540) (250,560)
 
+  # The dawn clock: once each, as the evidence comes in, the night moves on.
+  scene if act 4 and not inquiry_done and has ledger and has purse and has claims_book and not dawn3
+    set dawn1
+    set dawn2
+    set dawn3
+    say "The bell-ringer has reached the top of the tower. He's sat down to wait, which is the most considerate thing anyone's done tonight."
+  scene if act 4 and not inquiry_done and has ledger and has purse and not dawn2
+    set dawn1
+    set dawn2
+    say "The sky over the headland hasn't changed colour yet. It's thinking about it."
+  scene if act 4 and not inquiry_done and has ledger and has claims_book and not dawn2
+    set dawn1
+    set dawn2
+    say "The sky over the headland hasn't changed colour yet. It's thinking about it."
+  scene if act 4 and not inquiry_done and has purse and has claims_book and not dawn2
+    set dawn1
+    set dawn2
+    say "The sky over the headland hasn't changed colour yet. It's thinking about it."
+  scene if act 4 and not inquiry_done and (has ledger or has purse or has claims_book) and not dawn1
+    set dawn1
+    say "Up the hill, the bell-ringer's lantern is moving. He's climbing early. Cray will have paid him for punctuality."
+
   hotspot ship "the Marrow"
     area (0,0) (650,0) (700,550) (0,600)
     stand 880,830
     look "The Marrow. A licensed pirate brig, which in Port Vela is a perfectly respectable thing to be. She sails for the Straits at dawn."
-    talk "I call up to the deck. Someone calls back: “Licence first, clerk!” Even our pirates have standards."
+    talk "I call up to the deck. A woman's voice calls back: “Licence first, clerk!” She sounded like she'd already lost interest. Even our pirates have standards."
     open "I'm not opening a ship. Ships open themselves, usually at the worst moment."
     pickup "She's a little big for my satchel."
     state if act 4 and quarantine_lifted
@@ -109,7 +131,8 @@ room dock "Vela Docks"
   hotspot water "harbour water"
     area 0,250 760x630
     nowalk
-    look "Black water holding the town's lights. Past the headland it becomes the Straits, where my father's ship was last seen. His compass is in my pocket. It has never once pointed north, and it isn't starting tonight."
+    look "Black water holding the town's lights. Past the headland it becomes the Straits, where my father's ship was last seen."
+      say "His compass is in my pocket. It has never once pointed north, and it isn't starting tonight."
     talk "I tell the water I'm coming. It doesn't seem worried."
     use "I could drink it. I have had worse from the tavern."
     state if act 4
@@ -159,7 +182,7 @@ room dock "Vela Docks"
     show if act 4 and not ledger_written
     area 1730,300 190x280
     stand 1800,700
-    look "The steps up to Upper Town. Nine shirts on a line up there, and an old woman sweeping a clean step. I'm not knocking on anybody's door with “nearly”."
+    look "The steps up to Upper Town. Ten shirts on a line up there, and an old woman sweeping a clean step. I'm not knocking on anybody's door with “nearly”."
     open "Not yet. When I go up those steps I want to be carrying the ledger, corrected."
     walk "Not yet. When I go up those steps I want to be carrying the ledger, corrected."
 
@@ -193,7 +216,7 @@ room dock "Vela Docks"
   use ledger on quill_pier if ledger_written
     "She reads my entry upside down, and nods at it once, the way she'd nod at a good bearing."
   use crowbar on crate if not crate_open
-    "I get the bar under the crate and walk it round. The stack groans, gives, and comes away — and underneath, in the black wet timber where the fog gets in, there is a stand of jet-caps, thick as shillings."
+    "I lever the crate aside. Underneath, in the black wet timber where the fog gets in: jet-caps, thick as crowns on a factor's desk."
     give mushroom
     set crate_open
     sound pickup
