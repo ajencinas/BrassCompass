@@ -26,22 +26,22 @@ dialogue tavernkeeper
     -> straits2
   node straits2 marta "…You're signing on. Don't argue, I can see it. He had that exact look."
     > "Goodnight, Marta." -> bye
-  node favour marta "A favour's a debt with better manners. I take mushrooms, gossip and the truth, in that order. Come back with one."
-    > "Mushrooms, gossip, truth. In that order. Noted." -> bye
-  node key marta "Won it off him at cards. He bet it on a pair of threes, the old fool. It's yours in trade. My broth is as thin as a ledger tonight. Bring me a handful of jet-caps."
-    > "I've got some right here." if has mushroom -> traded
-      take mushroom
+  node favour marta "A favour's a debt with better manners. I take rum, gossip and the truth, in that order. Come back with one."
+    > "Rum, gossip, truth. In that order. Noted." -> bye
+  node key marta "Won it off him at cards. He bet it on a pair of threes, the old fool. Yours for a bottle of rum. Mine's been held on the pier since Thursday. By customs."
+    > "I've inspected some right here." if has rum -> traded
+      take rum
       give drawer_key
       set marta_paid
-      note marta_key "Marta won Bramwick's drawer key and would not give it back for nothing. A handful of jet-caps, for the broth, is apparently the rate."
+      note marta_key "Marta won Bramwick's drawer key and would not give it back for nothing. One bottle of her own impounded rum, for the punch, is apparently the rate."
       sound pickup
-    > "A handful. Done." if not has mushroom -> bye
-    > "Where do I find jet-caps at this hour?" if not has mushroom -> nofungus
-  node nofungus marta "Under the pier, mostly. There's a crate on the quay nobody's shifted in years, and they come up thick in the black timber beneath it."
-    -> nofungus2
-  node nofungus2 marta "You'd want a crowbar. That crate's been nailed down since the last harbourmaster but one."
-    > "A crowbar. Noted." -> bye
-  node traded marta "Jet-caps! The broth lives. Here's his key. And tell him a pair of threes is not a strategy."
+    > "One bottle. Done." if not has rum -> bye
+    > "Held by customs? Which customs?" if not has rum -> norum
+  node norum marta "You, clerk. A crate on the quay, stencilled HELD FOR CUSTOMS INSPECTION, and not a soul's come to inspect it. My punch bowl's dry and the regulars have noticed."
+    -> norum2
+  node norum2 marta "So inspect it. It's nailed shut, so bring a crowbar. And if a bottle comes loose during the inspection, well. That's procedure."
+    > "A crowbar. For procedure. Noted." -> bye
+  node traded marta "You inspected it? With a crowbar? That's the most customs has done for me in thirty years. Here's his key. And tell him a pair of threes is not a strategy."
     > "Goodnight, Marta." -> bye
   node thanks marta "Thanks are free, clerk, and I don't deal in free. Pay me in story: whatever's out in those Straits, come back and tell me. I hate an unfinished story."
     > "I will. I'll even get it stamped." -> bye

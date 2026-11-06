@@ -263,7 +263,7 @@ form." *Quill released.*
 > **ANSEL:** *(delighted)* Of course you are.
 
 Ansel won't leave without every crew. He gives Fenn flag sixteen (`flag16`, with an L in the
-corner: "For your mother. She'd have hated the colour.").
+corner: "For your mother. She'd have hated the mustard.").
 
 Tam Hobb is in the camp. *Talk to him:* "Tell my brother I said his tattoos are terrible."
 
@@ -283,7 +283,7 @@ Needle; the crews row out. Cray's cutter, watching from the far side, runs for P
 **Cast tonight:** Cray in Bramwick's chair (office); Bramwick and Rook drinking together and
 Marta (tavern); Nib (counting house); Cray's men (pier end); Quill, Ansel (dock, aboard).
 
-**Caption.** "Port Vela, the night after. Cray got home first. The harbour bell will ring at
+**Caption.** "Port Vela, that same night. Cray got home first. The harbour bell will ring at
 dawn, and at the bell he will write us all down as lost."
 
 ### 1. The dock: the farewell

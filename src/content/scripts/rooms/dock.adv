@@ -69,21 +69,21 @@ room dock "Vela Docks"
       talk "I call up to the rail."
         talk quill4 at rail
 
-  hotspot crate "stacked crate"
+  hotspot crate "impounded crate"
     show if act 1
     area 925,695 150x145
     stand 1110,840
-    look "A fish crate, nailed shut, stacked here so long the planks beneath it have gone black. Something has been growing in that dark, and growing well."
-    open "Nailed. Whatever is underneath has had three years to get comfortable."
-    pickup "I try to lift it. The crate has become furniture."
+    look "A crate of rum, nailed shut and stencilled HELD FOR CUSTOMS INSPECTION. It's been waiting for an inspector since Thursday. Technically, it's been waiting for me."
+    open "Nailed. Customs nails things properly. It's the one thing we do promptly."
+    pickup "I try to lift it. It's heavy with rum and paperwork, mostly paperwork."
       sound deny
-    push "It shifts an inch and the whole stack complains."
+    push "It sloshes, faintly, in a way I would describe on a form as “liquid”."
     pull "I pull. The crate declines, politely, the way nailed things do."
     state if crate_open = true
-      name "stacked crate"
-      look "The crate, shifted aside. The timbers under it are black and wet, and the jet-caps have been picked clean."
-      open "Open ground now, and a good deal wetter than it was."
-      pickup "I've had my share of them."
+      name "inspected crate"
+      look "Marta's rum, inspected. The lid's back on, and the crate is one bottle lighter, which is the customary margin of error."
+      open "I've inspected it. Inspecting it again would just be drinking."
+      pickup "It's cleared customs. Customs has had its share."
 
   hotspot crowbar "crowbar"
     show if act 1 and not has crowbar
@@ -216,9 +216,9 @@ room dock "Vela Docks"
   use ledger on quill_pier if ledger_written
     "She reads my entry upside down, and nods at it once, the way she'd nod at a good bearing."
   use crowbar on crate if not crate_open
-    "I lever the crate aside. Underneath, in the black wet timber where the fog gets in: jet-caps, thick as crowns on a factor's desk."
-    give mushroom
+    "I conduct a customs inspection, with the crowbar. It is very thorough. When it's over the crate is one bottle lighter, and that bottle is the sample."
+    give rum
     set crate_open
     sound pickup
   use crowbar on crate
-    "It's shifted already. The crate has given everything it has, and it was mostly mushrooms."
+    "It's been inspected. Any more inspection and Marta would call it theft, and she'd be right."

@@ -80,7 +80,7 @@ sparingly.
 | **Fenn** | Customs clerk, 23 | Polite, precise, deadpan; braver than he sounds | Treats everything as paperwork, and is usually right to | From stamping other people's voyages to choosing his own |
 | **Quill** | The Marrow's lookout, 22 | Blunt, quick, competitive; tender only when cornered | Calls Fenn "cargo"; says his name once, when it counts | From "only the lookout" to navigator, and from guarding herself to letting him in |
 | **Bramwick** | Harbourmaster | Pompous, kind, guilty | Recites regulations at people as hints | Confesses, is disgraced, is reinstated, pays the IOU |
-| **Marta** | Runs the Salty Keel | Warm, sharp, trades in stories | Collects stories like debts; jet-caps for the broth | Finally hears the whole story; wins the last hand |
+| **Marta** | Runs the Salty Keel | Warm, sharp, trades in stories | Collects stories like debts; rum for the punch | Finally hears the whole story; wins the last hand |
 | **Rook** | The Arcadia's navigator, 70s | Wry, self-mocking, sober underneath | Navigates by self-deprecation ("the bar's low and I'm under it") | Hands back the purse; goes back to sea, "mostly" sober |
 | **Silas Cray** | Factor, insurer, villain | Unfailingly polite, amused, never raises his voice | Collects things; bills by the hour | Undone by paperwork, the one thing he thought he owned |
 | **Mr Tallow** | Chandler (voice only) | Harassed, grateful | Unpaid invoices; the cat | Paid at last |
@@ -159,7 +159,7 @@ choices. It changes lines and the ending, never whether you can finish.
 
 ## Facts to keep straight
 
-- The Marrow sails **at dawn**; Act I is the night before. Act IV is the night after the return.
+- The Marrow sails **at dawn**; Act I is the night before. Act IV is that same night, after the return.
 - "Six ships in three years, the Arcadia first."
 - Cray's company is **Cray & Co., factors**; its seal is a cloud.
 - The quarantine flag is **yellow**; the fake fog is **kelp smoke**.

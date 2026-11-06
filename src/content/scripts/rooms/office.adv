@@ -130,8 +130,8 @@ room office "Customs House"
     talk bramwick at confess
   use licence on bramwick
     "Bramwick reads it and slides it back. “A fine licence. The berth is still Mr Cray's. The manifest, Fenn. And the ledger, in your own eyes.”"
-  use mushroom on bramwick
-    "He looks at the mushrooms. “I am not buying produce. I am a harbourmaster.”"
+  use rum on bramwick
+    "“Seized spirits, Fenn? I am legally absent, and an absent man cannot accept a bribe. Return it to whichever punch bowl it was seized from.”"
   use licence_form on bramwick
     "“It wants the harbour stamp, Fenn, which I cannot apply after the bell.” He stares very hard at his own drawer."
   use stamp on bramwick

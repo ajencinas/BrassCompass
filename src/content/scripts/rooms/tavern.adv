@@ -72,7 +72,7 @@ room tavern "The Salty Keel"
       look "Rook, at his corner table, with company for once: Bramwick, out of uniform, matching him drink for drink and apology for apology."
       talk "He sees my face and puts his mug down very slowly."
         talk rook4
-    state if (seen:rook.who or seen:rook.knew)
+    state if met_rook
       name "Old Rook"
 
   hotspot bar "the bar"
@@ -178,7 +178,7 @@ room tavern "The Salty Keel"
     area 855,470 110x220
     nowalk
     look "Dorrit, at the back, guarding the punch bowl as though it might be smuggled. He has stamped his own cup."
-    talk "“Stamped and passed, clerk. I'm only here as a witness. And for the punch.”"
+    talk "“Stamped and passed, clerk. I'm only here as a witness. And for the punch. I'm told customs inspected the rum personally.”"
 
   use stamp on crowd if act 4 and wager
     "My bet's on the slate already, stamped. The ink is dry. The Marrow is wet. Both count."
@@ -238,9 +238,9 @@ room tavern "The Salty Keel"
     "She reads “for fog”, and laughs out loud, once, like a cork. “Keep that for afters.”"
   use ledger on cray_t
     "He raises his glass to it. “To the ledger. Long may it say what it says.”"
-  use mushroom on marta
-    "“Jet-caps!” Marta holds one up to the lantern. “The broth lives, and so does the room. Here: his key. Tell Bramwick he can win it back when he learns to bluff.”"
-    take mushroom
+  use rum on marta
+    "“Inspected? With a crowbar? That's the most customs has done for me in thirty years.” She uncorks it over the punch bowl. “Here: his key. Tell Bramwick to learn to bluff.”"
+    take rum
     give drawer_key
     set marta_paid
     sound pickup

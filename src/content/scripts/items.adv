@@ -3,14 +3,14 @@
 item crowbar "crowbar"
   look "A crowbar with ambitions well beyond leaning on bollards."
 
-item mushroom "jet-caps"
-  look "Jet-caps. Black-capped, wet, and worth more than they look. They grow in timber the fog has been at, and Marta will not serve her broth without them."
+item rum "inspected rum"
+  look "One bottle of Marta's rum, removed for inspection. I have inspected the label, the cork and the colour. The rest is between Marta and her punch bowl."
 
 item licence_form "licence form"
   look "A blank Seafarer's Licence. Name, rank, and a box marked “previous piracy, if any”. Worthless until it carries the harbour stamp."
 
 item drawer_key "drawer key"
-  look "Bramwick's drawer key. Lost at cards, traded for a handful of mushrooms. A distinguished career, for a key."
+  look "Bramwick's drawer key. Lost at cards, traded for a bottle of inspected rum. A distinguished career, for a key."
 
 item stamp "harbour stamp"
   look "The harbour stamp. Brass, heavy, and far more powerful than it looks."
@@ -19,7 +19,7 @@ item licence "stamped licence"
   look "My Seafarer's Licence, stamped by a clerk of the customs house in the Harbourmaster's legal absence. The ink is still wet."
 
 item compass "brass compass"
-  look "My father's compass. My grandfather made it, my father sailed by it, and then one morning he left it on the hall table and sailed without it. It has never once pointed north."
+  look "My father's compass. My grandfather made it, my father sailed by it, and he left it on the hall table the morning he sailed. I assumed he'd be back for it. I'm still assuming."
   state if act 1 and has licence and has manifest and ledger_read
     look "The needle points at the customs house like a dog that's found something. Bramwick, then. With everything."
   state if act 1 and has licence and not ledger_read
@@ -30,12 +30,12 @@ item compass "brass compass"
     look "A harbour stamp and a clerk who knows where the licence forms are. Even the needle can see where this is going."
   state if act 1 and has drawer_key
     look "Bramwick's drawer key. The needle points at the customs house, or at least doesn't object to it."
-  state if act 1 and has mushroom
-    look "Someone in Port Vela wants what grows under the pier. The needle swings toward the tavern, and waits."
+  state if act 1 and has rum
+    look "One bottle of evidence, and a tavern with a dry punch bowl. The needle swings toward the Salty Keel, and waits."
   state if act 1 and knows_key
-    look "Marta has the drawer key and wants jet-caps. They come up under the stacked crate on the pier."
+    look "Marta has the drawer key and wants her rum. It's on the pier, in a crate marked HELD FOR CUSTOMS INSPECTION. I am customs."
   state if act 1
-    look "My father's compass. It has never once pointed north. Tonight it leans toward the customs house: Bramwick will know how a clerk gets a licence."
+    look "My father's compass. It points wherever it likes, and tonight it likes the customs house: Bramwick will know how a clerk gets a licence."
   state if act 2 and vane_convinced
     look "The needle has stopped pretending to be a compass. It points over the bow, into the fog, at a reef nobody sails. Forward, then."
   state if act 2 and quill_navigator and crew_agree

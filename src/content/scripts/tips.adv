@@ -22,14 +22,14 @@ tip if act 1 and has stamp
   "Pick up a blank licence form from Bramwick's desk."
 tip if act 1 and has drawer_key
   "Use the drawer key on Bramwick's drawer in the customs house."
-tip if act 1 and has mushroom and knows_key
-  "Give the jet-caps to Marta in the Salty Keel."
-tip if act 1 and has mushroom
-  "Ask Bramwick how a clerk could stamp a licence. Marta wants jet-caps for her broth."
+tip if act 1 and has rum and knows_key
+  "Give the inspected rum to Marta in the Salty Keel."
+tip if act 1 and has rum
+  "Ask Bramwick how a clerk could stamp a licence. Marta will want her rum."
 tip if act 1 and knows_key and has crowbar
-  "Marta wants jet-caps. Use the crowbar on the stacked crate on the pier."
+  "Marta wants her rum. Use the crowbar on the impounded crate on the pier."
 tip if act 1 and knows_key
-  "Marta wants jet-caps from under the crate on the pier. Pick up the crowbar by the bollard first."
+  "Marta's rum is in the impounded crate on the pier. Pick up the crowbar by the bollard first."
 tip if act 1
   "Talk to Bramwick in the customs house (the stone building on the right) about signing on."
 # Act II
