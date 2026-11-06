@@ -37,6 +37,11 @@ The generated art — scene backgrounds, character sprites, portraits and props 
 repository**. It is a little over 80 MB of WebP and PNG, which belongs in a shared folder rather
 than in git history alongside the code.
 
+To be precise: the art is no longer *tracked*, but earlier commits did contain it, so a clone still
+downloads it as part of the history. Removing it from history means rewriting every commit with
+`git filter-repo` and force-pushing, which breaks existing clones; that is the owner's call and has
+not been done.
+
 **Images are available on request.** Everything needed to run the game is in a private folder:
 
 ```
