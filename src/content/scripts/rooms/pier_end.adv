@@ -12,6 +12,8 @@ room pier_end "The Pier End"
   # Wilf, loading the hand cart; Bartle, by the lamp, whose turn it supposedly is.
   sprite npc_weather_body at 885,765 size 1 idle speaker weather for wilf grade "saturate(0.6) brightness(0.72)" if not inquiry_done
   sprite npc_weather_body at 1330,662 size 1 flip idle speaker weather2 for bartle grade "saturate(0.6) brightness(0.72)" if not inquiry_done
+  # Vane, ashore once the flag's down, by the lamp, looking at the crates she carried.
+  sprite npc_vane_body at 1330,662 size 1 flip idle speaker vane for vane grade "saturate(0.75) brightness(0.88)"
 
   hotspot town "back along the pier"
     area 0,360 520x120
@@ -44,6 +46,15 @@ room pier_end "The Pier End"
       talk weather4
     give "“Docket first, sir.”"
 
+  hotspot vane "Captain Vane"
+    show if quarantine_lifted
+    area 1280,440 105x225
+    stand 1180,700
+    look "Captain Vane, ashore, by the lamp, with her hands behind her back, inspecting Cray's kelp crates the way she'd inspect a crew she was about to flog."
+    talk "She doesn't turn round. “Clerk.”"
+      talk vane4
+    give "“Keep it, clerk. I've carried enough of other people's cargo.”"
+
   hotspot crates "kelp crates"
     area 940,530 270x150
     stand 1180,700
@@ -69,7 +80,7 @@ room pier_end "The Pier End"
   hotspot lighthouse "the lighthouse"
     area 2110,90 170x450
     nowalk
-    look "The Vela light, turning over the harbour mouth. Three years I watched ships leave by it. Last night I came home by it. It looks smaller from the sea, which I'm told is the point."
+    look "The Vela light, turning over the harbour mouth. Three years I watched ships leave by it. Tonight I came home by it. It looks smaller from the sea, which I'm told is the point."
 
   hotspot sea "the harbour mouth"
     area 1900,560 660x320

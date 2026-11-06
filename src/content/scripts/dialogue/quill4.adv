@@ -1,8 +1,8 @@
 # Quill, on the Marrow's rail; then the pier at dawn.
 dialogue quill4
-  node farewell quill "Yellow flag on the harbour boom, cargo. Quarantine. Nobody off the Marrow sets foot in Port Vela, and the harbour guns have been told so. In writing."
+  node farewell quill "Yellow flag on the boom, cargo. Quarantine: nobody off the Marrow sets foot in Port Vela. Except customs. Dorrit swears it's a regulation. Congratulations, you're a clerk again."
     -> farewell2
-  node farewell2 quill "And if she's still at anchor when the dawn bell rings, Cray writes her down as a plague ship, and the guns get to practise. So we sail at dawn. Either way."
+  node farewell2 quill "And if she's still at anchor when the dawn bell rings, Cray writes her down as a plague ship, and the harbour guns get to practise. So we sail at dawn. Either way."
     > "Then I have until dawn." -> until
       add aff 1
     > "I got a licence, a berth and a pirate captain in one night. Dawn's ages away." -> ages
@@ -38,26 +38,33 @@ dialogue quill4
     > "I'll be back before dawn." -> back
   node done quill "I heard. The whole harbour heard; Hobb cried on the capstan. Now get that flag off the boom, cargo. I want to stand on something that doesn't move."
   node dad quill "Up and down the rail. He's moved flag sixteen to our masthead so the town can see it. Vane let him. I've never seen Vane let anybody do anything."
-  node plan quill "You're asking the lookout? Fine. He lies on paper, so you beat him on paper. Find every page he wrote and hold it up to the light. Start with Bramwick; he's the one who knows the rules."
+    -> crates
+  node crates quill "Vane found out what was in her crates. She's been very quiet. Hobb hid the cargo book, in case she wants to throw it at someone and picks him."
+  node plan quill "You're asking the navigator? Good. He lies on paper, so take a bearing on every page he wrote and see where they cross. Start with Bramwick; he's where the lines meet."
   node liar quill "There. Low over the lighthouse. …It's moved since I showed you. It always moves. I like that about it. Go on. Go and be a clerk at somebody."
   node back quill "I know. I'm counting on it. I'm also counting the bells, so don't test me."
   # On the pier, once the quarantine's lifted and before the ledger's put right.
-  node pier quill "Solid ground. I hate it. It just sits there. …The book, cargo. Fix the book, then come and find me."
+  node pier quill "Solid ground. I hate it. It just sits there. …The book, cargo. Fix the book, take it up the steps to Upper Town, then come and find me."
     > "You came ashore." -> ashore
     > "On my way." -> END
   node ashore quill "Vane said stretch my legs. I've stretched them as far as this bollard. It's a good bollard. I'm keeping it."
   # Dawn, on the pier: the choice.
-  node dawn narrator "The sky over the headland has gone the colour of weak tea. Quill is sitting on a bollard at the end of the pier, swinging one bare foot over the water, waiting for me as if she isn't."
+  node dawn narrator "The sky over the headland has gone the colour of weak tea. Quill is on a bollard at the pier end, swinging one bare foot over the water, waiting for me as if she isn't."
     -> sea
-  node sea quill "Well, cargo. Sea or desk?"
+  node sea quill "Well, cargo. Sea or desk? Your father's been home one night, and Bramwick needs somebody who reads the backs. I know what I'm asking."
+    -> tide
+  node tide quill "The tide doesn't care. I do. Don't tell the tide."
     > "You called me Fenn. Earlier." if not seen:quill4.once -> once
     > "Sign me on. Purser. I'll keep the books and you'll keep the stars." -> purser
     > "Someone has to keep the ledger honest. Come back every season?" -> season
-  node once quill "Once. It's rationed, I told you. I'm saving the rest for when you've earned them."
+    > "Upper Town first. I owe somebody up there an ending." if not seen:onn.home -> upfirst
+  node once quill "Once. It's rationed. I'm saving the rest for when you've earned them."
     -> sea2
-  node sea2 quill "So. Sea or desk? The tide doesn't care. I do. Don't tell the tide."
+  node sea2 quill "So. Sea or desk? Take your time. Not that much."
     > "Sign me on. Purser. I'll keep the books and you'll keep the stars." -> purser
     > "Someone has to keep the ledger honest. Come back every season?" -> season
+    > "Upper Town first. I owe somebody up there an ending." if not seen:onn.home -> upfirst
+  node upfirst quill "Upper Town first, cargo. Go on. I was a lookout for years. Waiting's the job."
   node purser narrator "She tries very hard not to smile, and loses by a distance."
     -> biscuits
   node biscuits quill "Purser. Vane will make you count the biscuits."
@@ -66,7 +73,11 @@ dialogue quill4
   node pkiss narrator "I kiss her, on the pier, in front of the customs house, the lighthouse, and my father, who has found a reason to coil a rope very slowly nearby."
     -> logging
   node logging ansel "Don't mind me. I'm logging it."
-    -> aboard
+    -> ptwo
+  node ptwo quill "Get aboard, then. …Fenn. That's two. Don't get used to it."
+    > "(Go aboard.)" -> END
+      set ending_pirate
+      act 4
   node aboard quill "Get aboard, then, cargo. The tide's turning. So, apparently, are you."
     > "(Go aboard.)" -> END
       set ending_pirate
@@ -79,7 +90,11 @@ dialogue quill4
     > "I'll stamp it." -> quay
     > "(Kiss her.)" if aff >= 14 -> dkiss
   node dkiss narrator "I kiss her. Behind us the customs-house window bangs open, Bramwick says “Regulation—”, Marta says “Shut that window, you old fool”, and he does. Slowly."
-    -> quay
+    -> dtwo
+  node dtwo quill "Be on the quay when we come in, Fenn. That's two. I'll want a receipt."
+    > "(Watch her go.)" -> END
+      set ending_desk
+      act 4
   node quay quill "Be on the quay when we come in. Don't be late."
     > "(Watch her go.)" -> END
       set ending_desk

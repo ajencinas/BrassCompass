@@ -11,7 +11,11 @@ dialogue ansel4
   node night ansel "Goodnight, son. Mind the third plank on the pier; it's been loose since before you were born. I keep meaning to report it. To you, I suppose, now."
   # Ashore, at Rook's table, after the quarantine's lifted.
   node ashore ansel "Son! Rook owes me a reef, and he's paying in rum, which isn't legal tender. I'm not proud."
-    > "What will you do now?" -> shop
+    > "What will you do now?" if not seen:ansel4.shop -> shop
+    > "Should I go with them? The Marrow." if not seen:ansel4.point -> point
     > "(Leave them to it.)" -> leave
-  node shop ansel "Open a shop, I think. Compasses. Every one will point at the Old Nail and be useless anywhere else. I'll sell them as souvenirs of home."
+  node shop ansel "Open a shop, I think. Compasses. Every one will point at the Old Nail and be useless anywhere else. I'll sell them to people who want to come home."
+  node point ansel "I sailed twenty years, son, and the best navigating I ever did was leaving a compass on a hall table. Don't ask me where to point."
+    -> stake
+  node stake ansel "You've seen what I do at the third stake."
   node leave rook "Go on, boy. Your captain and I have three years of lying to catch up on."

@@ -6,7 +6,7 @@ dialogue weather4
     > "Who signs for it?" if not seen:weather4.signs -> signs
     > "I've seen kelp crates like those before. On the Marrow." if kelp_seen and not seen:weather4.marrow -> marrow
     > "Goodnight." -> bye
-  node for weather "Fog. —"
+  node for weather "Fog—"
     -> fires
   node fires weather2 "Fires! It's for fires, sir. Fog's just what fires do if you're not careful. We're very careful."
   node menace weather "Not my turn, sir. It's Bartle's turn."

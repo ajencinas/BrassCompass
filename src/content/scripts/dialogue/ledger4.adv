@@ -3,16 +3,32 @@ dialogue ledger4
   node open narrator "I open the harbour ledger on the bar, at the page I walked past for three years without once turning to it. ARCADIA. LOST AT SEA. In Bramwick's hand, three days early."
     -> quiet
   node quiet narrator "The room goes quiet. Bramwick takes his hat off. Rook takes his off too, finds he isn't wearing one, and holds his mug to his chest instead."
-    > "(Write.)" -> write
+    > "(Write.)" if pike_roll -> write_roll
       set ledger_written
       note wrote_it_down "I wrote it all into the harbour ledger and signed my name under it, which is either the bravest or the most clerical thing I have ever done."
+    > "(Write.)" if not pike_roll -> write
+      set ledger_written
+      note wrote_it_down "I wrote it all into the harbour ledger and signed my name under it, which is either the bravest or the most clerical thing I have ever done."
+  node write_roll narrator "Underneath, in my best customs hand, I write: ARCADIA: returned. All hands."
+    -> roll
+  node roll narrator "Then the other five ships, one under another, every name off Pike's roll. It takes a while. Nobody in the Keel minds."
+    -> shake
   node write narrator "Underneath, in my best customs hand, I write: ARCADIA: returned. All hands."
+    -> five
+  node five narrator "Then the other five ships, one under another. Returned. All hands. Returned. All hands."
+    -> shake
+  node shake narrator "By the last one my hand has stopped shaking, which is how I find out it was."
     -> stamp
   node stamp narrator "Then I stamp it. The stamp comes down on the page like a door closing behind somebody who has come home."
     sound chime
+    -> desk
+  node desk bramwick "There'll be a desk going at the customs house, Fenn. For somebody who reads the backs. I can't pay you much. I can pay you honestly."
+    -> account
+  node account ansel "Don't stay on my account, son. I managed three years on a reef. I can manage a shop."
     -> ending
   node ending marta "Now that's an ending."
     > "Not quite. There's a ship sailing at dawn." -> dawn
     > "(Close the book.)" -> closed
   node dawn marta "Then go and catch it, you daft article. Or don't. But go and say so to her face."
+    -> closed
   node closed narrator "I close the book. For the first time in three years I don't know what the next page says, and I find I like it."

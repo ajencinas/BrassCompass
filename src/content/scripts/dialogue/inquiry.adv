@@ -12,10 +12,14 @@ dialogue inquiry
     -> cat
   node cat narrator "Marta sets a stool behind the bar like a bench. Mr Tallow's cat jumps up beside her, sits, and looks at Cray as if he were a ledger that doesn't balance."
     -> dorrit
-  node dorrit narrator "At the back, a round shape in a customs waistcoat has slipped in: Dorrit. Customs officers are exempt from quarantine, he says. He never resigned. He just stopped coming in."
+  node dorrit narrator "At the back, a round shape in a customs waistcoat has slipped in: Dorrit. Customs can't be quarantined, he says. He never resigned. He just stopped coming in."
     set inquiry_started
     -> open
   node open marta "This inquiry is open. Mr Cray will answer the charges. Fenn will bring them. Everybody else will drink quietly and not touch the cat."
+    -> liberty
+  node liberty silas "Allow me. I've taken the liberty of drafting the charges against me. Mine will be tidier."
+    -> readthem
+  node readthem marta "Read them, then. Fenn will answer them."
     -> c1
   # The log needs no "if has": Act IV starts with it and nothing takes it, and an
   # unconditional choice keeps every charge node from ever being a dead end.
@@ -98,18 +102,18 @@ dialogue inquiry
     -> c3r
   node c3ok fenn "Six ships, paid in full, for weather. And the same year, your office refused Captain Vane's claim for a real storm. On a technicality."
     -> stamped
-  node stamped dorrit "Stamped and passed, that book. I'd know. I passed its first page myself, before I went to sea. Thought it smelled off even then."
+  node stamped dorrit "Requisitioned on a stamped form, handed over by the company's own clerk. Stamped and passed, that book. I'd serve soup on it."
     -> vane
   node vane marta "Vane's claim. I remember. She drank here a month on credit, and paid back every penny. Go on, Mr Cray."
     -> c4
   # Charge the fourth: who was taken off.
-  node c4 silas "Even granting all that, clerk: nobody can say who was taken off those ships. Or by whom. Or that anyone was taken at all."
+  node c4 silas "Even granting all that, clerk: who was aboard? Everyone who could tell you is on a plague ship, under my yellow flag. Quarantine. I'm told it's catching."
     > "(Show Ansel's log.)" -> c4_ansel_log
     > "(Show the harbour ledger.)" if has ledger -> c4_ledger
     > "(Show the claims book.)" if has claims_book -> c4_claims_book
     > "(Show Rook's purse.)" if has purse -> c4ok
     > "(Show the kelp manifest.)" if has kelp_manifest -> c4_kelp
-  node c4r marta "The charge is that nobody can say who was taken off, Fenn. Is there anybody in this room who can?"
+  node c4r marta "The charge is that nobody ashore can say who was taken off, Fenn. Is there anybody in this room who can?"
     > "(Show Ansel's log.)" -> c4_ansel_log
     > "(Show the harbour ledger.)" if has ledger -> c4_ledger
     > "(Show the claims book.)" if has claims_book -> c4_claims_book
@@ -119,19 +123,25 @@ dialogue inquiry
     -> c4r
   node c4_ledger silas "The ledger records ships, clerk, not people. It's one of the things I like best about it."
     -> c4r
-  node c4_claims_book silas "Insurers pay for hulls. They're famously uninterested in who was aboard. It's why I went into the business."
+  node c4_claims_book silas "Hulls, clerk. That book is all hulls. Insurers are famously uninterested in who was aboard. It's why I went into the business."
     -> c4r
   node c4_kelp marta "The charge is people, Fenn, and that's kelp. Hold on to it. I can tell it wants an audience."
     -> c4r
   node c4ok narrator "I don't say anything. I hand the purse to Rook. He stands up, which takes him a while, and the whole room waits for him."
     -> first
-  node first rook "I can say. I was the first."
+  node first rook "I'm ashore. I was the first."
     -> fruit
   node fruit rook "Taken off the Arcadia under a yellow flag, paid with this, and put on a fruit boat. Cray's seal, never opened. Open it, Marta. I want everyone looking."
     -> wax
   node wax narrator "Marta breaks the wax cloud. Three hundred crowns spill on the bar, and a folded slip in a neat hand: RECEIVED, ONE NAVIGATOR, SURPLUS TO REQUIREMENTS. S.C."
     -> surplus
-  node surplus rook "Surplus. I've been called worse. Mostly by me."
+  node surplus marta "Is that your hand, Mr Cray?"
+    -> receipts
+  node receipts silas "…It's a very good hand. I always did keep receipts. It's a weakness."
+    -> same
+  node same bramwick "(quietly) Three hundred. Same as me."
+    -> pair
+  node pair rook "Then we're a matched pair. …Surplus. I've been called worse. Mostly by me."
     > "(Show the kelp manifest.)" if has kelp_manifest -> c5
       set kelp_read
       note kelp_fog "The fog is not weather. It is dried kelp, burned by the forkful in iron braziers, and Vane has been shipping it out in the Marrow's own crates."
@@ -145,9 +155,15 @@ dialogue inquiry
     -> stands
   # Cray, standing.
   node stands narrator "Cray stands. He brushes down his coat, straightens his cravat pin, and smiles at me, and it's very nearly a real smile."
+    -> colleagues
+  node colleagues silas "We're colleagues, really. I hear you wrote a form on a beach and a whole island walked out of it. I write it, you file it… and now you write it too."
+    -> true
+  node true fenn "Yes. The difference is that mine were true."
+    -> fashioned
+  node fashioned silas "Is that the difference? How very old-fashioned."
     -> point
   node point silas "I collect things that point, clerk. I wanted your compass for three years."
-    > "You collected the wrong thing. This one pointed at you." -> sodid
+    > "You should have collected clerks, Mr Cray. This one pointed at you." -> sodid
       take purse
       take claims_book
       set inquiry_done

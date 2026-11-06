@@ -1,0 +1,11 @@
+# Captain Vane, ashore at the pier end, with Cray's kelp crates.
+dialogue vane4
+  node root vane "Four hundred crates of fog, clerk. I carried them in my own hold for Cray, at a crown a crate, and was grateful for the crown."
+    -> weather
+  node weather vane "Funny thing, weather."
+    > "You didn't know what was in them." if not seen:vane4.ask -> ask
+    > "Your claim's in his book. Refused, on the same page as six paid." if not seen:vane4.page -> page
+    > "Goodnight, captain." -> bye
+  node ask vane "I didn't ask. That's worse, clerk, and cheaper. I was very proud of how cheap I was."
+  node page vane "Then put my name in your ledger, under his. Pell always said I'd end up in somebody's paperwork. He meant a warrant."
+  node bye vane "Go on. The Marrow sails at dawn, with or without a purser. I've no preference. Quill has several."

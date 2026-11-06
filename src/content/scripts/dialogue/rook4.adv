@@ -29,7 +29,7 @@ dialogue rook4
       sound pickup
   node now rook "Not yet. I'll look at it when there's a room full of people looking with me. Take it, boy. Hold it up at somebody."
     -> take
-  node take narrator "I take the purse. It's heavier than three hundred crowns ought to be. Guilt has a weight; Cray just never had to carry it."
+  node take narrator "I take the purse. It's heavier than a purse ought to be. Guilt has a weight; Cray just never had to carry it."
   # Afterwards.
   node hub rook "Still here, boy? There's a dawn coming, and I hear you've plans for it."
     > "Will you go back to sea?" if not seen:rook4.sea -> sea

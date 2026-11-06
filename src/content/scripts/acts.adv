@@ -20,7 +20,7 @@ act 3 "Tidy Weather"
   intro "/assets/video/act-iii-intro.mp4"
   outro "/assets/video/act-iii-outro.mp4"
   inventory compass stamp
-  caption "Quill rows. I hold the compass. Neither of us says that the flag on the wreck is the first thing I've wanted to see since I was twenty."
+  caption "Quill rows. I hold the compass. Neither of us mentions the flag on the wreck, so we both look at it instead."
   on start
     say "On the coral, Quill fishes something out of the bilge and holds it up by one end: my crowbar. “You packed a crowbar.” A pause. “Of course you did.” She drops it in my lap."
     give crowbar
@@ -30,7 +30,7 @@ act 4 "All Hands Returned"
   intro "/assets/video/act-iv-intro.mp4"
   outro "/assets/video/act-iv-outro.mp4"
   inventory compass stamp crowbar ansel_log
-  caption "Port Vela, the night after. Cray's cutter got home first. At the dawn bell he means to write us all down as lost, and this time he's holding the pen."
+  caption "Port Vela, that same night. Cray's cutter got home first. At the dawn bell he means to write us all down as lost, and this time he's holding the pen."
   on start
     talk quill4
 
@@ -45,9 +45,13 @@ ending "ALL HANDS RETURNED"
   line if ending_pirate and aff >= 14
     "Her hand is in mine before the Liar has even set. Neither of us writes that down."
   line if ending_pirate and not (aff >= 14)
-    "She doesn't hold my hand. She does stand close enough that it would be very easy to."
+    "She kissed me once, on a salt pan, and has since filed it under heatstroke. She stands close enough to amend the record."
   line if ending_pirate
-    "Flag sixteen flies at the masthead. My mother would have hated the colour."
+    "My father's compass sits in the Marrow's binnacle. Quill steers by it and pretends she doesn't need to. It still points at the Old Nail. So, most days, do we."
+  line if ending_pirate
+    "I brought Bramwick his stamp. He gave me a smaller one from his drawer: PURSER, THE MARROW. He'd had it cut that morning, before I'd decided."
+  line if ending_pirate
+    "Flag sixteen flies at the masthead. It's mustard. My mother would have hated it."
   # the desk ending: the customs-house window, a year on
   line if ending_desk
     "A year later, at the customs-house window: a sail on the horizon, a patchwork flag at her masthead. I stamp her ARRIVED before she's even rounded the light."
@@ -55,15 +59,23 @@ ending "ALL HANDS RETURNED"
     "She comes up the quay at a run, as she does every season, with a new star for me. I've written down four. One of them moves."
   line if ending_desk and aff >= 14 and night_watch
     "Every one of them is underlined."
+  line if ending_desk and aff >= 14
+    "On the quay she calls me cargo. On the steps, where nobody's counting, she doesn't."
   line if ending_desk and not (aff >= 14)
-    "She still calls me cargo. She brings a new star every season, and lets me write it down."
+    "She still calls me cargo. She said my name once, across a harbour, and is rationing the rest. Every season she brings a star and lets me write it down."
+  line if ending_desk
+    "I gave Quill the compass. It points at the Old Nail, which lines up the Needle, which leads here. She has never once been late."
+  line if ending_desk
+    "Bramwick moved my desk six inches nearer the window. He says it's regulation. He wrote it that morning."
   # the epilogue, for both
   line
     "Quill was named navigator of the Marrow. She had it written into the articles, then read out, then read out again."
   line
     "Captain Vane's storm claim was paid at last, with three years' interest. She uses the letter as a bookmark."
   line
-    "Rook went back to sea, sober. Mostly. On weekdays, and twice on Tuesdays."
+    "My father opened a shop on the quay. Every compass in it points at the Old Nail, and is useless anywhere else. He says that isn't a fault. It's how you find your way home."
+  line
+    "Rook works the counter in my father's shop. He tests every compass himself, sober, and the two of them argue about the reef until closing. Neither has ever let the other win."
   line if wager and iou_paid
     "Bramwick and Marta were married in the spring, paid for by a betting slate and a clerk who backed the right ship."
   line if wager and not iou_paid
@@ -73,14 +85,22 @@ ending "ALL HANDS RETURNED"
   line if not iou_paid and not wager
     "Bramwick and Marta are still playing for it, after a fashion. The IOU is in his breast pocket, unpaid, and she has stopped pretending she doesn't know which pocket."
   line
-    "My father opened an instrument shop on the quay. Every compass in it points at Port Vela. He says that isn't a fault; it's a feature, and the feature is home."
+    "Marta tells the whole story every night at nine, every word, and charges for the ending. Nobody has ever been allowed to skip to it."
+  line
+    "Old Onn never swept that step again. Tam ran out of wall and started on the lighthouse. He's up to a hundred and thirty, and one ship."
+  line
+    "Hobb's other arm is filling up nicely. He's put me on it, spelled wrong, which I'm told is an honour."
+  line
+    "Pike is junior clerk at the customs house. He dates everything, including the cat. Bramwick says it's the first time in thirty years the ledger has known what day it is."
   line if kelp_read
     "The last of Cray's kelp went on the Salty Keel's fire. For a week the whole harbour smelled of fog, and laughed."
   line if kelp_proof and not kelp_read
     "I kept the kelp manifest. FOR FOG. Nobody else ever read it out, and on very clear days I read it to myself."
   line if silas_refused
     "Cray asked for my compass once more, through the bars, very politely. I said no. It runs in the family."
-  line
-    "Silas Cray filed an appeal from his cell, in triplicate, as is his right. Nib stamped all three copies without reading them."
+  line if ending_desk
+    "Silas Cray appealed from his cell, in triplicate. They crossed my desk. I stamped all three RECEIVED: SURPLUS TO REQUIREMENTS."
+  line if ending_pirate
+    "Silas Cray appealed from his cell, in triplicate. Nib filed all three in pigeonhole one, unread. It's where things go to be safe."
   line
     "ARCADIA: returned. All hands."

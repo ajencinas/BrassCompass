@@ -1,15 +1,24 @@
 # Bramwick, suspended, at Rook's table.
 dialogue bramwick4
-  node root bramwick "Fenn. You came back. Good. I've been suspended, which is the first evening off I've had in thirty years. I'm spending it badly."
+  node root bramwick "Fenn. You came back. Good. Cray asked me to enter the Marrow as lost before she was even late. I said no. First time in three years."
+    -> badly
+  node badly bramwick "He had me suspended by supper. It's my first evening off in thirty years, and I'm spending it badly."
     > "Cray says you were suspended for conduct." if not seen:bramwick4.conduct -> conduct
     > "How do we get you reinstated?" if not seen:bramwick4.paper -> reg2
     > "The ledger's chained to its desk." if seen:bramwick4.paper and not ledger_taken -> chain
     > "Where would Cray keep his insurance books?" if seen:bramwick4.paper and not has claims_book -> counting
     > "Who would preside over an inquiry?" if seen:bramwick4.paper and not seen:bramwick4.preside -> preside
     > "Goodnight, sir." -> bye
-  node conduct bramwick "Conduct unbecoming. He asked me to enter the Marrow as lost before she was even late, and I refused. Apparently that was very unbecoming. He had it signed by supper."
+  node hub bramwick "Still suspended, Fenn. Still spending it badly. I've had two drinks and an apology, and the apology went down worse."
+    > "Cray says you were suspended for conduct." if not seen:bramwick4.conduct -> conduct
+    > "How do we get you reinstated?" if not seen:bramwick4.paper -> reg2
+    > "The ledger's chained to its desk." if seen:bramwick4.paper and not ledger_taken -> chain
+    > "Where would Cray keep his insurance books?" if seen:bramwick4.paper and not has claims_book -> counting
+    > "Who would preside over an inquiry?" if seen:bramwick4.paper and not seen:bramwick4.preside -> preside
+    > "Goodnight, sir." -> bye
+  node conduct bramwick "Conduct unbecoming. Saying no to Mr Cray is very unbecoming, it turns out. I'd forgotten how much I enjoy it."
     -> conduct2
-  node conduct2 rook "First time he's said no to Cray in three years. He's been insufferable about it."
+  node conduct2 rook "He's told me nine times. The last three, he stood up."
   node reg2 bramwick "Regulation two, Fenn. A harbourmaster suspended by a party to fraud is reinstated on proof of the fraud."
     -> proof
   node proof bramwick "Proof. Not a story; Marta has stories. Paper. Before the bell."
@@ -18,7 +27,7 @@ dialogue bramwick4
     -> look
   node look narrator "He doesn't look at Rook. Very carefully, he doesn't look at Rook."
   node chain bramwick "I chained it there myself. Regulation thirty-one: the harbour ledger shall not leave the loft. …I wrote regulation thirty-one, Fenn. I can't think why. Bring something heavy."
-  node counting bramwick "Cray & Co., up Chandler's Lane. He'll have left his clerk there; he leaves clerks the way other men leave a lamp on. Nothing comes out of that office without a requisition, stamped."
+  node counting bramwick "Cray & Co., up Chandler's Lane. He'll have left his clerk there; he leaves clerks the way other men leave a lamp on. Nothing leaves that office without a stamped requisition."
   node preside bramwick "Not me; I'm a party. Not Cray; he's the other party. Someone who owns licensed premises and hates an unfinished story."
     -> presided
   node presided narrator "He looks at Marta. Marta finds something very interesting on the ceiling."
@@ -38,9 +47,15 @@ dialogue bramwick4
     -> crying
   node crying narrator "She's crying. Everyone in the Salty Keel can see she's crying."
     -> onions
-  node onions marta "It's the onions. Somebody's been cutting onions."
+  node onions marta "Nobody write that down."
     -> back
-  node back bramwick "One entry still wants correcting, Fenn, and it shouldn't be in my hand. Use it. Then bring it back. Clerks always bring them back."
+  node back narrator "He presses the stamp back into my hand."
+    -> entry
+  node entry bramwick "One entry still wants correcting, and it shouldn't be in my hand. Use it. Then bring it back. Clerks always bring them back."
+    -> fourteen
+  node fourteen fenn "Regulation fourteen, sir. Any clerk of this house may stamp in the Harbourmaster's absence."
+    -> absent
+  node absent bramwick "I'm not absent, Fenn. I'm right here. (He turns to the window.) …Though I find the harbour very absorbing just now."
   # The IOU: talking to him once the quarantine is lifted.
   node debt bramwick "Fenn. I have a debt to settle, and I need a witness. Clerks make excellent witnesses. Nobody suspects them of having feelings."
     > "The IOU in your drawer." if seen_iou -> read

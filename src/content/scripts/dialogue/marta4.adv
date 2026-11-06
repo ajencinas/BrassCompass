@@ -5,16 +5,18 @@ dialogue marta4
     > "The story isn't finished yet." if not seen:marta4.unfinished -> unfinished
     > "Would you preside over an inquiry?" if seen:bramwick4.paper and not seen:marta4.preside -> preside
     > "Goodnight, Marta." -> bye
-  node father marta "You never. (She puts down the glass she's been polishing since you came in.) Alive? Well, don't stand there being pleased at me. Where is he?"
+  node father marta "You never. (She puts down the glass she's been polishing since the Marrow sailed.) Alive? Well, don't stand there being pleased at me. Where is he?"
     -> where
-  node where marta "On the Marrow? Under that yellow rag? Cray hoisted it before his cutter was even tied up. I've watched that boat all night like a pot."
+  node where marta "On the Marrow? Under that yellow rag? Cray hoisted it before his cutter was even tied up. I've watched that boat all night. It hasn't moved, and neither have I."
     > "Then I'd better get the rag down." -> rag
-  node rag marta "You had. And Fenn: when you do, I want it told here. Every word. I've been owed this one three years."
+  node rag marta "You'd better. And Fenn: when you do, I want it told here. Every word. I've been owed this one three years."
   node unfinished marta "Then finish it. You know I hate an unfinished story. Finish it here, where I can see, and don't you dare skip to the end."
   node preside marta "In my tavern? Bring me the villain and the evidence, and I'll bring the cat. Tallow left it here at supper. It's been supervising the bar ever since."
-  node bye marta "Mind how you go. And go quickly; you look like a man with a bell after him."
+  node bye marta "Go quickly. You look like a man with a bell after him, and I won't have a story end in my doorway."
   # Once the inquiry's done.
   node after marta "Well. That's an ending. …No, it isn't. Not until it's in the book. Go on, clerk. You've the stamp and the ledger, and I've the whole room watching."
   # Once the ledger's written.
-  node ending marta "Now it's an ending. Go and find your navigator, Fenn. She's been sitting on the pier like a gull waiting for chips."
+  node ending marta "Now it's an ending. Take it up the steps first; Onn's owed it before I am. Then go and find your navigator."
+    -> gull
+  node gull marta "She's been sitting on the pier like a gull waiting for chips."
   node cards marta "Hush, clerk. He's bluffing. He's always bluffing. Thirty years I've let him think I can't tell."

@@ -26,6 +26,6 @@ dialogue nib
   node know nib "A book."
     -> ruin
   node ruin fenn "Your employer's ruin, more or less."
-    > "…" -> stamped
+    -> stamped
   node stamped nib "Was it stamped? Then it's not my problem. It's the stamp's."
   node after nib "Got another requisition? I like them. They tell you what to do, and then you've done it."
