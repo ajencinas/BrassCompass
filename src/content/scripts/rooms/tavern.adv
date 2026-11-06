@@ -189,8 +189,26 @@ room tavern "The Salty Keel"
     "It's written. I keep opening it to check. It's still written."
   use purse on rook
     "He shakes his head. “Hold on to it, boy. When it's time, hand it back to me in front of everybody. That's the only way I'll be able to.”"
+  use ledger on bramwick_t if ledger_written
+    "He reads the new line with his hat in both hands, the way men read a name on a church wall."
+  use ledger on bramwick_t if inquiry_done
+    "“Under my lie, Fenn, not over it. I want people to be able to read both.”"
   use ledger on bramwick_t
     "He looks at his own handwriting and goes grey. “Yes. That's my lie. Bring it to the inquiry, Fenn. I'll stand next to it.”"
+  use ledger on marta if ledger_written
+    "She reads my entry, then reads it again, which for Marta is a standing ovation."
+  use ledger on marta if inquiry_done
+    "“Don't show me, clerk. Write in it. The bar's right there, and so is everybody.”"
+  use ledger on marta
+    "She pushes it back across the bar without opening it. “Not to me, clerk. To him, in front of me.”"
+  use purse on marta
+    "“Not to me, clerk. To him, in front of me. And let Rook do the handing; it's his to give back.”"
+  use purse on bramwick_t
+    "He won't touch it. “That's Rook's to give back, Fenn, not mine to take. I've taken quite enough off that man.”"
+  use claims_book on bramwick_t
+    "He finds Vane's refusal, then the six payouts on the facing page, and closes the book gently, like a door on a sickroom. “That's the kind of paper, Fenn.”"
+  use kelp_manifest on bramwick_t
+    "He reads “for fog” twice. “Somebody at Cray's writes down exactly what he's told. When this is over, bring me that clerk. I could use a man like that.”"
   use claims_book on marta
     "She runs a finger down the page and stops at Vane's name. “Refused. I remember the month she drank that refusal. Hold on to that, clerk.”"
   use ansel_log on rook

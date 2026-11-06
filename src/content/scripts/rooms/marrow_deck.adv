@@ -102,6 +102,9 @@ room marrow_deck "The Marrow — Main Deck"
     sound pickup
   use crowbar on crates
     "Once was enough. The kelp isn't going to explain itself a second time."
+  use spyglass on quill if not quill_helped
+    "I hold out the spyglass. Quill's hand closes on it before I've finished holding it out, and then, remembering itself, doesn't pull."
+    talk quill at lost
   use sextant on quill if vane_terms
     "I hold out Pell's sextant. Quill looks at it, and then at me, and doesn't take it straight away."
     talk quill at sextant
@@ -111,3 +114,9 @@ room marrow_deck "The Marrow — Main Deck"
     "She skims it. “Twenty-two names and a navigator who wasn't drowned. Show it to someone who's lost somebody, cargo. Not me.”"
   use pell_log on quill
     "She won't open it. “That's the captain's to read. Pell would've said so, if he'd finished saying things.”"
+  use licence on quill
+    "She reads it without taking it. “Says you can sail. Doesn't say you can get past me. Different department.”"
+  use compass on rail
+    "The needle swings off north and settles on the horizon past the bow, as if it's heard somebody say its name."
+  use spyglass on rail
+    "I put the spyglass to my eye. The sea, closer. It's no less enormous; it's just enormous in more detail."

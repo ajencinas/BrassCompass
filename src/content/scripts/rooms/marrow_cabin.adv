@@ -61,3 +61,7 @@ room marrow_cabin "The Marrow — Captain's Cabin"
     "“Pell's sextant.” She doesn't take it. “Give it to someone who can use it. I have someone in mind. So, I suspect, do you.”"
   use manifest on vane
     "She reads the names and hands it back. “Twenty-two. I know where you're going with that, clerk. Take it below, to someone who'll go there with you.”"
+  use compass on vane if not vane_terms
+    "She doesn't look at it. “Show me on the chart, clerk. I don't take bearings off people's palms.”"
+  use compass on vane
+    "“I've seen where it points. Now bring me three reasons it's allowed to.”"

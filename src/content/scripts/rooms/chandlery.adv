@@ -47,6 +47,8 @@ room chandlery "The Chandler's"
 
   use stamp on counter if act 4
     "Everything's paid. Stamping it again would just be showing off, and Mr Tallow isn't here to see."
+  use stamp on counter if chandler_paid
+    "One invoice paid is a kindness. Two is a precedent, and Mr Tallow would never stop sending them."
   use stamp on counter
     "I stamp the oldest invoice PAID. A cheer from the back room, then a thump, then “Anything you like, clerk!” I ask for the Arcadia's manifest. A copy sails out through the doorway and lands at my feet. The cat follows it, to supervise."
     give manifest

@@ -128,3 +128,11 @@ room key_gate "Gullet Key — the Quarantine Gate"
   use stamp on pike
     "He holds out his hand to be stamped, hopefully. I'm tempted. I'm a professional."
   combos quill_combos
+  use crowbar on gate if not gate_open
+    "I size up the chain with the crowbar. Pike sizes me up with the clipboard. “Regulation one, sir: nobody forces the gate. Regulation two: see regulation one.”"
+  use crowbar on gate
+    "It's open. Pike would only want a form for opening it any further."
+  use bill on calendar
+    "I hold the bill up to the calendar in case the date jumps across. Pike watches with real interest. It doesn't. Dates on this island have to be torn off and carried, like everything else."
+  use ansel_log on pike
+    "Pike reads a line, lips moving, and goes pink to the ears. “That's a captain's log, sir. I'm not cleared for feelings.”"

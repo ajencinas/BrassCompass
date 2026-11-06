@@ -63,3 +63,9 @@ room marrow_quarterdeck "The Marrow — Quarterdeck"
     look "Captain Vane at the head of her quarterdeck, hat on, watching the fog come to meet us."
     talk "“Why are you still aft, clerk? The bow. The fog won't wait, and neither will the reef.”"
     give "“The only thing I want from you now is bearings.”"
+  use compass on binnacle
+    "I hold my father's compass beside the ship's. North, says one. The Old Nail, says the other. They glare at each other like two clerks with the same file."
+  use compass on seas
+    "The needle points into the grey off the bow, steady as a finger on a map. The Straits are where it wants to go. It has never wanted anything so much."
+  use spyglass on seas
+    "Grey, then more grey, then a gull, very large and very cross about it."

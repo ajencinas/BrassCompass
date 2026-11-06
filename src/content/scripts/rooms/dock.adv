@@ -189,3 +189,5 @@ room dock "Vela Docks"
     give mushroom
     set crate_open
     sound pickup
+  use crowbar on crate
+    "It's shifted already. The crate has given everything it has, and it was mostly mushrooms."

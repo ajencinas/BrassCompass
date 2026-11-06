@@ -37,7 +37,7 @@ tip if act 2 and vane_convinced
   "Go forward to the bow (the foredeck, at the back of the main deck) and use the compass on the fog. Call the side the needle swings to."
 tip if act 2 and quill_navigator and crew_agree
   "Give Pell's log to Captain Vane in her cabin."
-tip if act 2 and has sextant
+tip if act 2 and has sextant and vane_terms
   "Give Pell's sextant to Quill on the main deck."
 tip if act 2 and vane_terms and dinner and not chest_open
   "Hobb has gone to dinner. Open Pell's sea-chest below decks."

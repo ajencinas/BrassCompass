@@ -82,6 +82,13 @@ room alley "Chandler's Lane"
     look "Further up the lane, past where Cray used to stand and wait for me: a brass plate, a polished door, a little cloud. CRAY & CO., FACTORS. There's a light on."
     open "I go up the lane to Cray & Co. The brass plate has been polished so hard it's nearly gone."
 
+  use compass on silas if seen:silas.compass
+    "My hand gets as far as my pocket and refuses to come out. Cray watches it with professional interest."
+    set silas_refused
+  use compass on silas
+    "My hand gets as far as my pocket and refuses to come out. Cray watches it with professional interest."
+  use crowbar on warehouse_stairs if loft_open
+    "The shutter's already folded back, and the bolts are lying in the gutter looking ashamed of themselves."
   use crowbar on warehouse_stairs
     "I get the crowbar behind the shutter and lean. The bolts give one at a time, complaining in the way of things that have been doing their job too long."
     set loft_open

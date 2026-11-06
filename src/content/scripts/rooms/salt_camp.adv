@@ -129,3 +129,7 @@ room salt_camp "Gullet Key — the Salt Camp"
   use ansel_log on tamhobb
     "He finds his own name in it and taps it twice. “Still here, Captain,” he says to the page."
   combos quill_combos
+  use stamp on hut
+    "I stamp the padlock. It now looks officially locked, which is worse."
+  use ansel_log on pike
+    "He won't take it. “Captain's private papers, sir. I'd need a form to read them, and I'd need a stronger stomach to want to.”"

@@ -31,7 +31,7 @@ dialogue quill
     > "Here. (give the spyglass)" -> thanks
       take spyglass
       set quill_helped
-      note quill_spyglass "Quill lost her spyglass over the side and would not call a clerk crew without it. Returning it bought me the run of the aft deck."
+      note quill_spyglass "Quill dropped her spyglass on deck in the dark and would not let a clerk past without it. Returning it bought me the run of the aft deck."
     > "Not yet." -> bye
   node thanks quill "There she is. Dented twice, still honest. …You're blurrier up close. Go on, then. Captain's down the companionway at the stern."
     > "Thank you, Quill." -> thanked

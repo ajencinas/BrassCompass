@@ -106,6 +106,8 @@ room weather_works "Gullet Key — the Weather Works"
   use bill on braziers if not bill_smoked
     "I hold the bill in the kelp smoke until its corners curl. Fumigated, at the source."
     set bill_smoked
+  use bill on braziers
+    "It's been fumigated. Any more smoke and Pike will want to know where it's been."
   use crowbar on great_brazier
     "I could poke it. It would poke back."
   combos quill_combos

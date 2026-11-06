@@ -75,3 +75,10 @@ combos quill_combos
     "She glances at the needle. “Still pointing at trouble. Good. Keeps things simple.”"
   use stamp on quill
     "She holds out the back of her hand, gravely. I stamp it. She looks at it for longer than a joke needs."
+
+# Act I: the licence and the manifest are stamped by somebody else, or by me exactly once.
+use stamp on licence
+  "It's stamped. A second stamp would make it look nervous, and a nervous licence gets read."
+
+use stamp on manifest
+  "Stamping it would make it a customs document, and then it would belong to the harbour. It belongs to twenty-two other people."

@@ -116,6 +116,8 @@ room office "Customs House"
     "“The harbour stamp. Mine, technically, tonight. Keep it. I've had a new one made. It's very handsome.”"
   use crowbar on cray
     "I weigh the crowbar. He watches me weigh it, entirely unworried. “Assault on a harbourmaster, acting. That's a lovely form. I have several.”"
+  use drawer_key on drawer if drawer_open
+    "It's unlocked. Unlocking it again would only be showing it the key."
   use drawer_key on drawer
     "The key turns. Inside: the harbour stamp, a pot of ink, and an IOU to Marta for one game of cards, unpaid. I take the stamp."
     give stamp
@@ -133,3 +135,11 @@ room office "Customs House"
     "“Put that away. I am absent.”"
   use drawer_key on bramwick
     "“I don't want it back tonight. Tonight I am, legally, elsewhere.”"
+  use crowbar on drawer if act 1 and not drawer_open
+    "I fit the crowbar to the drawer. Bramwick doesn't look up. “That drawer is harbour property, Fenn, and for the next eleven minutes so am I.”"
+  use crowbar on drawer if act 1
+    "It's open. The crowbar is disappointed in both of us."
+  use crowbar on drawer
+    "It's empty and unlocked. There's no glory in levering it, and I'd still have to fill in the form."
+  use crowbar on bramwick
+    "Bramwick looks at the crowbar over his spectacles. “Menacing a harbourmaster is regulation nine, Fenn. Being caught at it is regulation ten. I wrote them both in a temper.”"

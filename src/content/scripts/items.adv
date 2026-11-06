@@ -40,7 +40,7 @@ item compass "brass compass"
     look "The needle has stopped pretending to be a compass. It points over the bow, into the fog, at a reef nobody sails. Forward, then."
   state if act 2 and quill_navigator and crew_agree
     look "A navigator, a crew, and Pell's last sentence in my pocket. The needle points aft, at the captain's cabin, and waits."
-  state if act 2 and has sextant
+  state if act 2 and has sextant and vane_terms
     look "Pell's sextant. The needle swings toward the one person on board who wants to be a navigator more than she wants breakfast."
   state if act 2 and vane_terms and dinner and not chest_open
     look "Hobb has gone to his dinner. The needle points below decks, at a sea-chest nobody opens."
