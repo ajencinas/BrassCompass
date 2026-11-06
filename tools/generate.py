@@ -14,6 +14,7 @@ import time
 from io import BytesIO
 
 sys.path.insert(0, os.path.dirname(__file__))
+import socket
 import urllib.request, urllib.error
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -26,54 +27,145 @@ SCENE_W, SCENE_H = 1920, 880
 
 
 def api_key():
-    for line in open(os.path.join(ROOT, ".env")):
-        if line.startswith("RUNCOMFY_API"):
-            return line.split("=", 1)[1].strip().strip('"').strip("'")
-    raise SystemExit("RUNCOMFY_API missing from .env")
+    """Read the RunComfy key lazily: environment first, then .env."""
+    global _KEY
+    if _KEY:
+        return _KEY
+    key = os.environ.get("RUNCOMFY_API", "").strip()
+    if not key:
+        env = os.path.join(ROOT, ".env")
+        if os.path.exists(env):
+            with open(env) as f:
+                for line in f:
+                    line = line.strip()
+                    if line.startswith("export "):
+                        line = line[len("export "):].lstrip()
+                    if line.startswith("RUNCOMFY_API") and "=" in line:
+                        key = line.split("=", 1)[1].strip().strip('"').strip("'")
+                        break
+    if not key:
+        raise SystemExit("RUNCOMFY_API missing (set it in the environment or in .env)")
+    _KEY = key
+    return _KEY
 
 
-KEY = api_key()
+_KEY = None
+
+RETRIES = 5
+BACKOFF = 2.0  # seconds; doubles each attempt
+
+
+class ApiError(RuntimeError):
+    def __init__(self, msg, code=None):
+        super().__init__(msg)
+        self.code = code
+
+
+class JobFailed(ApiError):
+    """The job itself ended badly (failed/cancelled); resuming it is pointless."""
+
+
+def _is_timeout(e):
+    return isinstance(e, (socket.timeout, TimeoutError)) or isinstance(
+        getattr(e, "reason", None), (socket.timeout, TimeoutError)
+    )
+
+
+def _retrying(fn, what, tries=RETRIES, retry_timeouts=True):
+    """Call fn(); retry with exponential backoff on 5xx, 429, network errors
+    and timeouts. Other HTTP 4xx fail immediately."""
+    delay = BACKOFF
+    for attempt in range(1, tries + 1):
+        try:
+            return fn()
+        except urllib.error.HTTPError as e:
+            try:
+                body = e.read().decode(errors="replace")[:400]
+            except Exception:
+                body = ""
+            if e.code != 429 and e.code < 500:
+                raise ApiError(f"{what}: HTTP {e.code} {body}", code=e.code) from None
+            err = f"HTTP {e.code} {body}"
+        except (urllib.error.URLError, socket.timeout, TimeoutError, ConnectionError) as e:
+            if _is_timeout(e) and not retry_timeouts:
+                raise ApiError(f"{what}: timed out (not retried: the request may have been accepted)") from None
+            err = f"{type(e).__name__}: {getattr(e, 'reason', e)}"
+        if attempt == tries:
+            raise ApiError(f"{what}: giving up after {tries} tries ({err})")
+        print(f"       retry {attempt}/{tries - 1} for {what} in {delay:.0f}s ({err})", flush=True)
+        time.sleep(delay)
+        delay *= 2
 
 
 def _req(path, data=None):
     body = json.dumps(data).encode() if data is not None else None
-    r = urllib.request.Request(
-        BASE + path, data=body, method="POST" if data is not None else "GET"
-    )
-    r.add_header("Authorization", "Bearer " + KEY)
-    if body:
-        r.add_header("Content-Type", "application/json")
-    try:
+
+    def call():
+        r = urllib.request.Request(
+            BASE + path, data=body, method="POST" if data is not None else "GET"
+        )
+        r.add_header("Authorization", "Bearer " + api_key())
+        if body:
+            r.add_header("Content-Type", "application/json")
         with urllib.request.urlopen(r, timeout=180) as resp:
             return json.load(resp)
-    except urllib.error.HTTPError as e:
-        return {"_err": e.code, "_body": e.read().decode()[:400]}
+
+    # A POST that timed out may already have been accepted (and billed), so
+    # only retry it on explicit server errors / connection failures.
+    return _retrying(call, ("POST " if body else "GET ") + path, retry_timeouts=body is None)
 
 
-def run(model_id, payload, timeout=1200):
+DONE = ("completed", "succeeded")
+FAILED = ("failed", "cancelled", "canceled", "error")
+
+
+def submit(model_id, payload):
     sub = _req(f"/v1/models/{model_id}", payload)
-    if "request_id" not in sub:
-        raise RuntimeError(f"submit failed: {sub}")
-    rid = sub["request_id"]
+    if not isinstance(sub, dict) or "request_id" not in sub:
+        raise ApiError(f"submit failed: {sub}")
+    return sub["request_id"]
+
+
+def poll(rid, timeout=1200):
+    """Wait for request `rid` to finish and return its result."""
     t0 = time.time()
     while time.time() - t0 < timeout:
         st = _req(f"/v1/requests/{rid}/status")
-        if st.get("status") in ("completed", "succeeded", "failed", "cancelled"):
+        status = str(st.get("status", "")).lower()
+        if status in FAILED:
+            raise JobFailed(f"job {rid} {status}: {st.get('error') or st}")
+        if status in DONE:
             res = _req(f"/v1/requests/{rid}/result?include_cost=true")
-            if res.get("status") == "failed":
-                raise RuntimeError(f"job failed: {res.get('error')}")
+            rstatus = str(res.get("status", "")).lower()
+            if rstatus in FAILED:
+                raise JobFailed(f"job {rid} {rstatus}: {res.get('error') or res}")
             return res
         time.sleep(5)
-    raise RuntimeError("timeout")
+    raise ApiError(f"timeout waiting for job {rid}")
+
+
+def run(model_id, payload, timeout=1200, request_id=None, on_submit=None):
+    rid = request_id or submit(model_id, payload)
+    if on_submit and not request_id:
+        on_submit(rid)
+    return poll(rid, timeout)
 
 
 def download(url, path):
-    r = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    with urllib.request.urlopen(r, timeout=300) as resp:
-        data = resp.read()
+    if not url:
+        raise ApiError("no output URL in result")
+
+    def fetch():
+        r = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(r, timeout=300) as resp:
+            return resp.read()
+
+    data = _retrying(fetch, f"download {url}")
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, "wb") as f:
+    tmp = path + ".tmp"
+    with open(tmp, "wb") as f:
         f.write(data)
+    os.replace(tmp, path)
     return data
 
 
@@ -804,21 +896,68 @@ MANIFEST = [
 
 def load_cache():
     if os.path.exists(CACHE):
-        return json.load(open(CACHE))
+        with open(CACHE) as f:
+            return json.load(f)
     return {}
 
 
 def save_cache(c):
-    json.dump(c, open(CACHE, "w"), indent=2)
+    tmp = CACHE + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(c, f, indent=2)
+        f.flush()
+        os.fsync(f.fileno())
+    os.replace(tmp, CACHE)
 
 
 # Superseded assets: kept in the manifest for the record, never rebuilt.
 RETIRED = {"bg_dock", "bg_office", "bg_tavern", "char_walk", "npc_bramwick_body", "npc_marta_body"}
 
 
+def output_url(kind, res):
+    out = res.get("output") or {}
+    if kind == "image":
+        lst = out.get("images") or [out.get("image")]
+    else:
+        lst = out.get("audios") or [out.get("audio")]
+    url = lst[0] if lst else None
+    if isinstance(url, dict):
+        url = url.get("url")
+    return url
+
+
+def postprocess(name, kind, rel, payload, raw, out_path):
+    if kind == "image":
+        if rel.startswith("scenes/"):
+            post_background(raw, out_path, width=2560 if name.endswith("_wide") else SCENE_W)
+        elif rel.startswith("props/"):
+            post_sprite(raw, out_path)
+        elif "walk" in rel:
+            post_walk_sheet(raw, out_path)
+        elif rel.startswith("characters/") and name.startswith("npc_") and name not in CHAR_KEYS:
+            # Dialogue portraits are full paintings on a dark backdrop. Chroma-keying them
+            # divides the backdrop colour back out and leaves banding and red halos.
+            post_portrait(raw, out_path)
+        elif rel.startswith("characters/"):
+            post_sprite(raw, out_path)
+        else:
+            post_background(raw, out_path)
+    else:
+        post_audio(raw, out_path, max_seconds=int(payload.get("duration", 60)))
+
+
 def main(only=None):
+    """Generate assets. Returns a list of (name, error) for assets that failed.
+
+    Cache entries are {"sig", "cost", "path"} for finished assets. While a job
+    is in flight the entry also carries "pending": {"sig", "request_id", and
+    once known "result"}, saved before polling, so a re-run resumes the same
+    paid job (poll and/or download) instead of submitting a new one.
+    """
     cache = load_cache()
     total = 0.0
+    failures = []
+    reprocess = bool(os.environ.get("REPROCESS"))
     for name, kind, model, payload, rel in MANIFEST:
         if only and name not in only:
             continue
@@ -832,63 +971,76 @@ def main(only=None):
             json.dumps([model, payload], sort_keys=True).encode()
         ).hexdigest()[:16]
 
-        if not os.environ.get("REPROCESS") and cache.get(name, {}).get("sig") == sig and os.path.exists(out_path):
+        entry = cache.get(name, {})
+        pending = entry.get("pending")
+        if pending and pending.get("sig") != sig:
+            pending = None  # payload changed since that job; it is no longer wanted
+        if not reprocess and not pending and entry.get("sig") == sig and os.path.exists(out_path):
             print(f"[skip] {name} (cached)")
             continue
 
         print(f"[gen ] {name}  ->  {rel}", flush=True)
         t0 = time.time()
-
         raw_path = os.path.join(ROOT, ".genraw", f"{name}.raw")
-        if os.environ.get("REPROCESS") and os.path.exists(raw_path):
-            # Re-run post-processing on a cached render — no API call, no charge.
-            print(f"       reprocessing {raw_path}")
-            raw = open(raw_path, "rb").read()
-            res = {"output": {}, "cost": 0}
-            kind_override = kind
-        else:
-            kind_override = kind
-            try:
-                res = run(model, payload)
-            except Exception as e:
-                print(f"[FAIL] {name}: {e}")
-                continue
 
-        out = res.get("output", {})
-        if kind_override == "image":
-            url = (out.get("images") or [out.get("image")] or [None])[0]
-            raw = raw if os.environ.get("REPROCESS") and os.path.exists(raw_path) else download(url, raw_path)
-            if rel.startswith("scenes/"):
-                post_background(raw, out_path, width=2560 if name.endswith("_wide") else SCENE_W)
-            elif rel.startswith("props/"):
-                post_sprite(raw, out_path)
-            elif "walk" in rel:
-                post_walk_sheet(raw, out_path)
-            elif rel.startswith("characters/") and name.startswith("npc_") and name not in CHAR_KEYS:
-                # Dialogue portraits are full paintings on a dark backdrop. Chroma-keying them
-                # divides the backdrop colour back out and leaves banding and red halos.
-                post_portrait(raw, out_path)
-            elif rel.startswith("characters/"):
-                post_sprite(raw, out_path)
+        try:
+            if reprocess and os.path.exists(raw_path):
+                # Re-run post-processing on a cached render — no API call, no charge.
+                print(f"       reprocessing {raw_path}")
+                with open(raw_path, "rb") as f:
+                    raw = f.read()
+                cost = entry.get("cost", 0) if entry.get("sig") == sig else 0
+                spent = 0
             else:
-                post_background(raw, out_path)
-        else:
-            if os.environ.get("REPROCESS") and os.path.exists(raw_path):
-                raw = open(raw_path, "rb").read()
-            else:
-                url = (out.get("audios") or [out.get("audio")])[0]
+                if pending and pending.get("result"):
+                    print(f"       resuming download for job {pending['request_id']}")
+                    res = pending["result"]
+                else:
+                    def remember(rid):
+                        entry["pending"] = {"sig": sig, "request_id": rid}
+                        cache[name] = entry
+                        save_cache(cache)
+
+                    rid = pending.get("request_id") if pending else None
+                    if rid:
+                        print(f"       resuming job {rid}")
+                    try:
+                        res = run(model, payload, request_id=rid, on_submit=remember)
+                    except ApiError as e:
+                        # A failed/cancelled/unknown job cannot be resumed: forget
+                        # it so the next run submits afresh. Transient errors and
+                        # timeouts keep it, so the next run resumes the same job.
+                        if isinstance(e, JobFailed) or e.code in (404, 410):
+                            if entry.pop("pending", None) is not None:
+                                save_cache(cache)
+                        raise
+                    entry["pending"]["result"] = {
+                        "output": res.get("output") or {},
+                        "cost": res.get("cost", 0) or 0,
+                    }
+                    save_cache(cache)
+                url = output_url(kind, res)
                 raw = download(url, raw_path)
-            post_audio(raw, out_path, max_seconds=int(payload.get("duration", 60)))
+                cost = spent = res.get("cost", 0) or 0
+            postprocess(name, kind, rel, payload, raw, out_path)
+        except Exception as e:
+            print(f"[FAIL] {name}: {e}", flush=True)
+            failures.append((name, str(e)))
+            continue
 
-        cost = res.get("cost", 0) or 0
-        total += cost
+        total += spent
         cache[name] = {"sig": sig, "cost": cost, "path": rel}
         save_cache(cache)
-        print(f"       done in {time.time() - t0:.0f}s  ${cost:.4f}", flush=True)
+        print(f"       done in {time.time() - t0:.0f}s  ${spent:.4f}", flush=True)
 
     print(f"\nTotal spend this run: ${total:.4f}")
     print(f"Assets in {ASSETS}")
+    if failures:
+        print(f"\n{len(failures)} asset(s) FAILED:")
+        for name, err in failures:
+            print(f"  - {name}: {err}")
+    return failures
 
 
 if __name__ == "__main__":
-    main(sys.argv[1:] or None)
+    sys.exit(1 if main(sys.argv[1:] or None) else 0)
