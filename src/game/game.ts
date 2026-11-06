@@ -22,10 +22,17 @@ import { ACTS, ENDING, FIRST_ACT } from "../content/acts";
 import { defaultLine, noComboLine, itemAloneLine, targetOf, phrase, type Target } from "./lines";
 import { personHeightAt } from "./scale";
 import { Casebook, type CaseNote } from "./casebook";
+import { readSave, writeSave, clearSave, backupCorrupt, takeOldSave, hasAnySave, type SaveData } from "./save";
+import { drawDebugOverlay } from "./debug";
+import { drawTitle, titleButtons, hitTitleButton, type TitleId } from "./title";
+import { drawFigure, drawSprite, drawShadow } from "./figures";
 import { ITEMS } from "../content/items";
 import { DIALOGUES } from "../content/dialogue";
 import { GLOBAL_COMBOS } from "../content/combos";
 import { TIPS } from "../content/hints";
+
+/** Top-bar buttons: one definition, used for both drawing and hit-testing. */
+const BAR = { y: 18, h: 44, tip: [1300, 160], casebook: [1470, 190], pause: [1690, 206] } as const;
 
 const TIPS_KEY = "brasscompass.tips.v1";
 
@@ -58,31 +65,6 @@ interface Sentence {
   b: Ref | null;
 }
 
-interface SaveData {
-  room: string;
-  x: number;
-  y: number;
-  facing: 1 | -1;
-  flags: Record<string, unknown>;
-  inventory: string[];
-  /** Which act the save belongs to. Older saves without one are treated as Act I. */
-  act: number;
-  /** Casebook entries filed so far. */
-  notes?: CaseNote[];
-  /**
-   * False when the save was written at the act boundary, before `startAct` ran the act's
-   * opening effects. Those give items (Act III's crowbar) that the act cannot be finished
-   * without, so a resume has to run them.
-   */
-  actStarted?: boolean;
-}
-
-/** Top-bar buttons: one definition, used for both drawing and hit-testing. */
-const BAR = { y: 18, h: 44, tip: [1300, 160], casebook: [1470, 190], pause: [1690, 206] } as const;
-
-const SAVE_KEY = "brasscompass.save.v3";
-/** Saves from before the story rewrite: restarted at the beginning of their act. */
-const OLD_SAVE_KEYS = ["brasscompass.save.v2"];
 // Movement is measured in body heights so it reads the same at every depth: a figure half as
 // tall (twice as far away) covers half the screen distance in the same time.
 const WALK_SPEED = 1.15; // body heights per second
@@ -208,7 +190,7 @@ export class Game {
 
   start(): void {
     try {
-      this.hasSave = [SAVE_KEY, ...OLD_SAVE_KEYS].some((k) => localStorage.getItem(k) !== null);
+      this.hasSave = hasAnySave();
     } catch { this.hasSave = false; }
     if (import.meta.env.DEV) {
       (window as unknown as Record<string, unknown>).__game = this;
@@ -1250,11 +1232,10 @@ export class Game {
       notes: this.notes,
       actStarted: at?.actStarted ?? true,
     };
-    try {
-      localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+    if (writeSave(data)) {
       this.hasSave = true;
       this.saveBroken = false;
-    } catch {
+    } else {
       // Quota or blocked storage. Say so once, in character, rather than losing the voyage quietly.
       if (!this.saveBroken) {
         this.saveBroken = true;
@@ -1267,16 +1248,19 @@ export class Game {
 
   private loadGame(): void {
     this.queue = null;
-    let raw: string | null;
-    try { raw = localStorage.getItem(SAVE_KEY); } catch { raw = null; }
-    if (!raw) return this.loadOldSave();
-    try {
-      const d = JSON.parse(raw) as SaveData;
-      if (!ROOMS[d.room] || !Array.isArray(d.inventory) ||
-          !d.flags || typeof d.flags !== "object" ||
-          !Number.isFinite(d.x) || !Number.isFinite(d.y)) {
-        throw new Error("Invalid save data");
-      }
+    const { data: d, raw, corrupt } = readSave((id) => id in ROOMS);
+    if (!d) {
+      if (!corrupt) return this.loadOldSave();
+      // Keep the unreadable save instead of overwriting it, and tell the player.
+      if (raw) backupCorrupt(raw);
+      clearSave();
+      this.newGame();
+      this.saveWarning =
+        "The last page of my notebook is ruined — the save couldn't be read. I've kept it aside " +
+        "and started a fresh page.";
+      return;
+    }
+    {
       this.inventory = d.inventory;
       this.inventoryPage = 0;
       this.flags = d.flags;
@@ -1290,28 +1274,24 @@ export class Game {
         if (def?.onStart) this.runEffects(def.onStart);
         this.persist();
       }
-    } catch {
-      // Keep the unreadable save instead of overwriting it, and tell the player.
-      try { localStorage.setItem(SAVE_KEY + ".corrupt", raw); } catch { /* nothing else to do */ }
-      try { localStorage.removeItem(SAVE_KEY); } catch { /* ignore */ }
-      this.newGame();
-      this.saveWarning =
-        "The last page of my notebook is ruined — the save couldn't be read. I've kept it aside " +
-        "and started a fresh page.";
     }
   }
 
   /** Content changed under older saves, so keep their progress but restart their act. */
   private loadOldSave(): void {
-    for (const key of OLD_SAVE_KEYS) {
-      let d: Partial<SaveData> | null = null;
-      try { d = JSON.parse(localStorage.getItem(key) ?? "null"); localStorage.removeItem(key); } catch { d = null; }
-      if (!d) continue;
-      const act = typeof d.act === "number" && ACTS[d.act] ? d.act : FIRST_ACT;
-      if (act === FIRST_ACT) return this.newGame();
-      this.resetState();
-      this.flags = d.flags && typeof d.flags === "object" ? d.flags : {};
-      return this.startAct(act);
+    const raw = takeOldSave();
+    if (raw) {
+      try {
+        const d = JSON.parse(raw) as Partial<SaveData>;
+        const act = typeof d.act === "number" && ACTS[d.act] ? d.act : FIRST_ACT;
+        if (act !== FIRST_ACT) {
+          this.resetState();
+          this.flags = d.flags && typeof d.flags === "object" ? d.flags : {};
+          return this.startAct(act);
+        }
+      } catch {
+        /* fall through to a new game */
+      }
     }
     this.newGame();
   }
@@ -1399,7 +1379,7 @@ export class Game {
     this.resetTransient();
     this.won = true;
     this.audio.chime();
-    try { localStorage.removeItem(SAVE_KEY); } catch { /* ignore */ }
+    clearSave();
     this.hasSave = false;
   }
 
@@ -1570,7 +1550,9 @@ export class Game {
     for (const d of drawables) d.draw();
 
     if (this.room.stars) this.drawStars(ctx, worldWidth, this.room.stars.y);
-    if (this.debugOverlay) this.drawDebugOverlay(ctx);
+    if (this.debugOverlay) {
+      drawDebugOverlay({ ctx, room: this.room, devHandle: this.devHandle, personHeight: (y) => this.personHeight(y) });
+    }
     ctx.restore();
 
     const g = ctx.createRadialGradient(
@@ -1722,39 +1704,6 @@ export class Game {
    * sits on x — so frames of uneven generated sheets neither bob nor sway. `visible` is how much
    * of a whole figure the art contains, from the top.
    */
-  private drawFigure(
-    ctx: CanvasRenderingContext2D,
-    key: string,
-    x: number,
-    y: number,
-    height: number,
-    opts: { frames?: number; frame?: number; visible?: number; flip?: boolean; grade?: string; anchor?: "torso" | "box" } = {}
-  ): void {
-    const img = this.assets.img(key);
-    const b = img && this.assets.frameBounds(key, opts.frames ?? 1)?.[opts.frame ?? 0];
-    if (!img || !b) return;
-    const k = (height * (opts.visible ?? 1)) / (b.bottom - b.top);
-    const anchor = opts.anchor === "box" ? (b.left + b.right) / 2 : b.torso;
-    ctx.save();
-    ctx.translate(x, 0);
-    ctx.filter = opts.grade ?? "none";
-    if (opts.flip) ctx.scale(-1, 1);
-    ctx.drawImage(
-      img, b.left, b.top, b.right - b.left, b.bottom - b.top,
-      (b.left - anchor) * k, y - height, (b.right - b.left) * k, (b.bottom - b.top) * k
-    );
-    ctx.restore();
-  }
-
-  private drawShadow(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, alpha = 0.34): void {
-    ctx.save();
-    ctx.fillStyle = `rgba(0,0,0,${alpha})`;
-    ctx.beginPath();
-    ctx.ellipse(x, y - 2, w / 2, Math.max(3, w * 0.13), 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-  }
-
   private drawSprite(
     ctx: CanvasRenderingContext2D,
     key: string,
@@ -1766,12 +1715,7 @@ export class Game {
     flip = false,
     grade = "none"
   ): void {
-    const b = this.assets.frameBounds(key)?.[0];
-    if (!b) return;
-    const height = size * this.personHeight(y);
-    // Only art that reaches the floor casts a contact shadow.
-    if (visible >= 1) this.drawShadow(ctx, x, y, height * ((b.right - b.left) / (b.bottom - b.top)) * 0.8);
-    this.drawFigure(ctx, key, x, y, height, { visible, flip, grade, anchor: figure ? "torso" : "box" });
+    drawSprite(ctx, this.assets, key, x, y, size * this.personHeight(y), { visible, figure, flip, grade });
   }
 
   private drawPlayer(ctx: CanvasRenderingContext2D): void {
@@ -1782,19 +1726,19 @@ export class Game {
     const cycle = this.walkPhase / STRIDE;
     const grade = this.figureGrade("saturate(0.85) brightness(0.9)");
 
-    this.drawShadow(ctx, this.x, this.y, height * 0.26, 0.38);
+    drawShadow(ctx, this.x, this.y, height * 0.26, 0.38);
 
     // Every sheet faces right; facing left mirrors about the torso.
     if (walking && vertical && this.assets.img("char_walk_vertical")) {
       const frame = (this.moveDirection === "up" ? 0 : 3) + (Math.floor(cycle * 3) % 3);
-      this.drawFigure(ctx, "char_walk_vertical", this.x, this.y, height, { frames: 6, frame, grade });
+      drawFigure(ctx, this.assets, "char_walk_vertical", this.x, this.y, height, { frames: 6, frame, grade });
     } else if (walking && this.assets.img(sheet)) {
       const frame = Math.floor(cycle * 6) % 6;
-      this.drawFigure(ctx, sheet, this.x, this.y, height, { frames: 6, frame, grade, flip: this.facing < 0 });
+      drawFigure(ctx, this.assets, sheet, this.x, this.y, height, { frames: 6, frame, grade, flip: this.facing < 0 });
     } else if (this.assets.img("char_elias")) {
       // A slow breath rather than a bob keeps the feet planted.
       const breath = 1 + Math.sin(this.time * 2.2) * 0.004;
-      this.drawFigure(ctx, "char_elias", this.x, this.y, height * breath, { grade, flip: this.facing < 0 });
+      drawFigure(ctx, this.assets, "char_elias", this.x, this.y, height * breath, { grade, flip: this.facing < 0 });
     }
   }
 
@@ -2004,150 +1948,29 @@ export class Game {
       size: 20, color: "rgba(201,162,74,0.8)", align: "center",
     });
   }
-  private drawDebugOverlay(ctx: CanvasRenderingContext2D): void {
-    const poly = (p: Poly) => { ctx.beginPath(); p.forEach((q, i) => i ? ctx.lineTo(q.x, q.y) : ctx.moveTo(q.x, q.y)); ctx.closePath(); };
-    ctx.save();
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = "#3f6"; for (const p of this.room.walk) { poly(p); ctx.stroke(); }
-    ctx.strokeStyle = "#f3c"; for (const o of this.room.occluders ?? []) {
-      poly(o.area); ctx.stroke();
-      ctx.setLineDash([6, 6]); ctx.beginPath(); ctx.moveTo(o.area[0].x, o.y); ctx.lineTo(Math.max(...o.area.map((q) => q.x)), o.y); ctx.stroke(); ctx.setLineDash([]);
-    }
-    ctx.strokeStyle = "#39f"; for (const h of this.room.hotspots) {
-      if ("rect" in h.area) ctx.strokeRect(h.area.rect.x, h.area.rect.y, h.area.rect.w, h.area.rect.h); else { poly(h.area); ctx.stroke(); }
-      if (h.stand) { ctx.fillStyle = "#39f"; ctx.fillRect(h.stand.x - 5, h.stand.y - 5, 10, 10); }
-    }
-    ctx.strokeStyle = "#ff0"; ctx.beginPath();
-    ctx.moveTo(0, this.room.perspective.horizon); ctx.lineTo(this.room.width ?? LOGICAL_W, this.room.perspective.horizon); ctx.stroke();
-    this.drawScaleGauge(ctx);
-    // Vertices, the entry and arrival points: the handles the dev editor can drag.
-    const dot = (p: Pt, color: string, r = 4) => { ctx.fillStyle = color; ctx.fillRect(p.x - r, p.y - r, r * 2, r * 2); };
-    for (const p of this.room.walk) p.forEach((q) => dot(q, "#3f6"));
-    for (const o of this.room.occluders ?? []) o.area.forEach((q) => dot(q, "#f3c"));
-    for (const h of this.room.hotspots) if (!("rect" in h.area)) (h.area as Poly).forEach((q) => dot(q, "#39f", 3));
-    dot(this.room.entry, "#fff", 6);
-    for (const p of Object.values(this.room.arrive ?? {})) dot(p, "#fc6", 6);
-    if (this.devHandle) { ctx.strokeStyle = "#fff"; ctx.lineWidth = 3; ctx.strokeRect(this.devHandle.x - 9, this.devHandle.y - 9, 18, 18); }
-    ctx.restore();
-  }
-
-  /**
-   * A 1.75 m human silhouette at sample points across the floor. This is the only way to see a
-   * wrong scale before it ships: if the figure is not the height of the furniture beside it, the
-   * room's perspective is wrong.
-   */
-  private drawScaleGauge(ctx: CanvasRenderingContext2D): void {
-    const samples: Pt[] = [];
-    for (const p of this.room.walk) {
-      for (let i = 0; i < p.length; i++) {
-        const a = p[i], b = p[(i + 1) % p.length];
-        for (let t = 0.2; t < 1; t += 0.3) samples.push({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t });
-      }
-    }
-    ctx.save();
-    for (const s of samples) {
-      const h = this.personHeight(s.y);
-      if (h < 24) continue;
-      const w = h * 0.15;
-      ctx.strokeStyle = "rgba(255,255,255,0.55)";
-      ctx.fillStyle = "rgba(255,255,255,0.10)";
-      ctx.lineWidth = 1.5;
-      // body
-      ctx.beginPath();
-      ctx.moveTo(s.x - w * 0.75, s.y - h * 0.44);
-      ctx.lineTo(s.x - w * 0.62, s.y - h * 0.86);
-      ctx.lineTo(s.x + w * 0.62, s.y - h * 0.86);
-      ctx.lineTo(s.x + w * 0.75, s.y - h * 0.44);
-      ctx.lineTo(s.x + w * 0.5, s.y);
-      ctx.lineTo(s.x - w * 0.5, s.y);
-      ctx.closePath();
-      ctx.fill(); ctx.stroke();
-      // head
-      ctx.beginPath();
-      ctx.arc(s.x, s.y - h * 0.93, h * 0.068, 0, Math.PI * 2);
-      ctx.fill(); ctx.stroke();
-      // floor contact
-      ctx.beginPath();
-      ctx.moveTo(s.x - w * 0.9, s.y); ctx.lineTo(s.x + w * 0.9, s.y);
-      ctx.stroke();
-      drawText(ctx, `${Math.round(h)}`, s.x + w, s.y - h * 0.99, {
-        size: 13, color: "rgba(255,255,255,0.75)", shadow: false,
-      });
-    }
-    ctx.restore();
-  }
-
   // ------------------------------------------------------------ title
 
-  private titleFocus: "start" | "continue" | "explore" | null = null;
+  private titleFocus: TitleId | null = null;
 
-  /** Title buttons top to bottom; Continue only when there is a save. */
-  private titleButtons(): { id: "start" | "continue" | "explore"; label: string; y: number }[] {
-    const list: { id: "start" | "continue" | "explore"; label: string }[] = [
-      { id: "start", label: "New Voyage" },
-      ...(this.hasSave ? [{ id: "continue" as const, label: "Continue" }] : []),
-      { id: "explore", label: "Explore Scenes" },
-    ];
-    return list.map((b, i) => ({ ...b, y: 670 + i * 88 }));
+  private titleButtons() {
+    return titleButtons(this.hasSave);
   }
   private hitTitle(top: number, x: number, y: number): boolean {
-    return x > 760 && x < 1160 && y > top - 10 && y < top + 68;
+    return hitTitleButton(top, x, y);
+  }
+  private renderTitle(ctx: CanvasRenderingContext2D): void {
+    drawTitle(ctx, {
+      bg: this.assets.img("bg_dock_wide"),
+      buttons: this.titleButtons(),
+      focus: this.titleFocus,
+      dev: import.meta.env.DEV,
+    });
   }
   private titleActivate(id: "start" | "continue" | "explore"): void {
     this.titleFocus = null;
     if (id === "start") { this.explore = false; this.beginNewVoyage(); }
     else if (id === "continue" && this.hasSave) { this.explore = false; this.title = false; this.loadGame(); }
     else if (id === "explore") this.startExplore();
-  }
-
-  private renderTitle(ctx: CanvasRenderingContext2D): void {
-    const bg = this.assets.img("bg_dock_wide");
-    if (bg) {
-      const width = LOGICAL_H * (bg.width / bg.height);
-      ctx.drawImage(bg, (LOGICAL_W - width) / 2, 0, width, LOGICAL_H);
-    } else {
-      ctx.fillStyle = "#070b14";
-      ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
-    }
-
-    const g = ctx.createLinearGradient(0, 0, 0, LOGICAL_H);
-    g.addColorStop(0, "rgba(3,5,12,0.72)");
-    g.addColorStop(0.45, "rgba(3,5,12,0.35)");
-    g.addColorStop(1, "rgba(3,5,12,0.88)");
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
-
-    drawText(ctx, "THE BRASS", LOGICAL_W / 2, 300, {
-      size: 96, color: "#e8c98a", align: "center", weight: "bold",
-    });
-    drawText(ctx, "COMPASS", LOGICAL_W / 2, 400, {
-      size: 96, color: "#e8c98a", align: "center", weight: "bold",
-    });
-    drawText(ctx, "a tale of the Vela Straits", LOGICAL_W / 2, 530, {
-      size: 26, color: "rgba(200,215,235,0.75)", align: "center", weight: "normal",
-    });
-
-    for (const b of this.titleButtons()) this.drawTitleButton(ctx, b.label, b.y, this.titleFocus === b.id);
-
-    drawText(ctx, "Tab / arrows — navigate    ·    Enter — select    ·    right click — quick action / cancel", LOGICAL_W / 2, 986, {
-      size: 18, color: "rgba(214,224,238,0.88)", align: "center",
-    });
-    const dev = import.meta.env.DEV ? "    ·    F2 — Adventure Editor" : "";
-    drawText(ctx, `H — tip for what's next    ·    Escape — settings (tip mode)    ·    M — mute${dev}`, LOGICAL_W / 2, 1018, {
-      size: 18, color: "rgba(214,224,238,0.7)", align: "center",
-    });
-  }
-
-  private drawTitleButton(ctx: CanvasRenderingContext2D, label: string, y: number, hover: boolean): void {
-    const w = 400, h = 62, x = LOGICAL_W / 2 - w / 2;
-    ctx.fillStyle = hover ? "rgba(232,201,138,0.18)" : "rgba(10,16,28,0.55)";
-    ctx.fillRect(x, y, w, h);
-    ctx.strokeStyle = hover ? "rgba(232,201,138,0.9)" : "rgba(201,162,74,0.45)";
-    ctx.lineWidth = hover ? 2 : 1.5;
-    ctx.strokeRect(x + 1, y + 1, w - 2, h - 2);
-    drawText(ctx, label, LOGICAL_W / 2, y + 17, {
-      size: 26, color: hover ? "#fff6e0" : "#d9c9a4", align: "center", weight: "bold",
-    });
   }
 
   private renderWin(ctx: CanvasRenderingContext2D): void {
