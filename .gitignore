@@ -1,6 +1,10 @@
 node_modules/
 dist/
 /*.mp4
+# Scratch screenshots at the repo root.
+/*.png
+# Screenshots written by the browser tests (npm test, test:editor).
+test-output/
 # Story cinematics are generated, not source: ~20 MB, rebuilt from cinematic/.
 public/assets/video/*.mp4
 cinematic/.hyperframes/
