@@ -92,7 +92,7 @@ game's generic replies.
 |---|---|
 | `person` / `thing` | force person or object wording in fallback lines (normally guessed) |
 | `nowalk` | act without walking over (the sky, a distant ship) |
-| `verb talk` | the natural verb, lit on hover and done by right-click (normally guessed) |
+| `verb talk` | the natural verb, lit on hover and done by a plain click (normally guessed) |
 | `article the` / `a` / `none` | article for fallback lines |
 | `item crowbar` | Pick up gives this item |
 | `exit dock` | shorthand: open, use and walk all `go dock` |
