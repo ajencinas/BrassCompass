@@ -5,7 +5,7 @@
  */
 const TRANSCRIPTS: Record<string, string[]> = {
   "intro.mp4": ["The Brass Compass", "One night in Port Vela. One berth on the Marrow. One clerk with paperwork to finish."],
-  "act-i-outro.mp4": ["End of Act I", "One stamped licence. One berth on the Marrow.", "Officially competent, in a font nobody can argue with.", "The next chapter: tomorrow, the Marrow sails. Tonight, the harbour keeps its secrets."],
+  "act-i-outro.mp4": ["End of Act I", "One stamped licence. One berth on the Marrow.", "Officially competent, in a font nobody can argue with.", "The next chapter: at dawn, the Marrow sails. Somewhere past the reef, somebody has been paying to keep ships lost."],
   "act-ii-intro.mp4": ["Act II", "The Vela Straits"],
   "act-ii-outro.mp4": ["The Vela Straits", "Inside the reef, a ship that should not exist."],
   "act-iii-intro.mp4": ["Act III", "Tidy Weather"],
