@@ -39,11 +39,13 @@ room salt_camp "Gullet Key — the Salt Camp"
     look "The reef flats, running out to the lagoon in a mile of coral and sudden deep pockets. Somebody who'd crossed them a hundred times might know the way."
     open "Not without somebody who knows where the holes are. The holes are very patient."
     walk "Not without somebody who knows where the holes are. The holes are very patient."
-    # Crossable once Quill is out: you came over them, and Ansel is a bonus, not a gate.
-    state if quill_free
+    # Crossable once Ansel has shown the way (and handed over flag sixteen).
+    state if ansel_met
       exit reef_wreck
       look "The reef flats, staked across to the wreck at low tide. My father's road. He goes wrong at the third stake."
       open "We cross the flats, stake by stake. At the third one I don't follow my father."
+    state if quill_free
+      look "The reef flats, staked across to the wreck. My father's road. I'd like a word with him before I take it."
 
   hotspot hut "the store hut"
     area 1990,280 570x520
@@ -62,7 +64,7 @@ room salt_camp "Gullet Key — the Salt Camp"
     area 440,470 170x320
     stand 700,800
     look "A big man raking salt, with a shaved head and a black beard and a face I've already seen, older and sadder, at the Marrow's mess table."
-    talk "He leans on his rake and looks at me as if I'm a knot somebody tied badly."
+    talk "He leans on his rake and looks at me as if I'm a knot somebody tied badly. It's the exact look his brother gives me."
       talk tamhobb
     give "“Nothing in here's mine to keep, clerk. Hang on to it.”"
 
@@ -73,6 +75,8 @@ room salt_camp "Gullet Key — the Salt Camp"
     talk "He snaps to attention, slightly less snappily than before."
       talk pike at camp
     give "“Only forms, sir. Sorry, sir.”"
+    state if pike_roll
+      talk: talk pike at after
     state if quill_free
       talk: talk pike at done
 
@@ -82,7 +86,7 @@ room salt_camp "Gullet Key — the Salt Camp"
     stand 1300,790
     look "My father. Sunburnt to the colour of a ship's biscuit, beard like a burst mattress, a needle in his lapel and an L on his cuff. He looks exactly the same and nothing like."
     talk "He's grinning. He hasn't stopped since he dropped the flag."
-      talk ansel
+      talk ansel at taller
     give "“For me? Is it a flag? It's not a flag. Pity.”"
     state if ansel_met
       talk: talk ansel at hub
@@ -132,4 +136,4 @@ room salt_camp "Gullet Key — the Salt Camp"
   use stamp on hut
     "I stamp the padlock. It now looks officially locked, which is worse."
   use ansel_log on pike
-    "He won't take it. “Captain's private papers, sir. I'd need a form to read them, and I'd need a stronger stomach to want to.”"
+    "He shuts his eyes before I can open it. “Captain's private papers, sir. I didn't see that. I didn't see me not seeing it.”"

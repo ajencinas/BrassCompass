@@ -44,7 +44,7 @@ room key_gate "Gullet Key — the Quarantine Gate"
     look "A double gate in the palisade, barred, chained and, by the look of it, inspected. Beyond it something is burning on purpose."
     open "Pike clears his throat. “Bill of Health first, sir. Fumigated, stamped, countersigned and dated.”"
     push "Pike clears his throat at a volume I'd thought only Bramwick could manage."
-    pull "Pike clears his throat at a volume I'd thought only Bramwick could manage."
+    pull "I pull. Pike makes a small noise of grief on the gate's behalf."
     state if fog_down
       look "Barred again, from inside. Behind it, the Weather are holding a polite meeting about who let the weather out."
       open "Barred. Somebody on the other side says “Sorry!” in a tone that isn't."
@@ -65,7 +65,7 @@ room key_gate "Gullet Key — the Quarantine Gate"
     look "A little iron brazier with a sign: FUMIGATION, PAPERS ONLY. It smoulders kelp, politely, in a thin grey curl."
     use "I warm my hands. Pike watches to make sure I'm not fumigating them without a bill."
     pickup "It's hot, it's iron, and it's official. Three reasons to leave it alone."
-    turnoff "Pike would put me out for that, and he'd have a form for it."
+    turnoff "It's the only warm thing on the island that isn't trying to sell me something."
 
   hotspot to_shore "path to the lagoon"
     area 0,380 300x420
@@ -77,7 +77,7 @@ room key_gate "Gullet Key — the Quarantine Gate"
     show if not fog_down
     area 900,560 170x280
     stand 1120,850
-    look "A sentry of about nineteen, with a yellow armband big enough to signal ships and a clipboard he holds like a shield. He has the face of a boy who has never once been allowed to stamp anything."
+    look "A sentry of about nineteen: armband big enough to signal ships, clipboard held like a shield. Nobody has ever let him stamp anything."
     talk "He snaps to attention so hard his cap goes on without him."
       talk pike
     give "“I can only accept completed paperwork, sir.”"
@@ -85,7 +85,7 @@ room key_gate "Gullet Key — the Quarantine Gate"
       talk "He holds up one finger without opening his eyes. “Six, f. Nearly there, sir.”"
         nothing
     state if gate_open
-      talk: talk pike at open
+      talk: talk pike at held
     state if seen:pike.halt
       talk: talk pike at again
 
@@ -131,8 +131,8 @@ room key_gate "Gullet Key — the Quarantine Gate"
   use crowbar on gate if not gate_open
     "I size up the chain with the crowbar. Pike sizes me up with the clipboard. “Regulation one, sir: nobody forces the gate. Regulation two: see regulation one.”"
   use crowbar on gate
-    "It's open. Pike would only want a form for opening it any further."
+    "It's open. I'd hate to frighten it."
   use bill on calendar
-    "I hold the bill up to the calendar in case the date jumps across. Pike watches with real interest. It doesn't. Dates on this island have to be torn off and carried, like everything else."
+    "I hold the bill up to the calendar in case the date jumps across. It doesn't. Dates here have to be torn off and carried."
   use ansel_log on pike
     "Pike reads a line, lips moving, and goes pink to the ears. “That's a captain's log, sir. I'm not cleared for feelings.”"

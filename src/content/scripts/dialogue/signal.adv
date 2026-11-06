@@ -2,7 +2,7 @@
 dialogue signal
   node down narrator "I haul down number fifteen and fold it the way you'd fold a letter. Then I bend number sixteen on to the halyard."
     -> up
-  node up narrator "It goes up in jerks, hand over hand, and breaks out at the masthead: shirts, patches, an L. A colour my mother would have hated."
+  node up narrator "It goes up in jerks, hand over hand, and breaks out at the masthead: shirts, patches, an L, and a great deal of mustard."
     -> wait
   node wait quill "There. Now we wait for the captain to decide we're not dead."
     -> about
@@ -11,7 +11,9 @@ dialogue signal
     > "(Take Quill's hand.)" if aff >= 12 -> hand
   node hand narrator "Quill's hand is already there. Neither of us mentions it. We're busy watching the ship."
     -> boats
-  node boats narrator "On the lagoon, a hundred and thirty sailors row for her in everything that floats. Somewhere among them my father is shouting the stroke, wrongly."
+  node boats narrator "On the lagoon, a hundred and thirty sailors put out for her in everything that floats, which turns out to include salt rafts, two doors and a bathtub."
+    -> stroke
+  node stroke narrator "Somewhere among them my father is shouting the stroke, wrongly."
     -> cutter
   node cutter narrator "And across the water a grey cutter with a cloud on her sail slips her cable and runs for Port Vela with every stitch she owns."
     -> home

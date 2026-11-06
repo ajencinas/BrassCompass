@@ -1,6 +1,11 @@
 # Quill, ashore. One tree, a node per place.
 dialogue quill3
-  # The wreck and the lagoon shore: the boat banter.
+  # The lagoon shore: the cutter.
+  node shore quill "That cutter's been watching us since we beached. Clean hull, no nets. Nobody that tidy is fishing."
+    > "Should we be worried?" -> split
+    > "What did the captain say, exactly?" -> plan
+  node split quill "I'm worried. You're busy. That's a good split."
+  # The wreck: the boat banter.
   node boat quill "Boat's beached. And I'm not waiting with it, before you ask. Somebody has to stop you filling in forms at a man with a cutlass."
     > "You could wait with the boat. It's very safe." if not seen:quill3.safe -> safe
     > "Thank you for rowing." if not seen:quill3.rowing -> rowing
@@ -25,22 +30,26 @@ dialogue quill3
     > "It's not tidy. The whole room is at an angle." -> angle
     > "Give me a minute." -> minute
   node mother quill "I guessed. She's got your face, only she looks like she'd use it to win arguments. …I'll look at the wall for a bit. In case you want to tell her anything."
-  node angle quill "Everything's at an angle on a ship, cargo. This one's just stopped pretending."
+  node angle quill "Everything's at an angle on a ship. This one's just stopped pretending."
   node minute quill "Take two. The wreck's been waiting three years. It can wait for a clerk to breathe."
   node shaken quill "You all right?"
     > "No. But I think I'm going to be." if not seen:quill3.going -> going
       add aff 1
-    > "I've been called an idiot in writing. By two people. In one morning." -> two
+    > "My father predicted me. In ink. Three years in advance." -> two
   node going quill "Good. That's the right order to say it in."
-  node two quill "Three, counting me. I'm counting me."
+  node two quill "Took him one line. Took me a week. I'm not bitter."
   # At the gate.
   node gate quill "He's got a clipboard, cargo. This is your fight. I'll hold your coat."
-    > "Is a navigator a ship's officer?" if seen:pike.need and not bill_signed -> officer
+    > "Is a navigator a ship's officer?" if seen:pike.need and not bill_signed and has bill -> officer
+      set bill_signed
+    > "Is a navigator a ship's officer?" if seen:pike.need and not bill_signed and not has bill -> air
     > "You could just climb the fence." -> fence
     > "Wish me luck." -> luck
   node officer quill "It says so in the Marrow's log. In your handwriting. …Give me the bill, then, before I come to my senses."
+    -> sign
+  node air quill "It says so in the Marrow's log, in your handwriting. Get the form first. I'm not signing air."
   node fence quill "I could. Then he'd blow that whistle, and every Weather man on the key would come and be polite at me. I'd rather watch you do it properly."
-  node luck quill "You don't need luck. You need a date, a stamp and a signature. Same as a wedding, Marta says."
+  node luck quill "You don't need luck. You need smoke, a stamp, a signature and a date. Same as a wedding, Marta says."
   # Countersigning the bill (combos give it to her; rooms_act3.ts).
   node sign narrator "She reads every line of it, which nobody ever does, and signs at the bottom in careful capitals: QUILL, NAVIGATOR. Then she looks at it for a long time."
     -> signed
@@ -55,7 +64,7 @@ dialogue quill3
   node works quill "Kelp smoke. Same as the crates on the Marrow. That big brazier's doing most of the work; put it out and the fog has nothing to stand on."
     > "And then?" -> then
     > "I'd need something wetter than paperwork." -> wetter
-  node then quill "Then we run, cargo. I'm good at running. You'll be good at it by the end."
+  node then quill "Then we run. I'm good at running. You'll be good at it by the end."
   node wetter quill "Everything's wetter than your paperwork. There's a whole lagoon out there. Find it a bucket."
   # Through the bars of the store hut.
   node hut quill "Don't look so pleased. You've finally got me in a box with a label on."
@@ -71,9 +80,9 @@ dialogue quill3
     > "He does that." -> waves
     > "Let him watch." if not seen:quill3.watch -> watch
       add aff 1
-  node waves quill "Go and talk to him, cargo. You've waited three years. I've waited about a minute and I'm already sick of it."
+  node waves quill "He waved at me through the bars, too. Twice a day, like a lighthouse with opinions. I like him. Don't tell him."
   node watch quill "…All right. Let him. But I'm not waving back."
   # Back on the wreck with flag sixteen.
-  node flag quill "Go on. Run it up. You've been carrying it like it's a baby."
-    > "It's a very important baby." -> baby
-  node baby quill "It's a flag made of your shirts, cargo. The halyard's on the mainmast. Up."
+  node flag quill "Go on. Run it up. You've been carrying it like it's the Crown Jewels."
+    > "It's better than the Crown Jewels. It has an L." -> baby
+  node baby quill "It's a flag made of your shirts. The halyard's on the mainmast. Up."

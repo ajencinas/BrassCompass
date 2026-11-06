@@ -53,9 +53,17 @@ dialogue pike
   node beautiful pike "It's beautiful. Nobody ever does the dating."
     > "Thank you, Pike." -> open
     > "Will you have it framed?" -> framed
-  node framed pike "Better than framed, sir. Filed. …No, keep it on you. Inspections are random."
+  node framed pike "Better than framed, sir. Memorised. I'll be saying it to myself at night."
     -> open
-  node open pike "Gate's open, sir. Mind the Weather Works. They're not a form sort of people."
+  node open narrator "He hands the bill back, reluctantly, like a man returning a puppy."
+    -> gate
+  node gate pike "Gate's open, sir. Keep it on you; inspections are random. Mind the Weather Works. They're not a form sort of people."
+    -> thread
+  node thread pike "Past them it's the camp. Six crews, pending. One of them's a captain who keeps asking me for thread."
+    -> walk
+  node walk narrator "Thread. I don't say anything. I notice I've started walking."
+  # Talking to Pike again at the open gate.
+  node held pike "Still open, sir. I keep checking. Mind the Weather Works, and if you see the captain, I've no thread. I've looked."
   # In the salt camp, after the halyard (rooms_act3.ts, salt_camp scene).
   node landed narrator "We come down in a salt pan, in a heap, in a spray of white. When I can see again, Pike is standing over us with his clipboard. He has run all the way round."
     -> rope
@@ -78,7 +86,7 @@ dialogue pike
   node none pike "Only we haven't got any Form 9s. We've never had any Form 9s. Nobody's ever been released."
     > "Then I'll write one." -> write
       set knows_form9
-      note form9 "Form 9 is a Release of Detained Persons Upon Inspection. One signature and the quarantine has to let them go. Pike has never had one, which is not an accident."
+      note form9 "Form 9: Release of Detained Person Upon Inspection. Written out clean, stamped by a harbour officer, any paper will do. Pike has never had one, which is not an accident."
     > "Nobody? In three years?" -> nobody
   node nobody pike "Not once, sir. I did wonder. But wondering isn't a form."
     > "Then I'll write one." -> write
@@ -108,10 +116,26 @@ dialogue pike
     > "I wrote a very good form." -> kiss
     > "I'd have written a hundred." -> kiss
       add aff 1
-  node kiss narrator "She takes my face in both hands, salt and all, and kisses me. There is no form for this. There doesn't need to be."
+  node kiss narrator "She takes my face in both hands, salt and all, and kisses me. I hold on. I've been told to keep doing that."
     -> ansel
   node ansel ansel "Ah. Good. I'll come back."
     -> turn
   node turn narrator "A sunburnt man with a needle in his lapel and a flag under his arm has stopped in the middle of the salt pan. He turns to go. He turns back. He drops the flag."
+    talk ansel
   # Talking to Pike after he's been out-formed.
-  node done pike "I've filed it, sir. In my hat; it's the safest place on the key. …Is this what being on the right side feels like? It's very windy."
+  node done pike "I've filed it, sir. In my hat; it's the safest place on the key."
+    -> roll
+  node roll pike "…And this, sir. The roll: every name on the key, all six crews. I kept it very neat. I'd like it to go somewhere it'll be read."
+    set pike_roll
+    -> roll2
+  node roll2 narrator "Six ships' worth of names, in a hand so careful it's almost shy. I put it in the log, where they belong."
+    -> bright
+  node bright pike "Is this what being on the right side feels like, sir? It's very bright."
+    > "Customs is hiring. We have a great many forms." -> hiring
+    > "You did well, Pike." -> well
+  node hiring pike "(whispering) Do you have a Form 12?"
+  node well pike "Did I, sir? Nobody's ever said. I'll write it down before it wears off."
+  # Pike, once he's handed over the roll.
+  node after pike "Still filed, sir. The roll's with you and the form's in my hat. Between us we're very well organised."
+    > "Customs is hiring. We have a great many forms." if not seen:pike.hiring -> hiring
+    > "Carry on, Pike." -> END

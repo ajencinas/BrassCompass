@@ -41,7 +41,7 @@ room reef_wreck "The Arcadia, on the Reef"
     area 1340,230 880x480
     stand 1700,790
     article none
-    look "The Arcadia, my father's ship, heeled over on the coral with her masts still up. Three years of weather and she's kept her dignity. She looks like she's waiting for a tide that knows its business."
+    look "The Arcadia, my father's ship, heeled over on the coral with her masts still up. Three years, and she's kept her dignity."
     talk "“Hello,” I say. It comes out smaller than I meant."
     open "The way in is the hatch on her deck. It doesn't look in a hurry."
 
@@ -73,11 +73,11 @@ room reef_wreck "The Arcadia, on the Reef"
   hotspot flag "the flag"
     area 1720,60 300x170
     stand 1700,785
-    look "A flag made of shirts, sewn by somebody with more feeling than skill. Fifteen, stitched in the middle. In the corner, in red thread, an L. I don't know what the L is for."
+    look "A flag made of shirts, sewn with more feeling than skill. Fifteen in the middle. In the corner, in red thread, an L. I know one L. I decide I'm not ready to know it yet."
     pickup "It's at the top of a mast. I'm at the bottom of everything."
     state if flag16_up
       name "flag sixteen"
-      look "Sixteen, at the masthead. A colour my mother would have hated, flying as if it doesn't care."
+      look "Sixteen, at the masthead, mustard and unrepentant."
         talk signal at about
     state if log_read
       name "flag fifteen"

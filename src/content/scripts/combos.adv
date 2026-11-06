@@ -26,7 +26,7 @@ use calendar_leaf on bill
 
 # Act IV: the requisition for Cray's claims book, stamped in the Harbourmaster's absence.
 use stamp on requisition if not req_stamped
-  "Any clerk of this house may stamp in the Harbourmaster's absence. Tonight the Harbourmaster is very absent. I stamp the requisition: HARBOUR OF PORT VELA, square in the middle of Cray's little cloud."
+  "Any clerk of this house may stamp in the Harbourmaster's absence. Tonight he's very absent. I stamp the requisition: HARBOUR OF PORT VELA, square in the middle of Cray's little cloud."
   set req_stamped
   sound chime
 
@@ -62,13 +62,13 @@ combos quill_combos
   use ansel_log on quill
     "She doesn't open it again. “I've read it. Once was the right number of times.”"
   use crowbar on quill
-    "She pushes it back. “I packed it for you. Don't make it a whole thing.”"
+    "She pushes it back. “You packed it, you carry it. That's the rule with crowbars.”"
   use calendar_leaf on quill
-    "“A day. What am I meant to do with a day?” She hands it back. “Put it on the bill, cargo. That's what days are for.”"
+    "“A day. What am I meant to do with a day?” She hands it back. “Put it on the bill. That's what days are for.”"
   use flag16 on quill
     "She won't take it. “Your father gave it to you. Run it up yourself.”"
   use bucket_water on quill
-    "“Throw that at me, cargo, and you'd better be able to swim.”"
+    "“Throw that at me and you'd better be able to swim.”"
   use bucket on quill
     "“That's a bucket. I've seen one. Fill it with something, then we'll talk.”"
   use compass on quill

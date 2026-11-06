@@ -10,7 +10,7 @@ dialogue log
     -> stop
   node stop narrator "I read the first line. I don't read the second one. The words stay where they are, and so do I."
     > "(Hold the log out to Quill.)" -> reads
-    > "“It's the light in here. And the salt. It's a wreck.”" -> salt
+    > "It's the light in here. And the salt. It's a wreck." -> salt
   node salt narrator "“It's a wreck,” Quill agrees, and takes the log out of my hands. “Budge up.”"
     -> reads
   node reads quill "(reading) “Lise, number fifteen is the blue one. Our boy will have the compass by now. If I'm late, he'll know what to do with it.”"

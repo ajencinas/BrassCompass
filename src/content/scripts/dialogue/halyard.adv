@@ -12,7 +12,7 @@ dialogue halyard
       add aff 1
   node stopped weather "Oh dear. Then you'll be needing an inspection. A thorough one."
     -> grab
-  node notwithout quill "Not without you, cargo."
+  node notwithout quill "Not without you."
     -> grab
   node grab narrator "Quill yanks the halyard off its cleat, hooks an arm round my waist and puts one bare foot on the rim of a brazier."
     -> hold

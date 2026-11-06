@@ -1,6 +1,6 @@
 # Tam Hobb, raking salt.
 dialogue tamhobb
-  node root tamhobb "You've the look of a man who's been talking to my brother. You've stopped blinking."
+  node root tamhobb "New, are you? New ones stare at the salt like it owes them money."
     > "You're Tam Hobb." if not seen:tamhobb.tam -> tam
     > "He's on the Marrow. Your name's on his arm." if seen:tamhobb.tam and not seen:tamhobb.arm -> arm
     > "Your son's in Upper Town, counting ships off the wall." if seen:tam.dad and seen:tamhobb.tam and not seen:tamhobb.son -> son
@@ -8,11 +8,10 @@ dialogue tamhobb
     > "Back to the salt." -> bye
   node tam tamhobb "Who's asking? …No. Don't tell me. You've got paperwork in your face. You're the Fenn boy."
     > "He's on the Marrow. Your name's on his arm." -> arm
-  node arm tamhobb "On his arm? In ink? (He leans on the rake.) He'll have spelled it wrong."
+  node arm tamhobb "On his arm? In ink? (He leans on the rake, harder than a man needs to.) He'll have spelled it wrong."
     -> arm2
   node arm2 tamhobb "Tell my brother I said his tattoos are terrible."
     > "He left room on his arm. In case." -> room
-      add aff 1
     > "I'll tell him. From a distance." -> distance
   node room tamhobb "…Course he did. Big soft lump. Tell him that too. No. Don't. I'll tell him."
   node distance tamhobb "Wise. He hugs like a capstan."
