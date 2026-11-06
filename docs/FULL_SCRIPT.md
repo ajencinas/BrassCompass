@@ -56,33 +56,33 @@
 
 **FENN** — Customs clerk, 23. Polite, precise, deadpan; braver than he sounds. *[The player: every choice and every verb line.]*
 
-**HARBOURMASTER BRAMWICK** — Harbourmaster. Pompous, kind, guilty. *[39 lines in bramwick, bramwick4, inquiry, rook4.]*
+**HARBOURMASTER BRAMWICK** — Harbourmaster. Pompous, kind, guilty. *[50 lines in bramwick, bramwick4, inquiry, ledger4, rook4.]*
 
-**MARTA** — Runs the Salty Keel. Warm, sharp, trades in stories. *[49 lines in bramwick4, inquiry, ledger4, marta4, regulars4, tavernkeeper.]*
+**MARTA** — Runs the Salty Keel. Warm, sharp, trades in stories. *[54 lines in bramwick4, inquiry, ledger4, marta4, regulars4, tavernkeeper.]*
 
-**QUILL** — The Marrow's lookout, 22. Blunt, quick, competitive; tender only when cornered. *[122 lines in ansel, bearings, halyard, log, pike, quill, quill3, quill4, signal, watch.]*
+**QUILL** — The Marrow's lookout, 22. Blunt, quick, competitive; tender only when cornered. *[137 lines in ansel, bearings, halyard, log, pike, quill, quill3, quill4, signal, watch.]*
 
-**OLD ROOK** — The Arcadia's navigator, 70s. Wry, self-mocking, sober underneath. *[28 lines in ansel4, bramwick4, inquiry, rook, rook4.]*
+**OLD ROOK** — The Arcadia's navigator, 70s. Wry, self-mocking, sober underneath. *[32 lines in ansel4, bramwick4, inquiry, rook, rook4.]*
 
 **NELL** — *[11 lines in nell.]*
 
-**TAM** — *[10 lines in tam.]*
+**TAM** — *[13 lines in tam.]*
 
-**OLD ONN** — *[12 lines in onn.]*
+**OLD ONN** — *[14 lines in onn.]*
 
-**SILAS CRAY** — Factor, insurer, villain. Unfailingly polite, amused, never raises his voice. *[38 lines in cray4, inquiry, silas.]*
+**SILAS CRAY** — Factor, insurer, villain. Unfailingly polite, amused, never raises his voice. *[44 lines in cray4, inquiry, silas.]*
 
 **MR TALLOW (FROM THE BACK ROOM)** — Chandler (voice only). Harassed, grateful. *[6 lines in tallow.]*
 
-**CAPTAIN VANE** — The Marrow's captain, 50s. Dry contempt over grief. *[28 lines in bearings, vane.]*
+**CAPTAIN VANE** — The Marrow's captain, 50s. Dry contempt over grief. *[45 lines in bearings, vane, vane4.]*
 
-**DORRIT** — Cook, ex-customs, 60s. Fussy officialese. *[13 lines in bearings, dorrit, inquiry.]*
+**DORRIT** — Cook, ex-customs, 60s. Fussy officialese. *[14 lines in bearings, dorrit, inquiry.]*
 
-**HOBB** — Bosun, 40s. Few words, big feelings. *[19 lines in bearings, hobb.]*
+**HOBB** — Bosun, 40s. Few words, big feelings. *[28 lines in bearings, hobb, hobb4.]*
 
-**ANSEL FENN** — Fenn's father. Cheerful about catastrophe; apologises for the wrong things. *[32 lines in ansel, ansel4, pike, quill4.]*
+**ANSEL FENN** — Fenn's father. Cheerful about catastrophe; apologises for the wrong things. *[41 lines in ansel, ansel4, ledger4, pike, quill4.]*
 
-**PIKE** — Weather sentry. Earnest jobsworth. *[29 lines in pike.]*
+**PIKE** — Weather sentry. Earnest jobsworth. *[36 lines in pike.]*
 
 **TAM HOBB** — *[15 lines in tamhobb.]*
 
@@ -113,74 +113,75 @@
 
 *[room* `dock`*; also in Act IV]* <sub>rooms/dock.adv:1</sub>
 
-**the Marrow** `ship` <sub>rooms/dock.adv:32</sub>
+**the Marrow** `ship` <sub>rooms/dock.adv:54</sub>
 
-- **Look at:** The Marrow. A licensed pirate brig, which in Port Vela is a perfectly respectable thing to be. She sails for the Straits at dawn. <sub>rooms/dock.adv:35</sub>
-- **Talk to:** I call up to the deck. Someone calls back: “Licence first, clerk!” Even our pirates have standards. <sub>rooms/dock.adv:36</sub>
-- **Open:** I'm not opening a ship. Ships open themselves, usually at the worst moment. <sub>rooms/dock.adv:37</sub>
-- **Pick up:** She's a little big for my satchel. <sub>rooms/dock.adv:38</sub>
+- **Look at:** The Marrow. A licensed pirate brig, which in Port Vela is a perfectly respectable thing to be. She sails for the Straits at dawn. <sub>rooms/dock.adv:57</sub>
+- **Talk to:** I call up to the deck. A woman's voice calls back: “Licence first, clerk!” She sounded like she'd already lost interest. Even our pirates have standards. <sub>rooms/dock.adv:58</sub>
+- **Open:** I'm not opening a ship. Ships open themselves, usually at the worst moment. <sub>rooms/dock.adv:59</sub>
+- **Pick up:** She's a little big for my satchel. <sub>rooms/dock.adv:60</sub>
 
-**stacked crate** `crate` *[present Act I only]* <sub>rooms/dock.adv:50</sub>
+**impounded crate** `crate` *[present Act I only]* <sub>rooms/dock.adv:72</sub>
 
-- **Look at:** A fish crate, nailed shut, stacked here so long the planks beneath it have gone black. Something has been growing in that dark, and growing well. <sub>rooms/dock.adv:54</sub>
-- **Open:** Nailed. Whatever is underneath has had three years to get comfortable. <sub>rooms/dock.adv:55</sub>
-- **Push:** It shifts an inch and the whole stack complains. <sub>rooms/dock.adv:58</sub>
-- **Pull:** I pull. The crate declines, politely, the way nailed things do. <sub>rooms/dock.adv:59</sub>
-- **Pick up:** I try to lift it. The crate has become furniture. <sub>rooms/dock.adv:56</sub>
-  - *[sound: deny]* <sub>rooms/dock.adv:57</sub>
-- *When* *[if crate_open]* *— called “stacked crate”* <sub>rooms/dock.adv:60</sub>
-  - **Look at:** The crate, shifted aside. The timbers under it are black and wet, and the jet-caps have been picked clean. <sub>rooms/dock.adv:62</sub>
-  - **Open:** Open ground now, and a good deal wetter than it was. <sub>rooms/dock.adv:63</sub>
-  - **Pick up:** I've had my share of them. <sub>rooms/dock.adv:64</sub>
+- **Look at:** A crate of rum, nailed shut and stencilled HELD FOR CUSTOMS INSPECTION. It's been waiting for an inspector since Thursday. Technically, it's been waiting for me. <sub>rooms/dock.adv:76</sub>
+- **Open:** Nailed. Customs nails things properly. It's the one thing we do promptly. <sub>rooms/dock.adv:77</sub>
+- **Push:** It sloshes, faintly, in a way I would describe on a form as “liquid”. <sub>rooms/dock.adv:80</sub>
+- **Pull:** I pull. The crate declines, politely, the way nailed things do. <sub>rooms/dock.adv:81</sub>
+- **Pick up:** I try to lift it. It's heavy with rum and paperwork, mostly paperwork. <sub>rooms/dock.adv:78</sub>
+  - *[sound: deny]* <sub>rooms/dock.adv:79</sub>
+- *When* *[if crate_open]* *— called “inspected crate”* <sub>rooms/dock.adv:82</sub>
+  - **Look at:** Marta's rum, inspected. The lid's back on, and the crate is one bottle lighter, which is the customary margin of error. <sub>rooms/dock.adv:84</sub>
+  - **Open:** I've inspected it. Inspecting it again would just be drinking. <sub>rooms/dock.adv:85</sub>
+  - **Pick up:** It's cleared customs. Customs has had its share. <sub>rooms/dock.adv:86</sub>
 
-**crowbar** `crowbar` *[present Act I, if doesn't have crowbar]* *[Pick up gives: crowbar]* <sub>rooms/dock.adv:66</sub>
+**crowbar** `crowbar` *[present Act I, if doesn't have crowbar]* *[Pick up gives: crowbar]* <sub>rooms/dock.adv:88</sub>
 
-- **Look at:** A crowbar, leaning against a bollard as though it works here. <sub>rooms/dock.adv:71</sub>
-- **Pick up:** I take the crowbar. Nobody on a pier at night asks why. <sub>rooms/dock.adv:72</sub>
+- **Look at:** A crowbar, leaning against a bollard as though it works here. <sub>rooms/dock.adv:93</sub>
+- **Pick up:** I take the crowbar. Nobody on a pier at night asks why. <sub>rooms/dock.adv:94</sub>
 
-**customs house** `office_door` <sub>rooms/dock.adv:74</sub>
+**customs house** `office_door` <sub>rooms/dock.adv:96</sub>
 
-- **Look at:** The customs house. My desk is in there, and my employer, and my future — in roughly that order. <sub>rooms/dock.adv:78</sub>
-- **Use:** I'd rather go in than explain myself out here. <sub>rooms/dock.adv:79</sub>
-  - *[→ goes to Customs House]* <sub>rooms/dock.adv:77</sub>
-- **Open:** I go in. Paperwork waits for no man. <sub>rooms/dock.adv:80</sub>
-  - *[→ goes to Customs House]* <sub>rooms/dock.adv:77</sub>
-- **Walk to:** *[→ goes to Customs House]* <sub>rooms/dock.adv:77</sub>
+- **Look at:** The customs house. My desk is in there, and my employer, and my future — in roughly that order. <sub>rooms/dock.adv:100</sub>
+- **Use:** I'd rather go in than explain myself out here. <sub>rooms/dock.adv:101</sub>
+  - *[→ goes to Customs House]* <sub>rooms/dock.adv:99</sub>
+- **Open:** I go in. Paperwork waits for no man. <sub>rooms/dock.adv:102</sub>
+  - *[→ goes to Customs House]* <sub>rooms/dock.adv:99</sub>
+- **Walk to:** *[→ goes to Customs House]* <sub>rooms/dock.adv:99</sub>
 
-**tavern** `tavern_door` <sub>rooms/dock.adv:84</sub>
+**tavern** `tavern_door` <sub>rooms/dock.adv:106</sub>
 
-- **Look at:** The Salty Keel. Warm light, loud voices, and half the harbour drinking to the Marrow's voyage. <sub>rooms/dock.adv:88</sub>
-- **Use:** A drink would be sensible. I have never been accused of that. <sub>rooms/dock.adv:89</sub>
-  - *[→ goes to The Salty Keel]* <sub>rooms/dock.adv:87</sub>
-- **Open:** I push the door. It gives, the way tavern doors always do. <sub>rooms/dock.adv:90</sub>
-  - *[→ goes to The Salty Keel]* <sub>rooms/dock.adv:87</sub>
-- **Walk to:** *[→ goes to The Salty Keel]* <sub>rooms/dock.adv:87</sub>
+- **Look at:** The Salty Keel. Warm light, loud voices, and half the harbour drinking to the Marrow's voyage. <sub>rooms/dock.adv:110</sub>
+- **Use:** A drink would be sensible. I have never been accused of that. <sub>rooms/dock.adv:111</sub>
+  - *[→ goes to The Salty Keel]* <sub>rooms/dock.adv:109</sub>
+- **Open:** I push the door. It gives, the way tavern doors always do. <sub>rooms/dock.adv:112</sub>
+  - *[→ goes to The Salty Keel]* <sub>rooms/dock.adv:109</sub>
+- **Walk to:** *[→ goes to The Salty Keel]* <sub>rooms/dock.adv:109</sub>
 
-**Chandler's Lane** `alley_mouth` <sub>rooms/dock.adv:94</sub>
+**Chandler's Lane** `alley_mouth` <sub>rooms/dock.adv:116</sub>
 
-- **Look at:** A gap between two warehouses that the town calls a lane and the rain calls a river. It leads to the chandler's, and to the loft above it. <sub>rooms/dock.adv:98</sub>
-- **Use / Walk to:** *[→ goes to Chandler's Lane]* <sub>rooms/dock.adv:97</sub>
-- **Open:** I turn into the lane. It smells of rope and old rain. <sub>rooms/dock.adv:99</sub>
-  - *[→ goes to Chandler's Lane]* <sub>rooms/dock.adv:97</sub>
+- **Look at:** A gap between two warehouses that the town calls a lane and the rain calls a river. It leads to the chandler's, and to the loft above it. <sub>rooms/dock.adv:120</sub>
+- **Use / Walk to:** *[→ goes to Chandler's Lane]* <sub>rooms/dock.adv:119</sub>
+- **Open:** I turn into the lane. It smells of rope and old rain. <sub>rooms/dock.adv:121</sub>
+  - *[→ goes to Chandler's Lane]* <sub>rooms/dock.adv:119</sub>
 
-**steps to Upper Town** `village_steps` *[present Act I only]* <sub>rooms/dock.adv:101</sub>
+**steps to Upper Town** `village_steps` *[present Act I only]* <sub>rooms/dock.adv:123</sub>
 
-- **Look at:** A flight of stone steps going up between two warehouses, to the houses above the waterfront. Somebody's washing is up there and somebody's lamp is lit. <sub>rooms/dock.adv:106</sub>
-- **Use / Walk to:** *[→ goes to Upper Town]* <sub>rooms/dock.adv:105</sub>
-- **Open:** I go up the steps into the town. <sub>rooms/dock.adv:107</sub>
-  - *[→ goes to Upper Town]* <sub>rooms/dock.adv:105</sub>
+- **Look at:** A flight of stone steps going up between two warehouses, to the houses above the waterfront. Somebody's washing is up there and somebody's lamp is lit. <sub>rooms/dock.adv:128</sub>
+- **Use / Walk to:** *[→ goes to Upper Town]* <sub>rooms/dock.adv:127</sub>
+- **Open:** I go up the steps into the town. <sub>rooms/dock.adv:129</sub>
+  - *[→ goes to Upper Town]* <sub>rooms/dock.adv:127</sub>
 
-**harbour water** `water` <sub>rooms/dock.adv:109</sub>
+**harbour water** `water` <sub>rooms/dock.adv:131</sub>
 
-- **Look at:** Black water holding the town's lights. Past the headland it becomes the Straits, where my father's ship was last seen. His compass is in my pocket. It has never once pointed north, and it isn't starting tonight. <sub>rooms/dock.adv:112</sub>
-- **Talk to:** I tell the water I'm coming. It doesn't seem worried. <sub>rooms/dock.adv:113</sub>
-- **Use:** I could drink it. I have had worse from the tavern. <sub>rooms/dock.adv:114</sub>
+- **Look at:** Black water holding the town's lights. Past the headland it becomes the Straits, where my father's ship was last seen. <sub>rooms/dock.adv:134</sub>
+  - **FENN (V.O.)**: His compass is in my pocket. It has never once pointed north, and it isn't starting tonight. <sub>rooms/dock.adv:135</sub>
+- **Talk to:** I tell the water I'm coming. It doesn't seem worried. <sub>rooms/dock.adv:136</sub>
+- **Use:** I could drink it. I have had worse from the tavern. <sub>rooms/dock.adv:137</sub>
 
 **Combinations here**
 
-- **Use crowbar on stacked crate:** *[if crate_open = false]* I get the bar under the crate and walk it round. The stack groans, gives, and comes away — and underneath, in the black wet timber where the fog gets in, there is a stand of jet-caps, thick as shillings. <sub>rooms/dock.adv:196</sub>
-  - *[Fenn receives: jet-caps]* *[sets crate_open]* *[sound: pickup]* <sub>rooms/dock.adv:197</sub>
-- **Use crowbar on stacked crate:** It's shifted already. The crate has given everything it has, and it was mostly mushrooms. <sub>rooms/dock.adv:201</sub>
+- **Use crowbar on impounded crate:** *[if crate_open = false]* I conduct a customs inspection, with the crowbar. It is very thorough. When it's over the crate is one bottle lighter, and that bottle is the sample. <sub>rooms/dock.adv:219</sub>
+  - *[Fenn receives: inspected rum]* *[sets crate_open]* *[sound: pickup]* <sub>rooms/dock.adv:220</sub>
+- **Use crowbar on impounded crate:** It's been inspected. Any more inspection and Marta would call it theft, and she'd be right. <sub>rooms/dock.adv:224</sub>
 
 <a id="act1-office"></a>
 ## Customs House
@@ -233,17 +234,19 @@
 - **Use drawer key on locked drawer:** *[if drawer_open]* It's unlocked. Unlocking it again would only be showing it the key. <sub>rooms/office.adv:120</sub>
 - **Use drawer key on locked drawer:** The key turns. Inside: the harbour stamp, a pot of ink, and an IOU to Marta for one game of cards, unpaid. I take the stamp. <sub>rooms/office.adv:122</sub>
   - *[Fenn receives: harbour stamp]* *[sets drawer_open]* <sub>rooms/office.adv:123</sub>
-- **Use stamped licence on Harbourmaster Bramwick:** *[if ledger_read and has manifest copy]* I put the licence on the desk, and the Arcadia's manifest beside it. Bramwick reads the manifest first. Then he puts down his pen, which I have never seen him do. <sub>rooms/office.adv:126</sub>
-  - *[→ conversation* [bramwick at confess](#dlg-bramwick-confess) *— below]* <sub>rooms/office.adv:127</sub>
-- **Use stamped licence on Harbourmaster Bramwick:** Bramwick reads the licence and approves of it. “The licence is fine. The berth is Mr Cray's.” He slides it back. “The Arcadia's manifest copy, Fenn; the chandler keeps one. And read the harbour ledger yourself. Don't let me read it to you.” <sub>rooms/office.adv:129</sub>
-- **Use jet-caps on Harbourmaster Bramwick:** He looks at the mushrooms. “I am not buying produce. I am a harbourmaster.” <sub>rooms/office.adv:131</sub>
-- **Use licence form on Harbourmaster Bramwick:** “It wants the harbour stamp, Fenn, which I cannot apply after the bell.” He stares very hard at his own drawer. <sub>rooms/office.adv:133</sub>
-- **Use harbour stamp on Harbourmaster Bramwick:** “Put that away. I am absent.” <sub>rooms/office.adv:135</sub>
-- **Use drawer key on Harbourmaster Bramwick:** “I don't want it back tonight. Tonight I am, legally, elsewhere.” <sub>rooms/office.adv:137</sub>
-- **Use crowbar on locked drawer:** *[Act I, if drawer_open = false]* I fit the crowbar to the drawer. Bramwick doesn't look up. “That drawer is harbour property, Fenn, and for the next eleven minutes so am I.” <sub>rooms/office.adv:139</sub>
-- **Use crowbar on locked drawer:** *[Act I only]* It's open. The crowbar is disappointed in both of us. <sub>rooms/office.adv:141</sub>
-- **Use crowbar on locked drawer:** It's empty and unlocked. There's no glory in levering it, and I'd still have to fill in the form. <sub>rooms/office.adv:143</sub>
-- **Use crowbar on Harbourmaster Bramwick:** Bramwick looks at the crowbar over his spectacles. “Menacing a harbourmaster is regulation nine, Fenn. Being caught at it is regulation ten. I wrote them both in a temper.” <sub>rooms/office.adv:145</sub>
+- **Use stamped licence on Harbourmaster Bramwick:** *[if ledger_read and has manifest copy and met_rook]* I put the licence on the desk, and the Arcadia's manifest beside it. Bramwick reads the manifest first. Then he puts down his pen, which I have never seen him do. <sub>rooms/office.adv:126</sub>
+  - *[→ conversation* [bramwick at confess_rook](#dlg-bramwick-confess_rook) *— below]* <sub>rooms/office.adv:127</sub>
+- **Use stamped licence on Harbourmaster Bramwick:** *[if ledger_read and has manifest copy]* I put the licence on the desk, and the Arcadia's manifest beside it. Bramwick reads the manifest first. Then he puts down his pen, which I have never seen him do. <sub>rooms/office.adv:129</sub>
+  - *[→ conversation* [bramwick at confess](#dlg-bramwick-confess) *— below]* <sub>rooms/office.adv:130</sub>
+- **Use stamped licence on Harbourmaster Bramwick:** Bramwick reads it and slides it back. “A fine licence. The berth is still Mr Cray's. The manifest, Fenn. And the ledger, in your own eyes.” <sub>rooms/office.adv:132</sub>
+- **Use inspected rum on Harbourmaster Bramwick:** “Seized spirits, Fenn? I am legally absent, and an absent man cannot accept a bribe. Return it to whichever punch bowl it was seized from.” <sub>rooms/office.adv:134</sub>
+- **Use licence form on Harbourmaster Bramwick:** “It wants the harbour stamp, Fenn, which I cannot apply after the bell.” He stares very hard at his own drawer. <sub>rooms/office.adv:136</sub>
+- **Use harbour stamp on Harbourmaster Bramwick:** “Put that away. I am absent.” <sub>rooms/office.adv:138</sub>
+- **Use drawer key on Harbourmaster Bramwick:** “I don't want it back tonight. Tonight I am, legally, elsewhere.” <sub>rooms/office.adv:140</sub>
+- **Use crowbar on locked drawer:** *[Act I, if drawer_open = false]* I fit the crowbar to the drawer. Bramwick doesn't look up. “That drawer is harbour property, Fenn. I, being absent, cannot stop you. I can, however, disapprove from here.” <sub>rooms/office.adv:142</sub>
+- **Use crowbar on locked drawer:** *[Act I only]* It's open. The crowbar is disappointed in both of us. <sub>rooms/office.adv:144</sub>
+- **Use crowbar on locked drawer:** It's empty and unlocked. There's no glory in levering it, and I'd still have to fill in the form. <sub>rooms/office.adv:146</sub>
+- **Use crowbar on Harbourmaster Bramwick:** Bramwick looks at the crowbar over his spectacles. “Menacing a harbourmaster is regulation nine, Fenn. Being caught at it is regulation ten. I wrote them both in a temper.” <sub>rooms/office.adv:148</sub>
 
 <a id="dlg-bramwick"></a>
 ### Conversation: bramwick (Harbourmaster Bramwick)
@@ -260,72 +263,103 @@
 - **4.** **FENN**: Goodnight, sir. <sub>dialogue/bramwick.adv:6</sub>
   - *→ continues at* [bye](#dlg-bramwick-bye)
 
-<a id="dlg-bramwick-berth"></a>`berth` **HARBOURMASTER BRAMWICK**: The Marrow. Licensed piracy, bound for the Straits. Every hand who sails from Vela carries a Seafarer's Licence with the harbour stamp on it. Pirates included. Pirates especially. We are a well-run port. <sub>dialogue/bramwick.adv:10</sub>
+<a id="dlg-bramwick-berth"></a>`berth` **HARBOURMASTER BRAMWICK**: The Marrow, for the Straits. Every hand who sails from Vela carries a Seafarer's Licence, with the harbour stamp on it. <sub>dialogue/bramwick.adv:10</sub>
+- *→ continues at* [berth2](#dlg-bramwick-berth2)
+
+<a id="dlg-bramwick-berth2"></a>`berth2` **HARBOURMASTER BRAMWICK**: Pirates included. Pirates especially. We are a well-run port. <sub>dialogue/bramwick.adv:12</sub>
 - *→ continues at* [form](#dlg-bramwick-form)
 
-<a id="dlg-bramwick-form"></a>`form` **HARBOURMASTER BRAMWICK**: I cannot stamp anything after the night bell. Regulation fourteen. However, any clerk of this house may stamp in the Harbourmaster's absence. And after the bell, Fenn, I am, legally, absent. <sub>dialogue/bramwick.adv:12</sub>
-- **1.** **FENN**: So I could stamp it myself? <sub>dialogue/bramwick.adv:13</sub>
+<a id="dlg-bramwick-form"></a>`form` **HARBOURMASTER BRAMWICK**: I cannot stamp anything after the night bell. Regulation fourteen. <sub>dialogue/bramwick.adv:14</sub>
+- *→ continues at* [form2](#dlg-bramwick-form2)
+
+<a id="dlg-bramwick-form2"></a>`form2` **HARBOURMASTER BRAMWICK**: However, any clerk of this house may stamp in the Harbourmaster's absence. And after the bell, Fenn, I am, legally, absent. <sub>dialogue/bramwick.adv:16</sub>
+- **1.** **FENN**: So I could stamp it myself? <sub>dialogue/bramwick.adv:17</sub>
   - *→ continues at* [self](#dlg-bramwick-self)
-- **2.** **FENN**: Where is the stamp? <sub>dialogue/bramwick.adv:14</sub>
-  - *[sets knows_key]* <sub>dialogue/bramwick.adv:15</sub>
-  - *[casebook:* The licence needs the harbour stamp. It lives in Bramwick's desk drawer, and he lost the key to Marta at cards.*]* <sub>dialogue/bramwick.adv:16</sub>
+- **2.** **FENN**: Where is the stamp? <sub>dialogue/bramwick.adv:18</sub>
+  - *[sets knows_key]* <sub>dialogue/bramwick.adv:19</sub>
+  - *[casebook:* The licence needs the harbour stamp. It lives in Bramwick's desk drawer, and he lost the key to Marta at cards.*]* <sub>dialogue/bramwick.adv:20</sub>
   - *→ continues at* [key](#dlg-bramwick-key)
-- **3.** **FENN**: Is there a berth left? <sub>dialogue/bramwick.adv:17</sub>
+- **3.** **FENN**: Is there a berth left? <sub>dialogue/bramwick.adv:21</sub>
   - *→ continues at* [claim](#dlg-bramwick-claim)
 
-<a id="dlg-bramwick-self"></a>`self` **HARBOURMASTER BRAMWICK**: I said no such thing. I recited several regulations, loudly. The forms are on my desk. The stamp is in my drawer. <sub>dialogue/bramwick.adv:18</sub>
-- **1.** **FENN**: And the drawer is…? <sub>dialogue/bramwick.adv:19</sub>
-  - *[sets knows_key]* <sub>dialogue/bramwick.adv:20</sub>
+<a id="dlg-bramwick-self"></a>`self` **HARBOURMASTER BRAMWICK**: I said no such thing. I recited several regulations, loudly. The forms are on my desk. The stamp is in my drawer. <sub>dialogue/bramwick.adv:22</sub>
+- **1.** **FENN**: And the drawer is…? <sub>dialogue/bramwick.adv:23</sub>
+  - *[sets knows_key]* <sub>dialogue/bramwick.adv:24</sub>
   - *→ continues at* [key](#dlg-bramwick-key)
 
-<a id="dlg-bramwick-key"></a>`key` **HARBOURMASTER BRAMWICK**: Locked. The key is with Marta at the Salty Keel. I lost it to her at cards. A man of my standing does not discuss it further. <sub>dialogue/bramwick.adv:21</sub>
-- **1.** **FENN**: Is there a berth left? <sub>dialogue/bramwick.adv:22</sub>
+<a id="dlg-bramwick-key"></a>`key` **HARBOURMASTER BRAMWICK**: Locked. The key is with Marta at the Salty Keel. I lost it to her at cards. A man of my standing does not discuss it further. <sub>dialogue/bramwick.adv:25</sub>
+- **1.** **FENN**: Is there a berth left? <sub>dialogue/bramwick.adv:26</sub>
   - *→ continues at* [claim](#dlg-bramwick-claim)
-- **2.** **FENN**: Right. Marta. <sub>dialogue/bramwick.adv:23</sub>
+- **2.** **FENN**: Right. Marta. <sub>dialogue/bramwick.adv:27</sub>
   - *→ continues at* [bye](#dlg-bramwick-bye)
 
-<a id="dlg-bramwick-claim"></a>`claim` **HARBOURMASTER BRAMWICK**: One. Claimed and paid for by Mr Cray's office. A claim stands, Fenn, unless the claimant has defrauded this harbour. Mr Cray is a very respectable man. <sub>dialogue/bramwick.adv:24</sub>
-- **1.** **FENN**: That sounded like a hint, sir. <sub>dialogue/bramwick.adv:25</sub>
+<a id="dlg-bramwick-claim"></a>`claim` **HARBOURMASTER BRAMWICK**: One. Claimed and paid for by Mr Cray's office. A claim stands, Fenn, unless the claimant has defrauded this harbour. Mr Cray is a very respectable man. <sub>dialogue/bramwick.adv:28</sub>
+- **1.** **FENN**: That sounded like a hint, sir. <sub>dialogue/bramwick.adv:29</sub>
   - *→ continues at* [hint](#dlg-bramwick-hint)
-- **2.** **FENN**: Why are you helping me? <sub>dialogue/bramwick.adv:26</sub>
+- **2.** **FENN**: Why are you helping me? <sub>dialogue/bramwick.adv:30</sub>
   - *→ continues at* [care](#dlg-bramwick-care)
 
-<a id="dlg-bramwick-hint"></a>`hint` **HARBOURMASTER BRAMWICK**: It was a regulation. I am full of them tonight. Get your licence first. Then we'll see what else you can find. <sub>dialogue/bramwick.adv:27</sub>
-- **1.** **FENN**: Where is the stamp? *[if knows_key = false]* <sub>dialogue/bramwick.adv:28</sub>
-  - *[sets knows_key]* <sub>dialogue/bramwick.adv:29</sub>
-  - *→ continues at* [key](#dlg-bramwick-key) *(above)*
-- **2.** **FENN**: Goodnight, sir. <sub>dialogue/bramwick.adv:30</sub>
-  - *→ continues at* [bye](#dlg-bramwick-bye)
-
-<a id="dlg-bramwick-bye"></a>`bye` **HARBOURMASTER BRAMWICK**: Goodnight, Fenn. Don't stamp anything I'd regret. <sub>dialogue/bramwick.adv:47</sub>
-- *[ends]*
-
-<a id="dlg-bramwick-care"></a>`care` **HARBOURMASTER BRAMWICK**: Three years you've kept my ledgers without a blot. Your father sailed for the Straits, and I won't be the man who kept his son ashore. I have been enough of a man like that already. <sub>dialogue/bramwick.adv:31</sub>
+<a id="dlg-bramwick-hint"></a>`hint` **HARBOURMASTER BRAMWICK**: It was a regulation. I am full of them tonight. Get your licence first. Then we'll see what else you can find. <sub>dialogue/bramwick.adv:31</sub>
 - **1.** **FENN**: Where is the stamp? *[if knows_key = false]* <sub>dialogue/bramwick.adv:32</sub>
   - *[sets knows_key]* <sub>dialogue/bramwick.adv:33</sub>
   - *→ continues at* [key](#dlg-bramwick-key) *(above)*
-- **2.** **FENN**: Thank you, sir. <sub>dialogue/bramwick.adv:34</sub>
+- **2.** **FENN**: Goodnight, sir. <sub>dialogue/bramwick.adv:34</sub>
+  - *→ continues at* [bye](#dlg-bramwick-bye)
+
+<a id="dlg-bramwick-bye"></a>`bye` **HARBOURMASTER BRAMWICK**: Goodnight, Fenn. Don't stamp anything I'd regret. <sub>dialogue/bramwick.adv:65</sub>
+- *[ends]*
+
+<a id="dlg-bramwick-care"></a>`care` **HARBOURMASTER BRAMWICK**: Three years you've kept my day-books without a blot. Your father sailed for the Straits, and I won't be the man who kept his son ashore. <sub>dialogue/bramwick.adv:35</sub>
+- *→ continues at* [care2](#dlg-bramwick-care2)
+
+<a id="dlg-bramwick-care2"></a>`care2` **HARBOURMASTER BRAMWICK**: I have been enough of a man like that already. <sub>dialogue/bramwick.adv:37</sub>
+- **1.** **FENN**: Where is the stamp? *[if knows_key = false]* <sub>dialogue/bramwick.adv:38</sub>
+  - *[sets knows_key]* <sub>dialogue/bramwick.adv:39</sub>
+  - *→ continues at* [key](#dlg-bramwick-key) *(above)*
+- **2.** **FENN**: Thank you, sir. I'll try to blot something, for old times' sake. <sub>dialogue/bramwick.adv:40</sub>
   - *→ continues at* [bye](#dlg-bramwick-bye) *(above)*
 
-<a id="dlg-bramwick-licence"></a>`licence` **HARBOURMASTER BRAMWICK**: Do you. I can't stamp it, Fenn, but I can certainly read it. Hand it over. <sub>dialogue/bramwick.adv:35</sub>
-- **1.** **FENN**: Here it is. And the Arcadia's manifest. *[if ledger_read and has manifest copy]* <sub>dialogue/bramwick.adv:36</sub>
+<a id="dlg-bramwick-licence"></a>`licence` **HARBOURMASTER BRAMWICK**: Do you. I can't stamp it, Fenn, but I can certainly read it. Hand it over. <sub>dialogue/bramwick.adv:41</sub>
+- **1.** **FENN**: Here it is. And the Arcadia's manifest. *[if ledger_read and has manifest copy and met_rook = false]* <sub>dialogue/bramwick.adv:42</sub>
   - *→ continues at* [confess](#dlg-bramwick-confess)
-- **2.** **FENN**: Here it is. *[if (ledger_read = false or doesn't have manifest copy)]* <sub>dialogue/bramwick.adv:37</sub>
+- **2.** **FENN**: Here it is. And the Arcadia's manifest. *[if ledger_read and has manifest copy and met_rook]* <sub>dialogue/bramwick.adv:43</sub>
+  - *→ continues at* [confess_rook](#dlg-bramwick-confess_rook)
+- **3.** **FENN**: Here it is. *[if (ledger_read = false or doesn't have manifest copy)]* <sub>dialogue/bramwick.adv:44</sub>
   - *→ continues at* [deferred](#dlg-bramwick-deferred)
+- **4.** **FENN**: On second thoughts, sir, it needs another read. <sub>dialogue/bramwick.adv:45</sub>
+  - *→ continues at* [bye](#dlg-bramwick-bye) *(above)*
 
-<a id="dlg-bramwick-confess"></a>`confess` **FENN**: The Arcadia, entered as lost three days before she was late, in your hand. A fee paid by Cray & Co. And a navigator discharged at sea, who is drinking in the Salty Keel. <sub>dialogue/bramwick.adv:40</sub>
+<a id="dlg-bramwick-confess"></a>`confess` **FENN**: The Arcadia: lost three days before she was late, in your hand. Quarantine dues, paid by Cray & Co. And a navigator 'discharged at sea'. By whom, sir, in the middle of the sea? <sub>dialogue/bramwick.adv:50</sub>
 - *→ continues at* [confess2](#dlg-bramwick-confess2)
 
-<a id="dlg-bramwick-confess2"></a>`confess2` **HARBOURMASTER BRAMWICK**: I was paid. I told myself it was a kindness: a quick line in the book instead of a long wait at the window. It was not a kindness. It was three hundred crowns. <sub>dialogue/bramwick.adv:42</sub>
+<a id="dlg-bramwick-confess2"></a>`confess2` **HARBOURMASTER BRAMWICK**: I was paid. I told myself it was a kindness: a quick line in the book instead of a long wait at the window. It was not a kindness. It was three hundred crowns. <sub>dialogue/bramwick.adv:54</sub>
 - *→ continues at* [confess3](#dlg-bramwick-confess3)
 
-<a id="dlg-bramwick-confess3"></a>`confess3` **HARBOURMASTER BRAMWICK**: Mr Cray's claim is void. Regulation two. Your name is on the Marrow's manifest. She sails at dawn, Fenn. Don't make me write you down as lost. <sub>dialogue/bramwick.adv:44</sub>
-- **1.** **FENN**: I won't, sir. <sub>dialogue/bramwick.adv:45</sub>
-  - *[→ Act I ends]* <sub>dialogue/bramwick.adv:46</sub>
+<a id="dlg-bramwick-confess3"></a>`confess3` **HARBOURMASTER BRAMWICK**: Mr Cray's claim is void, regulation two, and you're on the Marrow. I wrote your father down, Fenn. I never once saw him go under. Don't make me write you down as lost. <sub>dialogue/bramwick.adv:56</sub>
+- **1.** **FENN**: I won't, sir. <sub>dialogue/bramwick.adv:57</sub>
+  - *[→ Act I ends]* <sub>dialogue/bramwick.adv:58</sub>
   - *[ends]*
+- **2.** **FENN**: You wrote him down, sir. Three days early. <sub>dialogue/bramwick.adv:59</sub>
+  - *→ continues at* [early](#dlg-bramwick-early)
+- **3.** **FENN**: You told me to read it. Thank you for that. <sub>dialogue/bramwick.adv:60</sub>
+  - *→ continues at* [thanked](#dlg-bramwick-thanked)
 
-<a id="dlg-bramwick-deferred"></a>`deferred` **HARBOURMASTER BRAMWICK**: A fine licence. The berth is still Mr Cray's. Bring me the Arcadia's manifest copy; the chandler keeps one of every ship he provisions. And read the harbour ledger yourself, Fenn. Don't let me read it to you. <sub>dialogue/bramwick.adv:38</sub>
-- **1.** **FENN**: Yes, sir. <sub>dialogue/bramwick.adv:39</sub>
+<a id="dlg-bramwick-early"></a>`early` **HARBOURMASTER BRAMWICK**: I did. I have read that line every morning since. It does not improve. <sub>dialogue/bramwick.adv:61</sub>
+- *[→ Act I ends]* <sub>dialogue/bramwick.adv:62</sub>
+- *[ends]*
+
+<a id="dlg-bramwick-thanked"></a>`thanked` **HARBOURMASTER BRAMWICK**: Don't thank me, Fenn. I bolted that loft from the lane side for three years, hoping someone would notice. Sail. <sub>dialogue/bramwick.adv:63</sub>
+- *[→ Act I ends]* <sub>dialogue/bramwick.adv:64</sub>
+- *[ends]*
+
+<a id="dlg-bramwick-confess_rook"></a>`confess_rook` **FENN**: The Arcadia: lost three days before she was late, in your hand. Quarantine dues, paid by Cray & Co. And a navigator 'discharged at sea', now drinking in the Salty Keel. <sub>dialogue/bramwick.adv:52</sub>
+- *→ continues at* [confess2](#dlg-bramwick-confess2) *(above)*
+
+<a id="dlg-bramwick-deferred"></a>`deferred` **HARBOURMASTER BRAMWICK**: A fine licence. The berth is still Mr Cray's. Bring me the Arcadia's manifest copy; the chandler keeps one of every ship he provisions. <sub>dialogue/bramwick.adv:46</sub>
+- *→ continues at* [deferred2](#dlg-bramwick-deferred2)
+
+<a id="dlg-bramwick-deferred2"></a>`deferred2` **HARBOURMASTER BRAMWICK**: And read the harbour ledger yourself, Fenn. Don't let me read it to you. <sub>dialogue/bramwick.adv:48</sub>
+- **1.** **FENN**: Yes, sir. I'll read it myself. In good light. Twice. <sub>dialogue/bramwick.adv:49</sub>
   - *→ continues at* [bye](#dlg-bramwick-bye) *(above)*
 
 <a id="dlg-bramwick-loiter"></a>`loiter` **HARBOURMASTER BRAMWICK**: Good man. The ledger is never finished, Fenn. That is what I love about it. <sub>dialogue/bramwick.adv:7</sub>
@@ -339,55 +373,55 @@
 
 *[room* `tavern`*; also in Act IV]* <sub>rooms/tavern.adv:1</sub>
 
-**Marta** `marta` <sub>rooms/tavern.adv:38</sub>
+**Marta** `marta` <sub>rooms/tavern.adv:40</sub>
 
-- **Look at:** Marta, who runs the Salty Keel and, by most accounts, Port Vela. She has already won several arguments today and is pacing herself. <sub>rooms/tavern.adv:41</sub>
-- **Talk to:** I catch Marta's eye. It takes some catching. <sub>rooms/tavern.adv:42</sub>
-  - *[→ conversation* [tavernkeeper](#dlg-tavernkeeper) *— below]* <sub>rooms/tavern.adv:43</sub>
-- **Give:** She only takes things worth trading. <sub>rooms/tavern.adv:44</sub>
-- **Open:** Marta is not a door. She has made this clear to several people, one of them a door. <sub>rooms/tavern.adv:45</sub>
+- **Look at:** Marta, who runs the Salty Keel and, by most accounts, Port Vela. She has already won several arguments today and is pacing herself. <sub>rooms/tavern.adv:43</sub>
+- **Talk to:** I catch Marta's eye. It takes some catching. <sub>rooms/tavern.adv:44</sub>
+  - *[→ conversation* [tavernkeeper](#dlg-tavernkeeper) *— below]* <sub>rooms/tavern.adv:45</sub>
+- **Give:** She only takes things worth trading. <sub>rooms/tavern.adv:46</sub>
+- **Open:** Marta is not a door. She has made this clear to several people, one of them a door. <sub>rooms/tavern.adv:47</sub>
 
-**old sailor** `rook` <sub>rooms/tavern.adv:57</sub>
+**old sailor** `rook` <sub>rooms/tavern.adv:59</sub>
 
-- **Look at:** An old man nursing a mug he stopped drinking an hour ago. He has the stillness of someone who used to stand watches, and the nose of someone who stopped. <sub>rooms/tavern.adv:60</sub>
-- **Talk to:** He looks up before I say anything, the way men do when they've been waiting. <sub>rooms/tavern.adv:61</sub>
-  - *[→ conversation* [rook](#dlg-rook) *— below]* <sub>rooms/tavern.adv:62</sub>
-- **Give:** He waves it away without looking at it. <sub>rooms/tavern.adv:63</sub>
-- *When* *[if (seen:rook.who or seen:rook.knew)]* *— called “Old Rook”* <sub>rooms/tavern.adv:73</sub>
+- **Look at:** An old man nursing a mug he stopped drinking an hour ago. He has the stillness of someone who used to stand watches, and the nose of someone who stopped. <sub>rooms/tavern.adv:62</sub>
+- **Talk to:** He looks up before I say anything, the way men do when they've been waiting. <sub>rooms/tavern.adv:63</sub>
+  - *[→ conversation* [rook](#dlg-rook) *— below]* <sub>rooms/tavern.adv:64</sub>
+- **Give:** He waves it away without looking at it. <sub>rooms/tavern.adv:65</sub>
+- *When* *[if met_rook]* *— called “Old Rook”* <sub>rooms/tavern.adv:75</sub>
 
-**the bar** `bar` <sub>rooms/tavern.adv:76</sub>
+**the bar** `bar` <sub>rooms/tavern.adv:78</sub>
 
-- **Look at:** A bar polished by a thousand elbows and one very committed mop. The bottles are arranged by how much trouble they cause. <sub>rooms/tavern.adv:79</sub>
-- **Use:** I'd need money, and the customs house pays its clerks in experience. <sub>rooms/tavern.adv:80</sub>
-- **Open:** It's a bar, not a crate. <sub>rooms/tavern.adv:81</sub>
+- **Look at:** A bar polished by a thousand elbows and one very committed mop. The bottles are arranged by how much trouble they cause. <sub>rooms/tavern.adv:81</sub>
+- **Use:** I'd need money, and the customs house pays its clerks in experience. <sub>rooms/tavern.adv:82</sub>
+- **Open:** It's a bar, not a crate. <sub>rooms/tavern.adv:83</sub>
 
-**door to the docks** `door_out` <sub>rooms/tavern.adv:83</sub>
+**door to the docks** `door_out` <sub>rooms/tavern.adv:85</sub>
 
-- **Look at:** The door out to the docks. Cooler out there. <sub>rooms/tavern.adv:87</sub>
-- **Use / Open / Walk to:** *[→ goes to Vela Docks]* <sub>rooms/tavern.adv:86</sub>
+- **Look at:** The door out to the docks. Cooler out there. <sub>rooms/tavern.adv:89</sub>
+- **Use / Open / Walk to:** *[→ goes to Vela Docks]* <sub>rooms/tavern.adv:88</sub>
 
-**the regulars** `crowd` <sub>rooms/tavern.adv:89</sub>
+**the regulars** `crowd` <sub>rooms/tavern.adv:91</sub>
 
-- **Look at:** Sailors and dockhands, toasting the Marrow. Half of them are wishing her luck; the other half have chalked their money on a betting slate that says she won't come back. <sub>rooms/tavern.adv:93</sub>
-- **Talk to:** I ask about the Straits. Three of them go quiet at once. It's a local custom. <sub>rooms/tavern.adv:94</sub>
-- **Use:** There's a betting slate on their table. It's missing something official. <sub>rooms/tavern.adv:95</sub>
-- *When* *[if wager]* <sub>rooms/tavern.adv:112</sub>
-  - **Look at:** The regulars have my three years' wages on their slate, stamped. They keep toasting me, which is either friendly or premature. <sub>rooms/tavern.adv:113</sub>
+- **Look at:** Sailors and dockhands, toasting the Marrow. Half of them are wishing her luck; the other half have chalked their money on a betting slate that says she won't come back. <sub>rooms/tavern.adv:95</sub>
+- **Talk to:** I ask about the Straits. Three of them go quiet at once. It's a local custom. <sub>rooms/tavern.adv:96</sub>
+- **Use:** There's a betting slate on their table. It's missing something official. <sub>rooms/tavern.adv:97</sub>
+- *When* *[if wager]* <sub>rooms/tavern.adv:114</sub>
+  - **Look at:** The regulars have my three years' wages on their slate, stamped. They keep toasting me, which is either friendly or premature. <sub>rooms/tavern.adv:115</sub>
 
 **Combinations here**
 
-- **Use jet-caps on Marta:** “Jet-caps!” Marta takes them off me and holds one up to the lantern. “The broth lives, and so does the room. Here — his key. Tell Bramwick he can win it back when he learns to bluff.” <sub>rooms/tavern.adv:221</sub>
-  - *[Fenn hands over: jet-caps]* *[Fenn receives: drawer key]* *[sets marta_paid]* *[sound: pickup]* <sub>rooms/tavern.adv:222</sub>
-- **Use harbour stamp on the regulars:** *[if wager = false]* Every bet on that slate says the Marrow won't come back. Somebody ought to take the other side. <sub>rooms/tavern.adv:227</sub>
-  - *[→ conversation* [regulars](#dlg-regulars) *— below]* <sub>rooms/tavern.adv:228</sub>
-- **Use harbour stamp on the regulars:** My bet's on the slate, stamped and drying. There's no taking it back, which is the point of ink. <sub>rooms/tavern.adv:230</sub>
+- **Use inspected rum on Marta:** “Inspected? With a crowbar? That's the most customs has done for me in thirty years.” She uncorks it over the punch bowl. “Here: his key. Tell Bramwick to learn to bluff.” <sub>rooms/tavern.adv:242</sub>
+  - *[Fenn hands over: inspected rum]* *[Fenn receives: drawer key]* *[sets marta_paid]* *[sound: pickup]* <sub>rooms/tavern.adv:243</sub>
+- **Use harbour stamp on the regulars:** *[if wager = false]* Every bet on that slate says the Marrow won't come back. Somebody ought to take the other side. <sub>rooms/tavern.adv:248</sub>
+  - *[→ conversation* [regulars](#dlg-regulars) *— below]* <sub>rooms/tavern.adv:249</sub>
+- **Use harbour stamp on the regulars:** My bet's on the slate, stamped and drying. There's no taking it back, which is the point of ink. <sub>rooms/tavern.adv:251</sub>
 
 <a id="dlg-tavernkeeper"></a>
 ### Conversation: tavernkeeper (Marta)
 
 *[source:* `dialogue tavernkeeper`*, starts at* `root`*]* <sub>dialogue/tavernkeeper.adv:1</sub>
 
-<a id="dlg-tavernkeeper-root"></a>`root` **MARTA**: Clerk! Here for a drink, or here to inspect my shelves like it's a customs raid? <sub>dialogue/tavernkeeper.adv:2</sub>
+<a id="dlg-tavernkeeper-root"></a>`root` **MARTA**: Clerk! You've a face like an unfiled form. Sit down and tell me what's written on it. <sub>dialogue/tavernkeeper.adv:2</sub>
 - **1.** **FENN**: What's everyone celebrating? <sub>dialogue/tavernkeeper.adv:3</sub>
   - *→ continues at* [marrow](#dlg-tavernkeeper-marrow)
 - **2.** **FENN**: I need a favour. *[if knows_key = false and marta_paid = false]* <sub>dialogue/tavernkeeper.adv:5</sub>
@@ -409,11 +443,14 @@
 - **3.** **FENN**: Goodnight, Marta. <sub>dialogue/tavernkeeper.adv:13</sub>
   - *→ continues at* [bye](#dlg-tavernkeeper-bye)
 
-<a id="dlg-tavernkeeper-straits"></a>`straits` **MARTA**: Six ships in three years. Your father's was the first. They find the hulls drifting, sails set, nobody aboard. Not so much as a cat. You're not thinking of signing on? …You are. He had that exact look. <sub>dialogue/tavernkeeper.adv:25</sub>
-- **1.** **FENN**: Goodnight, Marta. <sub>dialogue/tavernkeeper.adv:26</sub>
+<a id="dlg-tavernkeeper-straits"></a>`straits` **MARTA**: Six ships in three years. Five came back drifting, sails set, not so much as a cat aboard. Your father's never came back at all. <sub>dialogue/tavernkeeper.adv:25</sub>
+- *→ continues at* [straits2](#dlg-tavernkeeper-straits2)
+
+<a id="dlg-tavernkeeper-straits2"></a>`straits2` **MARTA**: …You're signing on. Don't argue, I can see it. He had that exact look. <sub>dialogue/tavernkeeper.adv:27</sub>
+- **1.** **FENN**: Goodnight, Marta. <sub>dialogue/tavernkeeper.adv:28</sub>
   - *→ continues at* [bye](#dlg-tavernkeeper-bye)
 
-<a id="dlg-tavernkeeper-bye"></a>`bye` **MARTA**: Mind the step. It's been drinking too. <sub>dialogue/tavernkeeper.adv:44</sub>
+<a id="dlg-tavernkeeper-bye"></a>`bye` **MARTA**: Go on. And shut the door behind you; the gossip gets out. <sub>dialogue/tavernkeeper.adv:48</sub>
 - *[ends]*
 
 <a id="dlg-tavernkeeper-crew"></a>`crew` **MARTA**: Vane, who could out-stare a gull. Hobb, the bosun, who has more names on his arms than I have on my slate. And a lookout who can spot a lie at two miles and a compliment at none. <sub>dialogue/tavernkeeper.adv:14</sub>
@@ -425,31 +462,34 @@
 - **2.** **FENN**: I'll mind her. Goodnight. <sub>dialogue/tavernkeeper.adv:18</sub>
   - *→ continues at* [bye](#dlg-tavernkeeper-bye) *(above)*
 
-<a id="dlg-tavernkeeper-favour"></a>`favour` **MARTA**: A clerk asking favours after the bell. Come back when you know what you want, and bring something worth the trade. My broth is as thin as a ledger. <sub>dialogue/tavernkeeper.adv:27</sub>
-- **1.** **FENN**: Something for the broth. Noted. <sub>dialogue/tavernkeeper.adv:28</sub>
+<a id="dlg-tavernkeeper-favour"></a>`favour` **MARTA**: A favour's a debt with better manners. I take rum, gossip and the truth, in that order. Come back with one. <sub>dialogue/tavernkeeper.adv:29</sub>
+- **1.** **FENN**: Rum, gossip, truth. In that order. Noted. <sub>dialogue/tavernkeeper.adv:30</sub>
   - *→ continues at* [bye](#dlg-tavernkeeper-bye) *(above)*
 
-<a id="dlg-tavernkeeper-key"></a>`key` **MARTA**: Won it off him at cards. He bet it on a pair of threes, the old fool. It's yours in trade. My broth is as thin as a ledger tonight. Bring me a handful of jet-caps. <sub>dialogue/tavernkeeper.adv:29</sub>
-- **1.** **FENN**: I've got some right here. *[if has jet-caps]* <sub>dialogue/tavernkeeper.adv:30</sub>
-  - *[Fenn hands over: jet-caps]* *[Fenn receives: drawer key]* *[sets marta_paid]* <sub>dialogue/tavernkeeper.adv:31</sub>
-  - *[casebook:* Marta won Bramwick's drawer key and would not give it back for nothing. A handful of jet-caps, for the broth, is apparently the rate.*]* <sub>dialogue/tavernkeeper.adv:34</sub>
-  - *[sound: pickup]* <sub>dialogue/tavernkeeper.adv:35</sub>
+<a id="dlg-tavernkeeper-key"></a>`key` **MARTA**: Won it off him at cards. He bet it on a pair of threes, the old fool. Yours for a bottle of rum. Mine's been held on the pier since Thursday. By customs. <sub>dialogue/tavernkeeper.adv:31</sub>
+- **1.** **FENN**: I've inspected some right here. *[if has inspected rum]* <sub>dialogue/tavernkeeper.adv:32</sub>
+  - *[Fenn hands over: inspected rum]* *[Fenn receives: drawer key]* *[sets marta_paid]* <sub>dialogue/tavernkeeper.adv:33</sub>
+  - *[casebook:* Marta won Bramwick's drawer key and would not give it back for nothing. One bottle of her own impounded rum, for the punch, is apparently the rate.*]* <sub>dialogue/tavernkeeper.adv:36</sub>
+  - *[sound: pickup]* <sub>dialogue/tavernkeeper.adv:37</sub>
   - *→ continues at* [traded](#dlg-tavernkeeper-traded)
-- **2.** **FENN**: A handful. Done. *[if doesn't have jet-caps]* <sub>dialogue/tavernkeeper.adv:36</sub>
+- **2.** **FENN**: One bottle. Done. *[if doesn't have inspected rum]* <sub>dialogue/tavernkeeper.adv:38</sub>
   - *→ continues at* [bye](#dlg-tavernkeeper-bye) *(above)*
-- **3.** **FENN**: Where do I find jet-caps at this hour? *[if doesn't have jet-caps]* <sub>dialogue/tavernkeeper.adv:37</sub>
-  - *→ continues at* [nofungus](#dlg-tavernkeeper-nofungus)
+- **3.** **FENN**: Held by customs? Which customs? *[if doesn't have inspected rum]* <sub>dialogue/tavernkeeper.adv:39</sub>
+  - *→ continues at* [norum](#dlg-tavernkeeper-norum)
 
-<a id="dlg-tavernkeeper-traded"></a>`traded` **MARTA**: Jet-caps! The broth lives. Here's his key. And tell him a pair of threes is not a strategy. <sub>dialogue/tavernkeeper.adv:40</sub>
-- **1.** **FENN**: Goodnight, Marta. <sub>dialogue/tavernkeeper.adv:41</sub>
-  - *→ continues at* [bye](#dlg-tavernkeeper-bye) *(above)*
-
-<a id="dlg-tavernkeeper-nofungus"></a>`nofungus` **MARTA**: Under the pier, mostly. There's a crate on the quay nobody's shifted in years, and they come up thick in the black timber beneath it. You'd want a crowbar; that crate's been nailed down since the last harbourmaster but one. <sub>dialogue/tavernkeeper.adv:38</sub>
-- **1.** **FENN**: A crowbar. Noted. <sub>dialogue/tavernkeeper.adv:39</sub>
+<a id="dlg-tavernkeeper-traded"></a>`traded` **MARTA**: You inspected it? With a crowbar? That's the most customs has done for me in thirty years. Here's his key. And tell him a pair of threes is not a strategy. <sub>dialogue/tavernkeeper.adv:44</sub>
+- **1.** **FENN**: Goodnight, Marta. <sub>dialogue/tavernkeeper.adv:45</sub>
   - *→ continues at* [bye](#dlg-tavernkeeper-bye) *(above)*
 
-<a id="dlg-tavernkeeper-thanks"></a>`thanks` **MARTA**: Thank the mushrooms. And Fenn: whatever's out in those Straits, come back and tell me. I hate an unfinished story. <sub>dialogue/tavernkeeper.adv:42</sub>
-- **1.** **FENN**: I will. <sub>dialogue/tavernkeeper.adv:43</sub>
+<a id="dlg-tavernkeeper-norum"></a>`norum` **MARTA**: You, clerk. A crate on the quay, stencilled HELD FOR CUSTOMS INSPECTION, and not a soul's come to inspect it. My punch bowl's dry and the regulars have noticed. <sub>dialogue/tavernkeeper.adv:40</sub>
+- *→ continues at* [norum2](#dlg-tavernkeeper-norum2)
+
+<a id="dlg-tavernkeeper-norum2"></a>`norum2` **MARTA**: So inspect it. It's nailed shut, so bring a crowbar. And if a bottle comes loose during the inspection, well. That's procedure. <sub>dialogue/tavernkeeper.adv:42</sub>
+- **1.** **FENN**: A crowbar. For procedure. Noted. <sub>dialogue/tavernkeeper.adv:43</sub>
+  - *→ continues at* [bye](#dlg-tavernkeeper-bye) *(above)*
+
+<a id="dlg-tavernkeeper-thanks"></a>`thanks` **MARTA**: Thanks are free, clerk, and I don't deal in free. Pay me in story: whatever's out in those Straits, come back and tell me. I hate an unfinished story. <sub>dialogue/tavernkeeper.adv:46</sub>
+- **1.** **FENN**: I will. I'll even get it stamped. <sub>dialogue/tavernkeeper.adv:47</sub>
   - *→ continues at* [bye](#dlg-tavernkeeper-bye) *(above)*
 
 <a id="dlg-tavernkeeper-iou"></a>`iou` **MARTA**: Thirty years he's owed me that game. He'll never pay it. Paying would mean it's over. <sub>dialogue/tavernkeeper.adv:19</sub>
@@ -477,57 +517,71 @@
 - **3.** **FENN**: Sorry. I'm in a hurry. <sub>dialogue/rook.adv:6</sub>
   - *→ continues at* [bye](#dlg-rook-bye)
 
-<a id="dlg-rook-knew"></a>`knew` **OLD ROOK**: I steered for him for eleven years. Best captain on the Straits run and the worst at cards. I was aboard the Arcadia when she went missing, boy, and she did not sink while I was looking. <sub>dialogue/rook.adv:9</sub>
-- **1.** **FENN**: Then how are you here? <sub>dialogue/rook.adv:10</sub>
+<a id="dlg-rook-knew"></a>`knew` **OLD ROOK**: I steered for him for eleven years. Best captain on the Straits run, and the worst singer on any of them. <sub>dialogue/rook.adv:10</sub>
+- *[sets met_rook]* <sub>dialogue/rook.adv:11</sub>
+- *→ continues at* [knew2](#dlg-rook-knew2)
+
+<a id="dlg-rook-knew2"></a>`knew2` **OLD ROOK**: I was aboard the Arcadia when she went missing, boy, and she did not sink while I was looking. <sub>dialogue/rook.adv:13</sub>
+- **1.** **FENN**: Then how are you here? <sub>dialogue/rook.adv:14</sub>
   - *→ continues at* [fog](#dlg-rook-fog)
-- **2.** **FENN**: The ledger says she was lost. <sub>dialogue/rook.adv:11</sub>
+- **2.** **FENN**: The ledger says she was lost. <sub>dialogue/rook.adv:15</sub>
   - *→ continues at* [ledger](#dlg-rook-ledger)
 
-<a id="dlg-rook-fog"></a>`fog` **OLD ROOK**: Fog came down out of a clear sky. Men rowed out under a yellow flag. Quarantine, they said, ever so polite. They took me off first, paid me, put me on a fruit boat. I've been drunk ever since and it's still the strangest thing I've seen. <sub>dialogue/rook.adv:12</sub>
-- **1.** **FENN**: Paid you? <sub>dialogue/rook.adv:13</sub>
-  - *[casebook:* Rook was paid off the night the Arcadia was taken: a purse with Cray's seal on it, and a lie about quarantine. He never opened it.*]* <sub>dialogue/rook.adv:14</sub>
+<a id="dlg-rook-fog"></a>`fog` **OLD ROOK**: Fog came down out of a clear sky. Men rowed out under a yellow flag. 'Quarantine,' ever so polite. <sub>dialogue/rook.adv:16</sub>
+- *→ continues at* [fog2](#dlg-rook-fog2)
+
+<a id="dlg-rook-fog2"></a>`fog2` **OLD ROOK**: They took me off first, paid me, put me on a fruit boat. I've been drunk ever since, and it's still the strangest thing I've seen. <sub>dialogue/rook.adv:18</sub>
+- **1.** **FENN**: Paid you? <sub>dialogue/rook.adv:19</sub>
   - *→ continues at* [purse](#dlg-rook-purse)
-- **2.** **FENN**: And the ledger? <sub>dialogue/rook.adv:15</sub>
+- **2.** **FENN**: And the ledger? <sub>dialogue/rook.adv:20</sub>
   - *→ continues at* [ledger](#dlg-rook-ledger)
 
-<a id="dlg-rook-purse"></a>`purse` **OLD ROOK**: A purse with a seal on it. I never opened it. Seemed like the one decent thing left to do, and I've been very careful not to do any others. <sub>dialogue/rook.adv:16</sub>
-- **1.** **FENN**: And the ledger? <sub>dialogue/rook.adv:17</sub>
+<a id="dlg-rook-purse"></a>`purse` **OLD ROOK**: A purse with a little wax cloud on it. Never opened it. Seemed like the one decent thing left to do, and I've been very careful not to do any others. <sub>dialogue/rook.adv:21</sub>
+- *[casebook:* Rook was taken off the Arcadia under a yellow flag, 'for quarantine', and paid off with a purse stamped with a little wax cloud. He never opened it. Quarantine where? Nobody said.*]* <sub>dialogue/rook.adv:22</sub>
+- **1.** **FENN**: And the ledger? <sub>dialogue/rook.adv:23</sub>
   - *→ continues at* [ledger](#dlg-rook-ledger)
 
-<a id="dlg-rook-ledger"></a>`ledger` **OLD ROOK**: When I got home she was already written in as lost. Three days before she was even late. Ink does what the man holding the pen is paid to. It's all in the harbour ledger, up in the loft over the chandler's. <sub>dialogue/rook.adv:18</sub>
-- **1.** **FENN**: The loft's shutter is bolted. *[if looked:alley.warehouse_stairs]* <sub>dialogue/rook.adv:19</sub>
+<a id="dlg-rook-ledger"></a>`ledger` **OLD ROOK**: When I got home she was already written in as lost. Three days before she was even late. Ink does what the man holding the pen is paid to. <sub>dialogue/rook.adv:24</sub>
+- *→ continues at* [ledger2](#dlg-rook-ledger2)
+
+<a id="dlg-rook-ledger2"></a>`ledger2` **OLD ROOK**: It's all in the harbour ledger, up in the loft over the chandler's. <sub>dialogue/rook.adv:26</sub>
+- **1.** **FENN**: The loft's shutter is bolted. *[if looked:alley.warehouse_stairs]* <sub>dialogue/rook.adv:27</sub>
   - *→ continues at* [locked](#dlg-rook-locked)
-- **2.** **FENN**: Who paid? <sub>dialogue/rook.adv:20</sub>
+- **2.** **FENN**: Who paid? <sub>dialogue/rook.adv:28</sub>
   - *→ continues at* [cray](#dlg-rook-cray)
-- **3.** **FENN**: What do I do with it? <sub>dialogue/rook.adv:21</sub>
+- **3.** **FENN**: What do I do with it? <sub>dialogue/rook.adv:29</sub>
   - *→ continues at* [advice](#dlg-rook-advice)
 
-<a id="dlg-rook-locked"></a>`locked` **OLD ROOK**: Bolted from the lane side, which is the trusting side. A crowbar will talk it round. Crowbars are very persuasive. So I'm told. By crowbars. <sub>dialogue/rook.adv:22</sub>
-- **1.** **FENN**: Who paid? <sub>dialogue/rook.adv:23</sub>
+<a id="dlg-rook-locked"></a>`locked` **OLD ROOK**: Bolted from the lane side, which is the trusting side. A crowbar will talk it round. Crowbars are very persuasive. So I'm told. By crowbars. <sub>dialogue/rook.adv:30</sub>
+- **1.** **FENN**: Who paid? <sub>dialogue/rook.adv:31</sub>
   - *→ continues at* [cray](#dlg-rook-cray)
-- **2.** **FENN**: Thank you. <sub>dialogue/rook.adv:24</sub>
+- **2.** **FENN**: Thank you. I'll pass that on to the crowbar. <sub>dialogue/rook.adv:32</sub>
   - *→ continues at* [thanks](#dlg-rook-thanks)
 
-<a id="dlg-rook-cray"></a>`cray` **OLD ROOK**: Silas Cray. Factor. He'll be in the lane, being expensive at someone. If he offers to buy that compass, ask yourself why a man who owns everything wants the one thing in Vela that points the wrong way. <sub>dialogue/rook.adv:25</sub>
-- **1.** **FENN**: What do I do with the ledger? <sub>dialogue/rook.adv:26</sub>
+<a id="dlg-rook-cray"></a>`cray` **OLD ROOK**: Silas Cray. Factor. He'll be in the lane, being expensive at someone. <sub>dialogue/rook.adv:33</sub>
+- *→ continues at* [cray2](#dlg-rook-cray2)
+
+<a id="dlg-rook-cray2"></a>`cray2` **OLD ROOK**: If he offers to buy that compass, ask yourself why a man who owns everything wants the one thing in Vela that points the wrong way. <sub>dialogue/rook.adv:35</sub>
+- **1.** **FENN**: What do I do with the ledger? <sub>dialogue/rook.adv:36</sub>
   - *→ continues at* [advice](#dlg-rook-advice)
-- **2.** **FENN**: Thank you. <sub>dialogue/rook.adv:27</sub>
+- **2.** **FENN**: Thank you. I'll keep a hand on my pocket. <sub>dialogue/rook.adv:37</sub>
   - *→ continues at* [thanks](#dlg-rook-thanks)
 
-<a id="dlg-rook-advice"></a>`advice` **OLD ROOK**: Read it. Then say it to Bramwick's face, at his own desk. Shame works on men like him. On me it only works on Tuesdays. <sub>dialogue/rook.adv:28</sub>
-- **1.** **FENN**: Who paid for the entry? <sub>dialogue/rook.adv:29</sub>
+<a id="dlg-rook-advice"></a>`advice` **OLD ROOK**: Read it. Then say it to Bramwick's face, at his own desk. Shame works on men like him. On me it only works on Tuesdays. <sub>dialogue/rook.adv:38</sub>
+- **1.** **FENN**: Who paid for the entry? <sub>dialogue/rook.adv:39</sub>
   - *→ continues at* [cray](#dlg-rook-cray) *(above)*
-- **2.** **FENN**: Thank you. <sub>dialogue/rook.adv:30</sub>
+- **2.** **FENN**: Thank you. I'll put you down as a witness. <sub>dialogue/rook.adv:40</sub>
   - *→ continues at* [thanks](#dlg-rook-thanks)
 
-<a id="dlg-rook-thanks"></a>`thanks` **OLD ROOK**: Go on, then. Be a better navigator than me. The bar's low and I'm under it. And boy: don't let them write you down as lost. <sub>dialogue/rook.adv:31</sub>
+<a id="dlg-rook-thanks"></a>`thanks` **OLD ROOK**: Go on, then. Be a better navigator than me. The bar's low and I'm under it. And boy: don't let them write you down as lost. <sub>dialogue/rook.adv:41</sub>
 - *[ends]*
 
 <a id="dlg-rook-who"></a>`who` **OLD ROOK**: Rook. Navigator. Retired, the way a ship's retired when it's on the bottom. I took the Arcadia out of this harbour on her last run. <sub>dialogue/rook.adv:7</sub>
-- **1.** **FENN**: You sailed with my father? <sub>dialogue/rook.adv:8</sub>
+- *[sets met_rook]* <sub>dialogue/rook.adv:8</sub>
+- **1.** **FENN**: You sailed with my father? <sub>dialogue/rook.adv:9</sub>
   - *→ continues at* [knew](#dlg-rook-knew) *(above)*
 
-<a id="dlg-rook-bye"></a>`bye` **OLD ROOK**: A hurry. I remember those. Went everywhere in one, once. <sub>dialogue/rook.adv:32</sub>
+<a id="dlg-rook-bye"></a>`bye` **OLD ROOK**: A hurry. I remember those. Went everywhere in one, once. <sub>dialogue/rook.adv:42</sub>
 - *[ends]*
 
 <a id="dlg-regulars"></a>
@@ -539,7 +593,7 @@
 - *→ continues at* [book](#dlg-regulars-book)
 
 <a id="dlg-regulars-book"></a>`book` **A REGULAR**: A clerk betting on pirates! Put it in the book, Marta, before he sobers up. <sub>dialogue/regulars.adv:6</sub>
-- **1.** **FENN**: I am entirely sober. It's the pirates you should worry about. <sub>dialogue/regulars.adv:7</sub>
+- **1.** **FENN**: I am entirely sober. So is the stamp. <sub>dialogue/regulars.adv:7</sub>
   - *[sets wager]* <sub>dialogue/regulars.adv:8</sub>
   - *→ continues at* [sober](#dlg-regulars-sober)
 - **2.** **FENN**: And put me down for the first round when she docks. <sub>dialogue/regulars.adv:9</sub>
@@ -557,63 +611,69 @@
 
 *[room* `alley`*; also in Act IV]* <sub>rooms/alley.adv:1</sub>
 
-**man in a good coat** `silas` *[present Act I only]* <sub>rooms/alley.adv:18</sub>
+**On arrival**
 
-- **Look at:** Good coat, better boots, and the expression of a man who has never once carried his own luggage. He's waiting for someone, and he's decided it's me. <sub>rooms/alley.adv:22</sub>
-- **Talk to:** He's already turning to face me. He's been waiting. <sub>rooms/alley.adv:23</sub>
-  - *[→ conversation* [silas](#dlg-silas) *— below]* <sub>rooms/alley.adv:24</sub>
-- **Give:** He takes only what he's asked for, and he asks for a great deal. <sub>rooms/alley.adv:25</sub>
-- *When* *[if silas_refused]* *— called “Silas Cray”* <sub>rooms/alley.adv:26</sub>
-  - **Look at:** Silas Cray. He hasn't moved, and he hasn't stopped watching my coat pocket. <sub>rooms/alley.adv:28</sub>
-  - **Talk to:** He doesn't turn round. “Still no? Then say it quickly. I bill by the hour.” <sub>rooms/alley.adv:29</sub>
-- *When* *[if silas_offer]* *— called “Silas Cray”* <sub>rooms/alley.adv:30</sub>
-  - **Look at:** Silas Cray, being patient at me from across the lane. <sub>rooms/alley.adv:32</sub>
-  - **Talk to:** “Back already,” he says. “I told you you'd come round.” <sub>rooms/alley.adv:33</sub>
-- *When* *[if seen:silas.root]* *— called “Silas Cray”* <sub>rooms/alley.adv:34</sub>
+- *Once,* *[Act I, if seen:silas.root = false]* <sub>rooms/alley.adv:19</sub>
+  - **FENN (V.O.)**: A man in a good coat steps out of a doorway, as if he's been rehearsing it. <sub>rooms/alley.adv:20</sub>
+  - *[→ conversation* [silas](#dlg-silas) *— below]* <sub>rooms/alley.adv:21</sub>
 
-**the chandler's** `chandlery_door` <sub>rooms/alley.adv:37</sub>
+**man in a good coat** `silas` *[present Act I only]* <sub>rooms/alley.adv:23</sub>
 
-- **Look at:** The chandler's window, lit and full of rope. Rope, pitch, canvas, and the answer to every question a ship ever asks. Open late, because ships are always leaving. <sub>rooms/alley.adv:41</sub>
-- **Use / Walk to:** *[→ goes to The Chandler's]* <sub>rooms/alley.adv:40</sub>
-- **Open:** I push the door. A bell somewhere in the shop regrets it. <sub>rooms/alley.adv:42</sub>
-  - *[→ goes to The Chandler's]* <sub>rooms/alley.adv:40</sub>
+- **Look at:** Good coat, better boots, and the expression of a man who has never once carried his own luggage. He's waiting for someone, and he's decided it's me. <sub>rooms/alley.adv:27</sub>
+- **Talk to:** He's already turning to face me. He's been waiting. <sub>rooms/alley.adv:28</sub>
+  - *[→ conversation* [silas](#dlg-silas) *— below]* <sub>rooms/alley.adv:29</sub>
+- **Give:** He takes only what he's asked for, and he asks for a great deal. <sub>rooms/alley.adv:30</sub>
+- *When* *[if silas_refused]* *— called “Silas Cray”* <sub>rooms/alley.adv:31</sub>
+  - **Look at:** Silas Cray. He hasn't moved, and he hasn't stopped watching my coat pocket. <sub>rooms/alley.adv:33</sub>
+  - **Talk to:** He doesn't turn round. “Still no? Then say it quickly. I bill by the hour.” <sub>rooms/alley.adv:34</sub>
+- *When* *[if silas_offer]* *— called “Silas Cray”* <sub>rooms/alley.adv:35</sub>
+  - **Look at:** Silas Cray, being patient at me from across the lane. <sub>rooms/alley.adv:37</sub>
+  - **Talk to:** “Back already,” he says. “I told you you'd come round.” <sub>rooms/alley.adv:38</sub>
+- *When* *[if seen:silas.root]* *— called “Silas Cray”* <sub>rooms/alley.adv:39</sub>
 
-**loft stairs** `warehouse_stairs` <sub>rooms/alley.adv:44</sub>
+**the chandler's** `chandlery_door` <sub>rooms/alley.adv:42</sub>
 
-- **Look at:** A wooden stair up to the harbour loft, shut off by a shutter bolted from this side. Bolts. The eternal enemy of the curious. <sub>rooms/alley.adv:47</sub>
-- **Use:** I'd need something to lever the shutter. Something with a bad attitude. <sub>rooms/alley.adv:52</sub>
-- **Open:** Bolted. The shutter has opinions about clerks. <sub>rooms/alley.adv:48</sub>
-  - *[sound: deny]* <sub>rooms/alley.adv:49</sub>
-- **Push:** It doesn't move. It has been bolted by a man who meant it. <sub>rooms/alley.adv:50</sub>
-  - *[sound: deny]* <sub>rooms/alley.adv:51</sub>
-- **Pull:** Bolted from this side, which is the wrong side for me. <sub>rooms/alley.adv:53</sub>
-- *When* *[if loft_open]* *— called “open loft stairs”* <sub>rooms/alley.adv:54</sub>
-  - **Look at:** The loft stairs, shutter folded back. The dark up there smells of paper. <sub>rooms/alley.adv:56</sub>
+- **Look at:** The chandler's window, lit and full of rope. Rope, pitch, canvas, and the answer to every question a ship ever asks. Open late, because ships are always leaving. <sub>rooms/alley.adv:46</sub>
+- **Use / Walk to:** *[→ goes to The Chandler's]* <sub>rooms/alley.adv:45</sub>
+- **Open:** I push the door. A bell somewhere in the shop regrets it. <sub>rooms/alley.adv:47</sub>
+  - *[→ goes to The Chandler's]* <sub>rooms/alley.adv:45</sub>
 
-**open loft stairs** `loft_stairs_open` *[present if loft_open]* <sub>rooms/alley.adv:58</sub>
+**loft stairs** `warehouse_stairs` <sub>rooms/alley.adv:49</sub>
 
-- **Look at:** The stairs up to the loft, shutter folded back. The dark smells of paper. <sub>rooms/alley.adv:63</sub>
-- **Use / Walk to:** *[→ goes to Harbour Loft]* <sub>rooms/alley.adv:62</sub>
-- **Open:** I go up. <sub>rooms/alley.adv:64</sub>
-  - *[→ goes to Harbour Loft]* <sub>rooms/alley.adv:62</sub>
+- **Look at:** A wooden stair up to the harbour loft, shut off by a shutter bolted from this side. Bolts. The eternal enemy of the curious. <sub>rooms/alley.adv:52</sub>
+- **Use:** I'd need something to lever the shutter. Something with a bad attitude. <sub>rooms/alley.adv:57</sub>
+- **Open:** Bolted. The shutter has opinions about clerks. <sub>rooms/alley.adv:53</sub>
+  - *[sound: deny]* <sub>rooms/alley.adv:54</sub>
+- **Push:** It doesn't move. It has been bolted by a man who meant it. <sub>rooms/alley.adv:55</sub>
+  - *[sound: deny]* <sub>rooms/alley.adv:56</sub>
+- **Pull:** Bolted from this side, which is the wrong side for me. <sub>rooms/alley.adv:58</sub>
+- *When* *[if loft_open]* *— called “open loft stairs”* <sub>rooms/alley.adv:59</sub>
+  - **Look at:** The loft stairs, shutter folded back. The dark up there smells of paper. <sub>rooms/alley.adv:61</sub>
 
-**back to the docks** `to_dock` <sub>rooms/alley.adv:66</sub>
+**open loft stairs** `loft_stairs_open` *[present if loft_open]* <sub>rooms/alley.adv:63</sub>
 
-- **Look at:** The lane runs back down to the waterfront. <sub>rooms/alley.adv:70</sub>
-- **Use / Open / Walk to:** *[→ goes to Vela Docks]* <sub>rooms/alley.adv:69</sub>
+- **Look at:** The stairs up to the loft, shutter folded back. The dark smells of paper. <sub>rooms/alley.adv:68</sub>
+- **Use / Walk to:** *[→ goes to Harbour Loft]* <sub>rooms/alley.adv:67</sub>
+- **Open:** I go up. <sub>rooms/alley.adv:69</sub>
+  - *[→ goes to Harbour Loft]* <sub>rooms/alley.adv:67</sub>
 
-**stacked crates** `crates` <sub>rooms/alley.adv:72</sub>
+**back to the docks** `to_dock` <sub>rooms/alley.adv:71</sub>
 
-- **Look at:** Crates waiting to go up to the loft, stencilled with a little cloud. Cray & Co. Whatever's in them, it's been paid for by someone who doesn't like to be asked. <sub>rooms/alley.adv:75</sub>
+- **Look at:** The lane runs back down to the waterfront. <sub>rooms/alley.adv:75</sub>
+- **Use / Open / Walk to:** *[→ goes to Vela Docks]* <sub>rooms/alley.adv:74</sub>
+
+**stacked crates** `crates` <sub>rooms/alley.adv:77</sub>
+
+- **Look at:** Crates waiting to go up to the loft, stencilled with a little cloud. Cray & Co. Whatever's in them, it's been paid for by someone who doesn't like to be asked. <sub>rooms/alley.adv:80</sub>
 
 **Combinations here**
 
-- **Use brass compass on man in a good coat:** *[if seen:silas.compass]* My hand gets as far as my pocket and refuses to come out. Cray watches it with professional interest. <sub>rooms/alley.adv:86</sub>
-  - *[sets silas_refused]* <sub>rooms/alley.adv:87</sub>
-- **Use brass compass on man in a good coat:** My hand gets as far as my pocket and refuses to come out. Cray watches it with professional interest. <sub>rooms/alley.adv:89</sub>
-- **Use crowbar on loft stairs:** *[if loft_open]* The shutter's already folded back, and the bolts are lying in the gutter looking ashamed of themselves. <sub>rooms/alley.adv:91</sub>
-- **Use crowbar on loft stairs:** I get the crowbar behind the shutter and lean. The bolts give one at a time, complaining in the way of things that have been doing their job too long. <sub>rooms/alley.adv:93</sub>
-  - *[sets loft_open]* *[sound: door]* <sub>rooms/alley.adv:94</sub>
+- **Use brass compass on man in a good coat:** *[if seen:silas.compass]* My hand gets as far as my pocket and refuses to come out. Cray watches it with professional interest. <sub>rooms/alley.adv:91</sub>
+  - *[sets silas_refused]* <sub>rooms/alley.adv:92</sub>
+- **Use brass compass on man in a good coat:** My hand gets as far as my pocket and refuses to come out. Cray watches it with professional interest. <sub>rooms/alley.adv:94</sub>
+- **Use crowbar on loft stairs:** *[if loft_open]* The shutter's already folded back, and the bolts are lying in the gutter looking ashamed of themselves. <sub>rooms/alley.adv:96</sub>
+- **Use crowbar on loft stairs:** I get the crowbar behind the shutter and lean. The bolts give one at a time, complaining in the way of things that have been doing their job too long. <sub>rooms/alley.adv:98</sub>
+  - *[sets loft_open]* *[sound: door]* <sub>rooms/alley.adv:99</sub>
 
 <a id="dlg-silas"></a>
 ### Conversation: silas (Silas Cray)
@@ -624,42 +684,58 @@
 - **1.** **FENN**: I still haven't come round. *[if silas_offer and silas_refused = false]* <sub>dialogue/silas.adv:3</sub>
   - *→ continues at* [refuse](#dlg-silas-refuse)
 - **2.** **FENN**: The berth isn't yours to sell. <sub>dialogue/silas.adv:4</sub>
-  - *→ continues at* [hard](#dlg-silas-hard)
+  - *→ continues at* [keep](#dlg-silas-keep)
 - **3.** **FENN**: What do you want for it? <sub>dialogue/silas.adv:5</sub>
   - *→ continues at* [compass](#dlg-silas-compass)
 - **4.** **FENN**: Excuse me. <sub>dialogue/silas.adv:6</sub>
   - *→ continues at* [bye](#dlg-silas-bye)
 
-<a id="dlg-silas-refuse"></a>`refuse` **SILAS CRAY**: No. Your father said that too. Such a family for one-syllable answers. Good night, clerk. <sub>dialogue/silas.adv:19</sub>
-- *[sets silas_refused]* <sub>dialogue/silas.adv:20</sub>
+<a id="dlg-silas-refuse"></a>`refuse` **SILAS CRAY**: No. Your father said that too. Such a family for one-syllable answers. Good night, clerk. <sub>dialogue/silas.adv:28</sub>
+- *[sets silas_refused]* <sub>dialogue/silas.adv:29</sub>
+- *[casebook:* Cray offered me the last berth for my father's compass. He knows it points somewhere useful, and he would rather buy it than take it. I said no.*]* <sub>dialogue/silas.adv:30</sub>
 - *[ends]*
 
-<a id="dlg-silas-hard"></a>`hard` **SILAS CRAY**: Take? Taking leaves a record, and I'm very fond of the ledger as it is. No, I'll wait. Men who want to sail always come round. <sub>dialogue/silas.adv:13</sub>
-- **1.** **FENN**: Then I'll swim. <sub>dialogue/silas.adv:14</sub>
+<a id="dlg-silas-keep"></a>`keep` **SILAS CRAY**: Not to sell. To keep. I have a receipt, and Bramwick has a ledger, and between them it's mine. Men who want to sail always come round. <sub>dialogue/silas.adv:7</sub>
+- **1.** **FENN**: Then I'll swim. *[if seen:silas.compass]* <sub>dialogue/silas.adv:8</sub>
+  - *→ continues at* [swim_offer](#dlg-silas-swim_offer)
+- **2.** **FENN**: Then I'll swim. *[if seen:silas.compass = false]* <sub>dialogue/silas.adv:9</sub>
   - *→ continues at* [swim](#dlg-silas-swim)
-- **2.** **FENN**: We'll see. <sub>dialogue/silas.adv:15</sub>
+- **3.** **FENN**: What would it take to come round? <sub>dialogue/silas.adv:10</sub>
+  - *→ continues at* [compass](#dlg-silas-compass)
+- **4.** **FENN**: We'll see. <sub>dialogue/silas.adv:11</sub>
   - *→ continues at* [bye](#dlg-silas-bye)
 
-<a id="dlg-silas-swim"></a>`swim` **SILAS CRAY**: Swim, then. The Straits are lovely this time of year. Ask your father. <sub>dialogue/silas.adv:16</sub>
-- *[sets silas_refused]* <sub>dialogue/silas.adv:17</sub>
-- *[casebook:* Cray offered me the last berth for my father's compass. He knows it points somewhere useful, and he would rather buy it than take it. I said no.*]* <sub>dialogue/silas.adv:18</sub>
+<a id="dlg-silas-swim_offer"></a>`swim_offer` **SILAS CRAY**: Swim, then. The Straits are lovely this time of year. Ask your father. <sub>dialogue/silas.adv:25</sub>
+- *[sets silas_refused]* <sub>dialogue/silas.adv:26</sub>
+- *[casebook:* Cray offered me the last berth for my father's compass. He knows it points somewhere useful, and he would rather buy it than take it. I said no.*]* <sub>dialogue/silas.adv:27</sub>
 - *[ends]*
 
-<a id="dlg-silas-bye"></a>`bye` **SILAS CRAY**: Run along. The bell won't wait, and neither will I. Well. I will. I'm very patient. <sub>dialogue/silas.adv:21</sub>
-- *[sets silas_offer]* <sub>dialogue/silas.adv:22</sub>
+<a id="dlg-silas-swim"></a>`swim` **SILAS CRAY**: Swim, then. The Straits are lovely this time of year. Ask your father. <sub>dialogue/silas.adv:22</sub>
+- *[sets silas_refused]* <sub>dialogue/silas.adv:23</sub>
+- *[casebook:* Silas Cray has bought the last berth on the Marrow, and means to keep it. I told him I'd swim. He found that very funny.*]* <sub>dialogue/silas.adv:24</sub>
 - *[ends]*
 
-<a id="dlg-silas-compass"></a>`compass` **SILAS CRAY**: Your compass. Your grandfather made it, your father hid it, and you carry it about like a pocket watch that's lost its nerve. Give it to me and the berth is yours. <sub>dialogue/silas.adv:7</sub>
-- **1.** **FENN**: Why do you want it? <sub>dialogue/silas.adv:8</sub>
+<a id="dlg-silas-compass"></a>`compass` **SILAS CRAY**: Your compass. Your grandfather made it, your father hid it, and you carry it about like a pocket watch that's lost its nerve. Give it to me and the berth is yours. <sub>dialogue/silas.adv:12</sub>
+- *[sets silas_offer]* <sub>dialogue/silas.adv:13</sub>
+- **1.** **FENN**: Why do you want it? <sub>dialogue/silas.adv:14</sub>
   - *→ continues at* [why](#dlg-silas-why)
-- **2.** **FENN**: No. <sub>dialogue/silas.adv:9</sub>
+- **2.** **FENN**: No. <sub>dialogue/silas.adv:15</sub>
   - *→ continues at* [refuse](#dlg-silas-refuse) *(above)*
 
-<a id="dlg-silas-why"></a>`why` **SILAS CRAY**: Because it points somewhere, and I collect things that point. Other men collect beetles. Mine is the more profitable hobby. <sub>dialogue/silas.adv:10</sub>
-- **1.** **FENN**: You'd take it anyway. <sub>dialogue/silas.adv:11</sub>
-  - *→ continues at* [hard](#dlg-silas-hard) *(above)*
-- **2.** **FENN**: No. <sub>dialogue/silas.adv:12</sub>
+<a id="dlg-silas-why"></a>`why` **SILAS CRAY**: Because it points somewhere, and I collect things that point. Other men collect beetles. Mine is the more profitable hobby. <sub>dialogue/silas.adv:16</sub>
+- **1.** **FENN**: You'd take it anyway. <sub>dialogue/silas.adv:17</sub>
+  - *→ continues at* [hard](#dlg-silas-hard)
+- **2.** **FENN**: No. <sub>dialogue/silas.adv:18</sub>
   - *→ continues at* [refuse](#dlg-silas-refuse) *(above)*
+
+<a id="dlg-silas-hard"></a>`hard` **SILAS CRAY**: Take? Taking leaves a record, and I'm very fond of the ledger as it is. No, I'll wait. Men who want to sail always come round. <sub>dialogue/silas.adv:19</sub>
+- **1.** **FENN**: Then I'll swim. <sub>dialogue/silas.adv:20</sub>
+  - *→ continues at* [swim_offer](#dlg-silas-swim_offer) *(above)*
+- **2.** **FENN**: We'll see. <sub>dialogue/silas.adv:21</sub>
+  - *→ continues at* [bye](#dlg-silas-bye)
+
+<a id="dlg-silas-bye"></a>`bye` **SILAS CRAY**: Run along. The bell won't wait, and neither will I. Well. I will. I'm very patient. <sub>dialogue/silas.adv:31</sub>
+- *[ends]*
 
 <a id="act1-village"></a>
 ## Upper Town
@@ -711,7 +787,7 @@
 
 **washing line** `washing` <sub>rooms/village.adv:90</sub>
 
-- **Look at:** A line of shirts strung between two houses, drying in the dark. Nine of them. Somebody on this street is still washing for a man who isn't coming home. <sub>rooms/village.adv:93</sub>
+- **Look at:** A line of shirts strung between two houses, drying in the dark. Ten of them. Somebody on this street is still washing for a man who isn't coming home. <sub>rooms/village.adv:93</sub>
 
 **the houses** `cottages` <sub>rooms/village.adv:97</sub>
 
@@ -743,13 +819,13 @@
 - **2.** **FENN**: Another time. <sub>dialogue/nell.adv:10</sub>
   - *→ continues at* [bye](#dlg-nell-bye)
 
-<a id="dlg-nell-odd"></a>`odd` **NELL**: Six ships in three years, and every one found empty with the sails still set. The insurers call it weather. Weather doesn't tie off a wheel. <sub>dialogue/nell.adv:16</sub>
-- **1.** **FENN**: Weather doesn't tie off a wheel? <sub>dialogue/nell.adv:17</sub>
+<a id="dlg-nell-odd"></a>`odd` **NELL**: Six ships in three years. Five found drifting, sails set, nobody aboard; the sixth not found at all. The insurers call it weather. Weather doesn't tie off a wheel. <sub>dialogue/nell.adv:16</sub>
+- **1.** **FENN**: You've seen one of them. <sub>dialogue/nell.adv:17</sub>
   - *→ continues at* [wheel](#dlg-nell-wheel)
 - **2.** **FENN**: You think someone took them. <sub>dialogue/nell.adv:18</sub>
   - *→ continues at* [taken](#dlg-nell-taken)
 
-<a id="dlg-nell-wheel"></a>`wheel` **NELL**: Lashed. Every one. They come back with the wheel lashed amidships and the boats still hanging. Whatever happened, they weren't fighting it at the end. <sub>dialogue/nell.adv:19</sub>
+<a id="dlg-nell-wheel"></a>`wheel` **NELL**: I sold rope to the men who towed them in. Wheel lashed amidships, every one, boats still hanging. Whatever happened, they weren't fighting it. <sub>dialogue/nell.adv:19</sub>
 - **1.** **FENN**: That isn't weather. <sub>dialogue/nell.adv:20</sub>
   - *→ continues at* [taken](#dlg-nell-taken)
 
@@ -757,7 +833,7 @@
 - **1.** **FENN**: I will. Goodnight. <sub>dialogue/nell.adv:22</sub>
   - *→ continues at* [bye](#dlg-nell-bye)
 
-<a id="dlg-nell-bye"></a>`bye` **NELL**: Mind how you go. It's all steps and wet stone up here. <sub>dialogue/nell.adv:23</sub>
+<a id="dlg-nell-bye"></a>`bye` **NELL**: Go on. Hear anything out there, I'm buying. News, I mean. Not rope. <sub>dialogue/nell.adv:23</sub>
 - *[ends]*
 
 <a id="dlg-nell-village"></a>`village` **NELL**: Forty houses and a well. Half of them empty since the ships stopped coming back. The other half are related to each other, which is the real reason it's quiet. <sub>dialogue/nell.adv:11</sub>
@@ -807,47 +883,61 @@
 - **2.** **FENN**: Good job. <sub>dialogue/tam.adv:9</sub>
   - *→ continues at* [bye](#dlg-tam-bye)
 
-<a id="dlg-tam-strange"></a>`strange` **TAM**: The Arcadia was the biggest one ever came in here. My dad said she was so wide they had to bring her alongside in the morning light. She never came back. <sub>dialogue/tam.adv:13</sub>
-- **1.** **FENN**: Lots of ships don't. <sub>dialogue/tam.adv:14</sub>
+<a id="dlg-tam-strange"></a>`strange` **TAM**: The Arcadia was the fastest thing that ever came round the headland. I timed her. Then she stopped coming round. <sub>dialogue/tam.adv:16</sub>
+- **1.** **FENN**: She was my father's ship. <sub>dialogue/tam.adv:17</sub>
+  - *→ continues at* [captain](#dlg-tam-captain)
+- **2.** **FENN**: I'm sorry. <sub>dialogue/tam.adv:18</sub>
   - *→ continues at* [dad](#dlg-tam-dad)
-- **2.** **FENN**: I'm sorry. <sub>dialogue/tam.adv:15</sub>
+- **3.** **FENN**: Lots of ships don't. <sub>dialogue/tam.adv:19</sub>
   - *→ continues at* [dad](#dlg-tam-dad)
 
-<a id="dlg-tam-dad"></a>`dad` **TAM**: Dad went with her. Tam Hobb, able seaman. I'm Tam as well, after him; Mum says that way she only has to shout once. Nine others went with him off this street. Mum says I'm not to talk about it, so I talk about it to strangers instead. <sub>dialogue/tam.adv:16</sub>
-- **1.** **FENN**: I'll look for her. <sub>dialogue/tam.adv:17</sub>
+<a id="dlg-tam-captain"></a>`captain` **TAM**: You're the captain's? …Then you're not a stranger. You're on the tally. <sub>dialogue/tam.adv:20</sub>
+- *→ continues at* [dad](#dlg-tam-dad)
+
+<a id="dlg-tam-dad"></a>`dad` **TAM**: Dad went with her. Tam Hobb, able seaman. I'm Tam too; Mum says that way she only has to shout once. <sub>dialogue/tam.adv:22</sub>
+- *→ continues at* [dad2](#dlg-tam-dad2)
+
+<a id="dlg-tam-dad2"></a>`dad2` **TAM**: Mum says I'm not to talk about it, so I tell strangers. <sub>dialogue/tam.adv:24</sub>
+- **1.** **FENN**: I'll look for them. All of them. <sub>dialogue/tam.adv:25</sub>
   - *→ continues at* [promise](#dlg-tam-promise)
-- **2.** **FENN**: Goodnight, Tam. <sub>dialogue/tam.adv:18</sub>
+- **2.** **FENN**: Goodnight, Tam. <sub>dialogue/tam.adv:26</sub>
   - *→ continues at* [bye](#dlg-tam-bye)
 
-<a id="dlg-tam-promise"></a>`promise` **TAM**: Will you? If you find her, tell them the tally's still running. Tell them I kept counting. <sub>dialogue/tam.adv:19</sub>
-- **1.** **FENN**: I'll tell them. <sub>dialogue/tam.adv:20</sub>
+<a id="dlg-tam-promise"></a>`promise` **TAM**: If you find Dad, tell him the tally's still running. Tell him I kept counting. <sub>dialogue/tam.adv:27</sub>
+- **1.** **FENN**: I'll tell him. <sub>dialogue/tam.adv:28</sub>
   - *→ continues at* [bye](#dlg-tam-bye)
 
-<a id="dlg-tam-bye"></a>`bye` **TAM**: Watch the step. Mum says it's a killer. It's just a step. <sub>dialogue/tam.adv:21</sub>
+<a id="dlg-tam-bye"></a>`bye` **TAM**: Goodnight. That's you counted. <sub>dialogue/tam.adv:29</sub>
 - *[ends]*
 
 <a id="dlg-tam-do"></a>`do` **TAM**: I count the ships. Used to be nine or ten a week. Now it's three, and two of those are the same boat going back and forth because nobody else will. <sub>dialogue/tam.adv:10</sub>
 - **1.** **FENN**: Which boat? <sub>dialogue/tam.adv:11</sub>
-  - *→ continues at* [strange](#dlg-tam-strange) *(above)*
+  - *→ continues at* [which](#dlg-tam-which)
 - **2.** **FENN**: That's a good tally. <sub>dialogue/tam.adv:12</sub>
+  - *→ continues at* [bye](#dlg-tam-bye) *(above)*
+
+<a id="dlg-tam-which"></a>`which` **TAM**: The Marrow. Uncle Hobb's her bosun. He's got Dad on his arm, in ink. <sub>dialogue/tam.adv:13</sub>
+- **1.** **FENN**: Where's your dad? <sub>dialogue/tam.adv:14</sub>
+  - *→ continues at* [strange](#dlg-tam-strange) *(above)*
+- **2.** **FENN**: Goodnight, Tam. <sub>dialogue/tam.adv:15</sub>
   - *→ continues at* [bye](#dlg-tam-bye) *(above)*
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
 *[home: opened directly from rooms/village.adv:44]*
 
-<a id="dlg-tam-home"></a>`home` **TAM**: You found her! Dad came up the steps an hour ago. I counted him. Then I made him go down and come up again so I could count him twice. <sub>dialogue/tam.adv:23</sub>
-- **1.** **FENN**: Did you tell him you kept counting? *[if seen:tam.promise]* <sub>dialogue/tam.adv:24</sub>
+<a id="dlg-tam-home"></a>`home` **TAM**: You found her! Dad came up the steps an hour ago. I counted him. Then I made him go down and come up again so I could count him twice. <sub>dialogue/tam.adv:31</sub>
+- **1.** **FENN**: Did you tell him you kept counting? *[if seen:tam.promise]* <sub>dialogue/tam.adv:32</sub>
   - *→ continues at* [kept](#dlg-tam-kept)
-- **2.** **FENN**: How many is that now? <sub>dialogue/tam.adv:25</sub>
+- **2.** **FENN**: How many is that now? <sub>dialogue/tam.adv:33</sub>
   - *→ continues at* [many](#dlg-tam-many)
-- **3.** **FENN**: Goodnight, Tam. <sub>dialogue/tam.adv:26</sub>
+- **3.** **FENN**: Goodnight, Tam. <sub>dialogue/tam.adv:34</sub>
   - *→ continues at* [bye](#dlg-tam-bye) *(above)*
 
-<a id="dlg-tam-kept"></a>`kept` **TAM**: He's seen the tally. It's on the back of all Mum's recipes. She's very cross. She's also crying, so it's hard to tell which. <sub>dialogue/tam.adv:27</sub>
+<a id="dlg-tam-kept"></a>`kept` **TAM**: He's seen the tally. It's on the back of all Mum's recipes. She's very cross. She's also crying, so it's hard to tell which. <sub>dialogue/tam.adv:35</sub>
 - *[ends]*
 
-<a id="dlg-tam-many"></a>`many` **TAM**: A hundred and thirty, and one ship. People are harder than ships. They won't stand still to be counted, and they keep hugging. <sub>dialogue/tam.adv:28</sub>
+<a id="dlg-tam-many"></a>`many` **TAM**: A hundred and thirty, and one ship. People are harder than ships. They won't stand still to be counted, and they keep hugging. <sub>dialogue/tam.adv:36</sub>
 - *[ends]*
 
 <a id="dlg-onn"></a>
@@ -865,58 +955,64 @@
 - **4.** **FENN**: I'll leave you to it. <sub>dialogue/onn.adv:6</sub>
   - *→ continues at* [bye](#dlg-onn-bye)
 
-<a id="dlg-onn-crew"></a>`crew` **OLD ONN**: My husband's cousin. And the boy from the end house, and the two brothers who kept the chandlery before the chandler. Ten off this street, and twelve more from down the hill. I counted them out and I counted them back, and only the first part worked. <sub>dialogue/onn.adv:7</sub>
-- **1.** **FENN**: What happened to them? <sub>dialogue/onn.adv:8</sub>
+<a id="dlg-onn-crew"></a>`crew` **OLD ONN**: My husband's cousin. And the boy from the end house, and the two brothers who kept the chandlery before the chandler. <sub>dialogue/onn.adv:7</sub>
+- *→ continues at* [crew2](#dlg-onn-crew2)
+
+<a id="dlg-onn-crew2"></a>`crew2` **OLD ONN**: Ten off this street, twelve from down the hill. I counted them out and I counted them back, and only the first part worked. <sub>dialogue/onn.adv:9</sub>
+- **1.** **FENN**: What happened to them? <sub>dialogue/onn.adv:10</sub>
   - *→ continues at* [straits](#dlg-onn-straits)
 
-<a id="dlg-onn-straits"></a>`straits` **OLD ONN**: There's a place past the reef where the water goes quiet. Not calm — quiet. The fishermen won't say the name of it. They call it the Lull. <sub>dialogue/onn.adv:9</sub>
-- **1.** **FENN**: You believe that? <sub>dialogue/onn.adv:10</sub>
+<a id="dlg-onn-straits"></a>`straits` **OLD ONN**: There's a place past the reef where the water goes quiet. Not calm — quiet. The fishermen won't say the name of it. They call it the Lull. <sub>dialogue/onn.adv:11</sub>
+- **1.** **FENN**: You believe that? <sub>dialogue/onn.adv:12</sub>
   - *→ continues at* [believe](#dlg-onn-believe)
-- **2.** **FENN**: The Lull. <sub>dialogue/onn.adv:11</sub>
+- **2.** **FENN**: The Lull. <sub>dialogue/onn.adv:13</sub>
   - *→ continues at* [lull](#dlg-onn-lull)
 
-<a id="dlg-onn-believe"></a>`believe` **OLD ONN**: I believe twenty-two people went out and didn't come back, and the men who own the ships would rather it was weather. Belief is what's left when the paperwork runs out. <sub>dialogue/onn.adv:14</sub>
-- **1.** **FENN**: That's fair. <sub>dialogue/onn.adv:15</sub>
+<a id="dlg-onn-believe"></a>`believe` **OLD ONN**: I believe twenty-two went out and one came back, and he's been drunk ever since. And the men who own the ships would rather call it weather. <sub>dialogue/onn.adv:16</sub>
+- *→ continues at* [believe2](#dlg-onn-believe2)
+
+<a id="dlg-onn-believe2"></a>`believe2` **OLD ONN**: Belief is what's left when the paperwork runs out. <sub>dialogue/onn.adv:18</sub>
+- **1.** **FENN**: That's fair. <sub>dialogue/onn.adv:19</sub>
   - *→ continues at* [promise](#dlg-onn-promise)
 
-<a id="dlg-onn-promise"></a>`promise` **OLD ONN**: Then try. And clerk — when the paperwork's done, come and tell me. Not the harbourmaster. Me. <sub>dialogue/onn.adv:18</sub>
-- **1.** **FENN**: I will. <sub>dialogue/onn.adv:19</sub>
+<a id="dlg-onn-promise"></a>`promise` **OLD ONN**: Then try. And clerk — when the paperwork's done, come and tell me. Not the harbourmaster. Me. <sub>dialogue/onn.adv:22</sub>
+- **1.** **FENN**: I will. <sub>dialogue/onn.adv:23</sub>
   - *→ continues at* [bye](#dlg-onn-bye)
 
-<a id="dlg-onn-bye"></a>`bye` **OLD ONN**: Step. Wet. Mind it. <sub>dialogue/onn.adv:20</sub>
+<a id="dlg-onn-bye"></a>`bye` **OLD ONN**: Step. Wet. Mind it. <sub>dialogue/onn.adv:24</sub>
 - *[ends]*
 
-<a id="dlg-onn-lull"></a>`lull` **OLD ONN**: Don't say it twice, and don't say it while you're out there. If you go into the Lull and something calls your name, you don't answer. You understand me? You don't answer. <sub>dialogue/onn.adv:12</sub>
-- **1.** **FENN**: I understand. <sub>dialogue/onn.adv:13</sub>
+<a id="dlg-onn-lull"></a>`lull` **OLD ONN**: Don't say it twice, and don't say it while you're out there. If you go into the Lull and something calls your name, you don't answer. You understand me? You don't answer. <sub>dialogue/onn.adv:14</sub>
+- **1.** **FENN**: I understand. <sub>dialogue/onn.adv:15</sub>
   - *→ continues at* [promise](#dlg-onn-promise) *(above)*
 
-<a id="dlg-onn-help"></a>`help` **OLD ONN**: No, child. I've the broom and the step and a great deal of time. What I'd like is for one person to come back and tell me what's out there. <sub>dialogue/onn.adv:16</sub>
-- **1.** **FENN**: I'll try. <sub>dialogue/onn.adv:17</sub>
+<a id="dlg-onn-help"></a>`help` **OLD ONN**: No, child. I've the broom and the step and a great deal of time. What I'd like is for one person to come back and tell me what's out there. <sub>dialogue/onn.adv:20</sub>
+- **1.** **FENN**: I'll try. <sub>dialogue/onn.adv:21</sub>
   - *→ continues at* [promise](#dlg-onn-promise) *(above)*
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
 *[home: opened directly from rooms/village.adv:57]*
 
-<a id="dlg-onn-home"></a>`home` **OLD ONN**: The clerk. You've the face of somebody at the end of something. Go on, then. <sub>dialogue/onn.adv:22</sub>
-- **1.** **FENN**: You asked me to come and tell you. Not the harbourmaster. You. *[if seen:onn.promise]* <sub>dialogue/onn.adv:23</sub>
+<a id="dlg-onn-home"></a>`home` **OLD ONN**: The clerk. You've the face of somebody at the end of something. Go on, then. <sub>dialogue/onn.adv:26</sub>
+- **1.** **FENN**: You asked me to come and tell you. Not the harbourmaster. You. *[if seen:onn.promise]* <sub>dialogue/onn.adv:27</sub>
   - *→ continues at* [salt](#dlg-onn-salt)
-- **2.** **FENN**: They're home, Onn. All hands. *[if seen:onn.promise = false]* <sub>dialogue/onn.adv:24</sub>
+- **2.** **FENN**: They're home, Onn. All hands. *[if seen:onn.promise = false]* <sub>dialogue/onn.adv:28</sub>
   - *→ continues at* [salt](#dlg-onn-salt)
 
-<a id="dlg-onn-salt"></a>`salt` **FENN**: All hands. They were on Gullet Key, raking salt for Silas Cray. Three years. <sub>dialogue/onn.adv:25</sub>
+<a id="dlg-onn-salt"></a>`salt` **FENN**: All hands. They were on Gullet Key, raking salt for Silas Cray. Three years. <sub>dialogue/onn.adv:29</sub>
 - *→ continues at* [swept](#dlg-onn-swept)
 
-<a id="dlg-onn-swept"></a>`swept` **OLD ONN**: Salt. Three years I swept this step for drowned men, and they were raking salt. <sub>dialogue/onn.adv:27</sub>
-- **1.** **FENN**: And the Lull: something did call the Marrow's name in the fog. Through a speaking-trumpet. Nobody answered. *[if seen:onn.lull]* <sub>dialogue/onn.adv:28</sub>
+<a id="dlg-onn-swept"></a>`swept` **OLD ONN**: Salt. Three years I swept this step for drowned men, and they were raking salt. <sub>dialogue/onn.adv:31</sub>
+- **1.** **FENN**: And the Lull: something did call the Marrow's name in the fog. Through a speaking-trumpet. Nobody answered. *[if seen:onn.lull]* <sub>dialogue/onn.adv:32</sub>
   - *→ continues at* [trumpet](#dlg-onn-trumpet)
-- **2.** **FENN**: Not a drop of it was weather. <sub>dialogue/onn.adv:29</sub>
+- **2.** **FENN**: Not a drop of it was weather. <sub>dialogue/onn.adv:33</sub>
   - *→ continues at* [count](#dlg-onn-count)
 
-<a id="dlg-onn-trumpet"></a>`trumpet` **OLD ONN**: A trumpet. (She laughs, once, like a door nobody's opened in years.) Three years the fishermen have been frightened of a man with a trumpet and a form. <sub>dialogue/onn.adv:30</sub>
+<a id="dlg-onn-trumpet"></a>`trumpet` **OLD ONN**: A trumpet. (She laughs, once, like a door nobody's opened in years.) Three years the fishermen have been frightened of a man with a trumpet and a form. <sub>dialogue/onn.adv:34</sub>
 - *→ continues at* [count](#dlg-onn-count)
 
-<a id="dlg-onn-count"></a>`count` **OLD ONN**: Ten off this street. I'll count them back now; I said I would. (She leans the broom against the door.) Mind the step, clerk. It's wet, and I'm not sweeping it again tonight. <sub>dialogue/onn.adv:32</sub>
+<a id="dlg-onn-count"></a>`count` **OLD ONN**: Ten off this street. I'll count them back now; I said I would. (She leans the broom against the door.) Mind the step, clerk. It's wet, and I'm not sweeping it again tonight. <sub>dialogue/onn.adv:36</sub>
 - *[ends]*
 
 <a id="act1-chandlery"></a>
@@ -934,25 +1030,26 @@
 
 **the shelves** `shelves` <sub>rooms/chandlery.adv:23</sub>
 
-- **Look at:** Coils of rope, blocks and tackle, a lantern for every weather, and one shelf of things that look like they were invented on a dare. <sub>rooms/chandlery.adv:26</sub>
+- **Look at:** Coils of rope, bolts of sailcloth, a lantern for every weather, and one shelf of things that look like they were invented on a dare. <sub>rooms/chandlery.adv:26</sub>
+- **Use:** Sailcloth. My mother sewed it for a living. She could tell good canvas from bad by the sound it made tearing. I can't. <sub>rooms/chandlery.adv:27</sub>
 
-**back room** `back_room` <sub>rooms/chandlery.adv:28</sub>
+**back room** `back_room` <sub>rooms/chandlery.adv:29</sub>
 
-- **Look at:** A dark doorway to the back room. Somebody in there is counting something, out loud, and losing. <sub>rooms/chandlery.adv:32</sub>
-- **Talk to:** I call into the back room. <sub>rooms/chandlery.adv:33</sub>
-  - *[→ conversation* [tallow](#dlg-tallow) *— below]* <sub>rooms/chandlery.adv:34</sub>
-- **Open:** I'm not barging into a man's back room. That's how you meet his cat. <sub>rooms/chandlery.adv:35</sub>
+- **Look at:** A dark doorway to the back room. Somebody in there is counting something, out loud, and losing. <sub>rooms/chandlery.adv:33</sub>
+- **Talk to:** I call into the back room. <sub>rooms/chandlery.adv:34</sub>
+  - *[→ conversation* [tallow](#dlg-tallow) *— below]* <sub>rooms/chandlery.adv:35</sub>
+- **Open:** I'm not barging into a man's back room. That's how you meet his cat. <sub>rooms/chandlery.adv:36</sub>
 
-**door to the lane** `door_out` <sub>rooms/chandlery.adv:42</sub>
+**door to the lane** `door_out` <sub>rooms/chandlery.adv:43</sub>
 
-- **Look at:** The lane, wet and honest. <sub>rooms/chandlery.adv:46</sub>
-- **Use / Open / Walk to:** *[→ goes to Chandler's Lane]* <sub>rooms/chandlery.adv:45</sub>
+- **Look at:** The lane, wet and honest. <sub>rooms/chandlery.adv:47</sub>
+- **Use / Open / Walk to:** *[→ goes to Chandler's Lane]* <sub>rooms/chandlery.adv:46</sub>
 
 **Combinations here**
 
-- **Use harbour stamp on the counter:** *[if chandler_paid]* One invoice paid is a kindness. Two is a precedent, and Mr Tallow would never stop sending them. <sub>rooms/chandlery.adv:51</sub>
-- **Use harbour stamp on the counter:** I stamp the oldest invoice PAID. A cheer from the back room, then a thump, then “Anything you like, clerk!” I ask for the Arcadia's manifest. A copy sails out through the doorway and lands at my feet. The cat follows it, to supervise. <sub>rooms/chandlery.adv:53</sub>
-  - *[Fenn receives: manifest copy]* *[sets chandler_paid]* <sub>rooms/chandlery.adv:54</sub>
+- **Use harbour stamp on the counter:** *[if chandler_paid]* One invoice paid is a kindness. Two is a precedent, and Mr Tallow would never stop sending them. <sub>rooms/chandlery.adv:52</sub>
+- **Use harbour stamp on the counter:** I stamp the oldest invoice PAID. “Anything you like, clerk!” The Arcadia's manifest sails out of the back room and lands at my feet. The cat follows, to supervise. <sub>rooms/chandlery.adv:54</sub>
+  - *[Fenn receives: manifest copy]* *[sets chandler_paid]* <sub>rooms/chandlery.adv:55</sub>
 
 <a id="dlg-tallow"></a>
 ### Conversation: tallow (Mr Tallow (from the back room))
@@ -996,25 +1093,29 @@
 
 **harbour ledger** `ledger` *[present if ledger_taken = false]* <sub>rooms/warehouse.adv:13</sub>
 
-- **Look at:** The harbour ledger. Every arrival, every departure, every ship this town has ever lost, in one hand. <sub>rooms/warehouse.adv:17</sub>
-- **Use:** The Arcadia: lost at sea, in Bramwick's hand, three days before she was even late. Beside it, a fee: “Paid, Cray & Co., factors.” Nobody pays harbour dues on a wreck. Bramwick didn't just write my father off. He was paid to. <sub>rooms/warehouse.adv:22</sub>
-  - *[sets ledger_read]* *[sound: chime]* <sub>rooms/warehouse.adv:23</sub>
-- **Open:** The Arcadia: lost at sea, in Bramwick's hand, three days before she was even late. Beside it, a fee: “Paid, Cray & Co., factors.” Nobody pays harbour dues on a wreck. Bramwick didn't just write my father off. He was paid to. <sub>rooms/warehouse.adv:18</sub>
-  - *[sets ledger_read]* <sub>rooms/warehouse.adv:19</sub>
-  - *[casebook:* The Arcadia was entered as lost at sea three days before she was due. Under the entry, a harbour fee paid in full by a factor's office. Nobody pays harbour dues on a wreck.*]* <sub>rooms/warehouse.adv:20</sub>
-  - *[sound: chime]* <sub>rooms/warehouse.adv:21</sub>
-- **Pull:** It's chained to the desk. Of course it is. <sub>rooms/warehouse.adv:25</sub>
-- *When* *[if ledger_read]* *— called “harbour ledger”* <sub>rooms/warehouse.adv:34</sub>
-  - **Look at:** The entry still says lost. It will keep saying it until someone makes it say otherwise. <sub>rooms/warehouse.adv:36</sub>
+- **Look at:** The harbour ledger. The Harbourmaster's own book; clerks keep the day-books and aren't allowed up here. I've wanted to read one page of it for three years. <sub>rooms/warehouse.adv:17</sub>
+- **Use:** The Arcadia. “Lost at sea”, in Bramwick's hand, three days before she was even late. <sub>rooms/warehouse.adv:23</sub>
+  - **FENN (V.O.)**: Beside it: “Quarantine dues, Gullet Key station. Paid, Cray & Co.” Nobody pays dues on a wreck. He wasn't writing my father off. He was being paid to. <sub>rooms/warehouse.adv:24</sub>
+  - *[sets ledger_read]* <sub>rooms/warehouse.adv:25</sub>
+  - *[casebook:* The Arcadia was entered as lost in Bramwick's hand, three days before she was due. Beside it: “Quarantine dues, Gullet Key station. Paid, Cray & Co.” Quarantine where? For a ship nobody had seen?*]* <sub>rooms/warehouse.adv:26</sub>
+  - *[sound: chime]* <sub>rooms/warehouse.adv:27</sub>
+- **Open:** The Arcadia. “Lost at sea”, in Bramwick's hand, three days before she was even late. <sub>rooms/warehouse.adv:18</sub>
+  - **FENN (V.O.)**: Beside it: “Quarantine dues, Gullet Key station. Paid, Cray & Co.” Nobody pays dues on a wreck. He wasn't writing my father off. He was being paid to. <sub>rooms/warehouse.adv:19</sub>
+  - *[sets ledger_read]* <sub>rooms/warehouse.adv:20</sub>
+  - *[casebook:* The Arcadia was entered as lost in Bramwick's hand, three days before she was due. Beside it: “Quarantine dues, Gullet Key station. Paid, Cray & Co.” Quarantine where? For a ship nobody had seen?*]* <sub>rooms/warehouse.adv:21</sub>
+  - *[sound: chime]* <sub>rooms/warehouse.adv:22</sub>
+- **Pull:** It's chained to the desk. Of course it is. <sub>rooms/warehouse.adv:28</sub>
+- *When* *[if ledger_read]* *— called “harbour ledger”* <sub>rooms/warehouse.adv:37</sub>
+  - **Look at:** The entry still says lost. It will keep saying it until someone makes it say otherwise. <sub>rooms/warehouse.adv:39</sub>
 
-**stacked crates** `crates` <sub>rooms/warehouse.adv:38</sub>
+**stacked crates** `crates` <sub>rooms/warehouse.adv:41</sub>
 
-- **Look at:** More of Cray's cloud-stamped crates, stencilled for ports that ships have stopped reaching. Somebody is paying storage on a great deal of nothing. <sub>rooms/warehouse.adv:41</sub>
+- **Look at:** More of Cray's cloud-stamped crates, stencilled for ports that ships have stopped reaching. Somebody is paying storage on a great deal of nothing. <sub>rooms/warehouse.adv:44</sub>
 
-**stairs to the lane** `stairs_down` <sub>rooms/warehouse.adv:43</sub>
+**stairs to the lane** `stairs_down` <sub>rooms/warehouse.adv:46</sub>
 
-- **Look at:** The loft stairs, back down to the lane. <sub>rooms/warehouse.adv:47</sub>
-- **Use / Open / Walk to:** *[→ goes to Chandler's Lane]* <sub>rooms/warehouse.adv:46</sub>
+- **Look at:** The loft stairs, back down to the lane. <sub>rooms/warehouse.adv:50</sub>
+- **Use / Open / Walk to:** *[→ goes to Chandler's Lane]* <sub>rooms/warehouse.adv:49</sub>
 
 *[Act I closing cinematic: /assets/video/act-i-outro.mp4]* <sub>acts.adv:7</sub>
 
@@ -1115,8 +1216,8 @@
   - *[→ conversation* [quill at lost](#dlg-quill-lost) *— below]* <sub>rooms/marrow_deck.adv:107</sub>
 - **Use Pell's sextant on Quill:** *[if vane_terms]* I hold out Pell's sextant. Quill looks at it, and then at me, and doesn't take it straight away. <sub>rooms/marrow_deck.adv:109</sub>
   - *[→ conversation* [quill at sextant](#dlg-quill-sextant) *— below]* <sub>rooms/marrow_deck.adv:110</sub>
-- **Use Pell's sextant on Quill:** She turns it over and hands it back. “Pell's. What am I meant to navigate, cargo? Your feelings?” <sub>rooms/marrow_deck.adv:112</sub>
-- **Use manifest copy on Quill:** She skims it. “Twenty-two names and a navigator who wasn't drowned. Show it to someone who's lost somebody, cargo. Not me.” <sub>rooms/marrow_deck.adv:114</sub>
+- **Use Pell's sextant on Quill:** She turns it over and hands it back. “Pell's. Navigate what? The captain's going the long way, and the long way steers itself.” <sub>rooms/marrow_deck.adv:112</sub>
+- **Use manifest copy on Quill:** She skims it. “Twenty-two names and a navigator who wasn't drowned. Show it to someone who's lost somebody. Not me.” <sub>rooms/marrow_deck.adv:114</sub>
 - **Use Pell's log on Quill:** She won't open it. “That's the captain's to read. Pell would've said so, if he'd finished saying things.” <sub>rooms/marrow_deck.adv:116</sub>
 - **Use stamped licence on Quill:** She reads it without taking it. “Says you can sail. Doesn't say you can get past me. Different department.” <sub>rooms/marrow_deck.adv:118</sub>
 - **Use brass compass on the sea:** The needle swings off north and settles on the horizon past the bow, as if it's heard somebody say its name. <sub>rooms/marrow_deck.adv:120</sub>
@@ -1176,20 +1277,20 @@
 - **2.** **FENN**: I'll put in a good word with the captain. <sub>dialogue/quill.adv:39</sub>
   - *→ continues at* [goodword](#dlg-quill-goodword)
 
-<a id="dlg-quill-thanked"></a>`thanked` **QUILL**: Don't thank me. Thank the deck for not eating it. And clerk? Don't tell her I lost it. <sub>dialogue/quill.adv:40</sub>
+<a id="dlg-quill-thanked"></a>`thanked` **QUILL**: Thank the deck. It nearly ate it. And cargo? The captain doesn't hear about this. <sub>dialogue/quill.adv:40</sub>
 - *[ends]*
 
 <a id="dlg-quill-goodword"></a>`goodword` **QUILL**: Put in a good word for yourself. You'll need it more. And not a word about the spyglass. <sub>dialogue/quill.adv:41</sub>
 - *[ends]*
 
-<a id="dlg-quill-bye"></a>`bye` **QUILL**: Off you go. And stop standing like that. You're making the mast nervous. <sub>dialogue/quill.adv:50</sub>
+<a id="dlg-quill-bye"></a>`bye` **QUILL**: Off you go. And stop standing like that. You're making the mast nervous. <sub>dialogue/quill.adv:53</sub>
 - *[ends]*
 
 <a id="dlg-quill-marta"></a>`marta` **QUILL**: Marta. Of course. Did she mention compliments? <sub>dialogue/quill.adv:13</sub>
 - **1.** **FENN**: (Say nothing.) <sub>dialogue/quill.adv:14</sub>
   - *[aff +1]* <sub>dialogue/quill.adv:15</sub>
   - *→ continues at* [learn](#dlg-quill-learn)
-- **2.** **FENN**: She said you bite. <sub>dialogue/quill.adv:16</sub>
+- **2.** **FENN**: She did. I've been trying to think of one, to test it. <sub>dialogue/quill.adv:16</sub>
   - *→ continues at* [bite](#dlg-quill-bite)
 
 <a id="dlg-quill-learn"></a>`learn` **QUILL**: Good. You learn fast, for cargo. <sub>dialogue/quill.adv:17</sub>
@@ -1198,7 +1299,7 @@
 - **2.** **FENN**: I'll leave you to the horizon. <sub>dialogue/quill.adv:19</sub>
   - *→ continues at* [bye](#dlg-quill-bye) *(above)*
 
-<a id="dlg-quill-bite"></a>`bite` **QUILL**: Only cargo. Keeps the weight down. <sub>dialogue/quill.adv:20</sub>
+<a id="dlg-quill-bite"></a>`bite` **QUILL**: Keep trying. From over there. <sub>dialogue/quill.adv:20</sub>
 - **1.** **FENN**: I need to see the captain. *[if quill_helped = false]* <sub>dialogue/quill.adv:21</sub>
   - *→ continues at* [captain](#dlg-quill-captain) *(above)*
 - **2.** **FENN**: Noted. From a safe distance. <sub>dialogue/quill.adv:22</sub>
@@ -1217,86 +1318,92 @@
   - *→ continues at* [bye](#dlg-quill-bye) *(above)*
 
 <a id="dlg-quill-ambition"></a>`ambition` **QUILL**: Our navigator died last winter. Somebody has to read the stars. Might as well be somebody who can see them. <sub>dialogue/quill.adv:48</sub>
-- **1.** **FENN**: Good luck. <sub>dialogue/quill.adv:49</sub>
+- **1.** **FENN**: Navigators get written in the log. I'd know. I've filed a thousand. <sub>dialogue/quill.adv:49</sub>
+  - *[aff +1]* <sub>dialogue/quill.adv:50</sub>
+  - *→ continues at* [filed](#dlg-quill-filed)
+- **2.** **FENN**: Good luck. <sub>dialogue/quill.adv:51</sub>
   - *→ continues at* [bye](#dlg-quill-bye) *(above)*
+
+<a id="dlg-quill-filed"></a>`filed` **QUILL**: Lookouts get written in too. Under “and others”. …Off you go. <sub>dialogue/quill.adv:52</sub>
+- *[ends]*
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
 *[sextant: opened directly from rooms/marrow_deck.adv:110]*
 
-<a id="dlg-quill-sextant"></a>`sextant` **FENN (V.O.)**: She takes the sextant in both hands, the way you hold something that might be taken back. <sub>dialogue/quill.adv:52</sub>
+<a id="dlg-quill-sextant"></a>`sextant` **FENN (V.O.)**: She takes the sextant in both hands, the way you hold something that might be taken back. <sub>dialogue/quill.adv:55</sub>
 - *→ continues at* [swear](#dlg-quill-swear)
 
-<a id="dlg-quill-swear"></a>`swear` **QUILL**: Pell's. …You want me to swear to your line. <sub>dialogue/quill.adv:54</sub>
-- **1.** **FENN**: I want the captain to hear it from a navigator. <sub>dialogue/quill.adv:55</sub>
+<a id="dlg-quill-swear"></a>`swear` **QUILL**: Pell's. …You want me to swear to your line. <sub>dialogue/quill.adv:57</sub>
+- **1.** **FENN**: I want the captain to hear it from a navigator. <sub>dialogue/quill.adv:58</sub>
   - *→ continues at* [lookout](#dlg-quill-lookout)
-- **2.** **FENN**: I want somebody to check my sums. You seem the type. <sub>dialogue/quill.adv:56</sub>
+- **2.** **FENN**: I want somebody to check my sums. You seem the type. <sub>dialogue/quill.adv:59</sub>
   - *→ continues at* [sums](#dlg-quill-sums)
 
-<a id="dlg-quill-lookout"></a>`lookout` **QUILL**: I'm a lookout. <sub>dialogue/quill.adv:61</sub>
-- **1.** **FENN**: Not in the log, you're not. <sub>dialogue/quill.adv:62</sub>
-  - *[aff +1]* <sub>dialogue/quill.adv:63</sub>
+<a id="dlg-quill-lookout"></a>`lookout` **QUILL**: I'm a lookout. <sub>dialogue/quill.adv:64</sub>
+- **1.** **FENN**: Not in the log, you're not. <sub>dialogue/quill.adv:65</sub>
+  - *[aff +1]* <sub>dialogue/quill.adv:66</sub>
   - *→ continues at* [write](#dlg-quill-write)
-- **2.** **FENN**: You're the best eyes on this ship. <sub>dialogue/quill.adv:64</sub>
+- **2.** **FENN**: You're the best eyes on this ship. <sub>dialogue/quill.adv:67</sub>
   - *→ continues at* [eyes](#dlg-quill-eyes)
 
-<a id="dlg-quill-write"></a>`write` **FENN (V.O.)**: I open the Marrow's log at today's page and write, in my best customs hand: “Quill, navigator.” <sub>dialogue/quill.adv:65</sub>
+<a id="dlg-quill-write"></a>`write` **FENN (V.O.)**: I open the Marrow's log at today's page and write, in my best customs hand: “Quill, navigator.” <sub>dialogue/quill.adv:68</sub>
 - *→ continues at* [stupid](#dlg-quill-stupid)
 
-<a id="dlg-quill-stupid"></a>`stupid` **QUILL**: That's the stupidest thing I've ever heard. <sub>dialogue/quill.adv:67</sub>
+<a id="dlg-quill-stupid"></a>`stupid` **QUILL**: That's the stupidest thing I've ever heard. <sub>dialogue/quill.adv:70</sub>
 - *→ continues at* [underline](#dlg-quill-underline)
 
-<a id="dlg-quill-underline"></a>`underline` **QUILL**: …Underline it. <sub>dialogue/quill.adv:69</sub>
+<a id="dlg-quill-underline"></a>`underline` **QUILL**: …Underline it. <sub>dialogue/quill.adv:72</sub>
 - *→ continues at* [sight](#dlg-quill-sight)
 
-<a id="dlg-quill-sight"></a>`sight` **FENN (V.O.)**: She brings the sun down to the horizon in the mirror, reads it off twice, and lays the figures on my father's line. They agree with it. <sub>dialogue/quill.adv:73</sub>
+<a id="dlg-quill-sight"></a>`sight` **FENN (V.O.)**: She brings the sun down to the horizon in the mirror, reads it off twice, and lays the figures on my father's line. They agree with it. <sub>dialogue/quill.adv:76</sub>
 - *→ continues at* [sworn](#dlg-quill-sworn)
 
-<a id="dlg-quill-sworn"></a>`sworn` **QUILL**: The Old Nail lines up with the gap, and your needle lines up with the Old Nail. I'll swear to it. Tell the captain she has a navigator. <sub>dialogue/quill.adv:75</sub>
-- **1.** **FENN**: I'll tell her. <sub>dialogue/quill.adv:76</sub>
-  - *[Fenn hands over: Pell's sextant]* *[sets quill_navigator]* <sub>dialogue/quill.adv:77</sub>
+<a id="dlg-quill-sworn"></a>`sworn` **QUILL**: The Old Nail lines up with the gap, and your needle lines up with the Old Nail. I'll swear to it. Tell the captain she has a navigator. <sub>dialogue/quill.adv:78</sub>
+- **1.** **FENN**: I'll tell her. <sub>dialogue/quill.adv:79</sub>
+  - *[Fenn hands over: Pell's sextant]* *[sets quill_navigator]* <sub>dialogue/quill.adv:80</sub>
   - *[ends]*
-- **2.** **FENN**: Tell her yourself. You've earned the look on her face. <sub>dialogue/quill.adv:79</sub>
-  - *[Fenn hands over: Pell's sextant]* *[sets quill_navigator]* *[aff +1]* <sub>dialogue/quill.adv:80</sub>
+- **2.** **FENN**: Tell her yourself. You've earned the look on her face. <sub>dialogue/quill.adv:82</sub>
+  - *[Fenn hands over: Pell's sextant]* *[sets quill_navigator]* *[aff +1]* <sub>dialogue/quill.adv:83</sub>
   - *→ continues at* [earned](#dlg-quill-earned)
 
-<a id="dlg-quill-earned"></a>`earned` **QUILL**: I'll tell her. You tell the bosun. He likes you better; you haven't stepped on his feet yet. <sub>dialogue/quill.adv:83</sub>
+<a id="dlg-quill-earned"></a>`earned` **QUILL**: I'll tell her. You tell the bosun. He likes you better; you haven't stepped on his feet yet. <sub>dialogue/quill.adv:86</sub>
 - *[ends]*
 
-<a id="dlg-quill-eyes"></a>`eyes` **QUILL**: I know. It's nice to hear it from somebody with handwriting. <sub>dialogue/quill.adv:71</sub>
-- *→ continues at* [sight](#dlg-quill-sight) *(above)*
+<a id="dlg-quill-eyes"></a>`eyes` **QUILL**: I know. It's nice to hear it from somebody with handwriting. …So use it. <sub>dialogue/quill.adv:74</sub>
+- *→ continues at* [write](#dlg-quill-write) *(above)*
 
-<a id="dlg-quill-sums"></a>`sums` **QUILL**: I am the type. But Vane won't take a lookout's word on the reef, and I'm a lookout. <sub>dialogue/quill.adv:57</sub>
-- **1.** **FENN**: Not in the log, you're not. <sub>dialogue/quill.adv:58</sub>
-  - *[aff +1]* <sub>dialogue/quill.adv:59</sub>
+<a id="dlg-quill-sums"></a>`sums` **QUILL**: I am the type. But Vane won't take a lookout's word on the reef, and I'm a lookout. <sub>dialogue/quill.adv:60</sub>
+- **1.** **FENN**: Not in the log, you're not. <sub>dialogue/quill.adv:61</sub>
+  - *[aff +1]* <sub>dialogue/quill.adv:62</sub>
   - *→ continues at* [write](#dlg-quill-write) *(above)*
-- **2.** **FENN**: You're the best eyes on this ship. <sub>dialogue/quill.adv:60</sub>
+- **2.** **FENN**: You're the best eyes on this ship. <sub>dialogue/quill.adv:63</sub>
   - *→ continues at* [eyes](#dlg-quill-eyes) *(above)*
 
 *[nav: opened directly from rooms/marrow_quarterdeck.adv:56]*
 
-<a id="dlg-quill-nav"></a>`nav` **QUILL**: Navigator. It says so in the log, in a clerk's hand, so it must be true. <sub>dialogue/quill.adv:85</sub>
-- **1.** **FENN**: Will you show me the stars? *[if night_watch = false]* <sub>dialogue/quill.adv:86</sub>
+<a id="dlg-quill-nav"></a>`nav` **QUILL**: Navigator. It says so in the log, in a clerk's hand, so it must be true. <sub>dialogue/quill.adv:88</sub>
+- **1.** **FENN**: Will you show me the stars? *[if night_watch = false]* <sub>dialogue/quill.adv:89</sub>
   - *→ continues at* [tonight](#dlg-quill-tonight)
-- **2.** **FENN**: You've been crying. *[if vane_convinced]* <sub>dialogue/quill.adv:87</sub>
+- **2.** **FENN**: You've been crying. *[if vane_convinced]* <sub>dialogue/quill.adv:90</sub>
   - *→ continues at* [salt](#dlg-quill-salt)
-- **3.** **FENN**: What happens at the reef? *[if vane_convinced = false]* <sub>dialogue/quill.adv:88</sub>
+- **3.** **FENN**: What happens at the reef? *[if vane_convinced = false]* <sub>dialogue/quill.adv:91</sub>
   - *→ continues at* [reef](#dlg-quill-reef)
-- **4.** **FENN**: Carry on, navigator. <sub>dialogue/quill.adv:89</sub>
+- **4.** **FENN**: Carry on, navigator. <sub>dialogue/quill.adv:92</sub>
   - *→ continues at* [carry](#dlg-quill-carry)
 
-<a id="dlg-quill-tonight"></a>`tonight` **QUILL**: Tonight. I keep the watch from the crow's nest now. Climb the shrouds when it's dark, and bring your stomach. You'll want it back. <sub>dialogue/quill.adv:90</sub>
-- **1.** **FENN**: It's a date. …A watch. It's a watch. <sub>dialogue/quill.adv:91</sub>
+<a id="dlg-quill-tonight"></a>`tonight` **QUILL**: Tonight. I keep the watch from the crow's nest now. Climb the shrouds when it's dark, and bring your stomach. You'll want it back. <sub>dialogue/quill.adv:93</sub>
+- **1.** **FENN**: I'll dress for it. …For the cold. I'll dress for the cold. <sub>dialogue/quill.adv:94</sub>
   - *→ continues at* [carry](#dlg-quill-carry)
 
-<a id="dlg-quill-carry"></a>`carry` **QUILL**: Go on. I've a sky to check, and it's bigger than you. <sub>dialogue/quill.adv:95</sub>
+<a id="dlg-quill-carry"></a>`carry` **QUILL**: Go on. I've a sky to check, and it's bigger than you. <sub>dialogue/quill.adv:98</sub>
 - *[ends]*
 
-<a id="dlg-quill-salt"></a>`salt` **QUILL**: It's the sextant. It's got salt in it. …Get to the bow, cargo. I'll be on the wheel. <sub>dialogue/quill.adv:94</sub>
+<a id="dlg-quill-salt"></a>`salt` **QUILL**: It's the sextant. It's got salt in it. …Get to the bow, cargo. I'll be on the wheel. <sub>dialogue/quill.adv:97</sub>
 - *[ends]*
 
-<a id="dlg-quill-reef"></a>`reef` **QUILL**: If the captain says yes, I steer and you stand at the bow shouting at a compass. If she says no, we go the long way and nobody ever finds out if you were right. <sub>dialogue/quill.adv:92</sub>
-- **1.** **FENN**: Then she'll have to say yes. <sub>dialogue/quill.adv:93</sub>
+<a id="dlg-quill-reef"></a>`reef` **QUILL**: If the captain says yes, I steer and you stand at the bow shouting at a compass. If she says no, we go the long way and nobody ever finds out if you were right. <sub>dialogue/quill.adv:95</sub>
+- **1.** **FENN**: Then she'll have to say yes. <sub>dialogue/quill.adv:96</sub>
   - *→ continues at* [carry](#dlg-quill-carry) *(above)*
 
 <a id="act2-bow_fog"></a>
@@ -1341,7 +1448,7 @@
 - **Use spyglass on the fog:** Fog, magnified. Very detailed fog. <sub>rooms/bow_fog.adv:58</sub>
 
 <a id="dlg-bearings"></a>
-### Conversation: bearings (Dorrit, Hobb, Captain Vane, Quill)
+### Conversation: bearings (Dorrit, Captain Vane, Hobb, Quill)
 
 *[source:* `dialogue bearings`*, starts at* `fog`*]* <sub>dialogue/bearings.adv:2</sub>
 
@@ -1353,108 +1460,139 @@
   - *→ continues at* [oneOk](#dlg-bearings-oneOk)
 - **2.** **FENN**: “Starboard!” <sub>dialogue/bearings.adv:7</sub>
   - *→ continues at* [oneBad](#dlg-bearings-oneBad)
+- **3.** **FENN**: “Left!” <sub>dialogue/bearings.adv:8</sub>
+  - *→ continues at* [left](#dlg-bearings-left)
 
-<a id="dlg-bearings-oneOk"></a>`oneOk` **QUILL**: Port! Port it is! <sub>dialogue/bearings.adv:18</sub>
+<a id="dlg-bearings-oneOk"></a>`oneOk` **QUILL**: Port! Port it is! <sub>dialogue/bearings.adv:23</sub>
 - *→ continues at* [hail](#dlg-bearings-hail)
 
-<a id="dlg-bearings-hail"></a>`hail` **FENN (V.O.)**: Out of the white to port comes a voice, polite as a doorman, through a speaking-trumpet: “Ahoy, the Marrow! Quarantine inspection! Heave to!” It knows our name. Nobody aboard answers it, and it falls astern, sounding hurt. <sub>dialogue/bearings.adv:20</sub>
+<a id="dlg-bearings-hail"></a>`hail` **FENN (V.O.)**: Out of the white to port, a voice through a speaking-trumpet, polite as a doorman: “Ahoy, the Marrow! Quarantine inspection! Heave to!” <sub>dialogue/bearings.adv:25</sub>
+- *→ continues at* [hail2](#dlg-bearings-hail2)
+
+<a id="dlg-bearings-hail2"></a>`hail2` **FENN (V.O.)**: It knows our name. Somewhere up a flight of wet steps in Port Vela, an old woman is saying: you don't answer. <sub>dialogue/bearings.adv:27</sub>
+- *→ continues at* [nobody](#dlg-bearings-nobody)
+
+<a id="dlg-bearings-nobody"></a>`nobody` **CAPTAIN VANE**: Weather. With a speaking-trumpet. Nobody answer it. <sub>dialogue/bearings.adv:29</sub>
+- *→ continues at* [astern](#dlg-bearings-astern)
+
+<a id="dlg-bearings-astern"></a>`astern` **FENN (V.O.)**: It falls astern, sounding hurt. <sub>dialogue/bearings.adv:31</sub>
 - *→ continues at* [two](#dlg-bearings-two)
 
-<a id="dlg-bearings-two"></a>`two` **FENN (V.O.)**: Dead ahead. The needle is perfectly still, and so is everyone. <sub>dialogue/bearings.adv:22</sub>
-- **1.** **FENN**: “Steady as she goes.” <sub>dialogue/bearings.adv:23</sub>
+<a id="dlg-bearings-two"></a>`two` **FENN (V.O.)**: Dead ahead. The needle is perfectly still, and so is everyone. <sub>dialogue/bearings.adv:33</sub>
+- **1.** **FENN**: “Steady as she goes.” <sub>dialogue/bearings.adv:34</sub>
   - *→ continues at* [twoOk](#dlg-bearings-twoOk)
-- **2.** **FENN**: “Port again!” <sub>dialogue/bearings.adv:24</sub>
+- **2.** **FENN**: “Port again!” <sub>dialogue/bearings.adv:35</sub>
   - *→ continues at* [twoBad](#dlg-bearings-twoBad)
-- **3.** **FENN**: “Is anyone else's heart doing this?” <sub>dialogue/bearings.adv:25</sub>
+- **3.** **FENN**: “Is anyone else's heart doing this?” <sub>dialogue/bearings.adv:36</sub>
   - *→ continues at* [heart](#dlg-bearings-heart)
 
-<a id="dlg-bearings-twoOk"></a>`twoOk` **QUILL**: Steady! <sub>dialogue/bearings.adv:36</sub>
+<a id="dlg-bearings-twoOk"></a>`twoOk` **QUILL**: Steady! <sub>dialogue/bearings.adv:47</sub>
 - *→ continues at* [who](#dlg-bearings-who)
 
-<a id="dlg-bearings-who"></a>`who` **CAPTAIN VANE**: Who taught him that? <sub>dialogue/bearings.adv:38</sub>
-- **1.** **FENN**: (Listen.) *[if night_watch]* <sub>dialogue/bearings.adv:39</sub>
+<a id="dlg-bearings-who"></a>`who` **CAPTAIN VANE**: Who taught him that? <sub>dialogue/bearings.adv:49</sub>
+- **1.** **FENN**: (Listen.) *[if night_watch]* <sub>dialogue/bearings.adv:50</sub>
   - *→ continues at* [me](#dlg-bearings-me)
-- **2.** **FENN**: (Listen.) *[if night_watch = false]* <sub>dialogue/bearings.adv:40</sub>
+- **2.** **FENN**: (Listen.) *[if night_watch = false]* <sub>dialogue/bearings.adv:51</sub>
   - *→ continues at* [natural](#dlg-bearings-natural)
 
-<a id="dlg-bearings-me"></a>`me` **QUILL**: Me. Last night. <sub>dialogue/bearings.adv:41</sub>
+<a id="dlg-bearings-me"></a>`me` **QUILL**: Me. Last night. <sub>dialogue/bearings.adv:52</sub>
 - *→ continues at* [three](#dlg-bearings-three)
 
-<a id="dlg-bearings-three"></a>`three` **FENN (V.O.)**: Right, gently. The needle leans a hair to the right, and the rocks are close enough to read. <sub>dialogue/bearings.adv:45</sub>
-- **1.** **FENN**: “Starboard, a little.” <sub>dialogue/bearings.adv:46</sub>
+<a id="dlg-bearings-three"></a>`three` **FENN (V.O.)**: The needle leans a hair off the bowsprit, to the side I'd shake hands with. The rocks are close enough to read. <sub>dialogue/bearings.adv:56</sub>
+- **1.** **FENN**: “Starboard, a little.” <sub>dialogue/bearings.adv:57</sub>
   - *→ continues at* [threeOk](#dlg-bearings-threeOk)
-- **2.** **FENN**: “Starboard, a lot!” <sub>dialogue/bearings.adv:47</sub>
+- **2.** **FENN**: “Starboard, a lot!” <sub>dialogue/bearings.adv:58</sub>
   - *→ continues at* [threeBad](#dlg-bearings-threeBad)
 
-<a id="dlg-bearings-threeOk"></a>`threeOk` **QUILL**: Good! <sub>dialogue/bearings.adv:54</sub>
+<a id="dlg-bearings-threeOk"></a>`threeOk` **QUILL**: Good! <sub>dialogue/bearings.adv:65</sub>
 - *→ continues at* [good](#dlg-bearings-good)
 
-<a id="dlg-bearings-good"></a>`good` **QUILL**: That was “good”, cargo. Write it down. <sub>dialogue/bearings.adv:56</sub>
-- **1.** **FENN**: Already written. <sub>dialogue/bearings.adv:57</sub>
+<a id="dlg-bearings-good"></a>`good` **QUILL**: That was “good”, cargo. Write it down. <sub>dialogue/bearings.adv:67</sub>
+- **1.** **FENN**: Already written. <sub>dialogue/bearings.adv:68</sub>
   - *→ continues at* [lifts](#dlg-bearings-lifts)
-- **2.** **FENN**: Underlined. <sub>dialogue/bearings.adv:58</sub>
-  - *[aff +1]* <sub>dialogue/bearings.adv:59</sub>
+- **2.** **FENN**: Underlined. <sub>dialogue/bearings.adv:69</sub>
+  - *[aff +1]* <sub>dialogue/bearings.adv:70</sub>
   - *→ continues at* [lifts](#dlg-bearings-lifts)
 
-<a id="dlg-bearings-lifts"></a>`lifts` **FENN (V.O.)**: The fog tears open like a curtain. Inside the reef: a lagoon as flat as glass, and a ship on the rocks, heeled over, masts up. <sub>dialogue/bearings.adv:60</sub>
+<a id="dlg-bearings-lifts"></a>`lifts` **FENN (V.O.)**: The fog tears open like a curtain. Inside the reef: a lagoon as flat as glass, and a ship on the rocks, heeled over, masts up. <sub>dialogue/bearings.adv:71</sub>
 - *→ continues at* [flag](#dlg-bearings-flag)
 
-<a id="dlg-bearings-flag"></a>`flag` **FENN (V.O.)**: At her masthead, somebody has run up a flag made of shirts. <sub>dialogue/bearings.adv:62</sub>
+<a id="dlg-bearings-flag"></a>`flag` **FENN (V.O.)**: At her masthead, somebody has run up a flag made of shirts. <sub>dialogue/bearings.adv:73</sub>
 - *→ continues at* [vane](#dlg-bearings-vane)
 
-<a id="dlg-bearings-vane"></a>`vane` **CAPTAIN VANE**: That's a wreck. And somebody's still flying her colours. <sub>dialogue/bearings.adv:64</sub>
-- **1.** **FENN**: That's the Arcadia. <sub>dialogue/bearings.adv:65</sub>
-  - *[→ Act II ends]* <sub>dialogue/bearings.adv:66</sub>
-  - *[ends]*
-- **2.** **FENN**: (Look back at Quill.) *[if aff ≥ 4]* <sub>dialogue/bearings.adv:67</sub>
+<a id="dlg-bearings-vane"></a>`vane` **CAPTAIN VANE**: That's a wreck. And somebody's still flying her colours. <sub>dialogue/bearings.adv:75</sub>
+- **1.** **FENN**: That's the Arcadia. <sub>dialogue/bearings.adv:76</sub>
+  - *→ continues at* [arcadia](#dlg-bearings-arcadia)
+- **2.** **FENN**: (Look back at Quill.) *[if aff ≥ 4]* <sub>dialogue/bearings.adv:77</sub>
   - *→ continues at* [look](#dlg-bearings-look)
 
-<a id="dlg-bearings-look"></a>`look` **FENN (V.O.)**: At the wheel, Quill is looking at the wreck. Then, for one second, she's looking at me. <sub>dialogue/bearings.adv:68</sub>
-- **1.** **FENN**: That's the Arcadia. <sub>dialogue/bearings.adv:69</sub>
-  - *[→ Act II ends]* <sub>dialogue/bearings.adv:70</sub>
-  - *[ends]*
+<a id="dlg-bearings-arcadia"></a>`arcadia` **FENN**: …And shirts don't last three years in the weather. Somebody ran that up this week. <sub>dialogue/bearings.adv:80</sub>
+- *→ continues at* [alive](#dlg-bearings-alive)
 
-<a id="dlg-bearings-threeBad"></a>`threeBad` **HOBB**: How much is a lot? <sub>dialogue/bearings.adv:48</sub>
+<a id="dlg-bearings-alive"></a>`alive` **CAPTAIN VANE**: Somebody's alive in there. <sub>dialogue/bearings.adv:82</sub>
+- *→ continues at* [smoke](#dlg-bearings-smoke)
+
+<a id="dlg-bearings-smoke"></a>`smoke` **CAPTAIN VANE**: And here's the fog, closing in behind her again. I'll not run the Marrow blind through that twice. We stand off outside the reef. <sub>dialogue/bearings.adv:84</sub>
+- *→ continues at* [boat](#dlg-bearings-boat)
+
+<a id="dlg-bearings-boat"></a>`boat` **CAPTAIN VANE**: Quill, take the boat in. Fenn: find out who's flying that rag, and run me up a new one I can steer by. <sub>dialogue/bearings.adv:86</sub>
+- *→ continues at* [sorry](#dlg-bearings-sorry)
+
+<a id="dlg-bearings-sorry"></a>`sorry` **CAPTAIN VANE**: If the old one's still up when the fog lifts, I'll assume you're both dead. And I'll be sorry. <sub>dialogue/bearings.adv:88</sub>
+- *[→ Act II ends]* <sub>dialogue/bearings.adv:89</sub>
+- *[ends]*
+
+<a id="dlg-bearings-look"></a>`look` **FENN (V.O.)**: At the wheel, Quill is looking at the wreck. Then, for one second, she's looking at me. <sub>dialogue/bearings.adv:78</sub>
+- **1.** **FENN**: That's the Arcadia. <sub>dialogue/bearings.adv:79</sub>
+  - *→ continues at* [arcadia](#dlg-bearings-arcadia) *(above)*
+
+<a id="dlg-bearings-threeBad"></a>`threeBad` **HOBB**: How much is a lot? <sub>dialogue/bearings.adv:59</sub>
 - *→ continues at* [threeBad2](#dlg-bearings-threeBad2)
 
-<a id="dlg-bearings-threeBad2"></a>`threeBad2` **CAPTAIN VANE**: Less than that! <sub>dialogue/bearings.adv:50</sub>
+<a id="dlg-bearings-threeBad2"></a>`threeBad2` **CAPTAIN VANE**: Less than that! <sub>dialogue/bearings.adv:61</sub>
 - *→ continues at* [threeScrape](#dlg-bearings-threeScrape)
 
-<a id="dlg-bearings-threeScrape"></a>`threeScrape` **FENN (V.O.)**: The bowsprit swings past the gap and back again, like a man who's forgotten which door is his. <sub>dialogue/bearings.adv:52</sub>
+<a id="dlg-bearings-threeScrape"></a>`threeScrape` **FENN (V.O.)**: The bowsprit swings past the gap and back again, like a man who's forgotten which door is his. <sub>dialogue/bearings.adv:63</sub>
 - *→ continues at* [three](#dlg-bearings-three) *(above)*
 
-<a id="dlg-bearings-natural"></a>`natural` **QUILL**: Nobody. He reads it off a compass like it's a form. Don't tell him. <sub>dialogue/bearings.adv:43</sub>
+<a id="dlg-bearings-natural"></a>`natural` **QUILL**: Nobody. He reads it off a compass like it's a form. Don't tell him. <sub>dialogue/bearings.adv:54</sub>
 - *→ continues at* [three](#dlg-bearings-three) *(above)*
 
-<a id="dlg-bearings-twoBad"></a>`twoBad` **DORRIT**: Port again, he says! Is that a request or a regulation? <sub>dialogue/bearings.adv:28</sub>
+<a id="dlg-bearings-twoBad"></a>`twoBad` **DORRIT**: Port again, he says! Is that a request or a regulation? <sub>dialogue/bearings.adv:39</sub>
 - *→ continues at* [twoBad2](#dlg-bearings-twoBad2)
 
-<a id="dlg-bearings-twoBad2"></a>`twoBad2` **CAPTAIN VANE**: Port is where the rocks are, Mr Dorrit! Port is all rocks! <sub>dialogue/bearings.adv:30</sub>
+<a id="dlg-bearings-twoBad2"></a>`twoBad2` **CAPTAIN VANE**: Port is where the rocks are, Mr Dorrit! Port is all rocks! <sub>dialogue/bearings.adv:41</sub>
 - *→ continues at* [twoScrape](#dlg-bearings-twoScrape)
 
-<a id="dlg-bearings-twoScrape"></a>`twoScrape` **FENN (V.O.)**: The Marrow leans away from a rock close enough to sign for. Something in the galley breaks. <sub>dialogue/bearings.adv:32</sub>
+<a id="dlg-bearings-twoScrape"></a>`twoScrape` **FENN (V.O.)**: The Marrow leans away from a rock close enough to sign for. Something in the galley breaks. <sub>dialogue/bearings.adv:43</sub>
 - *→ continues at* [twoRock](#dlg-bearings-twoRock)
 
-<a id="dlg-bearings-twoRock"></a>`twoRock` **QUILL**: Eyes on the needle, cargo! Not on the rocks. The rocks are my job. <sub>dialogue/bearings.adv:34</sub>
+<a id="dlg-bearings-twoRock"></a>`twoRock` **QUILL**: Eyes on the needle, cargo! Not on the rocks. The rocks are my job. <sub>dialogue/bearings.adv:45</sub>
 - *→ continues at* [two](#dlg-bearings-two) *(above)*
 
-<a id="dlg-bearings-heart"></a>`heart` **HOBB**: Yes. <sub>dialogue/bearings.adv:26</sub>
+<a id="dlg-bearings-heart"></a>`heart` **HOBB**: Yes. <sub>dialogue/bearings.adv:37</sub>
 - *→ continues at* [two](#dlg-bearings-two) *(above)*
 
-<a id="dlg-bearings-oneBad"></a>`oneBad` **DORRIT**: He says starboard! <sub>dialogue/bearings.adv:8</sub>
+<a id="dlg-bearings-oneBad"></a>`oneBad` **DORRIT**: He says starboard! <sub>dialogue/bearings.adv:13</sub>
 - *→ continues at* [oneBad2](#dlg-bearings-oneBad2)
 
-<a id="dlg-bearings-oneBad2"></a>`oneBad2` **HOBB**: He means port! <sub>dialogue/bearings.adv:10</sub>
+<a id="dlg-bearings-oneBad2"></a>`oneBad2` **HOBB**: He means port! <sub>dialogue/bearings.adv:15</sub>
 - *→ continues at* [oneBad3](#dlg-bearings-oneBad3)
 
-<a id="dlg-bearings-oneBad3"></a>`oneBad3` **CAPTAIN VANE**: He means whatever doesn't sink us! <sub>dialogue/bearings.adv:12</sub>
+<a id="dlg-bearings-oneBad3"></a>`oneBad3` **CAPTAIN VANE**: He means whatever doesn't sink us! <sub>dialogue/bearings.adv:17</sub>
 - *→ continues at* [oneScrape](#dlg-bearings-oneScrape)
 
-<a id="dlg-bearings-oneScrape"></a>`oneScrape` **FENN (V.O.)**: Something long and patient scrapes down the hull, from the bow to the stern, taking its time. <sub>dialogue/bearings.adv:14</sub>
+<a id="dlg-bearings-oneScrape"></a>`oneScrape` **FENN (V.O.)**: Something long and patient scrapes down the hull, from the bow to the stern, taking its time. <sub>dialogue/bearings.adv:19</sub>
 - *→ continues at* [oneRock](#dlg-bearings-oneRock)
 
-<a id="dlg-bearings-oneRock"></a>`oneRock` **QUILL**: That was a rock, cargo. <sub>dialogue/bearings.adv:16</sub>
+<a id="dlg-bearings-oneRock"></a>`oneRock` **QUILL**: That was a rock. <sub>dialogue/bearings.adv:21</sub>
 - *→ continues at* [one](#dlg-bearings-one) *(above)*
+
+<a id="dlg-bearings-left"></a>`left` **DORRIT**: He says LEFT! Is left a bearing? <sub>dialogue/bearings.adv:9</sub>
+- *→ continues at* [left2](#dlg-bearings-left2)
+
+<a id="dlg-bearings-left2"></a>`left2` **CAPTAIN VANE**: It is today! Port! <sub>dialogue/bearings.adv:11</sub>
+- *→ continues at* [hail](#dlg-bearings-hail) *(above)*
 
 <a id="act2-crows_nest"></a>
 ## The Marrow — Night Watch
@@ -1468,7 +1606,7 @@
 
 **the shrouds** `shrouds` <sub>rooms/crows_nest.adv:21</sub>
 
-- **Look at:** The shrouds, up to the crow's nest. I've been up them once tonight, which is once more than my knees agreed to. <sub>rooms/crows_nest.adv:24</sub>
+- **Look at:** The shrouds. I got two ratlines up them tonight. Quill has entered it as a fall. <sub>rooms/crows_nest.adv:24</sub>
 - **Use:** I've done my climbing for the night. Quill says it's the coming down that kills you. <sub>rooms/crows_nest.adv:25</sub>
 
 **hatch to below decks** `below` <sub>rooms/crows_nest.adv:27</sub>
@@ -1490,11 +1628,11 @@
 
 *[source:* `dialogue watch`*, starts at* `root`*]* <sub>dialogue/watch.adv:2</sub>
 
-<a id="dlg-watch-root"></a>`root` **QUILL**: Took you long enough. Most cargo is sick on the second ratline. <sub>dialogue/watch.adv:3</sub>
-- **1.** **FENN**: I was sick on the first. I'm efficient. <sub>dialogue/watch.adv:4</sub>
+<a id="dlg-watch-root"></a>`root` **QUILL**: Two ratlines. Most cargo doesn't leave the deck. Sit. The sky's the same from down here, just further. <sub>dialogue/watch.adv:3</sub>
+- **1.** **FENN**: Two is a personal best. I'd like it entered. <sub>dialogue/watch.adv:4</sub>
   - *[aff +1]* <sub>dialogue/watch.adv:5</sub>
   - *→ continues at* [laugh](#dlg-watch-laugh)
-- **2.** **FENN**: I wanted to see what you see up here. <sub>dialogue/watch.adv:6</sub>
+- **2.** **FENN**: I wanted to see what you see. <sub>dialogue/watch.adv:6</sub>
   - *[aff +1]* <sub>dialogue/watch.adv:7</sub>
   - *→ continues at* [stars](#dlg-watch-stars)
 
@@ -1508,62 +1646,90 @@
   - *→ continues at* [see](#dlg-watch-see)
 
 <a id="dlg-watch-liar"></a>`liar` **QUILL**: That one. No. That one. …See? Liar. <sub>dialogue/watch.adv:13</sub>
-- **1.** **FENN**: What do you see, when you look out? <sub>dialogue/watch.adv:14</sub>
+- *→ continues at* [steady](#dlg-watch-steady)
+
+<a id="dlg-watch-steady"></a>`steady` **QUILL**: And when the bow's right, you say “steady”. Not “straight on”. A wheel likes being told what to keep, not what to do. <sub>dialogue/watch.adv:15</sub>
+- **1.** **FENN**: What do you see, when you look out? <sub>dialogue/watch.adv:16</sub>
   - *→ continues at* [see](#dlg-watch-see)
 
-<a id="dlg-watch-see"></a>`see` **QUILL**: Everywhere I haven't been yet. …What do you see? <sub>dialogue/watch.adv:15</sub>
-- **1.** **FENN**: Ink. Every ship I ever stamped out of Vela. I used to wonder where they went. <sub>dialogue/watch.adv:16</sub>
-  - *[aff +1]* <sub>dialogue/watch.adv:17</sub>
+<a id="dlg-watch-see"></a>`see` **QUILL**: Everywhere I haven't been yet. …What do you see? <sub>dialogue/watch.adv:17</sub>
+- **1.** **FENN**: Ink. Every ship I ever stamped out of Vela. I used to wonder where they went. <sub>dialogue/watch.adv:18</sub>
+  - *[aff +1]* <sub>dialogue/watch.adv:19</sub>
   - *→ continues at* [ink](#dlg-watch-ink)
-- **2.** **FENN**: Mostly the mast. It's very close. <sub>dialogue/watch.adv:18</sub>
+- **2.** **FENN**: Mostly the mast. It's very close. <sub>dialogue/watch.adv:20</sub>
   - *→ continues at* [mast](#dlg-watch-mast)
 
-<a id="dlg-watch-ink"></a>`ink` **QUILL**: Well. Now you're one of them. <sub>dialogue/watch.adv:19</sub>
+<a id="dlg-watch-ink"></a>`ink` **QUILL**: Well. Now you're one of them. <sub>dialogue/watch.adv:21</sub>
 - *→ continues at* [father](#dlg-watch-father)
 
-<a id="dlg-watch-father"></a>`father` **QUILL**: Your father. You think he's alive. <sub>dialogue/watch.adv:23</sub>
-- **1.** **FENN**: He left the compass for me. You don't do that if you're planning to be dead. <sub>dialogue/watch.adv:24</sub>
-  - *[aff +1]* <sub>dialogue/watch.adv:25</sub>
-  - *→ continues at* [we](#dlg-watch-we)
-- **2.** **FENN**: He owes me three years of birthdays. I intend to collect. <sub>dialogue/watch.adv:26</sub>
+<a id="dlg-watch-father"></a>`father` **QUILL**: Your father. You think he's alive. <sub>dialogue/watch.adv:25</sub>
+- **1.** **FENN**: He left the compass for me. You don't do that if you're planning to be dead. <sub>dialogue/watch.adv:26</sub>
   - *[aff +1]* <sub>dialogue/watch.adv:27</sub>
+  - *→ continues at* [we](#dlg-watch-we)
+- **2.** **FENN**: He owes me three years of birthdays. I intend to collect. <sub>dialogue/watch.adv:28</sub>
+  - *[aff +1]* <sub>dialogue/watch.adv:29</sub>
   - *→ continues at* [collect](#dlg-watch-collect)
+- **3.** **FENN**: He used to name the stars wrong on purpose, so I'd correct him. <sub>dialogue/watch.adv:30</sub>
+  - *[aff +1]* <sub>dialogue/watch.adv:31</sub>
+  - *→ continues at* [corrected](#dlg-watch-corrected)
+- **4.** **FENN**: And yours? *[if seen:watch.yours = false]* <sub>dialogue/watch.adv:32</sub>
+  - *→ continues at* [yours](#dlg-watch-yours)
 
-<a id="dlg-watch-we"></a>`we` **QUILL**: Then we'll find out. …We. Don't read into it. <sub>dialogue/watch.adv:30</sub>
-- **1.** **FENN**: I'm a clerk. I only read what's written. <sub>dialogue/watch.adv:31</sub>
-  - *[sets night_watch]* <sub>dialogue/watch.adv:32</sub>
+<a id="dlg-watch-we"></a>`we` **QUILL**: Then we'll find out. …We. Don't read into it. <sub>dialogue/watch.adv:48</sub>
+- **1.** **FENN**: I'm a clerk. I only read what's written. <sub>dialogue/watch.adv:49</sub>
+  - *[sets night_watch]* <sub>dialogue/watch.adv:50</sub>
   - *→ continues at* [written](#dlg-watch-written)
-- **2.** **FENN**: (Say nothing. Watch the Liar.) <sub>dialogue/watch.adv:33</sub>
-  - *[sets night_watch]* *[aff +1]* <sub>dialogue/watch.adv:34</sub>
+- **2.** **FENN**: (Say nothing. Watch the Liar.) <sub>dialogue/watch.adv:51</sub>
+  - *[sets night_watch]* *[aff +1]* <sub>dialogue/watch.adv:52</sub>
   - *→ continues at* [quiet](#dlg-watch-quiet)
 
-<a id="dlg-watch-written"></a>`written` **QUILL**: Then don't write it down either. …Go to bed, cargo. The Liar will still be here. Roughly. <sub>dialogue/watch.adv:36</sub>
+<a id="dlg-watch-written"></a>`written` **QUILL**: Then don't write it down either. …Go to bed, cargo. The Liar will still be here. Roughly. <sub>dialogue/watch.adv:54</sub>
 - *[ends]*
 
-<a id="dlg-watch-quiet"></a>`quiet` **FENN (V.O.)**: We watch the Liar for a long time. It moves, as advertised. Neither of us mentions that she's stopped calling me cargo for the last hour. <sub>dialogue/watch.adv:37</sub>
+<a id="dlg-watch-quiet"></a>`quiet` **FENN (V.O.)**: We watch the Liar for a long time. It moves, as advertised. Neither of us mentions that she's stopped calling me cargo for the last hour. <sub>dialogue/watch.adv:55</sub>
 - *[ends]*
 
-<a id="dlg-watch-collect"></a>`collect` **QUILL**: With interest. You're a clerk; you'll have worked it out to the penny. <sub>dialogue/watch.adv:28</sub>
+<a id="dlg-watch-collect"></a>`collect` **QUILL**: With interest. You're a clerk; you'll have worked it out to the penny. <sub>dialogue/watch.adv:46</sub>
 - *→ continues at* [we](#dlg-watch-we) *(above)*
 
-<a id="dlg-watch-mast"></a>`mast` **QUILL**: It does that. <sub>dialogue/watch.adv:21</sub>
+<a id="dlg-watch-corrected"></a>`corrected` **QUILL**: Then he's out there somewhere, getting them wrong. Somebody had better go and correct him. <sub>dialogue/watch.adv:44</sub>
+- *→ continues at* [we](#dlg-watch-we) *(above)*
+
+<a id="dlg-watch-yours"></a>`yours` **QUILL**: Pell taught me every star up here. He wasn't my father. He just did all the bits of it that were any use. <sub>dialogue/watch.adv:33</sub>
+- *→ continues at* [yours2](#dlg-watch-yours2)
+
+<a id="dlg-watch-yours2"></a>`yours2` **QUILL**: …Third hammock along. Nobody sleeps in it. Now answer the question, cargo. <sub>dialogue/watch.adv:35</sub>
+- *→ continues at* [father2](#dlg-watch-father2)
+
+<a id="dlg-watch-father2"></a>`father2` **QUILL**: Your father. Alive? <sub>dialogue/watch.adv:37</sub>
+- **1.** **FENN**: He left the compass for me. You don't do that if you're planning to be dead. <sub>dialogue/watch.adv:38</sub>
+  - *[aff +1]* <sub>dialogue/watch.adv:39</sub>
+  - *→ continues at* [we](#dlg-watch-we) *(above)*
+- **2.** **FENN**: He owes me three years of birthdays. I intend to collect. <sub>dialogue/watch.adv:40</sub>
+  - *[aff +1]* <sub>dialogue/watch.adv:41</sub>
+  - *→ continues at* [collect](#dlg-watch-collect) *(above)*
+- **3.** **FENN**: He used to name the stars wrong on purpose, so I'd correct him. <sub>dialogue/watch.adv:42</sub>
+  - *[aff +1]* <sub>dialogue/watch.adv:43</sub>
+  - *→ continues at* [corrected](#dlg-watch-corrected) *(above)*
+
+<a id="dlg-watch-mast"></a>`mast` **QUILL**: It does that. <sub>dialogue/watch.adv:23</sub>
 - *→ continues at* [father](#dlg-watch-father) *(above)*
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
 *[after: opened directly from rooms/crows_nest.adv:41]*
 
-<a id="dlg-watch-after"></a>`after` **QUILL**: Still here? The stars don't need supervising, clerk. Well. Not by you. <sub>dialogue/watch.adv:38</sub>
-- **1.** **FENN**: Show me the Hook again. <sub>dialogue/watch.adv:39</sub>
+<a id="dlg-watch-after"></a>`after` **QUILL**: Still here? The stars don't need supervising, cargo. Well. Not by you. <sub>dialogue/watch.adv:56</sub>
+- **1.** **FENN**: Show me the Hook again. <sub>dialogue/watch.adv:57</sub>
   - *→ continues at* [hook](#dlg-watch-hook)
-- **2.** **FENN**: Goodnight, Quill. <sub>dialogue/watch.adv:40</sub>
+- **2.** **FENN**: Goodnight, Quill. <sub>dialogue/watch.adv:58</sub>
   - *→ continues at* [night](#dlg-watch-night)
 
-<a id="dlg-watch-hook"></a>`hook` **QUILL**: There. Like a question mark somebody forgot to finish. You'd hate it. <sub>dialogue/watch.adv:41</sub>
-- **1.** **FENN**: Goodnight, Quill. <sub>dialogue/watch.adv:42</sub>
+<a id="dlg-watch-hook"></a>`hook` **QUILL**: There. Like a question mark somebody forgot to finish. You'd hate it. <sub>dialogue/watch.adv:59</sub>
+- **1.** **FENN**: Goodnight, Quill. <sub>dialogue/watch.adv:60</sub>
   - *→ continues at* [night](#dlg-watch-night)
 
-<a id="dlg-watch-night"></a>`night` **QUILL**: Night, cargo. Mind the second ratline. <sub>dialogue/watch.adv:43</sub>
+<a id="dlg-watch-night"></a>`night` **QUILL**: Night, cargo. Mind the second ratline. <sub>dialogue/watch.adv:61</sub>
 - *[ends]*
 
 <a id="act2-below_decks"></a>
@@ -1622,43 +1788,44 @@
   - **Look at:** Pell's sea-chest, iron-banded, and for the first time this morning nobody is standing behind it. <sub>rooms/below_decks.adv:77</sub>
   - **Open:** I lift the lid. Inside: a sextant polished to a mirror, and Pell's logbook. The last page is one sentence long, and it doesn't finish. <sub>rooms/below_decks.adv:78</sub>
     - *[Fenn receives: Pell's sextant]* *[Fenn receives: Pell's log]* *[sets chest_open]* *[sound: pickup]* <sub>rooms/below_decks.adv:79</sub>
+    - **FENN (V.O.)**: I leaf back through it. Three years ago: “Arcadia overdue. Harbour says lost. Harbour wrote it Monday. She wasn't due till Thursday.” <sub>rooms/below_decks.adv:83</sub>
 
-**Hobb** `hobb` *[present if dinner = false]* <sub>rooms/below_decks.adv:84</sub>
+**Hobb** `hobb` *[present if dinner = false]* <sub>rooms/below_decks.adv:85</sub>
 
-- **Look at:** Hobb, the bosun, with his arms folded across a lifetime of names. He is guarding a chest the way other men guard a grave. <sub>rooms/below_decks.adv:88</sub>
-- **Talk to:** He looks at me as though I'm a knot somebody tied badly. <sub>rooms/below_decks.adv:89</sub>
-  - *[→ conversation* [hobb](#dlg-hobb) *— below]* <sub>rooms/below_decks.adv:90</sub>
-- **Give:** He doesn't unfold his arms. That's the whole answer. <sub>rooms/below_decks.adv:91</sub>
+- **Look at:** Hobb, the bosun, with his arms folded across a lifetime of names. He is guarding a chest the way other men guard a grave. <sub>rooms/below_decks.adv:89</sub>
+- **Talk to:** He looks at me as though I'm a knot somebody tied badly. <sub>rooms/below_decks.adv:90</sub>
+  - *[→ conversation* [hobb](#dlg-hobb) *— below]* <sub>rooms/below_decks.adv:91</sub>
+- **Give:** He doesn't unfold his arms. That's the whole answer. <sub>rooms/below_decks.adv:92</sub>
 
-**Hobb** `hobb_table` *[present if dinner]* <sub>rooms/below_decks.adv:93</sub>
+**Hobb** `hobb_table` *[present if dinner]* <sub>rooms/below_decks.adv:94</sub>
 
-- **Look at:** Hobb, eating stew with the steady attention of a man who has waited three days for it. <sub>rooms/below_decks.adv:97</sub>
-- **Talk to:** He puts down his spoon. That's a compliment from Hobb. <sub>rooms/below_decks.adv:98</sub>
-  - *[→ conversation* [hobb at table](#dlg-hobb-table) *— below]* <sub>rooms/below_decks.adv:99</sub>
-- **Give:** “Not money. Don't insult me with money.” <sub>rooms/below_decks.adv:100</sub>
-- *When* *[if crew_agree]* <sub>rooms/below_decks.adv:101</sub>
-  - **Talk to:** *[→ conversation* [hobb at fed](#dlg-hobb-fed) *— below]* <sub>rooms/below_decks.adv:102</sub>
+- **Look at:** Hobb, eating stew with the steady attention of a man who has been on biscuit since dawn and took it personally. <sub>rooms/below_decks.adv:98</sub>
+- **Talk to:** He puts down his spoon. That's a compliment from Hobb. <sub>rooms/below_decks.adv:99</sub>
+  - *[→ conversation* [hobb at table](#dlg-hobb-table) *— below]* <sub>rooms/below_decks.adv:100</sub>
+- **Give:** “Not money. Don't insult me with money.” <sub>rooms/below_decks.adv:101</sub>
+- *When* *[if crew_agree]* <sub>rooms/below_decks.adv:102</sub>
+  - **Talk to:** *[→ conversation* [hobb at fed](#dlg-hobb-fed) *— below]* <sub>rooms/below_decks.adv:103</sub>
 
-**Dorrit** `dorrit` *[present if vane_convinced = false]* <sub>rooms/below_decks.adv:105</sub>
+**Dorrit** `dorrit` *[present if vane_convinced = false]* <sub>rooms/below_decks.adv:106</sub>
 
-- **Look at:** Dorrit, the cook, in a spotless apron over a customs officer's waistcoat. He holds his ladle the way I hold a pen. <sub>rooms/below_decks.adv:109</sub>
-- **Talk to:** He straightens his spectacles, which is how he says hello. <sub>rooms/below_decks.adv:110</sub>
-  - *[→ conversation* [dorrit](#dlg-dorrit) *— below]* <sub>rooms/below_decks.adv:111</sub>
-- **Give:** “Nothing changes hands in my galley without a docket.” <sub>rooms/below_decks.adv:112</sub>
-- *When* *[if dinner]* <sub>rooms/below_decks.adv:113</sub>
-  - **Talk to:** *[→ conversation* [dorrit at fed](#dlg-dorrit-fed) *— below]* <sub>rooms/below_decks.adv:114</sub>
+- **Look at:** Dorrit, the cook, in a spotless apron over a customs officer's waistcoat. He holds his ladle the way I hold a pen. <sub>rooms/below_decks.adv:110</sub>
+- **Talk to:** He straightens his spectacles, which is how he says hello. <sub>rooms/below_decks.adv:111</sub>
+  - *[→ conversation* [dorrit](#dlg-dorrit) *— below]* <sub>rooms/below_decks.adv:112</sub>
+- **Give:** “Nothing changes hands in my galley without a docket.” <sub>rooms/below_decks.adv:113</sub>
+- *When* *[if dinner]* <sub>rooms/below_decks.adv:114</sub>
+  - **Talk to:** *[→ conversation* [dorrit at fed](#dlg-dorrit-fed) *— below]* <sub>rooms/below_decks.adv:115</sub>
 
 **Combinations here**
 
-- **Use harbour stamp on stew pot:** *[if dinner = false]* I fish out a potato and stamp it. Dorrit takes off his spectacles to look at it properly. <sub>rooms/below_decks.adv:117</sub>
-  - *[→ conversation* [dorrit at passed](#dlg-dorrit-passed) *— below]* <sub>rooms/below_decks.adv:118</sub>
-- **Use harbour stamp on stew pot:** It's been passed once. Passing it twice would be showing off. <sub>rooms/below_decks.adv:120</sub>
-- **Use harbour stamp on Dorrit:** *[if dinner = false]* “Not me, clerk. The stew. I have been passed already, many years ago, with reservations.” <sub>rooms/below_decks.adv:122</sub>
-- **Use manifest copy on Hobb:** *[if vane_terms]* I lay the Arcadia's manifest beside his bowl. <sub>rooms/below_decks.adv:124</sub>
-  - *[→ conversation* [hobb at manifest](#dlg-hobb-manifest) *— below]* <sub>rooms/below_decks.adv:125</sub>
-- **Use manifest copy on Hobb:** Hobb pushes it back with one finger. “Captain hasn't said south. Till she does, that's just a list.” <sub>rooms/below_decks.adv:127</sub>
-- **Use manifest copy on Hobb:** “I don't read on an empty stomach, clerk. Nobody on this ship has eaten since Dorrit lost his stamp.” <sub>rooms/below_decks.adv:129</sub>
-- **Use crowbar on Pell's sea-chest:** I look at the crowbar, and then at Hobb, and then I put the crowbar away. <sub>rooms/below_decks.adv:131</sub>
+- **Use harbour stamp on stew pot:** *[if dinner = false]* I fish out a potato and stamp it. Dorrit takes off his spectacles to look at it properly. <sub>rooms/below_decks.adv:118</sub>
+  - *[→ conversation* [dorrit at passed](#dlg-dorrit-passed) *— below]* <sub>rooms/below_decks.adv:119</sub>
+- **Use harbour stamp on stew pot:** It's been passed once. Passing it twice would be showing off. <sub>rooms/below_decks.adv:121</sub>
+- **Use harbour stamp on Dorrit:** *[if dinner = false]* “Not me, clerk. The stew. I have been passed already, many years ago, with reservations.” <sub>rooms/below_decks.adv:123</sub>
+- **Use manifest copy on Hobb:** *[if vane_terms]* I lay the Arcadia's manifest beside his bowl. <sub>rooms/below_decks.adv:125</sub>
+  - *[→ conversation* [hobb at manifest](#dlg-hobb-manifest) *— below]* <sub>rooms/below_decks.adv:126</sub>
+- **Use manifest copy on Hobb:** Hobb pushes it back with one finger. “Captain hasn't said south. Till she does, that's just a list.” <sub>rooms/below_decks.adv:128</sub>
+- **Use manifest copy on Hobb:** “I don't read on an empty stomach, clerk. Nobody on this ship has eaten since Port Vela.” <sub>rooms/below_decks.adv:130</sub>
+- **Use crowbar on Pell's sea-chest:** I look at the crowbar, and then at Hobb, and then I put the crowbar away. <sub>rooms/below_decks.adv:132</sub>
 
 <a id="dlg-hobb"></a>
 ### Conversation: hobb (Hobb)
@@ -1666,7 +1833,7 @@
 *[source:* `dialogue hobb`*, starts at* `root`*]* <sub>dialogue/hobb.adv:1</sub>
 
 <a id="dlg-hobb-root"></a>`root` **HOBB**: Pell's chest. Nobody opens it. …Bosun's orders. I'm the bosun. <sub>dialogue/hobb.adv:2</sub>
-- **1.** **FENN**: When does anyone move round here? <sub>dialogue/hobb.adv:3</sub>
+- **1.** **FENN**: Do you ever leave it? <sub>dialogue/hobb.adv:3</sub>
   - *→ continues at* [move](#dlg-hobb-move)
 - **2.** **FENN**: Those tattoos. *[if seen:hobb.names = false]* <sub>dialogue/hobb.adv:4</sub>
   - *→ continues at* [names](#dlg-hobb-names)
@@ -1681,8 +1848,8 @@
 - **2.** **FENN**: Right. Dinner. <sub>dialogue/hobb.adv:9</sub>
   - *→ continues at* [bye](#dlg-hobb-bye)
 
-<a id="dlg-hobb-dorrit"></a>`dorrit` **HOBB**: When the stew's passed. Stew's never passed. We've been eating biscuit since Vela. <sub>dialogue/hobb.adv:10</sub>
-- **1.** **FENN**: I see. <sub>dialogue/hobb.adv:11</sub>
+<a id="dlg-hobb-dorrit"></a>`dorrit` **HOBB**: When the stew's passed. Stew's never passed. We've been on biscuit since Vela. …This morning. Feels longer. <sub>dialogue/hobb.adv:10</sub>
+- **1.** **FENN**: Right. Biscuit. <sub>dialogue/hobb.adv:11</sub>
   - *→ continues at* [bye](#dlg-hobb-bye)
 
 <a id="dlg-hobb-bye"></a>`bye` **HOBB**: Good. <sub>dialogue/hobb.adv:19</sub>
@@ -1706,7 +1873,7 @@
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
-*[table: opened directly from rooms/below_decks.adv:99]*
+*[table: opened directly from rooms/below_decks.adv:100]*
 
 <a id="dlg-hobb-table"></a>`table` **HOBB**: Nobody goes south of the reef for money. …Only for blood. <sub>dialogue/hobb.adv:21</sub>
 - **1.** **FENN**: Whose blood? <sub>dialogue/hobb.adv:22</sub>
@@ -1724,7 +1891,7 @@
 <a id="dlg-hobb-stew"></a>`stew` **HOBB**: It's stamped. <sub>dialogue/hobb.adv:27</sub>
 - *[ends]*
 
-*[manifest: opened directly from rooms/below_decks.adv:125]*
+*[manifest: opened directly from rooms/below_decks.adv:126]*
 
 <a id="dlg-hobb-manifest"></a>`manifest` **FENN (V.O.)**: Hobb runs one thick finger down the Arcadia's twenty-two names. The finger stops. <sub>dialogue/hobb.adv:29</sub>
 - *→ continues at* [tam](#dlg-hobb-tam)
@@ -1732,7 +1899,7 @@
 <a id="dlg-hobb-tam"></a>`tam` **HOBB**: Tam Hobb. Able seaman. <sub>dialogue/hobb.adv:31</sub>
 - *→ continues at* [sleeve](#dlg-hobb-sleeve)
 
-<a id="dlg-hobb-sleeve"></a>`sleeve` **FENN (V.O.)**: He rolls up his sleeve. Under Pell, under a dozen others, in older ink: TAM. <sub>dialogue/hobb.adv:33</sub>
+<a id="dlg-hobb-sleeve"></a>`sleeve` **FENN (V.O.)**: He rolls up his sleeve. Under a dozen others, in older ink: TAM. <sub>dialogue/hobb.adv:33</sub>
 - *→ continues at* [brother](#dlg-hobb-brother)
 
 <a id="dlg-hobb-brother"></a>`brother` **HOBB**: My brother. Lost with the Arcadia, three years back. …South it is. I'll tell the lads. <sub>dialogue/hobb.adv:35</sub>
@@ -1740,19 +1907,30 @@
   - *[sets crew_agree]* <sub>dialogue/hobb.adv:37</sub>
   - *[casebook:* Hobb found his brother on the Arcadia's manifest: Tam Hobb, able seaman, lost. The crew will sail south. The bosun rolled up his sleeve to tell me so, which I gather is the equivalent of a signature.*]* <sub>dialogue/hobb.adv:38</sub>
   - *→ continues at* [room](#dlg-hobb-room)
-- **2.** **FENN**: Thank you, Hobb. <sub>dialogue/hobb.adv:39</sub>
+- **2.** **FENN**: There's a boy in Upper Town called Tam. He counts the ships in. *[if seen:tam.dad]* <sub>dialogue/hobb.adv:39</sub>
   - *[sets crew_agree]* <sub>dialogue/hobb.adv:40</sub>
+  - *[casebook:* Hobb found his brother on the Arcadia's manifest: Tam Hobb, able seaman, lost. The crew will sail south. The bosun rolled up his sleeve to tell me so, which I gather is the equivalent of a signature.*]* <sub>dialogue/hobb.adv:41</sub>
+  - *→ continues at* [nephew](#dlg-hobb-nephew)
+- **3.** **FENN**: Thank you, Hobb. <sub>dialogue/hobb.adv:42</sub>
+  - *[sets crew_agree]* <sub>dialogue/hobb.adv:43</sub>
+  - *[casebook:* Hobb found his brother on the Arcadia's manifest: Tam Hobb, able seaman, lost. The crew will sail south. The bosun rolled up his sleeve to tell me so, which I gather is the equivalent of a signature.*]* <sub>dialogue/hobb.adv:44</sub>
   - *→ continues at* [dont](#dlg-hobb-dont)
 
-<a id="dlg-hobb-room"></a>`room` **HOBB**: Then I'll leave the room on my arm empty. For now. <sub>dialogue/hobb.adv:41</sub>
+<a id="dlg-hobb-room"></a>`room` **HOBB**: …Then I had that one done early. <sub>dialogue/hobb.adv:45</sub>
 - *[ends]*
 
-<a id="dlg-hobb-dont"></a>`dont` **HOBB**: Don't thank me. Be right. <sub>dialogue/hobb.adv:42</sub>
+<a id="dlg-hobb-nephew"></a>`nephew` **HOBB**: …He'd be about nine. <sub>dialogue/hobb.adv:46</sub>
+- *→ continues at* [nephew2](#dlg-hobb-nephew2)
+
+<a id="dlg-hobb-nephew2"></a>`nephew2` **HOBB**: Then it's south twice. <sub>dialogue/hobb.adv:48</sub>
 - *[ends]*
 
-*[fed: opened directly from rooms/below_decks.adv:102]*
+<a id="dlg-hobb-dont"></a>`dont` **HOBB**: Be right. That'll do for thanks. <sub>dialogue/hobb.adv:49</sub>
+- *[ends]*
 
-<a id="dlg-hobb-fed"></a>`fed` **HOBB**: The lads are with you. Don't make me get the needle out for you, clerk. <sub>dialogue/hobb.adv:43</sub>
+*[fed: opened directly from rooms/below_decks.adv:103]*
+
+<a id="dlg-hobb-fed"></a>`fed` **HOBB**: The lads are with you. Don't make me get the needle out for you, clerk. <sub>dialogue/hobb.adv:50</sub>
 - *[ends]*
 
 <a id="dlg-dorrit"></a>
@@ -1768,7 +1946,7 @@
 - **3.** **FENN**: Good day, Mr Dorrit. <sub>dialogue/dorrit.adv:5</sub>
   - *→ continues at* [bye](#dlg-dorrit-bye)
 
-<a id="dlg-dorrit-stamp"></a>`stamp` **DORRIT**: The stew has not been passed. I have no stamp. I left it in Port Vela with my pension. <sub>dialogue/dorrit.adv:6</sub>
+<a id="dlg-dorrit-stamp"></a>`stamp` **DORRIT**: The stew has not been passed. I have no stamp. I left it in Port Vela, in my desk. I never resigned. I simply stopped coming in. <sub>dialogue/dorrit.adv:6</sub>
 - **1.** **FENN**: Couldn't you just… serve it? <sub>dialogue/dorrit.adv:7</sub>
   - *→ continues at* [serve](#dlg-dorrit-serve)
 - **2.** **FENN**: I have a harbour stamp. *[if has harbour stamp]* <sub>dialogue/dorrit.adv:8</sub>
@@ -1794,7 +1972,7 @@
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
-*[passed: opened directly from rooms/below_decks.adv:118]*
+*[passed: opened directly from rooms/below_decks.adv:119]*
 
 <a id="dlg-dorrit-passed"></a>`passed` **DORRIT**: PASSED FOR CONSUMPTION. In purple. On a potato. …Beautiful. Regulation ink. <sub>dialogue/dorrit.adv:18</sub>
 - **1.** **FENN**: You're welcome. <sub>dialogue/dorrit.adv:19</sub>
@@ -1807,7 +1985,7 @@
 <a id="dlg-dorrit-gong"></a>`gong` **FENN (V.O.)**: He strikes the gong. The whole ship arrives at once, Hobb first, and the bosun's place by Pell's chest is suddenly very empty. <sub>dialogue/dorrit.adv:25</sub>
 - *[ends]*
 
-*[fed: opened directly from rooms/below_decks.adv:114]*
+*[fed: opened directly from rooms/below_decks.adv:115]*
 
 <a id="dlg-dorrit-fed"></a>`fed` **DORRIT**: Seconds are available on application. Thirds require a countersignature. <sub>dialogue/dorrit.adv:26</sub>
 - **1.** **FENN**: Where did you learn to cook? <sub>dialogue/dorrit.adv:27</sub>
@@ -1828,7 +2006,7 @@
 
 **the Straits** `seas` <sub>rooms/marrow_quarterdeck.adv:17</sub>
 
-- **Look at:** The Straits, ahead and to starboard, grey where the weather sits on them. Six ships in three years went in there. None of them came out with a crew. <sub>rooms/marrow_quarterdeck.adv:20</sub>
+- **Look at:** The Straits, ahead and to starboard, grey where the weather sits on them. Six ships in three years went in there. Five came out with nobody aboard. One didn't come out at all. <sub>rooms/marrow_quarterdeck.adv:20</sub>
 - **Use:** I hold the compass up. The needle settles, patient as a dog at a door. <sub>rooms/marrow_quarterdeck.adv:21</sub>
 
 **the wheel** `wheel` <sub>rooms/marrow_quarterdeck.adv:23</sub>
@@ -1858,7 +2036,7 @@
 **Quill** `quill` *[present if quill_navigator]* <sub>rooms/marrow_quarterdeck.adv:50</sub>
 
 - **Look at:** Quill, navigator, with Pell's sextant on a cord round her neck. She keeps touching it to make sure it's still there and pretending she isn't. <sub>rooms/marrow_quarterdeck.adv:54</sub>
-- **Talk to:** She looks up from her figures as if she'd heard me coming a mile off. She probably had. <sub>rooms/marrow_quarterdeck.adv:55</sub>
+- **Talk to:** She heard me three steps ago. She finishes her sum first, so I know where I rank. <sub>rooms/marrow_quarterdeck.adv:55</sub>
   - *[→ conversation* [quill at nav](#dlg-quill-nav) *— see Act II › The Marrow — Main Deck]* <sub>rooms/marrow_quarterdeck.adv:56</sub>
 - **Give:** “If it isn't a star or a bearing, cargo, I don't need it.” <sub>rooms/marrow_quarterdeck.adv:57</sub>
 
@@ -1892,33 +2070,34 @@
 
 **the bunk** `bunk` <sub>rooms/marrow_cabin.adv:27</sub>
 
-- **Look at:** A bunk, made with the corners of a woman who has done it herself for a long time. Under the pillow, a romance novel, face down and well read. Its bookmark is a letter from an insurance office, which says something about both. <sub>rooms/marrow_cabin.adv:30</sub>
+- **Look at:** A bunk, made with the corners of a woman who has done it herself for a long time. Under the pillow, a romance novel, face down and well read. <sub>rooms/marrow_cabin.adv:30</sub>
+  - **FENN (V.O.)**: Its bookmark is a letter from an insurance office, which says something about both. <sub>rooms/marrow_cabin.adv:31</sub>
 
-**door to the quarterdeck** `door_out` <sub>rooms/marrow_cabin.adv:32</sub>
+**door to the quarterdeck** `door_out` <sub>rooms/marrow_cabin.adv:33</sub>
 
-- **Look at:** The door back out to the quarterdeck. <sub>rooms/marrow_cabin.adv:36</sub>
-- **Use / Open / Walk to:** *[→ goes to The Marrow — Quarterdeck]* <sub>rooms/marrow_cabin.adv:35</sub>
+- **Look at:** The door back out to the quarterdeck. <sub>rooms/marrow_cabin.adv:37</sub>
+- **Use / Open / Walk to:** *[→ goes to The Marrow — Quarterdeck]* <sub>rooms/marrow_cabin.adv:36</sub>
 
-**Captain Vane** `vane` *[present if vane_convinced = false]* <sub>rooms/marrow_cabin.adv:39</sub>
+**Captain Vane** `vane` *[present if vane_convinced = false]* <sub>rooms/marrow_cabin.adv:40</sub>
 
-- **Look at:** Captain Vane. She has the coat of a woman who has been rich and the eyes of one who has been poor since. <sub>rooms/marrow_cabin.adv:43</sub>
-- **Talk to:** She looks up from the chart with the expression of someone interrupting herself. <sub>rooms/marrow_cabin.adv:44</sub>
-  - *[→ conversation* [vane](#dlg-vane) *— below]* <sub>rooms/marrow_cabin.adv:45</sub>
-- **Give:** She looks at it, then at me, and waits for me to put it away. <sub>rooms/marrow_cabin.adv:46</sub>
+- **Look at:** Captain Vane. She has the coat of a woman who has been rich and the eyes of one who has been poor since. <sub>rooms/marrow_cabin.adv:44</sub>
+- **Talk to:** She looks up from the chart with the expression of someone interrupting herself. <sub>rooms/marrow_cabin.adv:45</sub>
+  - *[→ conversation* [vane](#dlg-vane) *— below]* <sub>rooms/marrow_cabin.adv:46</sub>
+- **Give:** She looks at it, then at me, and waits for me to put it away. <sub>rooms/marrow_cabin.adv:47</sub>
 
 **Combinations here**
 
-- **Use brass compass on chart table:** *[if vane_terms = false]* I set the compass on the chart. The needle swings past north as if north had insulted it, and settles on a line straight through the reef. Vane comes round the table very slowly. <sub>rooms/marrow_cabin.adv:49</sub>
-  - *[→ conversation* [vane at compass](#dlg-vane-compass) *— below]* <sub>rooms/marrow_cabin.adv:50</sub>
-- **Use brass compass on chart table:** The needle still points straight through the reef. Vane doesn't need to see it again. She needs three reasons. <sub>rooms/marrow_cabin.adv:52</sub>
-- **Use Pell's log on Captain Vane:** *[if vane_terms and quill_navigator and crew_agree]* I put Pell's log on the chart table, open at the last page. Vane doesn't look down at it. She knows the handwriting from here. <sub>rooms/marrow_cabin.adv:54</sub>
-  - *[→ conversation* [vane at log](#dlg-vane-log) *— below]* <sub>rooms/marrow_cabin.adv:55</sub>
-- **Use Pell's log on Captain Vane:** *[if vane_terms]* She puts a hand flat on the log without opening it. “Not yet, clerk. A navigator and a crew first. Then you can break my heart.” <sub>rooms/marrow_cabin.adv:57</sub>
-- **Use Pell's log on Captain Vane:** Her face shuts like a hatch. “That's Pell's. Put it back where you found it.” <sub>rooms/marrow_cabin.adv:59</sub>
-- **Use Pell's sextant on Captain Vane:** “Pell's sextant.” She doesn't take it. “Give it to someone who can use it. I have someone in mind. So, I suspect, do you.” <sub>rooms/marrow_cabin.adv:61</sub>
-- **Use manifest copy on Captain Vane:** She reads the names and hands it back. “Twenty-two. I know where you're going with that, clerk. Take it below, to someone who'll go there with you.” <sub>rooms/marrow_cabin.adv:63</sub>
-- **Use brass compass on Captain Vane:** *[if vane_terms = false]* She doesn't look at it. “Show me on the chart, clerk. I don't take bearings off people's palms.” <sub>rooms/marrow_cabin.adv:65</sub>
-- **Use brass compass on Captain Vane:** “I've seen where it points. Now bring me three reasons it's allowed to.” <sub>rooms/marrow_cabin.adv:67</sub>
+- **Use brass compass on chart table:** *[if vane_terms = false]* I set the compass on the chart. The needle swings past north and settles on a line straight through the reef. Vane comes round the table very slowly. <sub>rooms/marrow_cabin.adv:50</sub>
+  - *[→ conversation* [vane at compass](#dlg-vane-compass) *— below]* <sub>rooms/marrow_cabin.adv:51</sub>
+- **Use brass compass on chart table:** The needle still points straight through the reef. Vane doesn't need to see it again. She needs three reasons. <sub>rooms/marrow_cabin.adv:53</sub>
+- **Use Pell's log on Captain Vane:** *[if vane_terms and quill_navigator and crew_agree]* I put Pell's log on the chart table, open at the last page. Vane doesn't look down at it. She knows the handwriting from here. <sub>rooms/marrow_cabin.adv:55</sub>
+  - *[→ conversation* [vane at log](#dlg-vane-log) *— below]* <sub>rooms/marrow_cabin.adv:56</sub>
+- **Use Pell's log on Captain Vane:** *[if vane_terms]* She puts a hand flat on the log without opening it. “Not yet, clerk. A navigator and a crew first. Then you can break my heart.” <sub>rooms/marrow_cabin.adv:58</sub>
+- **Use Pell's log on Captain Vane:** Her face shuts like a hatch. “That's Pell's. Put it back where you found it.” <sub>rooms/marrow_cabin.adv:60</sub>
+- **Use Pell's sextant on Captain Vane:** “Pell's sextant.” She doesn't take it. “Give it to someone who can use it. I have someone in mind. So, I suspect, do you.” <sub>rooms/marrow_cabin.adv:62</sub>
+- **Use manifest copy on Captain Vane:** She reads the names and hands it back. “Twenty-two. I know where you're going with that, clerk. Take it below, to someone who'll go there with you.” <sub>rooms/marrow_cabin.adv:64</sub>
+- **Use brass compass on Captain Vane:** *[if vane_terms = false]* She doesn't look at it. “Show me on the chart, clerk. I don't take bearings off people's palms.” <sub>rooms/marrow_cabin.adv:66</sub>
+- **Use brass compass on Captain Vane:** “I've seen where it points. Now bring me three reasons it's allowed to.” <sub>rooms/marrow_cabin.adv:68</sub>
 
 <a id="dlg-vane"></a>
 ### Conversation: vane (Captain Vane)
@@ -1937,25 +2116,25 @@
 - **5.** **FENN**: Nothing, captain. <sub>dialogue/vane.adv:7</sub>
   - *→ continues at* [bye](#dlg-vane-bye)
 
-<a id="dlg-vane-count"></a>`count` **CAPTAIN VANE**: A navigator, a crew, and a reason Pell would have. Count them for me, clerk. Slowly. <sub>dialogue/vane.adv:19</sub>
-- **1.** **FENN**: Quill has sworn to the line. *[if quill_navigator]* <sub>dialogue/vane.adv:20</sub>
+<a id="dlg-vane-count"></a>`count` **CAPTAIN VANE**: A navigator, a crew, and a reason Pell would have. Count them for me, clerk. Slowly. <sub>dialogue/vane.adv:27</sub>
+- **1.** **FENN**: Quill has sworn to the line. *[if quill_navigator]* <sub>dialogue/vane.adv:28</sub>
   - *→ continues at* [quill](#dlg-vane-quill)
-- **2.** **FENN**: The crew will sail it. *[if crew_agree]* <sub>dialogue/vane.adv:21</sub>
+- **2.** **FENN**: The crew will sail it. *[if crew_agree]* <sub>dialogue/vane.adv:29</sub>
   - *→ continues at* [crew](#dlg-vane-crew)
-- **3.** **FENN**: Still counting. <sub>dialogue/vane.adv:22</sub>
+- **3.** **FENN**: Still counting. <sub>dialogue/vane.adv:30</sub>
   - *→ continues at* [counting](#dlg-vane-counting)
 
-<a id="dlg-vane-quill"></a>`quill` **CAPTAIN VANE**: Quill. Pell said she had the best eyes he ever saw and the worst patience. He'd have liked this. He'd have pretended not to. <sub>dialogue/vane.adv:23</sub>
-- **1.** **FENN**: The crew will sail it. *[if crew_agree]* <sub>dialogue/vane.adv:24</sub>
+<a id="dlg-vane-quill"></a>`quill` **CAPTAIN VANE**: Quill. Pell said she had the best eyes he ever saw and the worst patience. He'd have liked this. He'd have pretended not to. <sub>dialogue/vane.adv:31</sub>
+- **1.** **FENN**: The crew will sail it. *[if crew_agree]* <sub>dialogue/vane.adv:32</sub>
   - *→ continues at* [crew](#dlg-vane-crew)
-- **2.** **FENN**: That's one. <sub>dialogue/vane.adv:25</sub>
+- **2.** **FENN**: That's one. <sub>dialogue/vane.adv:33</sub>
   - *→ continues at* [counting](#dlg-vane-counting)
 
-<a id="dlg-vane-crew"></a>`crew` **CAPTAIN VANE**: Hobb told me. He rolled up his sleeve to do it. In nine years I've never seen his whole arm. <sub>dialogue/vane.adv:26</sub>
-- **1.** **FENN**: That's two. <sub>dialogue/vane.adv:27</sub>
+<a id="dlg-vane-crew"></a>`crew` **CAPTAIN VANE**: Hobb told me. He rolled up his sleeve to do it. In nine years I've never seen his whole arm. <sub>dialogue/vane.adv:34</sub>
+- **1.** **FENN**: That's two. <sub>dialogue/vane.adv:35</sub>
   - *→ continues at* [counting](#dlg-vane-counting)
 
-<a id="dlg-vane-counting"></a>`counting` **CAPTAIN VANE**: And the third is the one you can't fetch from a sea-chest, clerk. Off you go. <sub>dialogue/vane.adv:28</sub>
+<a id="dlg-vane-counting"></a>`counting` **CAPTAIN VANE**: And a reason Pell would have. Pell never said anything he hadn't written down first, clerk. Off you go. <sub>dialogue/vane.adv:36</sub>
 - *[ends]*
 
 <a id="dlg-vane-course"></a>`course` **CAPTAIN VANE**: We sail Pell's line, north of the reef. Two days longer and nobody's ever been lost on it. Nobody runs the south side. Nobody who comes back. <sub>dialogue/vane.adv:11</sub>
@@ -1968,13 +2147,27 @@
 - **1.** **FENN**: Yes, captain. <sub>dialogue/vane.adv:15</sub>
   - *→ continues at* [bye](#dlg-vane-bye)
 
-<a id="dlg-vane-bye"></a>`bye` **CAPTAIN VANE**: Off my deck, clerk. <sub>dialogue/vane.adv:29</sub>
+<a id="dlg-vane-bye"></a>`bye` **CAPTAIN VANE**: Off my deck, clerk. <sub>dialogue/vane.adv:37</sub>
 - *[ends]*
 
-<a id="dlg-vane-ships"></a>`ships` **CAPTAIN VANE**: Six ships in three years. Found drifting, sails set, holds empty, not a soul aboard. The insurers paid out for weather. That same year they refused my claim for a real storm. Funny thing, weather. <sub>dialogue/vane.adv:16</sub>
-- **1.** **FENN**: Where's your navigator? *[if seen:vane.pell = false]* <sub>dialogue/vane.adv:17</sub>
+<a id="dlg-vane-ships"></a>`ships` **CAPTAIN VANE**: Six ships in three years. Five found drifting, holds empty, not a soul aboard. The sixth was the Arcadia, and nobody found so much as a plank. <sub>dialogue/vane.adv:16</sub>
+- *→ continues at* [insurers](#dlg-vane-insurers)
+
+<a id="dlg-vane-insurers"></a>`insurers` **CAPTAIN VANE**: The insurers paid on all six, for weather. That same year they refused my claim for a real storm. <sub>dialogue/vane.adv:18</sub>
+- *→ continues at* [funny](#dlg-vane-funny)
+
+<a id="dlg-vane-funny"></a>`funny` **CAPTAIN VANE**: Funny thing, weather. <sub>dialogue/vane.adv:20</sub>
+- **1.** **FENN**: Who are you carrying for now? *[if seen:vane.cray = false]* <sub>dialogue/vane.adv:21</sub>
+  - *→ continues at* [cray](#dlg-vane-cray)
+- **2.** **FENN**: Where's your navigator? *[if seen:vane.pell = false]* <sub>dialogue/vane.adv:22</sub>
   - *→ continues at* [pell](#dlg-vane-pell)
-- **2.** **FENN**: I see. <sub>dialogue/vane.adv:18</sub>
+- **3.** **FENN**: I'll let you get on. <sub>dialogue/vane.adv:23</sub>
+  - *→ continues at* [bye](#dlg-vane-bye) *(above)*
+
+<a id="dlg-vane-cray"></a>`cray` **CAPTAIN VANE**: Cray's charter. Cray's crates. Cray's money, the only kind that still hires me. …It pays for the stew, clerk. Some of us eat. <sub>dialogue/vane.adv:24</sub>
+- **1.** **FENN**: Where's your navigator? *[if seen:vane.pell = false]* <sub>dialogue/vane.adv:25</sub>
+  - *→ continues at* [pell](#dlg-vane-pell)
+- **2.** **FENN**: I'll let you get on. <sub>dialogue/vane.adv:26</sub>
   - *→ continues at* [bye](#dlg-vane-bye) *(above)*
 
 <a id="dlg-vane-pell"></a>`pell` **CAPTAIN VANE**: Pell. Forty years at sea. Died in his hammock last winter, mid-sentence. I'd give a great deal to know how that sentence ended. <sub>dialogue/vane.adv:8</sub>
@@ -1985,80 +2178,99 @@
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
-*[compass: opened directly from rooms/marrow_cabin.adv:50]*
+*[compass: opened directly from rooms/marrow_cabin.adv:51]*
 
-<a id="dlg-vane-compass"></a>`compass` **CAPTAIN VANE**: Through the reef. There is no way through the reef, clerk. That's what a reef is. <sub>dialogue/vane.adv:31</sub>
-- **1.** **FENN**: My father found one. <sub>dialogue/vane.adv:32</sub>
+<a id="dlg-vane-compass"></a>`compass` **CAPTAIN VANE**: Through the reef. There is no way through the reef, clerk. That's what a reef is. <sub>dialogue/vane.adv:39</sub>
+- **1.** **FENN**: My father found one. <sub>dialogue/vane.adv:40</sub>
   - *→ continues at* [father](#dlg-vane-father)
 
-<a id="dlg-vane-father"></a>`father` **CAPTAIN VANE**: And who is your father, that he finds holes in reefs? <sub>dialogue/vane.adv:33</sub>
-- **1.** **FENN**: Ansel Fenn. Of the Arcadia. <sub>dialogue/vane.adv:34</sub>
+<a id="dlg-vane-father"></a>`father` **CAPTAIN VANE**: And who is your father, that he finds holes in reefs? <sub>dialogue/vane.adv:41</sub>
+- **1.** **FENN**: Ansel Fenn. Of the Arcadia. <sub>dialogue/vane.adv:42</sub>
   - *→ continues at* [ansel](#dlg-vane-ansel)
 
-<a id="dlg-vane-ansel"></a>`ansel` **CAPTAIN VANE**: Ansel Fenn ran the Straits in half the time of anyone alive and never told a soul how. So. That's how. <sub>dialogue/vane.adv:35</sub>
+<a id="dlg-vane-ansel"></a>`ansel` **CAPTAIN VANE**: Ansel Fenn ran the Straits in half the time of anyone alive, and never told a soul how. The old men in the Keel talk about a straight gap through that reef. The Needle. <sub>dialogue/vane.adv:43</sub>
+- *→ continues at* [ansel2](#dlg-vane-ansel2)
+
+<a id="dlg-vane-ansel2"></a>`ansel2` **CAPTAIN VANE**: I took it for a story for selling drinks. …So. That's how. <sub>dialogue/vane.adv:45</sub>
 - *→ continues at* [needle](#dlg-vane-needle)
 
-<a id="dlg-vane-needle"></a>`needle` **FENN (V.O.)**: She looks at the needle for a long moment. The needle looks back, unrepentant. <sub>dialogue/vane.adv:37</sub>
+<a id="dlg-vane-needle"></a>`needle` **FENN (V.O.)**: She looks at the needle for a long moment. The needle looks back, unrepentant. <sub>dialogue/vane.adv:47</sub>
 - *→ continues at* [no](#dlg-vane-no)
 
-<a id="dlg-vane-no"></a>`no` **CAPTAIN VANE**: No. A dead man's compass and a clerk's word. I've buried one navigator this year; I won't drown a ship for another. <sub>dialogue/vane.adv:39</sub>
-- **1.** **FENN**: Then what would it take? <sub>dialogue/vane.adv:40</sub>
-  - *[sets vane_terms]* <sub>dialogue/vane.adv:41</sub>
+<a id="dlg-vane-no"></a>`no` **CAPTAIN VANE**: No. A dead man's compass and a clerk's word. I buried one navigator this winter. I'm not drowning a ship for a second. <sub>dialogue/vane.adv:49</sub>
+- **1.** **FENN**: Then what would it take? <sub>dialogue/vane.adv:50</sub>
+  - *[sets vane_terms]* <sub>dialogue/vane.adv:51</sub>
   - *→ continues at* [terms](#dlg-vane-terms)
-- **2.** **FENN**: I could fill in a form. <sub>dialogue/vane.adv:42</sub>
-  - *[sets vane_terms]* <sub>dialogue/vane.adv:43</sub>
+- **2.** **FENN**: I could fill in a form. <sub>dialogue/vane.adv:52</sub>
+  - *[sets vane_terms]* <sub>dialogue/vane.adv:53</sub>
   - *→ continues at* [form](#dlg-vane-form)
+- **3.** **FENN**: He isn't dead, captain. He's overdue. <sub>dialogue/vane.adv:54</sub>
+  - *→ continues at* [overdue](#dlg-vane-overdue)
 
-<a id="dlg-vane-terms"></a>`terms` **CAPTAIN VANE**: Three things. A navigator who'll swear to that line. A crew who'll sail it. <sub>dialogue/vane.adv:46</sub>
+<a id="dlg-vane-terms"></a>`terms` **CAPTAIN VANE**: Three things. A navigator who'll swear to that line. A crew who'll sail it. <sub>dialogue/vane.adv:62</sub>
 - *→ continues at* [terms2](#dlg-vane-terms2)
 
-<a id="dlg-vane-terms2"></a>`terms2` **CAPTAIN VANE**: And a reason Pell would have. Pell never dared the south side, clerk. Give me a reason he would have. <sub>dialogue/vane.adv:48</sub>
-- **1.** **FENN**: Yes, captain. <sub>dialogue/vane.adv:49</sub>
+<a id="dlg-vane-terms2"></a>`terms2` **CAPTAIN VANE**: And a reason Pell would have. Pell never dared the south side, clerk. Give me a reason he would have. <sub>dialogue/vane.adv:64</sub>
+- **1.** **FENN**: Yes, captain. <sub>dialogue/vane.adv:65</sub>
   - *[ends]*
-- **2.** **FENN**: Three things. I've done harder lists before breakfast. <sub>dialogue/vane.adv:50</sub>
+- **2.** **FENN**: Three things. I've done harder lists before breakfast. <sub>dialogue/vane.adv:66</sub>
   - *→ continues at* [lists](#dlg-vane-lists)
 
-<a id="dlg-vane-lists"></a>`lists` **CAPTAIN VANE**: It's past breakfast. Go and eat something; Dorrit's been sulking at the stew since Port Vela. <sub>dialogue/vane.adv:51</sub>
+<a id="dlg-vane-lists"></a>`lists` **CAPTAIN VANE**: It's past breakfast. Go and eat something; Dorrit's been sulking at the stew since Port Vela. <sub>dialogue/vane.adv:67</sub>
 - *[ends]*
 
-<a id="dlg-vane-form"></a>`form` **CAPTAIN VANE**: If a form could get a ship through that reef, clerk, Silas Cray would own the reef by now. …No. Here's what it would take. <sub>dialogue/vane.adv:44</sub>
+<a id="dlg-vane-form"></a>`form` **CAPTAIN VANE**: If a form could get a ship through that reef, clerk, Silas Cray would own the reef by now. …No. Here's what it would take. <sub>dialogue/vane.adv:60</sub>
 - *→ continues at* [terms](#dlg-vane-terms) *(above)*
 
-*[log: opened directly from rooms/marrow_cabin.adv:55]*
+<a id="dlg-vane-overdue"></a>`overdue` **CAPTAIN VANE**: …Spoken like a man who's never had to write the other word. <sub>dialogue/vane.adv:55</sub>
+- **1.** **FENN**: Then what would it take? <sub>dialogue/vane.adv:56</sub>
+  - *[sets vane_terms]* <sub>dialogue/vane.adv:57</sub>
+  - *→ continues at* [terms](#dlg-vane-terms) *(above)*
+- **2.** **FENN**: I could fill in a form. <sub>dialogue/vane.adv:58</sub>
+  - *[sets vane_terms]* <sub>dialogue/vane.adv:59</sub>
+  - *→ continues at* [form](#dlg-vane-form) *(above)*
 
-<a id="dlg-vane-log"></a>`log` **FENN**: Pell's last entry. It doesn't finish. <sub>dialogue/vane.adv:53</sub>
+*[log: opened directly from rooms/marrow_cabin.adv:56]*
+
+<a id="dlg-vane-log"></a>`log` **FENN**: Pell's last entry. It doesn't finish. <sub>dialogue/vane.adv:69</sub>
 - *→ continues at* [there](#dlg-vane-there)
 
-<a id="dlg-vane-there"></a>`there` **CAPTAIN VANE**: I know. I was there. <sub>dialogue/vane.adv:55</sub>
-- **1.** **FENN**: You said you'd give a great deal to know how it ended. *[if seen:vane.pell]* <sub>dialogue/vane.adv:56</sub>
+<a id="dlg-vane-there"></a>`there` **CAPTAIN VANE**: I know. I was there. <sub>dialogue/vane.adv:71</sub>
+- **1.** **FENN**: You said you'd give a great deal to know how it ended. *[if seen:vane.pell]* <sub>dialogue/vane.adv:72</sub>
   - *→ continues at* [read](#dlg-vane-read)
-- **2.** **FENN**: May I read it to you? <sub>dialogue/vane.adv:57</sub>
+- **2.** **FENN**: May I read it to you? <sub>dialogue/vane.adv:73</sub>
   - *→ continues at* [read](#dlg-vane-read)
 
-<a id="dlg-vane-read"></a>`read` **FENN**: “If Ansel's boy ever comes aboard with the old man's compass, tell the captain she should…” <sub>dialogue/vane.adv:58</sub>
+<a id="dlg-vane-read"></a>`read` **FENN**: “If Ansel's boy ever comes aboard with the old man's compass, tell the captain she should…” <sub>dialogue/vane.adv:74</sub>
+- *→ continues at* [boy](#dlg-vane-boy)
+
+<a id="dlg-vane-boy"></a>`boy` **FENN (V.O.)**: Ansel's boy. Nobody has called me that in three years. I read it the way it was written, and my voice only goes once. <sub>dialogue/vane.adv:76</sub>
 - *→ continues at* [silence](#dlg-vane-silence)
 
-<a id="dlg-vane-silence"></a>`silence` **FENN (V.O.)**: Vane is quiet for so long that the ship's timbers start talking to fill the gap. <sub>dialogue/vane.adv:60</sub>
+<a id="dlg-vane-silence"></a>`silence` **FENN (V.O.)**: Vane is quiet for so long that the ship's timbers start talking to fill the gap. <sub>dialogue/vane.adv:78</sub>
 - *→ continues at* [trust](#dlg-vane-trust)
 
-<a id="dlg-vane-trust"></a>`trust` **CAPTAIN VANE**: Trust the boy. That's how it ends. Pell always said I never trusted anyone. <sub>dialogue/vane.adv:62</sub>
+<a id="dlg-vane-trust"></a>`trust` **CAPTAIN VANE**: Trust the boy. That's how it ends. Pell and Ansel Fenn drank the same bad rum every winter for twenty years. Of course Ansel told him. <sub>dialogue/vane.adv:80</sub>
+- *→ continues at* [trust2](#dlg-vane-trust2)
+
+<a id="dlg-vane-trust2"></a>`trust2` **CAPTAIN VANE**: And Pell never told me, because I never trusted anyone. <sub>dialogue/vane.adv:82</sub>
 - *→ continues at* [hat](#dlg-vane-hat)
 
-<a id="dlg-vane-hat"></a>`hat` **FENN (V.O.)**: She stands, and puts on her hat, which I gather is serious. <sub>dialogue/vane.adv:64</sub>
+<a id="dlg-vane-hat"></a>`hat` **FENN (V.O.)**: She stands, and puts on her hat, which I gather is serious. <sub>dialogue/vane.adv:84</sub>
 - *→ continues at* [coward](#dlg-vane-coward)
 
-<a id="dlg-vane-coward"></a>`coward` **CAPTAIN VANE**: Fine. You old coward, you were going to say it. <sub>dialogue/vane.adv:66</sub>
+<a id="dlg-vane-coward"></a>`coward` **CAPTAIN VANE**: Fine. Forty years, Pell, and you finally give an order, and you make me finish it for you. <sub>dialogue/vane.adv:86</sub>
 - *→ continues at* [orders](#dlg-vane-orders)
 
-<a id="dlg-vane-orders"></a>`orders` **CAPTAIN VANE**: Get to the bow, clerk. Quill takes the wheel. You call the bearings. And if you're wrong, call them louder. <sub>dialogue/vane.adv:68</sub>
-- **1.** **FENN**: Aye, captain. <sub>dialogue/vane.adv:69</sub>
-  - *[Fenn hands over: Pell's log]* *[sets vane_convinced]* <sub>dialogue/vane.adv:70</sub>
+<a id="dlg-vane-orders"></a>`orders` **CAPTAIN VANE**: Get to the bow, clerk. Quill takes the wheel. You call the bearings. And if you're wrong, call them louder. <sub>dialogue/vane.adv:88</sub>
+- **1.** **FENN**: Aye, captain. <sub>dialogue/vane.adv:89</sub>
+  - *[Fenn hands over: Pell's log]* *[sets vane_convinced]* <sub>dialogue/vane.adv:90</sub>
   - *[ends]*
-- **2.** **FENN**: I've never said “aye” before. <sub>dialogue/vane.adv:72</sub>
-  - *[Fenn hands over: Pell's log]* *[sets vane_convinced]* <sub>dialogue/vane.adv:73</sub>
+- **2.** **FENN**: I've never said “aye” before. <sub>dialogue/vane.adv:92</sub>
+  - *[Fenn hands over: Pell's log]* *[sets vane_convinced]* <sub>dialogue/vane.adv:93</sub>
   - *→ continues at* [aye](#dlg-vane-aye)
 
-<a id="dlg-vane-aye"></a>`aye` **CAPTAIN VANE**: You'll get the hang of it. Most people do by the second reef. <sub>dialogue/vane.adv:75</sub>
+<a id="dlg-vane-aye"></a>`aye` **CAPTAIN VANE**: You'll get the hang of it. Most people do by the second reef. <sub>dialogue/vane.adv:95</sub>
 - *[ends]*
 
 *[Act II closing cinematic: /assets/video/act-ii-outro.mp4]* <sub>acts.adv:14</sub>
@@ -2075,7 +2287,7 @@
 
 *[starts in The Arcadia, on the Reef]*
 
-> **CAPTION**: Quill rows. I hold the compass. Neither of us says that the flag on the wreck is the first thing I've wanted to see since I was twenty. <sub>acts.adv:23</sub>
+> **CAPTION**: Quill rows. I hold the compass. Neither of us mentions the flag on the wreck, so we both look at it instead. <sub>acts.adv:23</sub>
 
 **On start**
 
@@ -2102,7 +2314,7 @@
 
 **the Arcadia** `wreck` <sub>rooms/reef_wreck.adv:40</sub>
 
-- **Look at:** The Arcadia, my father's ship, heeled over on the coral with her masts still up. Three years of weather and she's kept her dignity. She looks like she's waiting for a tide that knows its business. <sub>rooms/reef_wreck.adv:44</sub>
+- **Look at:** The Arcadia, my father's ship, heeled over on the coral with her masts still up. Three years, and she's kept her dignity. <sub>rooms/reef_wreck.adv:44</sub>
 - **Talk to:** “Hello,” I say. It comes out smaller than I meant. <sub>rooms/reef_wreck.adv:45</sub>
 - **Open:** The way in is the hatch on her deck. It doesn't look in a hurry. <sub>rooms/reef_wreck.adv:46</sub>
 
@@ -2130,10 +2342,10 @@
 
 **the flag** `flag` <sub>rooms/reef_wreck.adv:73</sub>
 
-- **Look at:** A flag made of shirts, sewn by somebody with more feeling than skill. Fifteen, stitched in the middle. In the corner, in red thread, an L. I don't know what the L is for. <sub>rooms/reef_wreck.adv:76</sub>
+- **Look at:** A flag made of shirts, sewn with more feeling than skill. Fifteen in the middle. In the corner, in red thread, an L. I know one L. I decide I'm not ready to know it yet. <sub>rooms/reef_wreck.adv:76</sub>
 - **Pick up:** It's at the top of a mast. I'm at the bottom of everything. <sub>rooms/reef_wreck.adv:77</sub>
 - *When* *[if flag16_up]* *— called “flag sixteen”* <sub>rooms/reef_wreck.adv:78</sub>
-  - **Look at:** Sixteen, at the masthead. A colour my mother would have hated, flying as if it doesn't care. <sub>rooms/reef_wreck.adv:80</sub>
+  - **Look at:** Sixteen, at the masthead, mustard and unrepentant. <sub>rooms/reef_wreck.adv:80</sub>
     - *[→ conversation* [signal at about](#dlg-signal-about) *— below]* <sub>rooms/reef_wreck.adv:81</sub>
 - *When* *[if log_read]* *— called “flag fifteen”* <sub>rooms/reef_wreck.adv:82</sub>
   - **Look at:** Number fifteen. The blue one. The L in the corner is for Lise. He's been signing them for her, every one. <sub>rooms/reef_wreck.adv:84</sub>
@@ -2186,10 +2398,10 @@
   - *[sets bill_signed]* *[→ conversation* [quill3 at sign](#dlg-quill3-sign) *— below]* <sub>combos.adv:58</sub>
 - **Use Bill of Health on Quill:** “I've signed it once, cargo. Twice and it's a habit.” *[shared group quill_combos]* <sub>combos.adv:61</sub>
 - **Use Ansel's log on Quill:** She doesn't open it again. “I've read it. Once was the right number of times.” *[shared group quill_combos]* <sub>combos.adv:63</sub>
-- **Use crowbar on Quill:** She pushes it back. “I packed it for you. Don't make it a whole thing.” *[shared group quill_combos]* <sub>combos.adv:65</sub>
-- **Use calendar leaf on Quill:** “A day. What am I meant to do with a day?” She hands it back. “Put it on the bill, cargo. That's what days are for.” *[shared group quill_combos]* <sub>combos.adv:67</sub>
+- **Use crowbar on Quill:** She pushes it back. “You packed it, you carry it. That's the rule with crowbars.” *[shared group quill_combos]* <sub>combos.adv:65</sub>
+- **Use calendar leaf on Quill:** “A day. What am I meant to do with a day?” She hands it back. “Put it on the bill. That's what days are for.” *[shared group quill_combos]* <sub>combos.adv:67</sub>
 - **Use flag sixteen on Quill:** She won't take it. “Your father gave it to you. Run it up yourself.” *[shared group quill_combos]* <sub>combos.adv:69</sub>
-- **Use bucket of lagoon on Quill:** “Throw that at me, cargo, and you'd better be able to swim.” *[shared group quill_combos]* <sub>combos.adv:71</sub>
+- **Use bucket of lagoon on Quill:** “Throw that at me and you'd better be able to swim.” *[shared group quill_combos]* <sub>combos.adv:71</sub>
 - **Use bucket on Quill:** “That's a bucket. I've seen one. Fill it with something, then we'll talk.” *[shared group quill_combos]* <sub>combos.adv:73</sub>
 - **Use brass compass on Quill:** She glances at the needle. “Still pointing at trouble. Good. Keeps things simple.” *[shared group quill_combos]* <sub>combos.adv:75</sub>
 - **Use harbour stamp on Quill:** She holds out the back of her hand, gravely. I stamp it. She looks at it for longer than a joke needs. *[shared group quill_combos]* <sub>combos.adv:77</sub>
@@ -2202,7 +2414,7 @@
 <a id="dlg-signal-down"></a>`down` **FENN (V.O.)**: I haul down number fifteen and fold it the way you'd fold a letter. Then I bend number sixteen on to the halyard. <sub>dialogue/signal.adv:3</sub>
 - *→ continues at* [up](#dlg-signal-up)
 
-<a id="dlg-signal-up"></a>`up` **FENN (V.O.)**: It goes up in jerks, hand over hand, and breaks out at the masthead: shirts, patches, an L. A colour my mother would have hated. <sub>dialogue/signal.adv:5</sub>
+<a id="dlg-signal-up"></a>`up` **FENN (V.O.)**: It goes up in jerks, hand over hand, and breaks out at the masthead: shirts, patches, an L, and a great deal of mustard. <sub>dialogue/signal.adv:5</sub>
 - *→ continues at* [wait](#dlg-signal-wait)
 
 <a id="dlg-signal-wait"></a>`wait` **QUILL**: There. Now we wait for the captain to decide we're not dead. <sub>dialogue/signal.adv:7</sub>
@@ -2214,18 +2426,21 @@
 - **2.** **FENN**: (Take Quill's hand.) *[if aff ≥ 12]* <sub>dialogue/signal.adv:11</sub>
   - *→ continues at* [hand](#dlg-signal-hand)
 
-<a id="dlg-signal-boats"></a>`boats` **FENN (V.O.)**: On the lagoon, a hundred and thirty sailors row for her in everything that floats. Somewhere among them my father is shouting the stroke, wrongly. <sub>dialogue/signal.adv:14</sub>
+<a id="dlg-signal-boats"></a>`boats` **FENN (V.O.)**: On the lagoon, a hundred and thirty sailors put out for her in everything that floats, which turns out to include salt rafts, two doors and a bathtub. <sub>dialogue/signal.adv:14</sub>
+- *→ continues at* [stroke](#dlg-signal-stroke)
+
+<a id="dlg-signal-stroke"></a>`stroke` **FENN (V.O.)**: Somewhere among them my father is shouting the stroke, wrongly. <sub>dialogue/signal.adv:16</sub>
 - *→ continues at* [cutter](#dlg-signal-cutter)
 
-<a id="dlg-signal-cutter"></a>`cutter` **FENN (V.O.)**: And across the water a grey cutter with a cloud on her sail slips her cable and runs for Port Vela with every stitch she owns. <sub>dialogue/signal.adv:16</sub>
+<a id="dlg-signal-cutter"></a>`cutter` **FENN (V.O.)**: And across the water a grey cutter with a cloud on her sail slips her cable and runs for Port Vela with every stitch she owns. <sub>dialogue/signal.adv:18</sub>
 - *→ continues at* [home](#dlg-signal-home)
 
-<a id="dlg-signal-home"></a>`home` **QUILL**: That's Cray's. He's running home to write us all down as lost. <sub>dialogue/signal.adv:18</sub>
-- **1.** **FENN**: Let him try. I have better handwriting. <sub>dialogue/signal.adv:19</sub>
-  - *[→ Act III ends]* <sub>dialogue/signal.adv:20</sub>
-  - *[ends]*
-- **2.** **FENN**: Then we'll just have to get there first. <sub>dialogue/signal.adv:21</sub>
+<a id="dlg-signal-home"></a>`home` **QUILL**: That's Cray's. He's running home to write us all down as lost. <sub>dialogue/signal.adv:20</sub>
+- **1.** **FENN**: Let him try. I have better handwriting. <sub>dialogue/signal.adv:21</sub>
   - *[→ Act III ends]* <sub>dialogue/signal.adv:22</sub>
+  - *[ends]*
+- **2.** **FENN**: Then we'll just have to get there first. <sub>dialogue/signal.adv:23</sub>
+  - *[→ Act III ends]* <sub>dialogue/signal.adv:24</sub>
   - *[ends]*
 
 <a id="dlg-signal-hand"></a>`hand` **FENN (V.O.)**: Quill's hand is already there. Neither of us mentions it. We're busy watching the ship. <sub>dialogue/signal.adv:12</sub>
@@ -2234,174 +2449,189 @@
 <a id="dlg-quill3"></a>
 ### Conversation: quill3 (Quill)
 
-*[source:* `dialogue quill3`*, starts at* `boat`*]* <sub>dialogue/quill3.adv:2</sub>
+*[source:* `dialogue quill3`*, starts at* `shore`*]* <sub>dialogue/quill3.adv:2</sub>
 
-<a id="dlg-quill3-boat"></a>`boat` **QUILL**: Boat's beached. And I'm not waiting with it, before you ask. Somebody has to stop you filling in forms at a man with a cutlass. <sub>dialogue/quill3.adv:4</sub>
-- **1.** **FENN**: You could wait with the boat. It's very safe. *[if seen:quill3.safe = false]* <sub>dialogue/quill3.adv:5</sub>
-  - *→ continues at* [safe](#dlg-quill3-safe)
-- **2.** **FENN**: Thank you for rowing. *[if seen:quill3.rowing = false]* <sub>dialogue/quill3.adv:6</sub>
-  - *[aff +1]* <sub>dialogue/quill3.adv:7</sub>
-  - *→ continues at* [rowing](#dlg-quill3-rowing)
-- **3.** **FENN**: What did the captain say, exactly? <sub>dialogue/quill3.adv:8</sub>
+<a id="dlg-quill3-shore"></a>`shore` **QUILL**: That cutter's been watching us since we beached. Clean hull, no nets. Nobody that tidy is fishing. <sub>dialogue/quill3.adv:4</sub>
+- **1.** **FENN**: Should we be worried? <sub>dialogue/quill3.adv:5</sub>
+  - *→ continues at* [split](#dlg-quill3-split)
+- **2.** **FENN**: What did the captain say, exactly? <sub>dialogue/quill3.adv:6</sub>
   - *→ continues at* [plan](#dlg-quill3-plan)
-- **4.** **FENN**: Shall we? <sub>dialogue/quill3.adv:9</sub>
-  - *→ continues at* [after](#dlg-quill3-after)
 
-<a id="dlg-quill3-safe"></a>`safe` **QUILL**: So's a drawer. You tried that for three years. How was it? <sub>dialogue/quill3.adv:10</sub>
-- **1.** **FENN**: What did the captain say, exactly? <sub>dialogue/quill3.adv:11</sub>
-  - *→ continues at* [plan](#dlg-quill3-plan)
-- **2.** **FENN**: Point taken. <sub>dialogue/quill3.adv:12</sub>
-  - *→ continues at* [after](#dlg-quill3-after)
+<a id="dlg-quill3-split"></a>`split` **QUILL**: I'm worried. You're busy. That's a good split. <sub>dialogue/quill3.adv:7</sub>
+- *[ends]*
 
-<a id="dlg-quill3-plan"></a>`plan` **QUILL**: Find anyone alive, run a new flag up the wreck's mast, and she brings the Marrow in through the Needle. If fifteen's still up when the fog lifts, we're dead and she's very sorry. <sub>dialogue/quill3.adv:16</sub>
-- **1.** **FENN**: She said “very sorry”? <sub>dialogue/quill3.adv:17</sub>
+<a id="dlg-quill3-plan"></a>`plan` **QUILL**: Find anyone alive, run a new flag up the wreck's mast, and she brings the Marrow in through the Needle. If the old rag's still up when the fog lifts, we're dead and she's very sorry. <sub>dialogue/quill3.adv:21</sub>
+- **1.** **FENN**: She said “very sorry”? <sub>dialogue/quill3.adv:22</sub>
   - *→ continues at* [sorry](#dlg-quill3-sorry)
-- **2.** **FENN**: Then we'd better not be dead. <sub>dialogue/quill3.adv:18</sub>
+- **2.** **FENN**: Then we'd better not be dead. <sub>dialogue/quill3.adv:23</sub>
   - *→ continues at* [after](#dlg-quill3-after)
 
-<a id="dlg-quill3-sorry"></a>`sorry` **QUILL**: She said “sorry”. I added the “very”. I'm navigator now; I'm allowed to round up. <sub>dialogue/quill3.adv:19</sub>
+<a id="dlg-quill3-sorry"></a>`sorry` **QUILL**: She said “sorry”. I added the “very”. I'm navigator now; I'm allowed to round up. <sub>dialogue/quill3.adv:24</sub>
 - *[ends]*
 
-<a id="dlg-quill3-after"></a>`after` **QUILL**: After you, cargo. If anything bites, I want to see what. <sub>dialogue/quill3.adv:20</sub>
+<a id="dlg-quill3-after"></a>`after` **QUILL**: After you, cargo. If anything bites, I want to see what. <sub>dialogue/quill3.adv:25</sub>
 - *[ends]*
-
-<a id="dlg-quill3-rowing"></a>`rowing` **QUILL**: I didn't row for you. I rowed because you row like you're signing something in triplicate. …You're welcome. <sub>dialogue/quill3.adv:13</sub>
-- **1.** **FENN**: What did the captain say, exactly? <sub>dialogue/quill3.adv:14</sub>
-  - *→ continues at* [plan](#dlg-quill3-plan) *(above)*
-- **2.** **FENN**: Shall we? <sub>dialogue/quill3.adv:15</sub>
-  - *→ continues at* [after](#dlg-quill3-after) *(above)*
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
+*[boat: opened directly from rooms/reef_wreck.adv:107]*
+
+<a id="dlg-quill3-boat"></a>`boat` **QUILL**: Boat's beached. And I'm not waiting with it, before you ask. Somebody has to stop you filling in forms at a man with a cutlass. <sub>dialogue/quill3.adv:9</sub>
+- **1.** **FENN**: You could wait with the boat. It's very safe. *[if seen:quill3.safe = false]* <sub>dialogue/quill3.adv:10</sub>
+  - *→ continues at* [safe](#dlg-quill3-safe)
+- **2.** **FENN**: Thank you for rowing. *[if seen:quill3.rowing = false]* <sub>dialogue/quill3.adv:11</sub>
+  - *[aff +1]* <sub>dialogue/quill3.adv:12</sub>
+  - *→ continues at* [rowing](#dlg-quill3-rowing)
+- **3.** **FENN**: What did the captain say, exactly? <sub>dialogue/quill3.adv:13</sub>
+  - *→ continues at* [plan](#dlg-quill3-plan) *(above)*
+- **4.** **FENN**: Shall we? <sub>dialogue/quill3.adv:14</sub>
+  - *→ continues at* [after](#dlg-quill3-after) *(above)*
+
+<a id="dlg-quill3-safe"></a>`safe` **QUILL**: So's a drawer. You tried that for three years. How was it? <sub>dialogue/quill3.adv:15</sub>
+- **1.** **FENN**: What did the captain say, exactly? <sub>dialogue/quill3.adv:16</sub>
+  - *→ continues at* [plan](#dlg-quill3-plan) *(above)*
+- **2.** **FENN**: Point taken. <sub>dialogue/quill3.adv:17</sub>
+  - *→ continues at* [after](#dlg-quill3-after) *(above)*
+
+<a id="dlg-quill3-rowing"></a>`rowing` **QUILL**: I didn't row for you. I rowed because you row like you're signing something in triplicate. …You're welcome. <sub>dialogue/quill3.adv:18</sub>
+- **1.** **FENN**: What did the captain say, exactly? <sub>dialogue/quill3.adv:19</sub>
+  - *→ continues at* [plan](#dlg-quill3-plan) *(above)*
+- **2.** **FENN**: Shall we? <sub>dialogue/quill3.adv:20</sub>
+  - *→ continues at* [after](#dlg-quill3-after) *(above)*
+
 *[cabin: opened directly from rooms/arcadia_cabin.adv:108]*
 
-<a id="dlg-quill3-cabin"></a>`cabin` **QUILL**: Your father keeps a tidy wreck. That's his desk. You're a clerk. Go on; I can see your fingers twitching from here. <sub>dialogue/quill3.adv:22</sub>
-- **1.** **FENN**: That's my mother, on the wall. *[if looked:arcadia_cabin.portrait and seen:quill3.mother = false]* <sub>dialogue/quill3.adv:23</sub>
-  - *[aff +1]* <sub>dialogue/quill3.adv:24</sub>
+<a id="dlg-quill3-cabin"></a>`cabin` **QUILL**: Your father keeps a tidy wreck. That's his desk. You're a clerk. Go on; I can see your fingers twitching from here. <sub>dialogue/quill3.adv:27</sub>
+- **1.** **FENN**: That's my mother, on the wall. *[if looked:arcadia_cabin.portrait and seen:quill3.mother = false]* <sub>dialogue/quill3.adv:28</sub>
+  - *[aff +1]* <sub>dialogue/quill3.adv:29</sub>
   - *→ continues at* [mother](#dlg-quill3-mother)
-- **2.** **FENN**: It's not tidy. The whole room is at an angle. <sub>dialogue/quill3.adv:25</sub>
+- **2.** **FENN**: It's not tidy. The whole room is at an angle. <sub>dialogue/quill3.adv:30</sub>
   - *→ continues at* [angle](#dlg-quill3-angle)
-- **3.** **FENN**: Give me a minute. <sub>dialogue/quill3.adv:26</sub>
+- **3.** **FENN**: Give me a minute. <sub>dialogue/quill3.adv:31</sub>
   - *→ continues at* [minute](#dlg-quill3-minute)
 
-<a id="dlg-quill3-mother"></a>`mother` **QUILL**: I guessed. She's got your face, only she looks like she'd use it to win arguments. …I'll look at the wall for a bit. In case you want to tell her anything. <sub>dialogue/quill3.adv:27</sub>
+<a id="dlg-quill3-mother"></a>`mother` **QUILL**: I guessed. She's got your face, only she looks like she'd use it to win arguments. …I'll look at the wall for a bit. In case you want to tell her anything. <sub>dialogue/quill3.adv:32</sub>
 - *[ends]*
 
-<a id="dlg-quill3-angle"></a>`angle` **QUILL**: Everything's at an angle on a ship, cargo. This one's just stopped pretending. <sub>dialogue/quill3.adv:28</sub>
+<a id="dlg-quill3-angle"></a>`angle` **QUILL**: Everything's at an angle on a ship. This one's just stopped pretending. <sub>dialogue/quill3.adv:33</sub>
 - *[ends]*
 
-<a id="dlg-quill3-minute"></a>`minute` **QUILL**: Take two. The wreck's been waiting three years. It can wait for a clerk to breathe. <sub>dialogue/quill3.adv:29</sub>
+<a id="dlg-quill3-minute"></a>`minute` **QUILL**: Take two. The wreck's been waiting three years. It can wait for a clerk to breathe. <sub>dialogue/quill3.adv:34</sub>
 - *[ends]*
 
 *[shaken: opened directly from rooms/arcadia_cabin.adv:111]*
 
-<a id="dlg-quill3-shaken"></a>`shaken` **QUILL**: You all right? <sub>dialogue/quill3.adv:30</sub>
-- **1.** **FENN**: No. But I think I'm going to be. *[if seen:quill3.going = false]* <sub>dialogue/quill3.adv:31</sub>
-  - *[aff +1]* <sub>dialogue/quill3.adv:32</sub>
+<a id="dlg-quill3-shaken"></a>`shaken` **QUILL**: You all right? <sub>dialogue/quill3.adv:35</sub>
+- **1.** **FENN**: No. But I think I'm going to be. *[if seen:quill3.going = false]* <sub>dialogue/quill3.adv:36</sub>
+  - *[aff +1]* <sub>dialogue/quill3.adv:37</sub>
   - *→ continues at* [going](#dlg-quill3-going)
-- **2.** **FENN**: I've been called an idiot in writing. By two people. In one morning. <sub>dialogue/quill3.adv:33</sub>
+- **2.** **FENN**: My father predicted me. In ink. Three years in advance. <sub>dialogue/quill3.adv:38</sub>
   - *→ continues at* [two](#dlg-quill3-two)
 
-<a id="dlg-quill3-going"></a>`going` **QUILL**: Good. That's the right order to say it in. <sub>dialogue/quill3.adv:34</sub>
+<a id="dlg-quill3-going"></a>`going` **QUILL**: Good. That's the right order to say it in. <sub>dialogue/quill3.adv:39</sub>
 - *[ends]*
 
-<a id="dlg-quill3-two"></a>`two` **QUILL**: Three, counting me. I'm counting me. <sub>dialogue/quill3.adv:35</sub>
+<a id="dlg-quill3-two"></a>`two` **QUILL**: Took him one line. Took me a week. I'm not bitter. <sub>dialogue/quill3.adv:40</sub>
 - *[ends]*
 
 *[gate: opened directly from rooms/key_gate.adv:98]*
 
-<a id="dlg-quill3-gate"></a>`gate` **QUILL**: He's got a clipboard, cargo. This is your fight. I'll hold your coat. <sub>dialogue/quill3.adv:37</sub>
-- **1.** **FENN**: Is a navigator a ship's officer? *[if seen:pike.need and bill_signed = false]* <sub>dialogue/quill3.adv:38</sub>
+<a id="dlg-quill3-gate"></a>`gate` **QUILL**: He's got a clipboard, cargo. This is your fight. I'll hold your coat. <sub>dialogue/quill3.adv:42</sub>
+- **1.** **FENN**: Is a navigator a ship's officer? *[if seen:pike.need and bill_signed = false and has Bill of Health]* <sub>dialogue/quill3.adv:43</sub>
+  - *[sets bill_signed]* <sub>dialogue/quill3.adv:44</sub>
   - *→ continues at* [officer](#dlg-quill3-officer)
-- **2.** **FENN**: You could just climb the fence. <sub>dialogue/quill3.adv:39</sub>
+- **2.** **FENN**: Is a navigator a ship's officer? *[if seen:pike.need and bill_signed = false and doesn't have Bill of Health]* <sub>dialogue/quill3.adv:45</sub>
+  - *→ continues at* [air](#dlg-quill3-air)
+- **3.** **FENN**: You could just climb the fence. <sub>dialogue/quill3.adv:46</sub>
   - *→ continues at* [fence](#dlg-quill3-fence)
-- **3.** **FENN**: Wish me luck. <sub>dialogue/quill3.adv:40</sub>
+- **4.** **FENN**: Wish me luck. <sub>dialogue/quill3.adv:47</sub>
   - *→ continues at* [luck](#dlg-quill3-luck)
 
-<a id="dlg-quill3-officer"></a>`officer` **QUILL**: It says so in the Marrow's log. In your handwriting. …Give me the bill, then, before I come to my senses. <sub>dialogue/quill3.adv:41</sub>
-- *[ends]*
+<a id="dlg-quill3-officer"></a>`officer` **QUILL**: It says so in the Marrow's log. In your handwriting. …Give me the bill, then, before I come to my senses. <sub>dialogue/quill3.adv:48</sub>
+- *→ continues at* [sign](#dlg-quill3-sign)
 
-<a id="dlg-quill3-fence"></a>`fence` **QUILL**: I could. Then he'd blow that whistle, and every Weather man on the key would come and be polite at me. I'd rather watch you do it properly. <sub>dialogue/quill3.adv:42</sub>
-- *[ends]*
-
-<a id="dlg-quill3-luck"></a>`luck` **QUILL**: You don't need luck. You need a date, a stamp and a signature. Same as a wedding, Marta says. <sub>dialogue/quill3.adv:43</sub>
-- *[ends]*
-
-*[sign: opened directly from combos.adv:59]*
-
-<a id="dlg-quill3-sign"></a>`sign` **FENN (V.O.)**: She reads every line of it, which nobody ever does, and signs at the bottom in careful capitals: QUILL, NAVIGATOR. Then she looks at it for a long time. <sub>dialogue/quill3.adv:45</sub>
+<a id="dlg-quill3-sign"></a>`sign` **FENN (V.O.)**: She reads every line of it, which nobody ever does, and signs at the bottom in careful capitals: QUILL, NAVIGATOR. Then she looks at it for a long time. <sub>dialogue/quill3.adv:54</sub>
 - *→ continues at* [signed](#dlg-quill3-signed)
 
-<a id="dlg-quill3-signed"></a>`signed` **QUILL**: First thing I've ever signed as anything. …It looks good. Don't say it looks good. <sub>dialogue/quill3.adv:47</sub>
-- **1.** **FENN**: It looks good. <sub>dialogue/quill3.adv:48</sub>
-  - *[aff +1]* <sub>dialogue/quill3.adv:49</sub>
+<a id="dlg-quill3-signed"></a>`signed` **QUILL**: First thing I've ever signed as anything. …It looks good. Don't say it looks good. <sub>dialogue/quill3.adv:56</sub>
+- **1.** **FENN**: It looks good. <sub>dialogue/quill3.adv:57</sub>
+  - *[aff +1]* <sub>dialogue/quill3.adv:58</sub>
   - *→ continues at* [looks](#dlg-quill3-looks)
-- **2.** **FENN**: It looks adequate. <sub>dialogue/quill3.adv:50</sub>
-  - *[aff +1]* <sub>dialogue/quill3.adv:51</sub>
+- **2.** **FENN**: It looks adequate. <sub>dialogue/quill3.adv:59</sub>
+  - *[aff +1]* <sub>dialogue/quill3.adv:60</sub>
   - *→ continues at* [adequate](#dlg-quill3-adequate)
 
-<a id="dlg-quill3-looks"></a>`looks` **QUILL**: I said don't. …Thank you. Take it before I underline it. <sub>dialogue/quill3.adv:52</sub>
+<a id="dlg-quill3-looks"></a>`looks` **QUILL**: I said don't. …Thank you. Take it before I underline it. <sub>dialogue/quill3.adv:61</sub>
 - *[ends]*
 
-<a id="dlg-quill3-adequate"></a>`adequate` **QUILL**: Adequate. I'll take it. That's a whole rank above what the lookout used to get. <sub>dialogue/quill3.adv:53</sub>
+<a id="dlg-quill3-adequate"></a>`adequate` **QUILL**: Adequate. I'll take it. That's a whole rank above what the lookout used to get. <sub>dialogue/quill3.adv:62</sub>
+- *[ends]*
+
+<a id="dlg-quill3-air"></a>`air` **QUILL**: It says so in the Marrow's log, in your handwriting. Get the form first. I'm not signing air. <sub>dialogue/quill3.adv:50</sub>
+- *[ends]*
+
+<a id="dlg-quill3-fence"></a>`fence` **QUILL**: I could. Then he'd blow that whistle, and every Weather man on the key would come and be polite at me. I'd rather watch you do it properly. <sub>dialogue/quill3.adv:51</sub>
+- *[ends]*
+
+<a id="dlg-quill3-luck"></a>`luck` **QUILL**: You don't need luck. You need smoke, a stamp, a signature and a date. Same as a wedding, Marta says. <sub>dialogue/quill3.adv:52</sub>
 - *[ends]*
 
 *[works: opened directly from rooms/weather_works.adv:90]*
 
-<a id="dlg-quill3-works"></a>`works` **QUILL**: Kelp smoke. Same as the crates on the Marrow. That big brazier's doing most of the work; put it out and the fog has nothing to stand on. <sub>dialogue/quill3.adv:55</sub>
-- **1.** **FENN**: And then? <sub>dialogue/quill3.adv:56</sub>
+<a id="dlg-quill3-works"></a>`works` **QUILL**: Kelp smoke. Same as the crates on the Marrow. That big brazier's doing most of the work; put it out and the fog has nothing to stand on. <sub>dialogue/quill3.adv:64</sub>
+- **1.** **FENN**: And then? <sub>dialogue/quill3.adv:65</sub>
   - *→ continues at* [then](#dlg-quill3-then)
-- **2.** **FENN**: I'd need something wetter than paperwork. <sub>dialogue/quill3.adv:57</sub>
+- **2.** **FENN**: I'd need something wetter than paperwork. <sub>dialogue/quill3.adv:66</sub>
   - *→ continues at* [wetter](#dlg-quill3-wetter)
 
-<a id="dlg-quill3-then"></a>`then` **QUILL**: Then we run, cargo. I'm good at running. You'll be good at it by the end. <sub>dialogue/quill3.adv:58</sub>
+<a id="dlg-quill3-then"></a>`then` **QUILL**: Then we run. I'm good at running. You'll be good at it by the end. <sub>dialogue/quill3.adv:67</sub>
 - *[ends]*
 
-<a id="dlg-quill3-wetter"></a>`wetter` **QUILL**: Everything's wetter than your paperwork. There's a whole lagoon out there. Find it a bucket. <sub>dialogue/quill3.adv:59</sub>
+<a id="dlg-quill3-wetter"></a>`wetter` **QUILL**: Everything's wetter than your paperwork. There's a whole lagoon out there. Find it a bucket. <sub>dialogue/quill3.adv:68</sub>
 - *[ends]*
 
-*[hut: opened directly from rooms/salt_camp.adv:54]*
+*[hut: opened directly from rooms/salt_camp.adv:56]*
 
-<a id="dlg-quill3-hut"></a>`hut` **QUILL**: Don't look so pleased. You've finally got me in a box with a label on. <sub>dialogue/quill3.adv:61</sub>
-- **1.** **FENN**: I'm getting you out. I promise. *[if seen:quill3.promise = false]* <sub>dialogue/quill3.adv:62</sub>
-  - *[aff +1]* <sub>dialogue/quill3.adv:63</sub>
+<a id="dlg-quill3-hut"></a>`hut` **QUILL**: Don't look so pleased. You've finally got me in a box with a label on. <sub>dialogue/quill3.adv:70</sub>
+- **1.** **FENN**: I'm getting you out. I promise. *[if seen:quill3.promise = false]* <sub>dialogue/quill3.adv:71</sub>
+  - *[aff +1]* <sub>dialogue/quill3.adv:72</sub>
   - *→ continues at* [promise](#dlg-quill3-promise)
-- **2.** **FENN**: You look very official behind bars. <sub>dialogue/quill3.adv:64</sub>
+- **2.** **FENN**: You look very official behind bars. <sub>dialogue/quill3.adv:73</sub>
   - *→ continues at* [official](#dlg-quill3-official)
-- **3.** **FENN**: Did he really call you cargo? <sub>dialogue/quill3.adv:65</sub>
+- **3.** **FENN**: Did he really call you cargo? <sub>dialogue/quill3.adv:74</sub>
   - *→ continues at* [cargo](#dlg-quill3-cargo)
 
-<a id="dlg-quill3-promise"></a>`promise` **QUILL**: I know. That's the annoying part. Go and be a clerk at him. <sub>dialogue/quill3.adv:66</sub>
+<a id="dlg-quill3-promise"></a>`promise` **QUILL**: I know. That's the annoying part. Go and be a clerk at him. <sub>dialogue/quill3.adv:75</sub>
 - *[ends]*
 
-<a id="dlg-quill3-official"></a>`official` **QUILL**: Say that again when I'm out, cargo. I dare you. <sub>dialogue/quill3.adv:67</sub>
+<a id="dlg-quill3-official"></a>`official` **QUILL**: Say that again when I'm out, cargo. I dare you. <sub>dialogue/quill3.adv:76</sub>
 - *[ends]*
 
-<a id="dlg-quill3-cargo"></a>`cargo` **QUILL**: Unaccompanied cargo. Pending inspection. …I'm never calling you that again. That's a lie. But I'll feel bad about it. <sub>dialogue/quill3.adv:68</sub>
+<a id="dlg-quill3-cargo"></a>`cargo` **QUILL**: Unaccompanied cargo. Pending inspection. …I'm never calling you that again. That's a lie. But I'll feel bad about it. <sub>dialogue/quill3.adv:77</sub>
 - *[ends]*
 
-*[camp: opened directly from rooms/salt_camp.adv:96]*
+*[camp: opened directly from rooms/salt_camp.adv:100]*
 
-<a id="dlg-quill3-camp"></a>`camp` **QUILL**: Don't look at me like that. Your father's watching. …He's still watching. He's waving. <sub>dialogue/quill3.adv:70</sub>
-- **1.** **FENN**: He does that. <sub>dialogue/quill3.adv:71</sub>
+<a id="dlg-quill3-camp"></a>`camp` **QUILL**: Don't look at me like that. Your father's watching. …He's still watching. He's waving. <sub>dialogue/quill3.adv:79</sub>
+- **1.** **FENN**: He does that. <sub>dialogue/quill3.adv:80</sub>
   - *→ continues at* [waves](#dlg-quill3-waves)
-- **2.** **FENN**: Let him watch. *[if seen:quill3.watch = false]* <sub>dialogue/quill3.adv:72</sub>
-  - *[aff +1]* <sub>dialogue/quill3.adv:73</sub>
+- **2.** **FENN**: Let him watch. *[if seen:quill3.watch = false]* <sub>dialogue/quill3.adv:81</sub>
+  - *[aff +1]* <sub>dialogue/quill3.adv:82</sub>
   - *→ continues at* [watch](#dlg-quill3-watch)
 
-<a id="dlg-quill3-waves"></a>`waves` **QUILL**: Go and talk to him, cargo. You've waited three years. I've waited about a minute and I'm already sick of it. <sub>dialogue/quill3.adv:74</sub>
+<a id="dlg-quill3-waves"></a>`waves` **QUILL**: He waved at me through the bars, too. Twice a day, like a lighthouse with opinions. I like him. Don't tell him. <sub>dialogue/quill3.adv:83</sub>
 - *[ends]*
 
-<a id="dlg-quill3-watch"></a>`watch` **QUILL**: …All right. Let him. But I'm not waving back. <sub>dialogue/quill3.adv:75</sub>
+<a id="dlg-quill3-watch"></a>`watch` **QUILL**: …All right. Let him. But I'm not waving back. <sub>dialogue/quill3.adv:84</sub>
 - *[ends]*
 
-*[flag: opened directly from rooms/reef_wreck.adv:112, rooms/salt_camp.adv:99]*
+*[flag: opened directly from rooms/reef_wreck.adv:112, rooms/salt_camp.adv:103]*
 
-<a id="dlg-quill3-flag"></a>`flag` **QUILL**: Go on. Run it up. You've been carrying it like it's a baby. <sub>dialogue/quill3.adv:77</sub>
-- **1.** **FENN**: It's a very important baby. <sub>dialogue/quill3.adv:78</sub>
+<a id="dlg-quill3-flag"></a>`flag` **QUILL**: Go on. Run it up. You've been carrying it like it's the Crown Jewels. <sub>dialogue/quill3.adv:86</sub>
+- **1.** **FENN**: It's better than the Crown Jewels. It has an L. <sub>dialogue/quill3.adv:87</sub>
   - *→ continues at* [baby](#dlg-quill3-baby)
 
-<a id="dlg-quill3-baby"></a>`baby` **QUILL**: It's a flag made of your shirts, cargo. The halyard's on the mainmast. Up. <sub>dialogue/quill3.adv:79</sub>
+<a id="dlg-quill3-baby"></a>`baby` **QUILL**: It's a flag made of your shirts. The halyard's on the mainmast. Up. <sub>dialogue/quill3.adv:88</sub>
 - *[ends]*
 
 <a id="act3-arcadia_cabin"></a>
@@ -2511,7 +2741,7 @@
 <a id="dlg-log-stop"></a>`stop` **FENN (V.O.)**: I read the first line. I don't read the second one. The words stay where they are, and so do I. <sub>dialogue/log.adv:11</sub>
 - **1.** **FENN**: (Hold the log out to Quill.) <sub>dialogue/log.adv:12</sub>
   - *→ continues at* [reads](#dlg-log-reads)
-- **2.** **FENN**: “It's the light in here. And the salt. It's a wreck.” <sub>dialogue/log.adv:13</sub>
+- **2.** **FENN**: It's the light in here. And the salt. It's a wreck. <sub>dialogue/log.adv:13</sub>
   - *→ continues at* [salt](#dlg-log-salt)
 
 <a id="dlg-log-reads"></a>`reads` **QUILL**: (reading) “Lise, number fifteen is the blue one. Our boy will have the compass by now. If I'm late, he'll know what to do with it.” <sub>dialogue/log.adv:16</sub>
@@ -2588,7 +2818,7 @@
 
 - **Look at:** Quill, shading her eyes at the grey cutter across the lagoon. She doesn't like it. She doesn't like most things, but she's specific about this one. <sub>rooms/lagoon_shore.adv:50</sub>
 - **Talk to:** She answers without taking her eyes off the cutter. <sub>rooms/lagoon_shore.adv:51</sub>
-  - *[→ conversation* [quill3 at boat](#dlg-quill3-boat) *— see Act III › The Arcadia, on the Reef]* <sub>rooms/lagoon_shore.adv:52</sub>
+  - *[→ conversation* [quill3 at shore](#dlg-quill3-shore) *— see Act III › The Arcadia, on the Reef]* <sub>rooms/lagoon_shore.adv:52</sub>
 - **Give:** “Hold on to it. If that cutter comes across, I want both hands free.” <sub>rooms/lagoon_shore.adv:53</sub>
 
 **Combinations here**
@@ -2624,77 +2854,81 @@
 - **Look at:** The reef flats, running out to the lagoon in a mile of coral and sudden deep pockets. Somebody who'd crossed them a hundred times might know the way. <sub>rooms/salt_camp.adv:39</sub>
 - **Open:** Not without somebody who knows where the holes are. The holes are very patient. <sub>rooms/salt_camp.adv:40</sub>
 - **Walk to:** Not without somebody who knows where the holes are. The holes are very patient. <sub>rooms/salt_camp.adv:41</sub>
-- *When* *[if quill_free]* <sub>rooms/salt_camp.adv:43</sub>
+- *When* *[if ansel_met]* <sub>rooms/salt_camp.adv:43</sub>
   - **Look at:** The reef flats, staked across to the wreck at low tide. My father's road. He goes wrong at the third stake. <sub>rooms/salt_camp.adv:45</sub>
   - **Use / Walk to:** *[→ goes to The Arcadia, on the Reef]* <sub>rooms/salt_camp.adv:44</sub>
   - **Open:** We cross the flats, stake by stake. At the third one I don't follow my father. <sub>rooms/salt_camp.adv:46</sub>
     - *[→ goes to The Arcadia, on the Reef]* <sub>rooms/salt_camp.adv:44</sub>
+- *When* *[if quill_free]* <sub>rooms/salt_camp.adv:47</sub>
+  - **Look at:** The reef flats, staked across to the wreck. My father's road. I'd like a word with him before I take it. <sub>rooms/salt_camp.adv:48</sub>
 
-**the store hut** `hut` <sub>rooms/salt_camp.adv:48</sub>
+**the store hut** `hut` <sub>rooms/salt_camp.adv:50</sub>
 
-- **Look at:** A stout store hut with a barred window and a padlock the size of a ham. Inside, pending inspection, a navigator, looking out at me through the bars. <sub>rooms/salt_camp.adv:51</sub>
-- **Talk to:** I go to the bars. <sub>rooms/salt_camp.adv:53</sub>
-  - *[→ conversation* [quill3 at hut](#dlg-quill3-hut) *— see Act III › The Arcadia, on the Reef]* <sub>rooms/salt_camp.adv:54</sub>
-- **Open:** Padlocked. Pike has the key on a string round his neck, next to his whistle. <sub>rooms/salt_camp.adv:52</sub>
-- **Pull:** The padlock is not open to argument. Pike, on the other hand, is open to paperwork. <sub>rooms/salt_camp.adv:55</sub>
-- *When* *[if quill_free]* <sub>rooms/salt_camp.adv:56</sub>
-  - **Look at:** The store hut, open now, empty but for salt fish and a tremendous sense of anticlimax. <sub>rooms/salt_camp.adv:57</sub>
-  - **Talk to:** Nobody in there now but the fish. <sub>rooms/salt_camp.adv:58</sub>
+- **Look at:** A stout store hut with a barred window and a padlock the size of a ham. Inside, pending inspection, a navigator, looking out at me through the bars. <sub>rooms/salt_camp.adv:53</sub>
+- **Talk to:** I go to the bars. <sub>rooms/salt_camp.adv:55</sub>
+  - *[→ conversation* [quill3 at hut](#dlg-quill3-hut) *— see Act III › The Arcadia, on the Reef]* <sub>rooms/salt_camp.adv:56</sub>
+- **Open:** Padlocked. Pike has the key on a string round his neck, next to his whistle. <sub>rooms/salt_camp.adv:54</sub>
+- **Pull:** The padlock is not open to argument. Pike, on the other hand, is open to paperwork. <sub>rooms/salt_camp.adv:57</sub>
+- *When* *[if quill_free]* <sub>rooms/salt_camp.adv:58</sub>
+  - **Look at:** The store hut, open now, empty but for salt fish and a tremendous sense of anticlimax. <sub>rooms/salt_camp.adv:59</sub>
+  - **Talk to:** Nobody in there now but the fish. <sub>rooms/salt_camp.adv:60</sub>
     - *[nothing: cancels the usual effects]*
 
-**Tam Hobb** `tamhobb` <sub>rooms/salt_camp.adv:61</sub>
+**Tam Hobb** `tamhobb` <sub>rooms/salt_camp.adv:63</sub>
 
-- **Look at:** A big man raking salt, with a shaved head and a black beard and a face I've already seen, older and sadder, at the Marrow's mess table. <sub>rooms/salt_camp.adv:64</sub>
-- **Talk to:** He leans on his rake and looks at me as if I'm a knot somebody tied badly. <sub>rooms/salt_camp.adv:65</sub>
-  - *[→ conversation* [tamhobb](#dlg-tamhobb) *— below]* <sub>rooms/salt_camp.adv:66</sub>
-- **Give:** “Nothing in here's mine to keep, clerk. Hang on to it.” <sub>rooms/salt_camp.adv:67</sub>
+- **Look at:** A big man raking salt, with a shaved head and a black beard and a face I've already seen, older and sadder, at the Marrow's mess table. <sub>rooms/salt_camp.adv:66</sub>
+- **Talk to:** He leans on his rake and looks at me as if I'm a knot somebody tied badly. It's the exact look his brother gives me. <sub>rooms/salt_camp.adv:67</sub>
+  - *[→ conversation* [tamhobb](#dlg-tamhobb) *— below]* <sub>rooms/salt_camp.adv:68</sub>
+- **Give:** “Nothing in here's mine to keep, clerk. Hang on to it.” <sub>rooms/salt_camp.adv:69</sub>
 
-**Pike** `pike` <sub>rooms/salt_camp.adv:69</sub>
+**Pike** `pike` <sub>rooms/salt_camp.adv:71</sub>
 
-- **Look at:** Pike, on camp duty, clutching his clipboard and avoiding Quill's eye through the bars. He looks like a man who has done his job and hates it. <sub>rooms/salt_camp.adv:72</sub>
-- **Talk to:** He snaps to attention, slightly less snappily than before. <sub>rooms/salt_camp.adv:73</sub>
-  - *[→ conversation* [pike at camp](#dlg-pike-camp) *— below]* <sub>rooms/salt_camp.adv:74</sub>
-- **Give:** “Only forms, sir. Sorry, sir.” <sub>rooms/salt_camp.adv:75</sub>
-- *When* *[if quill_free]* <sub>rooms/salt_camp.adv:76</sub>
-  - **Talk to:** *[→ conversation* [pike at done](#dlg-pike-done) *— below]* <sub>rooms/salt_camp.adv:77</sub>
+- **Look at:** Pike, on camp duty, clutching his clipboard and avoiding Quill's eye through the bars. He looks like a man who has done his job and hates it. <sub>rooms/salt_camp.adv:74</sub>
+- **Talk to:** He snaps to attention, slightly less snappily than before. <sub>rooms/salt_camp.adv:75</sub>
+  - *[→ conversation* [pike at camp](#dlg-pike-camp) *— below]* <sub>rooms/salt_camp.adv:76</sub>
+- **Give:** “Only forms, sir. Sorry, sir.” <sub>rooms/salt_camp.adv:77</sub>
+- *When* *[if pike_roll]* <sub>rooms/salt_camp.adv:78</sub>
+  - **Talk to:** *[→ conversation* [pike at after](#dlg-pike-after) *— below]* <sub>rooms/salt_camp.adv:79</sub>
+- *When* *[if quill_free]* <sub>rooms/salt_camp.adv:80</sub>
+  - **Talk to:** *[→ conversation* [pike at done](#dlg-pike-done) *— below]* <sub>rooms/salt_camp.adv:81</sub>
 
-**Ansel Fenn** `ansel` *[present if quill_free]* <sub>rooms/salt_camp.adv:79</sub>
+**Ansel Fenn** `ansel` *[present if quill_free]* <sub>rooms/salt_camp.adv:83</sub>
 
-- **Look at:** My father. Sunburnt to the colour of a ship's biscuit, beard like a burst mattress, a needle in his lapel and an L on his cuff. He looks exactly the same and nothing like. <sub>rooms/salt_camp.adv:83</sub>
-- **Talk to:** He's grinning. He hasn't stopped since he dropped the flag. <sub>rooms/salt_camp.adv:84</sub>
-  - *[→ conversation* [ansel](#dlg-ansel) *— below]* <sub>rooms/salt_camp.adv:85</sub>
-- **Give:** “For me? Is it a flag? It's not a flag. Pity.” <sub>rooms/salt_camp.adv:86</sub>
-- *When* *[if ansel_met]* <sub>rooms/salt_camp.adv:87</sub>
-  - **Talk to:** *[→ conversation* [ansel at hub](#dlg-ansel-hub) *— below]* <sub>rooms/salt_camp.adv:88</sub>
+- **Look at:** My father. Sunburnt to the colour of a ship's biscuit, beard like a burst mattress, a needle in his lapel and an L on his cuff. He looks exactly the same and nothing like. <sub>rooms/salt_camp.adv:87</sub>
+- **Talk to:** He's grinning. He hasn't stopped since he dropped the flag. <sub>rooms/salt_camp.adv:88</sub>
+  - *[→ conversation* [ansel at taller](#dlg-ansel-taller) *— below]* <sub>rooms/salt_camp.adv:89</sub>
+- **Give:** “For me? Is it a flag? It's not a flag. Pity.” <sub>rooms/salt_camp.adv:90</sub>
+- *When* *[if ansel_met]* <sub>rooms/salt_camp.adv:91</sub>
+  - **Talk to:** *[→ conversation* [ansel at hub](#dlg-ansel-hub) *— below]* <sub>rooms/salt_camp.adv:92</sub>
 
-**Quill** `quill` *[present if quill_free]* <sub>rooms/salt_camp.adv:90</sub>
+**Quill** `quill` *[present if quill_free]* <sub>rooms/salt_camp.adv:94</sub>
 
-- **Look at:** Quill, free, with salt in her hair and a look on her face I'd like to file somewhere safe. <sub>rooms/salt_camp.adv:94</sub>
-- **Talk to:** She turns round before I get there. She's stopped pretending she doesn't. <sub>rooms/salt_camp.adv:95</sub>
-  - *[→ conversation* [quill3 at camp](#dlg-quill3-camp) *— see Act III › The Arcadia, on the Reef]* <sub>rooms/salt_camp.adv:96</sub>
-- **Give:** “Keep it. You've already given me the best thing on this island, and it was a form.” <sub>rooms/salt_camp.adv:97</sub>
-- *When* *[if has flag sixteen]* <sub>rooms/salt_camp.adv:98</sub>
-  - **Talk to:** *[→ conversation* [quill3 at flag](#dlg-quill3-flag) *— see Act III › The Arcadia, on the Reef]* <sub>rooms/salt_camp.adv:99</sub>
+- **Look at:** Quill, free, with salt in her hair and a look on her face I'd like to file somewhere safe. <sub>rooms/salt_camp.adv:98</sub>
+- **Talk to:** She turns round before I get there. She's stopped pretending she doesn't. <sub>rooms/salt_camp.adv:99</sub>
+  - *[→ conversation* [quill3 at camp](#dlg-quill3-camp) *— see Act III › The Arcadia, on the Reef]* <sub>rooms/salt_camp.adv:100</sub>
+- **Give:** “Keep it. You've already given me the best thing on this island, and it was a form.” <sub>rooms/salt_camp.adv:101</sub>
+- *When* *[if has flag sixteen]* <sub>rooms/salt_camp.adv:102</sub>
+  - **Talk to:** *[→ conversation* [quill3 at flag](#dlg-quill3-flag) *— see Act III › The Arcadia, on the Reef]* <sub>rooms/salt_camp.adv:103</sub>
 
 **Combinations here**
 
-- **Use harbour stamp on Bill of Health:** *[if knows_form9 and form9 = false]* I turn the Bill of Health over and write on the back, in my best customs hand: FORM 9. RELEASE OF DETAINED PERSONS UPON INSPECTION. Then I stamp it, which makes it true. <sub>rooms/salt_camp.adv:102</sub>
-  - *[sets form9]* *[sound: chime]* <sub>rooms/salt_camp.adv:103</sub>
-- **Use harbour stamp on Bill of Health:** *[if form9]* Both sides stamped. Any more and it'll be mostly stamp. <sub>rooms/salt_camp.adv:106</sub>
-- **Use Bill of Health on Pike:** *[if form9 and quill_free = false]* I hand Pike the Bill of Health, back side up. <sub>rooms/salt_camp.adv:108</sub>
-  - *[Fenn hands over: Bill of Health]* *[sets quill_free]* *[sound: chime]* *[→ conversation* [pike at form9](#dlg-pike-form9) *— below]* <sub>rooms/salt_camp.adv:109</sub>
-- **Use Bill of Health on Pike:** *[if knows_form9 and quill_free = false]* “That's your Bill of Health, sir. It's lovely. It isn't a Form 9.” He looks at its blank back, and then at me, hopefully. <sub>rooms/salt_camp.adv:114</sub>
-- **Use Bill of Health on Pike:** “You're inspected, sir. You're fine. It's the lady who's pending.” <sub>rooms/salt_camp.adv:116</sub>
-- **Use Bill of Health on the store hut:** The padlock can't read. Pike can. <sub>rooms/salt_camp.adv:118</sub>
-- **Use crowbar on the store hut:** I measure the crowbar against the padlock. Then I look at Pike's whistle, and at the forty Weather men it would fetch. A form, then. <sub>rooms/salt_camp.adv:120</sub>
-- **Use flag sixteen on Ansel Fenn:** “Not to me, son. Up the mast. That's what they're for.” <sub>rooms/salt_camp.adv:122</sub>
-- **Use brass compass on Ansel Fenn:** He laughs out loud. “Still pointing at the Old Nail. Some of us are very loyal.” <sub>rooms/salt_camp.adv:124</sub>
-- **Use Ansel's log on Ansel Fenn:** He reads the last page and hands it back rather quickly. “You weren't meant to read that one. …I'm glad you did. Keep it.” <sub>rooms/salt_camp.adv:126</sub>
-- **Use harbour stamp on Pike:** He holds out his hand to be stamped, hopefully. I'm tempted. I'm a professional. <sub>rooms/salt_camp.adv:128</sub>
-- **Use Ansel's log on Tam Hobb:** He finds his own name in it and taps it twice. “Still here, Captain,” he says to the page. <sub>rooms/salt_camp.adv:130</sub>
+- **Use harbour stamp on Bill of Health:** *[if knows_form9 and form9 = false]* I turn the Bill of Health over and write on the back, in my best customs hand: FORM 9. RELEASE OF DETAINED PERSONS UPON INSPECTION. Then I stamp it, which makes it true. <sub>rooms/salt_camp.adv:106</sub>
+  - *[sets form9]* *[sound: chime]* <sub>rooms/salt_camp.adv:107</sub>
+- **Use harbour stamp on Bill of Health:** *[if form9]* Both sides stamped. Any more and it'll be mostly stamp. <sub>rooms/salt_camp.adv:110</sub>
+- **Use Bill of Health on Pike:** *[if form9 and quill_free = false]* I hand Pike the Bill of Health, back side up. <sub>rooms/salt_camp.adv:112</sub>
+  - *[Fenn hands over: Bill of Health]* *[sets quill_free]* *[sound: chime]* *[→ conversation* [pike at form9](#dlg-pike-form9) *— below]* <sub>rooms/salt_camp.adv:113</sub>
+- **Use Bill of Health on Pike:** *[if knows_form9 and quill_free = false]* “That's your Bill of Health, sir. It's lovely. It isn't a Form 9.” He looks at its blank back, and then at me, hopefully. <sub>rooms/salt_camp.adv:118</sub>
+- **Use Bill of Health on Pike:** “You're inspected, sir. You're fine. It's the lady who's pending.” <sub>rooms/salt_camp.adv:120</sub>
+- **Use Bill of Health on the store hut:** The padlock can't read. Pike can. <sub>rooms/salt_camp.adv:122</sub>
+- **Use crowbar on the store hut:** I measure the crowbar against the padlock. Then I look at Pike's whistle, and at the forty Weather men it would fetch. A form, then. <sub>rooms/salt_camp.adv:124</sub>
+- **Use flag sixteen on Ansel Fenn:** “Not to me, son. Up the mast. That's what they're for.” <sub>rooms/salt_camp.adv:126</sub>
+- **Use brass compass on Ansel Fenn:** He laughs out loud. “Still pointing at the Old Nail. Some of us are very loyal.” <sub>rooms/salt_camp.adv:128</sub>
+- **Use Ansel's log on Ansel Fenn:** He reads the last page and hands it back rather quickly. “You weren't meant to read that one. …I'm glad you did. Keep it.” <sub>rooms/salt_camp.adv:130</sub>
+- **Use harbour stamp on Pike:** He holds out his hand to be stamped, hopefully. I'm tempted. I'm a professional. <sub>rooms/salt_camp.adv:132</sub>
+- **Use Ansel's log on Tam Hobb:** He finds his own name in it and taps it twice. “Still here, Captain,” he says to the page. <sub>rooms/salt_camp.adv:134</sub>
 - *[the shared combinations of group quill_combos — see* [Act III › The Arcadia, on the Reef](#act3-reef_wreck)*]*
-- **Use harbour stamp on the store hut:** I stamp the padlock. It now looks officially locked, which is worse. <sub>rooms/salt_camp.adv:133</sub>
-- **Use Ansel's log on Pike:** He won't take it. “Captain's private papers, sir. I'd need a form to read them, and I'd need a stronger stomach to want to.” <sub>rooms/salt_camp.adv:135</sub>
+- **Use harbour stamp on the store hut:** I stamp the padlock. It now looks officially locked, which is worse. <sub>rooms/salt_camp.adv:137</sub>
+- **Use Ansel's log on Pike:** He shuts his eyes before I can open it. “Captain's private papers, sir. I didn't see that. I didn't see me not seeing it.” <sub>rooms/salt_camp.adv:139</sub>
 
 <a id="dlg-pike"></a>
 ### Conversation: pike (Pike, Quill, Ansel Fenn)
@@ -2801,125 +3035,167 @@
 - **2.** **FENN**: Will you have it framed? <sub>dialogue/pike.adv:55</sub>
   - *→ continues at* [framed](#dlg-pike-framed)
 
-<a id="dlg-pike-open"></a>`open` **PIKE**: Gate's open, sir. Mind the Weather Works. They're not a form sort of people. <sub>dialogue/pike.adv:58</sub>
+<a id="dlg-pike-open"></a>`open` **FENN (V.O.)**: He hands the bill back, reluctantly, like a man returning a puppy. <sub>dialogue/pike.adv:58</sub>
+- *→ continues at* [gate](#dlg-pike-gate)
+
+<a id="dlg-pike-gate"></a>`gate` **PIKE**: Gate's open, sir. Keep it on you; inspections are random. Mind the Weather Works. They're not a form sort of people. <sub>dialogue/pike.adv:60</sub>
+- *→ continues at* [thread](#dlg-pike-thread)
+
+<a id="dlg-pike-thread"></a>`thread` **PIKE**: Past them it's the camp. Six crews, pending. One of them's a captain who keeps asking me for thread. <sub>dialogue/pike.adv:62</sub>
+- *→ continues at* [walk](#dlg-pike-walk)
+
+<a id="dlg-pike-walk"></a>`walk` **FENN (V.O.)**: Thread. I don't say anything. I notice I've started walking. <sub>dialogue/pike.adv:64</sub>
 - *[ends]*
 
-<a id="dlg-pike-framed"></a>`framed` **PIKE**: Better than framed, sir. Filed. …No, keep it on you. Inspections are random. <sub>dialogue/pike.adv:56</sub>
+<a id="dlg-pike-framed"></a>`framed` **PIKE**: Better than framed, sir. Memorised. I'll be saying it to myself at night. <sub>dialogue/pike.adv:56</sub>
 - *→ continues at* [open](#dlg-pike-open) *(above)*
+
+*[held: opened directly from rooms/key_gate.adv:88]*
+
+<a id="dlg-pike-held"></a>`held` **PIKE**: Still open, sir. I keep checking. Mind the Weather Works, and if you see the captain, I've no thread. I've looked. <sub>dialogue/pike.adv:66</sub>
+- *[ends]*
 
 *[landed: opened directly from rooms/salt_camp.adv:18]*
 
-<a id="dlg-pike-landed"></a>`landed` **FENN (V.O.)**: We come down in a salt pan, in a heap, in a spray of white. When I can see again, Pike is standing over us with his clipboard. He has run all the way round. <sub>dialogue/pike.adv:60</sub>
+<a id="dlg-pike-landed"></a>`landed` **FENN (V.O.)**: We come down in a salt pan, in a heap, in a spray of white. When I can see again, Pike is standing over us with his clipboard. He has run all the way round. <sub>dialogue/pike.adv:68</sub>
 - *→ continues at* [rope](#dlg-pike-rope)
 
-<a id="dlg-pike-rope"></a>`rope` **PIKE**: Arrival by rope! Arrival by rope is not an approved means of entry, sir! <sub>dialogue/pike.adv:62</sub>
+<a id="dlg-pike-rope"></a>`rope` **PIKE**: Arrival by rope! Arrival by rope is not an approved means of entry, sir! <sub>dialogue/pike.adv:70</sub>
 - *→ continues at* [bearer](#dlg-pike-bearer)
 
-<a id="dlg-pike-bearer"></a>`bearer` **PIKE**: You're all right, sir: you're inspected, you've a bill. But she hasn't. Unaccompanied cargo is held pending inspection. <sub>dialogue/pike.adv:64</sub>
+<a id="dlg-pike-bearer"></a>`bearer` **PIKE**: You're all right, sir: you're inspected, you've a bill. But she hasn't. Unaccompanied cargo is held pending inspection. <sub>dialogue/pike.adv:72</sub>
 - *→ continues at* [goes](#dlg-pike-goes)
 
-<a id="dlg-pike-goes"></a>`goes` **QUILL**: Cargo. He called me cargo. …Fine. I'll go quietly. Clerk? This is your department. <sub>dialogue/pike.adv:66</sub>
+<a id="dlg-pike-goes"></a>`goes` **QUILL**: Cargo. He called me cargo. …Fine. I'll go quietly. Clerk? This is your department. <sub>dialogue/pike.adv:74</sub>
 - *→ continues at* [locked](#dlg-pike-locked)
 
-<a id="dlg-pike-locked"></a>`locked` **FENN (V.O.)**: She lets him walk her to the store hut, which frightens me more than the Weather did. The padlock goes click. Pike looks sorry, and then looks at his clipboard, and stops. <sub>dialogue/pike.adv:68</sub>
+<a id="dlg-pike-locked"></a>`locked` **FENN (V.O.)**: She lets him walk her to the store hut, which frightens me more than the Weather did. The padlock goes click. Pike looks sorry, and then looks at his clipboard, and stops. <sub>dialogue/pike.adv:76</sub>
 - *→ continues at* [camp](#dlg-pike-camp)
 
-<a id="dlg-pike-camp"></a>`camp` **PIKE**: Camp duty, sir. It's very like gate duty, only more people are sad at me. <sub>dialogue/pike.adv:70</sub>
-- **1.** **FENN**: What would release her? *[if knows_form9 = false]* <sub>dialogue/pike.adv:71</sub>
+<a id="dlg-pike-camp"></a>`camp` **PIKE**: Camp duty, sir. It's very like gate duty, only more people are sad at me. <sub>dialogue/pike.adv:78</sub>
+- **1.** **FENN**: What would release her? *[if knows_form9 = false]* <sub>dialogue/pike.adv:79</sub>
   - *→ continues at* [nine](#dlg-pike-nine)
-- **2.** **FENN**: Pike, I need you to look the other way. *[if seen:pike.twelve = false]* <sub>dialogue/pike.adv:72</sub>
+- **2.** **FENN**: Pike, I need you to look the other way. *[if seen:pike.twelve = false]* <sub>dialogue/pike.adv:80</sub>
   - *→ continues at* [twelve](#dlg-pike-twelve)
-- **3.** **FENN**: About the Form 9. *[if knows_form9]* <sub>dialogue/pike.adv:73</sub>
+- **3.** **FENN**: About the Form 9. *[if knows_form9]* <sub>dialogue/pike.adv:81</sub>
   - *→ continues at* [how](#dlg-pike-how)
-- **4.** **FENN**: Who are all these people? <sub>dialogue/pike.adv:74</sub>
+- **4.** **FENN**: Who are all these people? <sub>dialogue/pike.adv:82</sub>
   - *→ continues at* [crews](#dlg-pike-crews)
-- **5.** **FENN**: Never mind. <sub>dialogue/pike.adv:75</sub>
+- **5.** **FENN**: Never mind. <sub>dialogue/pike.adv:83</sub>
   - *→ continues at* [sorry](#dlg-pike-sorry)
 
-<a id="dlg-pike-nine"></a>`nine` **PIKE**: A Form 9, sir. Release of Detained Person Upon Inspection. <sub>dialogue/pike.adv:76</sub>
+<a id="dlg-pike-nine"></a>`nine` **PIKE**: A Form 9, sir. Release of Detained Person Upon Inspection. <sub>dialogue/pike.adv:84</sub>
 - *→ continues at* [none](#dlg-pike-none)
 
-<a id="dlg-pike-none"></a>`none` **PIKE**: Only we haven't got any Form 9s. We've never had any Form 9s. Nobody's ever been released. <sub>dialogue/pike.adv:78</sub>
-- **1.** **FENN**: Then I'll write one. <sub>dialogue/pike.adv:79</sub>
-  - *[sets knows_form9]* <sub>dialogue/pike.adv:80</sub>
-  - *[casebook:* Form 9 is a Release of Detained Persons Upon Inspection. One signature and the quarantine has to let them go. Pike has never had one, which is not an accident.*]* <sub>dialogue/pike.adv:81</sub>
+<a id="dlg-pike-none"></a>`none` **PIKE**: Only we haven't got any Form 9s. We've never had any Form 9s. Nobody's ever been released. <sub>dialogue/pike.adv:86</sub>
+- **1.** **FENN**: Then I'll write one. <sub>dialogue/pike.adv:87</sub>
+  - *[sets knows_form9]* <sub>dialogue/pike.adv:88</sub>
+  - *[casebook:* Form 9: Release of Detained Person Upon Inspection. Written out clean, stamped by a harbour officer, any paper will do. Pike has never had one, which is not an accident.*]* <sub>dialogue/pike.adv:89</sub>
   - *→ continues at* [write](#dlg-pike-write)
-- **2.** **FENN**: Nobody? In three years? <sub>dialogue/pike.adv:82</sub>
+- **2.** **FENN**: Nobody? In three years? <sub>dialogue/pike.adv:90</sub>
   - *→ continues at* [nobody](#dlg-pike-nobody)
 
-<a id="dlg-pike-write"></a>`write` **PIKE**: You can't just write a form, sir. <sub>dialogue/pike.adv:86</sub>
+<a id="dlg-pike-write"></a>`write` **PIKE**: You can't just write a form, sir. <sub>dialogue/pike.adv:94</sub>
 - *→ continues at* [can](#dlg-pike-can)
 
-<a id="dlg-pike-can"></a>`can` **FENN (V.O.)**: I'm a clerk of the Port Vela customs house. Writing forms is the only thing I can just do. All I need is paper, and the stamp. <sub>dialogue/pike.adv:88</sub>
+<a id="dlg-pike-can"></a>`can` **FENN (V.O.)**: I'm a clerk of the Port Vela customs house. Writing forms is the only thing I can just do. All I need is paper, and the stamp. <sub>dialogue/pike.adv:96</sub>
 - *[ends]*
 
-<a id="dlg-pike-nobody"></a>`nobody` **PIKE**: Not once, sir. I did wonder. But wondering isn't a form. <sub>dialogue/pike.adv:83</sub>
-- **1.** **FENN**: Then I'll write one. <sub>dialogue/pike.adv:84</sub>
-  - *[sets knows_form9]* <sub>dialogue/pike.adv:85</sub>
+<a id="dlg-pike-nobody"></a>`nobody` **PIKE**: Not once, sir. I did wonder. But wondering isn't a form. <sub>dialogue/pike.adv:91</sub>
+- **1.** **FENN**: Then I'll write one. <sub>dialogue/pike.adv:92</sub>
+  - *[sets knows_form9]* <sub>dialogue/pike.adv:93</sub>
   - *→ continues at* [write](#dlg-pike-write) *(above)*
 
-<a id="dlg-pike-twelve"></a>`twelve` **PIKE**: There's a form for that too, sir. Form 12. We haven't got any of those either. <sub>dialogue/pike.adv:90</sub>
+<a id="dlg-pike-twelve"></a>`twelve` **PIKE**: There's a form for that too, sir. Form 12. We haven't got any of those either. <sub>dialogue/pike.adv:98</sub>
 - *[ends]*
 
-<a id="dlg-pike-how"></a>`how` **PIKE**: A proper Form 9 is written out clean and stamped by a harbour officer, sir. On any paper. Even the back of something, at a pinch. <sub>dialogue/pike.adv:89</sub>
+<a id="dlg-pike-how"></a>`how` **PIKE**: A proper Form 9 is written out clean and stamped by a harbour officer, sir. On any paper. Even the back of something, at a pinch. <sub>dialogue/pike.adv:97</sub>
 - *[ends]*
 
-<a id="dlg-pike-crews"></a>`crews` **PIKE**: Six crews, sir, raking salt. Pending inspection. Some of them have been pending a very long time. <sub>dialogue/pike.adv:91</sub>
+<a id="dlg-pike-crews"></a>`crews` **PIKE**: Six crews, sir, raking salt. Pending inspection. Some of them have been pending a very long time. <sub>dialogue/pike.adv:99</sub>
 - *[ends]*
 
-<a id="dlg-pike-sorry"></a>`sorry` **PIKE**: Sorry about the lady, sir. It's nothing personal. It's regulations, which is worse. <sub>dialogue/pike.adv:92</sub>
+<a id="dlg-pike-sorry"></a>`sorry` **PIKE**: Sorry about the lady, sir. It's nothing personal. It's regulations, which is worse. <sub>dialogue/pike.adv:100</sub>
 - *[ends]*
 
-*[form9: opened directly from rooms/salt_camp.adv:112]*
+*[form9: opened directly from rooms/salt_camp.adv:116]*
 
-<a id="dlg-pike-form9"></a>`form9` **FENN (V.O.)**: Pike reads Form 9 with his finger, mouthing the long words. <sub>dialogue/pike.adv:94</sub>
+<a id="dlg-pike-form9"></a>`form9` **FENN (V.O.)**: Pike reads Form 9 with his finger, mouthing the long words. <sub>dialogue/pike.adv:102</sub>
 - *→ continues at* [real](#dlg-pike-real)
 
-<a id="dlg-pike-real"></a>`real` **PIKE**: That's… that's a real form. <sub>dialogue/pike.adv:96</sub>
+<a id="dlg-pike-real"></a>`real` **PIKE**: That's… that's a real form. <sub>dialogue/pike.adv:104</sub>
 - *→ continues at* [plural](#dlg-pike-plural)
 
-<a id="dlg-pike-plural"></a>`plural` **PIKE**: Release of Detained Persons. Persons, sir. With an s. <sub>dialogue/pike.adv:98</sub>
-- **1.** **FENN**: Yes. I wrote it in the plural. <sub>dialogue/pike.adv:99</sub>
+<a id="dlg-pike-plural"></a>`plural` **PIKE**: Release of Detained Persons. Persons, sir. With an s. <sub>dialogue/pike.adv:106</sub>
+- **1.** **FENN**: Yes. I wrote it in the plural. <sub>dialogue/pike.adv:107</sub>
   - *→ continues at* [everybody](#dlg-pike-everybody)
-- **2.** **FENN**: Is that a problem? <sub>dialogue/pike.adv:100</sub>
+- **2.** **FENN**: Is that a problem? <sub>dialogue/pike.adv:108</sub>
   - *→ continues at* [everybody](#dlg-pike-everybody)
 
-<a id="dlg-pike-everybody"></a>`everybody` **FENN (V.O.)**: He looks out over the salt pans at six crews of sailors, all raking, all pending. You can watch the sum arrive on his face. <sub>dialogue/pike.adv:101</sub>
+<a id="dlg-pike-everybody"></a>`everybody` **FENN (V.O.)**: He looks out over the salt pans at six crews of sailors, all raking, all pending. You can watch the sum arrive on his face. <sub>dialogue/pike.adv:109</sub>
 - *→ continues at* [inspected](#dlg-pike-inspected)
 
-<a id="dlg-pike-inspected"></a>`inspected` **PIKE**: …That's everybody, sir. (He blows his whistle.) Inspection's over! Everybody's… everybody's inspected! <sub>dialogue/pike.adv:103</sub>
+<a id="dlg-pike-inspected"></a>`inspected` **PIKE**: …That's everybody, sir. (He blows his whistle.) Inspection's over! Everybody's… everybody's inspected! <sub>dialogue/pike.adv:111</sub>
 - *→ continues at* [rakes](#dlg-pike-rakes)
 
-<a id="dlg-pike-rakes"></a>`rakes` **FENN (V.O.)**: A hundred and thirty rakes stop at once. Pike unlocks the store hut. Quill comes out into the glare with salt on her shoulders, looks at the form, and then at me. <sub>dialogue/pike.adv:105</sub>
+<a id="dlg-pike-rakes"></a>`rakes` **FENN (V.O.)**: A hundred and thirty rakes stop at once. Pike unlocks the store hut. Quill comes out into the glare with salt on her shoulders, looks at the form, and then at me. <sub>dialogue/pike.adv:113</sub>
 - *→ continues at* [wrote](#dlg-pike-wrote)
 
-<a id="dlg-pike-wrote"></a>`wrote` **QUILL**: You wrote a form. <sub>dialogue/pike.adv:107</sub>
-- **1.** **FENN**: I wrote a very good form. <sub>dialogue/pike.adv:108</sub>
+<a id="dlg-pike-wrote"></a>`wrote` **QUILL**: You wrote a form. <sub>dialogue/pike.adv:115</sub>
+- **1.** **FENN**: I wrote a very good form. <sub>dialogue/pike.adv:116</sub>
   - *→ continues at* [kiss](#dlg-pike-kiss)
-- **2.** **FENN**: I'd have written a hundred. <sub>dialogue/pike.adv:109</sub>
-  - *[aff +1]* <sub>dialogue/pike.adv:110</sub>
+- **2.** **FENN**: I'd have written a hundred. <sub>dialogue/pike.adv:117</sub>
+  - *[aff +1]* <sub>dialogue/pike.adv:118</sub>
   - *→ continues at* [kiss](#dlg-pike-kiss)
 
-<a id="dlg-pike-kiss"></a>`kiss` **FENN (V.O.)**: She takes my face in both hands, salt and all, and kisses me. There is no form for this. There doesn't need to be. <sub>dialogue/pike.adv:111</sub>
+<a id="dlg-pike-kiss"></a>`kiss` **FENN (V.O.)**: She takes my face in both hands, salt and all, and kisses me. I hold on. I've been told to keep doing that. <sub>dialogue/pike.adv:119</sub>
 - *→ continues at* [ansel](#dlg-pike-ansel)
 
-<a id="dlg-pike-ansel"></a>`ansel` **ANSEL FENN**: Ah. Good. I'll come back. <sub>dialogue/pike.adv:113</sub>
+<a id="dlg-pike-ansel"></a>`ansel` **ANSEL FENN**: Ah. Good. I'll come back. <sub>dialogue/pike.adv:121</sub>
 - *→ continues at* [turn](#dlg-pike-turn)
 
-<a id="dlg-pike-turn"></a>`turn` **FENN (V.O.)**: A sunburnt man with a needle in his lapel and a flag under his arm has stopped in the middle of the salt pan. He turns to go. He turns back. He drops the flag. <sub>dialogue/pike.adv:115</sub>
+<a id="dlg-pike-turn"></a>`turn` **FENN (V.O.)**: A sunburnt man with a needle in his lapel and a flag under his arm has stopped in the middle of the salt pan. He turns to go. He turns back. He drops the flag. <sub>dialogue/pike.adv:123</sub>
+- *[→ conversation* [ansel](#dlg-ansel) *— below]* <sub>dialogue/pike.adv:124</sub>
 - *[ends]*
 
-*[done: opened directly from rooms/salt_camp.adv:77]*
+*[done: opened directly from rooms/salt_camp.adv:81]*
 
-<a id="dlg-pike-done"></a>`done` **PIKE**: I've filed it, sir. In my hat; it's the safest place on the key. …Is this what being on the right side feels like? It's very windy. <sub>dialogue/pike.adv:117</sub>
+<a id="dlg-pike-done"></a>`done` **PIKE**: I've filed it, sir. In my hat; it's the safest place on the key. <sub>dialogue/pike.adv:126</sub>
+- *→ continues at* [roll](#dlg-pike-roll)
+
+<a id="dlg-pike-roll"></a>`roll` **PIKE**: …And this, sir. The roll: every name on the key, all six crews. I kept it very neat. I'd like it to go somewhere it'll be read. <sub>dialogue/pike.adv:128</sub>
+- *[sets pike_roll]* <sub>dialogue/pike.adv:129</sub>
+- *→ continues at* [roll2](#dlg-pike-roll2)
+
+<a id="dlg-pike-roll2"></a>`roll2` **FENN (V.O.)**: Six ships' worth of names, in a hand so careful it's almost shy. I put it in the log, where they belong. <sub>dialogue/pike.adv:131</sub>
+- *→ continues at* [bright](#dlg-pike-bright)
+
+<a id="dlg-pike-bright"></a>`bright` **PIKE**: Is this what being on the right side feels like, sir? It's very bright. <sub>dialogue/pike.adv:133</sub>
+- **1.** **FENN**: Customs is hiring. We have a great many forms. <sub>dialogue/pike.adv:134</sub>
+  - *→ continues at* [hiring](#dlg-pike-hiring)
+- **2.** **FENN**: You did well, Pike. <sub>dialogue/pike.adv:135</sub>
+  - *→ continues at* [well](#dlg-pike-well)
+
+<a id="dlg-pike-hiring"></a>`hiring` **PIKE**: (whispering) Do you have a Form 12? <sub>dialogue/pike.adv:136</sub>
 - *[ends]*
+
+<a id="dlg-pike-well"></a>`well` **PIKE**: Did I, sir? Nobody's ever said. I'll write it down before it wears off. <sub>dialogue/pike.adv:137</sub>
+- *[ends]*
+
+*[after: opened directly from rooms/salt_camp.adv:79]*
+
+<a id="dlg-pike-after"></a>`after` **PIKE**: Still filed, sir. The roll's with you and the form's in my hat. Between us we're very well organised. <sub>dialogue/pike.adv:139</sub>
+- **1.** **FENN**: Customs is hiring. We have a great many forms. *[if seen:pike.hiring = false]* <sub>dialogue/pike.adv:140</sub>
+  - *→ continues at* [hiring](#dlg-pike-hiring) *(above)*
+- **2.** **FENN**: Carry on, Pike. <sub>dialogue/pike.adv:141</sub>
+  - *[ends]*
 
 <a id="dlg-tamhobb"></a>
 ### Conversation: tamhobb (Tam Hobb)
 
 *[source:* `dialogue tamhobb`*, starts at* `root`*]* <sub>dialogue/tamhobb.adv:2</sub>
 
-<a id="dlg-tamhobb-root"></a>`root` **TAM HOBB**: You've the look of a man who's been talking to my brother. You've stopped blinking. <sub>dialogue/tamhobb.adv:3</sub>
+<a id="dlg-tamhobb-root"></a>`root` **TAM HOBB**: New, are you? New ones stare at the salt like it owes them money. <sub>dialogue/tamhobb.adv:3</sub>
 - **1.** **FENN**: You're Tam Hobb. *[if seen:tamhobb.tam = false]* <sub>dialogue/tamhobb.adv:4</sub>
   - *→ continues at* [tam](#dlg-tamhobb-tam)
 - **2.** **FENN**: He's on the Marrow. Your name's on his arm. *[if seen:tamhobb.tam and seen:tamhobb.arm = false]* <sub>dialogue/tamhobb.adv:5</sub>
@@ -2935,176 +3211,207 @@
 - **1.** **FENN**: He's on the Marrow. Your name's on his arm. <sub>dialogue/tamhobb.adv:10</sub>
   - *→ continues at* [arm](#dlg-tamhobb-arm)
 
-<a id="dlg-tamhobb-arm"></a>`arm` **TAM HOBB**: On his arm? In ink? (He leans on the rake.) He'll have spelled it wrong. <sub>dialogue/tamhobb.adv:11</sub>
+<a id="dlg-tamhobb-arm"></a>`arm` **TAM HOBB**: On his arm? In ink? (He leans on the rake, harder than a man needs to.) He'll have spelled it wrong. <sub>dialogue/tamhobb.adv:11</sub>
 - *→ continues at* [arm2](#dlg-tamhobb-arm2)
 
 <a id="dlg-tamhobb-arm2"></a>`arm2` **TAM HOBB**: Tell my brother I said his tattoos are terrible. <sub>dialogue/tamhobb.adv:13</sub>
 - **1.** **FENN**: He left room on his arm. In case. <sub>dialogue/tamhobb.adv:14</sub>
-  - *[aff +1]* <sub>dialogue/tamhobb.adv:15</sub>
   - *→ continues at* [room](#dlg-tamhobb-room)
-- **2.** **FENN**: I'll tell him. From a distance. <sub>dialogue/tamhobb.adv:16</sub>
+- **2.** **FENN**: I'll tell him. From a distance. <sub>dialogue/tamhobb.adv:15</sub>
   - *→ continues at* [distance](#dlg-tamhobb-distance)
 
-<a id="dlg-tamhobb-room"></a>`room` **TAM HOBB**: …Course he did. Big soft lump. Tell him that too. No. Don't. I'll tell him. <sub>dialogue/tamhobb.adv:17</sub>
+<a id="dlg-tamhobb-room"></a>`room` **TAM HOBB**: …Course he did. Big soft lump. Tell him that too. No. Don't. I'll tell him. <sub>dialogue/tamhobb.adv:16</sub>
 - *[ends]*
 
-<a id="dlg-tamhobb-distance"></a>`distance` **TAM HOBB**: Wise. He hugs like a capstan. <sub>dialogue/tamhobb.adv:18</sub>
+<a id="dlg-tamhobb-distance"></a>`distance` **TAM HOBB**: Wise. He hugs like a capstan. <sub>dialogue/tamhobb.adv:17</sub>
 - *[ends]*
 
-<a id="dlg-tamhobb-son"></a>`son` **FENN (V.O.)**: The rake stops. <sub>dialogue/tamhobb.adv:19</sub>
+<a id="dlg-tamhobb-son"></a>`son` **FENN (V.O.)**: The rake stops. <sub>dialogue/tamhobb.adv:18</sub>
 - *→ continues at* [son2](#dlg-tamhobb-son2)
 
-<a id="dlg-tamhobb-son2"></a>`son2` **TAM HOBB**: Little Tam. He'll be ten. …Counting ships. He gets that from me. I count everything here: pans, days, the buttons on Pike. <sub>dialogue/tamhobb.adv:21</sub>
-- **1.** **FENN**: He said to tell you he kept counting. *[if seen:tam.promise]* <sub>dialogue/tamhobb.adv:22</sub>
+<a id="dlg-tamhobb-son2"></a>`son2` **TAM HOBB**: Little Tam. He'll be ten. …Counting ships. He gets that from me. I count everything here: pans, days, the buttons on Pike. <sub>dialogue/tamhobb.adv:20</sub>
+- **1.** **FENN**: He said to tell you he kept counting. *[if seen:tam.promise]* <sub>dialogue/tamhobb.adv:21</sub>
   - *→ continues at* [counting](#dlg-tamhobb-counting)
-- **2.** **FENN**: He's still got your cap. It's still too big. <sub>dialogue/tamhobb.adv:23</sub>
+- **2.** **FENN**: He's still got your cap. It's still too big. <sub>dialogue/tamhobb.adv:22</sub>
   - *→ continues at* [cap](#dlg-tamhobb-cap)
 
-<a id="dlg-tamhobb-counting"></a>`counting` **TAM HOBB**: Did he. (He looks at the salt for a while.) Then I'd better come home and be counted. <sub>dialogue/tamhobb.adv:24</sub>
+<a id="dlg-tamhobb-counting"></a>`counting` **TAM HOBB**: Did he. (He looks at the salt for a while.) Then I'd better come home and be counted. <sub>dialogue/tamhobb.adv:23</sub>
 - *[ends]*
 
-<a id="dlg-tamhobb-cap"></a>`cap` **TAM HOBB**: It was too big for me, too. Tell him it fits eventually. Most things do, if you stop growing out of them. <sub>dialogue/tamhobb.adv:25</sub>
+<a id="dlg-tamhobb-cap"></a>`cap` **TAM HOBB**: It was too big for me, too. Tell him it fits eventually. Most things do, if you stop growing out of them. <sub>dialogue/tamhobb.adv:24</sub>
 - *[ends]*
 
-<a id="dlg-tamhobb-pike"></a>`pike` **TAM HOBB**: Pike? Pike'd let the devil out if the devil had the right form. Trouble is, nobody's ever seen the right form. Not on this key. <sub>dialogue/tamhobb.adv:26</sub>
+<a id="dlg-tamhobb-pike"></a>`pike` **TAM HOBB**: Pike? Pike'd let the devil out if the devil had the right form. Trouble is, nobody's ever seen the right form. Not on this key. <sub>dialogue/tamhobb.adv:25</sub>
 - *[ends]*
 
-<a id="dlg-tamhobb-bye"></a>`bye` **TAM HOBB**: Mind the pans. They're deeper than they look. Most things here are. <sub>dialogue/tamhobb.adv:27</sub>
+<a id="dlg-tamhobb-bye"></a>`bye` **TAM HOBB**: Mind the pans. They're deeper than they look. Most things here are. <sub>dialogue/tamhobb.adv:26</sub>
 - *[ends]*
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
 *[home: opened directly from rooms/village.adv:65]*
 
-<a id="dlg-tamhobb-home"></a>`home` **TAM HOBB**: Clerk. I've been home an hour, and my wife has said my name eleven times. I'm counting. The boy taught me. <sub>dialogue/tamhobb.adv:29</sub>
-- **1.** **FENN**: And your brother? <sub>dialogue/tamhobb.adv:30</sub>
+<a id="dlg-tamhobb-home"></a>`home` **TAM HOBB**: Clerk. I've been home an hour, and my wife has said my name eleven times. I'm counting. The boy taught me. <sub>dialogue/tamhobb.adv:28</sub>
+- **1.** **FENN**: And your brother? <sub>dialogue/tamhobb.adv:29</sub>
   - *→ continues at* [brother](#dlg-tamhobb-brother)
-- **2.** **FENN**: You brought the rake. <sub>dialogue/tamhobb.adv:31</sub>
+- **2.** **FENN**: You brought the rake. <sub>dialogue/tamhobb.adv:30</sub>
   - *→ continues at* [rake](#dlg-tamhobb-rake)
-- **3.** **FENN**: Goodnight, Tam. <sub>dialogue/tamhobb.adv:32</sub>
+- **3.** **FENN**: Goodnight, Tam. <sub>dialogue/tamhobb.adv:31</sub>
   - *→ continues at* [homebye](#dlg-tamhobb-homebye)
 
-<a id="dlg-tamhobb-brother"></a>`brother` **TAM HOBB**: Down at the Keel, showing the whole room his arm. He isn't crossing my name out. He's writing HOME under it, in worse ink. <sub>dialogue/tamhobb.adv:33</sub>
+<a id="dlg-tamhobb-brother"></a>`brother` **TAM HOBB**: Down at the Keel, showing the whole room his arm. He isn't crossing my name out. He's writing HOME under it, in worse ink. <sub>dialogue/tamhobb.adv:32</sub>
 - *[ends]*
 
-<a id="dlg-tamhobb-rake"></a>`rake` **TAM HOBB**: Three years. My hands don't know what to do without it. (He looks at it.) I'll hang it over the door. Pike can come and inspect it. <sub>dialogue/tamhobb.adv:34</sub>
+<a id="dlg-tamhobb-rake"></a>`rake` **TAM HOBB**: Three years. My hands don't know what to do without it. (He looks at it.) I'll hang it over the door. Pike can come and inspect it. <sub>dialogue/tamhobb.adv:33</sub>
 - *[ends]*
 
-<a id="dlg-tamhobb-homebye"></a>`homebye` **TAM HOBB**: Night, clerk. Mind the step. The boy says it's a killer. It's just a step. <sub>dialogue/tamhobb.adv:35</sub>
+<a id="dlg-tamhobb-homebye"></a>`homebye` **TAM HOBB**: Night, clerk. Mind the step. The boy says it's a killer. It's just a step. <sub>dialogue/tamhobb.adv:34</sub>
 - *[ends]*
 
 <a id="dlg-ansel"></a>
 ### Conversation: ansel (Ansel Fenn, Quill)
 
-*[source:* `dialogue ansel`*, starts at* `taller`*]* <sub>dialogue/ansel.adv:2</sub>
+*[source:* `dialogue ansel`*, starts at* `across`*]* <sub>dialogue/ansel.adv:2</sub>
 
-<a id="dlg-ansel-taller"></a>`taller` **ANSEL FENN**: You're taller. Is that regulation? <sub>dialogue/ansel.adv:3</sub>
-- **1.** **FENN**: Hello, Father. <sub>dialogue/ansel.adv:4</sub>
-  - *[aff +1]* <sub>dialogue/ansel.adv:5</sub>
+<a id="dlg-ansel-across"></a>`across` **FENN (V.O.)**: He's across the salt pan before I've decided to move. He stops a yard short, as if I'm something he's sewn and isn't sure will hold. <sub>dialogue/ansel.adv:4</sub>
+- *→ continues at* [paperwork](#dlg-ansel-paperwork)
+
+<a id="dlg-ansel-paperwork"></a>`paperwork` **FENN (V.O.)**: I've had three years to work out what to say. All of it was paperwork. <sub>dialogue/ansel.adv:6</sub>
+- *→ continues at* [taller](#dlg-ansel-taller)
+
+<a id="dlg-ansel-taller"></a>`taller` **ANSEL FENN**: You're taller. Is that regulation? <sub>dialogue/ansel.adv:8</sub>
+- **1.** **FENN**: Hello, Father. <sub>dialogue/ansel.adv:9</sub>
+  - *[aff +1]* <sub>dialogue/ansel.adv:10</sub>
   - *→ continues at* [hello](#dlg-ansel-hello)
-- **2.** **FENN**: You left the compass on the hall table. <sub>dialogue/ansel.adv:6</sub>
+- **2.** **FENN**: You left the compass on the hall table. <sub>dialogue/ansel.adv:11</sub>
   - *→ continues at* [table](#dlg-ansel-table)
 
-<a id="dlg-ansel-hello"></a>`hello` **ANSEL FENN**: Hello, son. <sub>dialogue/ansel.adv:7</sub>
-- *→ continues at* [wait](#dlg-ansel-wait)
-
-<a id="dlg-ansel-wait"></a>`wait` **ANSEL FENN**: I left it on the table because I knew you'd bring it. I didn't know it would take three years. …I'm sorry I made you wait. <sub>dialogue/ansel.adv:9</sub>
-- *→ continues at* [flags](#dlg-ansel-flags)
-
-<a id="dlg-ansel-flags"></a>`flags` **ANSEL FENN**: Fifteen flags. I kept thinking, one of these mornings somebody will look up. <sub>dialogue/ansel.adv:17</sub>
-- **1.** **FENN**: I read the log. The L is for her. <sub>dialogue/ansel.adv:18</sub>
-  - *→ continues at* [lise](#dlg-ansel-lise)
-- **2.** **FENN**: Your sewing is terrible. <sub>dialogue/ansel.adv:19</sub>
-  - *→ continues at* [sewing](#dlg-ansel-sewing)
-
-<a id="dlg-ansel-lise"></a>`lise` **ANSEL FENN**: She always said I couldn't sew. Fifteen flags, and she's still right. …I think she'd have liked that best. <sub>dialogue/ansel.adv:20</sub>
-- *→ continues at* [you](#dlg-ansel-you)
-
-<a id="dlg-ansel-you"></a>`you` **ANSEL FENN**: And you are? <sub>dialogue/ansel.adv:24</sub>
-- *→ continues at* [nav](#dlg-ansel-nav)
-
-<a id="dlg-ansel-nav"></a>`nav` **QUILL**: The navigator. <sub>dialogue/ansel.adv:26</sub>
-- *→ continues at* [course](#dlg-ansel-course)
-
-<a id="dlg-ansel-course"></a>`course` **ANSEL FENN**: (delighted) Of course you are. <sub>dialogue/ansel.adv:28</sub>
-- *→ continues at* [log](#dlg-ansel-log)
-
-<a id="dlg-ansel-log"></a>`log` **ANSEL FENN**: I'd say I didn't see anything just now, but I'm a captain. We see everything. We just log it later. <sub>dialogue/ansel.adv:30</sub>
-- *→ continues at* [dare](#dlg-ansel-dare)
-
-<a id="dlg-ansel-dare"></a>`dare` **QUILL**: Don't you dare log it. <sub>dialogue/ansel.adv:32</sub>
-- *→ continues at* [crews](#dlg-ansel-crews)
-
-<a id="dlg-ansel-crews"></a>`crews` **ANSEL FENN**: Pike says everybody's inspected. A hundred and thirty sailors, and the Weather took every boat that floats. I'm not leaving without every one of them. <sub>dialogue/ansel.adv:34</sub>
-- **1.** **FENN**: There's a ship outside the Needle, waiting for a new flag. <sub>dialogue/ansel.adv:35</sub>
-  - *[Fenn receives: flag sixteen]* *[sets ansel_met]* *[sound: pickup]* <sub>dialogue/ansel.adv:36</sub>
-  - *→ continues at* [sixteen](#dlg-ansel-sixteen)
-- **2.** **FENN**: You won't have to. I've brought a ship. Well. A ship brought me. <sub>dialogue/ansel.adv:39</sub>
-  - *[Fenn receives: flag sixteen]* *[sets ansel_met]* *[sound: pickup]* <sub>dialogue/ansel.adv:40</sub>
-  - *→ continues at* [sixteen](#dlg-ansel-sixteen)
-
-<a id="dlg-ansel-sixteen"></a>`sixteen` **ANSEL FENN**: Then she wants sixteen. I was putting it up this morning. …Here. With an L in the corner. For your mother. <sub>dialogue/ansel.adv:43</sub>
-- *→ continues at* [colour](#dlg-ansel-colour)
-
-<a id="dlg-ansel-colour"></a>`colour` **ANSEL FENN**: She'd have hated the colour. <sub>dialogue/ansel.adv:45</sub>
-- **1.** **FENN**: Then why that colour? <sub>dialogue/ansel.adv:46</sub>
-  - *[aff +1]* <sub>dialogue/ansel.adv:47</sub>
-  - *→ continues at* [why](#dlg-ansel-why)
-- **2.** **FENN**: I'll run it up. <sub>dialogue/ansel.adv:48</sub>
-  - *→ continues at* [run](#dlg-ansel-run)
-
-<a id="dlg-ansel-why"></a>`why` **ANSEL FENN**: So she'd have to come back and complain about it. …It hasn't worked yet. I'm a very patient sewer. <sub>dialogue/ansel.adv:49</sub>
-- *→ continues at* [run](#dlg-ansel-run)
-
-<a id="dlg-ansel-run"></a>`run` **ANSEL FENN**: The wreck's halyard, on the mainmast. Across the flats: follow the stakes, not me. I always go wrong at the third one. I'll get the lads to the beach. <sub>dialogue/ansel.adv:51</sub>
-- *[ends]*
-
-<a id="dlg-ansel-sewing"></a>`sewing` **ANSEL FENN**: Your mother said exactly that, in exactly that voice. Fifteen flags, and I still haven't proved her wrong. Don't tell her. Well. You know. <sub>dialogue/ansel.adv:22</sub>
-- *→ continues at* [you](#dlg-ansel-you) *(above)*
-
-<a id="dlg-ansel-table"></a>`table` **ANSEL FENN**: I did! On purpose! Cray wanted it, and I thought: my son has a desk and a stamp. He can't possibly get into trouble. <sub>dialogue/ansel.adv:11</sub>
+<a id="dlg-ansel-hello"></a>`hello` **ANSEL FENN**: Hello, son. <sub>dialogue/ansel.adv:12</sub>
 - *→ continues at* [look](#dlg-ansel-look)
 
-<a id="dlg-ansel-look"></a>`look` **FENN (V.O.)**: He looks at me properly: the salt, the stamp, the pirate standing next to me. <sub>dialogue/ansel.adv:13</sub>
-- *→ continues at* [lookat](#dlg-ansel-lookat)
+<a id="dlg-ansel-look"></a>`look` **FENN (V.O.)**: He looks at me properly: the salt, the stamp, the pirate standing next to me. <sub>dialogue/ansel.adv:16</sub>
+- *→ continues at* [sorry](#dlg-ansel-sorry)
 
-<a id="dlg-ansel-lookat"></a>`lookat` **ANSEL FENN**: …Look at you. <sub>dialogue/ansel.adv:15</sub>
-- *→ continues at* [flags](#dlg-ansel-flags) *(above)*
+<a id="dlg-ansel-sorry"></a>`sorry` **ANSEL FENN**: …Look at you. I'm sorry about the beard. I'm sorry about your shirts; most of them are flags now. I'm sorry about the beard. <sub>dialogue/ansel.adv:18</sub>
+- *→ continues at* [years](#dlg-ansel-years)
+
+<a id="dlg-ansel-years"></a>`years` **ANSEL FENN**: And the three years. I should have led with the three years. <sub>dialogue/ansel.adv:20</sub>
+- **1.** **FENN**: They wrote you down as lost. I was a customs clerk. I believed it. <sub>dialogue/ansel.adv:21</sub>
+  - *→ continues at* [neat](#dlg-ansel-neat)
+
+<a id="dlg-ansel-neat"></a>`neat` **ANSEL FENN**: (gently) Well. It was very neat handwriting. <sub>dialogue/ansel.adv:22</sub>
+- *→ continues at* [flags](#dlg-ansel-flags)
+
+<a id="dlg-ansel-flags"></a>`flags` **ANSEL FENN**: Fifteen flags. I kept thinking, one of these mornings somebody will look up. <sub>dialogue/ansel.adv:24</sub>
+- **1.** **FENN**: I read the log. The L is for her. <sub>dialogue/ansel.adv:25</sub>
+  - *→ continues at* [lise](#dlg-ansel-lise)
+- **2.** **FENN**: Your sewing is terrible. <sub>dialogue/ansel.adv:26</sub>
+  - *→ continues at* [sewing](#dlg-ansel-sewing)
+
+<a id="dlg-ansel-lise"></a>`lise` **ANSEL FENN**: She always said I couldn't sew. Fifteen flags, and she's still right. …I think she'd have liked that best. <sub>dialogue/ansel.adv:27</sub>
+- *→ continues at* [you](#dlg-ansel-you)
+
+<a id="dlg-ansel-you"></a>`you` **ANSEL FENN**: And you are? <sub>dialogue/ansel.adv:31</sub>
+- *→ continues at* [nav](#dlg-ansel-nav)
+
+<a id="dlg-ansel-nav"></a>`nav` **QUILL**: The navigator. <sub>dialogue/ansel.adv:33</sub>
+- *→ continues at* [course](#dlg-ansel-course)
+
+<a id="dlg-ansel-course"></a>`course` **ANSEL FENN**: (delighted) Of course you are. <sub>dialogue/ansel.adv:35</sub>
+- *→ continues at* [log](#dlg-ansel-log)
+
+<a id="dlg-ansel-log"></a>`log` **ANSEL FENN**: I'd say I didn't see anything just now, but I'm a captain. We see everything. We just log it later. <sub>dialogue/ansel.adv:37</sub>
+- *→ continues at* [dare](#dlg-ansel-dare)
+
+<a id="dlg-ansel-dare"></a>`dare` **QUILL**: Don't you dare log it. <sub>dialogue/ansel.adv:39</sub>
+- *→ continues at* [loft](#dlg-ansel-loft)
+
+<a id="dlg-ansel-loft"></a>`loft` **ANSEL FENN**: His mother kissed me in a sail loft, you know. I'd just been fined. <sub>dialogue/ansel.adv:41</sub>
+- *→ continues at* [what](#dlg-ansel-what)
+
+<a id="dlg-ansel-what"></a>`what` **QUILL**: What for? <sub>dialogue/ansel.adv:43</sub>
+- *→ continues at* [being](#dlg-ansel-being)
+
+<a id="dlg-ansel-being"></a>`being` **ANSEL FENN**: Being in a sail loft. <sub>dialogue/ansel.adv:45</sub>
+- *→ continues at* [crews](#dlg-ansel-crews)
+
+<a id="dlg-ansel-crews"></a>`crews` **ANSEL FENN**: Pike says everybody's inspected. A hundred and thirty sailors, and the Weather took every boat that floats. I'm not leaving without every one of them. <sub>dialogue/ansel.adv:47</sub>
+- **1.** **FENN**: There's a ship outside the Needle, waiting for a new flag. <sub>dialogue/ansel.adv:48</sub>
+  - *[Fenn receives: flag sixteen]* *[sets ansel_met]* *[sound: pickup]* <sub>dialogue/ansel.adv:49</sub>
+  - *→ continues at* [sixteen](#dlg-ansel-sixteen)
+- **2.** **FENN**: You won't have to. I've brought a ship. Well. A ship brought me. <sub>dialogue/ansel.adv:52</sub>
+  - *[Fenn receives: flag sixteen]* *[sets ansel_met]* *[sound: pickup]* <sub>dialogue/ansel.adv:53</sub>
+  - *→ continues at* [sixteen](#dlg-ansel-sixteen)
+
+<a id="dlg-ansel-sixteen"></a>`sixteen` **ANSEL FENN**: Then she wants sixteen. I was putting it up this morning. …Here. L in the corner. She checks. <sub>dialogue/ansel.adv:56</sub>
+- *→ continues at* [colour](#dlg-ansel-colour)
+
+<a id="dlg-ansel-colour"></a>`colour` **ANSEL FENN**: She'd have hated the colour. It's mustard. On purpose. <sub>dialogue/ansel.adv:58</sub>
+- **1.** **FENN**: Why mustard? <sub>dialogue/ansel.adv:59</sub>
+  - *[aff +1]* <sub>dialogue/ansel.adv:60</sub>
+  - *→ continues at* [why](#dlg-ansel-why)
+- **2.** **FENN**: I'll run it up. <sub>dialogue/ansel.adv:61</sub>
+  - *→ continues at* [run](#dlg-ansel-run)
+
+<a id="dlg-ansel-why"></a>`why` **ANSEL FENN**: So she'd have to come back and complain about it. …It hasn't worked yet. I'm a very patient sewer. Sewist. Man with a needle. <sub>dialogue/ansel.adv:62</sub>
+- *→ continues at* [run](#dlg-ansel-run)
+
+<a id="dlg-ansel-run"></a>`run` **ANSEL FENN**: The wreck's halyard, on the mainmast. Across the flats: follow the stakes, not me. I always go wrong at the third one. I'll get the lads to the beach. <sub>dialogue/ansel.adv:64</sub>
+- *[ends]*
+
+<a id="dlg-ansel-sewing"></a>`sewing` **ANSEL FENN**: Your mother said exactly that, in exactly that voice. Fifteen flags, and I still haven't proved her wrong. Don't tell her. Well. You know. <sub>dialogue/ansel.adv:29</sub>
+- *→ continues at* [you](#dlg-ansel-you) *(above)*
+
+<a id="dlg-ansel-table"></a>`table` **ANSEL FENN**: I did! On purpose! Cray wanted it, and I thought: my son has a desk and a stamp. He can't possibly get into trouble. <sub>dialogue/ansel.adv:14</sub>
+- *→ continues at* [look](#dlg-ansel-look) *(above)*
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
-*[hub: opened directly from rooms/salt_camp.adv:88]*
+*[hub: opened directly from rooms/salt_camp.adv:92]*
 
-<a id="dlg-ansel-hub"></a>`hub` **ANSEL FENN**: Still here? The flag won't raise itself. I've asked it. Nicely, and then not. <sub>dialogue/ansel.adv:53</sub>
-- **1.** **FENN**: What did the Weather do with you? <sub>dialogue/ansel.adv:54</sub>
+<a id="dlg-ansel-hub"></a>`hub` **ANSEL FENN**: Still here? The flag won't raise itself. I've asked it. Nicely, and then not. <sub>dialogue/ansel.adv:66</sub>
+- **1.** **FENN**: What did the Weather do with you? <sub>dialogue/ansel.adv:67</sub>
   - *→ continues at* [receipt](#dlg-ansel-receipt)
-- **2.** **FENN**: Rook's alive. He's in Port Vela. *[if seen:ansel.rook = false]* <sub>dialogue/ansel.adv:55</sub>
+- **2.** **FENN**: Rook's alive. He's in Port Vela. *[if seen:ansel.rook = false]* <sub>dialogue/ansel.adv:68</sub>
   - *→ continues at* [rook](#dlg-ansel-rook)
-- **3.** **FENN**: Why keep raising flags? <sub>dialogue/ansel.adv:56</sub>
+- **3.** **FENN**: I read the last page. *[if has Ansel's log and seen:ansel.page = false]* <sub>dialogue/ansel.adv:69</sub>
+  - *→ continues at* [page](#dlg-ansel-page)
+- **4.** **FENN**: I've still got the desk, you know. At the customs house. *[if seen:ansel.desk = false]* <sub>dialogue/ansel.adv:70</sub>
+  - *→ continues at* [desk](#dlg-ansel-desk)
+- **5.** **FENN**: Why keep raising flags? <sub>dialogue/ansel.adv:71</sub>
   - *→ continues at* [why2](#dlg-ansel-why2)
-- **4.** **FENN**: I'm going. <sub>dialogue/ansel.adv:57</sub>
+- **6.** **FENN**: I'm going. <sub>dialogue/ansel.adv:72</sub>
   - *→ continues at* [go](#dlg-ansel-go)
 
-<a id="dlg-ansel-receipt"></a>`receipt` **ANSEL FENN**: Polite men. They gave every one of us a receipt for himself. I've still got mine. “One captain, used.” I'd argue with “used”. <sub>dialogue/ansel.adv:58</sub>
+<a id="dlg-ansel-receipt"></a>`receipt` **ANSEL FENN**: Polite men. They gave every one of us a receipt for himself. I've still got mine. “One captain, used.” I'd argue with “used”. <sub>dialogue/ansel.adv:73</sub>
 - *[ends]*
 
-<a id="dlg-ansel-rook"></a>`rook` **ANSEL FENN**: Rook! The old— they told us he'd… (He stops.) Is he well? <sub>dialogue/ansel.adv:59</sub>
+<a id="dlg-ansel-rook"></a>`rook` **ANSEL FENN**: Rook! The old— they told us he'd… (He stops.) Is he well? <sub>dialogue/ansel.adv:74</sub>
 - *→ continues at* [drunk](#dlg-ansel-drunk)
 
-<a id="dlg-ansel-drunk"></a>`drunk` **ANSEL FENN**: Don't answer that. Is he drunk? <sub>dialogue/ansel.adv:61</sub>
-- **1.** **FENN**: Very. <sub>dialogue/ansel.adv:62</sub>
+<a id="dlg-ansel-drunk"></a>`drunk` **ANSEL FENN**: Don't answer that. Is he drunk? <sub>dialogue/ansel.adv:76</sub>
+- **1.** **FENN**: Very. <sub>dialogue/ansel.adv:77</sub>
   - *→ continues at* [well](#dlg-ansel-well)
-- **2.** **FENN**: He's been waiting for you. He just did it in a tavern. <sub>dialogue/ansel.adv:63</sub>
-  - *[aff +1]* <sub>dialogue/ansel.adv:64</sub>
+- **2.** **FENN**: He's been waiting for you. He just did it in a tavern. <sub>dialogue/ansel.adv:78</sub>
+  - *[aff +1]* <sub>dialogue/ansel.adv:79</sub>
   - *→ continues at* [well](#dlg-ansel-well)
 
-<a id="dlg-ansel-well"></a>`well` **ANSEL FENN**: Then he's well. Good. I'll want my navigator back. He owes me a reef. <sub>dialogue/ansel.adv:65</sub>
+<a id="dlg-ansel-well"></a>`well` **ANSEL FENN**: Then he's well. Good. I'll want my navigator back. He owes me a reef. <sub>dialogue/ansel.adv:80</sub>
 - *[ends]*
 
-<a id="dlg-ansel-why2"></a>`why2` **ANSEL FENN**: Every time they tore one down, somebody had to write down that they'd torn it down. I like to think I ruined a lot of afternoons. <sub>dialogue/ansel.adv:66</sub>
+<a id="dlg-ansel-page"></a>`page` **ANSEL FENN**: (He goes a little pink under the sunburn.) You weren't meant to read that one. …I'm glad you did. Keep it. <sub>dialogue/ansel.adv:81</sub>
 - *[ends]*
 
-<a id="dlg-ansel-go"></a>`go` **ANSEL FENN**: Go on, then. Follow the stakes. Not me. Never me. <sub>dialogue/ansel.adv:67</sub>
+<a id="dlg-ansel-desk"></a>`desk` **ANSEL FENN**: A desk's a fine thing. So's a deck. There's only one letter in it. <sub>dialogue/ansel.adv:82</sub>
+- *→ continues at* [desk2](#dlg-ansel-desk2)
+
+<a id="dlg-ansel-desk2"></a>`desk2` **ANSEL FENN**: I'm not saying which way to spell it. I'm your father, not your Harbourmaster. <sub>dialogue/ansel.adv:84</sub>
+- *[ends]*
+
+<a id="dlg-ansel-why2"></a>`why2` **ANSEL FENN**: Every time they tore one down, somebody had to write down that they'd torn it down. I like to think I ruined a lot of afternoons. <sub>dialogue/ansel.adv:85</sub>
+- *[ends]*
+
+<a id="dlg-ansel-go"></a>`go` **ANSEL FENN**: Go on, then. Follow the stakes. Not me. Never me. <sub>dialogue/ansel.adv:86</sub>
 - *[ends]*
 
 <a id="act3-key_gate"></a>
@@ -3134,7 +3441,7 @@
 - **Look at:** A double gate in the palisade, barred, chained and, by the look of it, inspected. Beyond it something is burning on purpose. <sub>rooms/key_gate.adv:44</sub>
 - **Open:** Pike clears his throat. “Bill of Health first, sir. Fumigated, stamped, countersigned and dated.” <sub>rooms/key_gate.adv:45</sub>
 - **Push:** Pike clears his throat at a volume I'd thought only Bramwick could manage. <sub>rooms/key_gate.adv:46</sub>
-- **Pull:** Pike clears his throat at a volume I'd thought only Bramwick could manage. <sub>rooms/key_gate.adv:47</sub>
+- **Pull:** I pull. Pike makes a small noise of grief on the gate's behalf. <sub>rooms/key_gate.adv:47</sub>
 - *When* *[if fog_down]* <sub>rooms/key_gate.adv:48</sub>
   - **Look at:** Barred again, from inside. Behind it, the Weather are holding a polite meeting about who let the weather out. <sub>rooms/key_gate.adv:49</sub>
   - **Use / Walk to:** *[nothing: cancels the usual effects]* <sub>rooms/key_gate.adv:52</sub>
@@ -3151,7 +3458,7 @@
 - **Look at:** A little iron brazier with a sign: FUMIGATION, PAPERS ONLY. It smoulders kelp, politely, in a thin grey curl. <sub>rooms/key_gate.adv:65</sub>
 - **Use:** I warm my hands. Pike watches to make sure I'm not fumigating them without a bill. <sub>rooms/key_gate.adv:66</sub>
 - **Pick up:** It's hot, it's iron, and it's official. Three reasons to leave it alone. <sub>rooms/key_gate.adv:67</sub>
-- **Turn off:** Pike would put me out for that, and he'd have a form for it. <sub>rooms/key_gate.adv:68</sub>
+- **Turn off:** It's the only warm thing on the island that isn't trying to sell me something. <sub>rooms/key_gate.adv:68</sub>
 
 **path to the lagoon** `to_shore` <sub>rooms/key_gate.adv:70</sub>
 
@@ -3160,7 +3467,7 @@
 
 **Pike** `pike` *[present if fog_down = false]* <sub>rooms/key_gate.adv:76</sub>
 
-- **Look at:** A sentry of about nineteen, with a yellow armband big enough to signal ships and a clipboard he holds like a shield. He has the face of a boy who has never once been allowed to stamp anything. <sub>rooms/key_gate.adv:80</sub>
+- **Look at:** A sentry of about nineteen: armband big enough to signal ships, clipboard held like a shield. Nobody has ever let him stamp anything. <sub>rooms/key_gate.adv:80</sub>
 - **Talk to:** He snaps to attention so hard his cap goes on without him. <sub>rooms/key_gate.adv:81</sub>
   - *[→ conversation* [pike](#dlg-pike) *— see Act III › Gullet Key — the Salt Camp]* <sub>rooms/key_gate.adv:82</sub>
 - **Give:** “I can only accept completed paperwork, sir.” <sub>rooms/key_gate.adv:83</sub>
@@ -3168,7 +3475,7 @@
   - **Talk to:** He holds up one finger without opening his eyes. “Six, f. Nearly there, sir.” <sub>rooms/key_gate.adv:85</sub>
     - *[nothing: cancels the usual effects]*
 - *When* *[if gate_open]* <sub>rooms/key_gate.adv:87</sub>
-  - **Talk to:** *[→ conversation* [pike at open](#dlg-pike-open) *— see Act III › Gullet Key — the Salt Camp]* <sub>rooms/key_gate.adv:88</sub>
+  - **Talk to:** *[→ conversation* [pike at held](#dlg-pike-held) *— see Act III › Gullet Key — the Salt Camp]* <sub>rooms/key_gate.adv:88</sub>
 - *When* *[if seen:pike.halt]* <sub>rooms/key_gate.adv:89</sub>
   - **Talk to:** *[→ conversation* [pike at again](#dlg-pike-again) *— see Act III › Gullet Key — the Salt Camp]* <sub>rooms/key_gate.adv:90</sub>
 
@@ -3196,8 +3503,8 @@
 - **Use harbour stamp on Pike:** He holds out his hand to be stamped, hopefully. I'm tempted. I'm a professional. <sub>rooms/key_gate.adv:129</sub>
 - *[the shared combinations of group quill_combos — see* [Act III › The Arcadia, on the Reef](#act3-reef_wreck)*]*
 - **Use crowbar on the gate:** *[if gate_open = false]* I size up the chain with the crowbar. Pike sizes me up with the clipboard. “Regulation one, sir: nobody forces the gate. Regulation two: see regulation one.” <sub>rooms/key_gate.adv:132</sub>
-- **Use crowbar on the gate:** It's open. Pike would only want a form for opening it any further. <sub>rooms/key_gate.adv:134</sub>
-- **Use Bill of Health on the station calendar:** I hold the bill up to the calendar in case the date jumps across. Pike watches with real interest. It doesn't. Dates on this island have to be torn off and carried, like everything else. <sub>rooms/key_gate.adv:136</sub>
+- **Use crowbar on the gate:** It's open. I'd hate to frighten it. <sub>rooms/key_gate.adv:134</sub>
+- **Use Bill of Health on the station calendar:** I hold the bill up to the calendar in case the date jumps across. It doesn't. Dates here have to be torn off and carried. <sub>rooms/key_gate.adv:136</sub>
 - **Use Ansel's log on Pike:** Pike reads a line, lips moving, and goes pink to the ears. “That's a captain's log, sir. I'm not cleared for feelings.” <sub>rooms/key_gate.adv:138</sub>
 
 <a id="act3-weather_works"></a>
@@ -3281,7 +3588,7 @@
 - **Use Bill of Health on the great brazier:** That's not fumigating, that's cremating. <sub>rooms/weather_works.adv:105</sub>
 - **Use Bill of Health on the braziers:** *[if bill_smoked = false]* I hold the bill in the kelp smoke until its corners curl. Fumigated, at the source. <sub>rooms/weather_works.adv:107</sub>
   - *[sets bill_smoked]* <sub>rooms/weather_works.adv:108</sub>
-- **Use Bill of Health on the braziers:** It's been fumigated. Any more smoke and Pike will want to know where it's been. <sub>rooms/weather_works.adv:110</sub>
+- **Use Bill of Health on the braziers:** It's been fumigated. Any more smoke and it'll start forecasting. <sub>rooms/weather_works.adv:110</sub>
 - **Use crowbar on the great brazier:** I could poke it. It would poke back. <sub>rooms/weather_works.adv:112</sub>
 - *[the shared combinations of group quill_combos — see* [Act III › The Arcadia, on the Reef](#act3-reef_wreck)*]*
 
@@ -3331,7 +3638,7 @@
   - *[aff +1]* <sub>dialogue/halyard.adv:25</sub>
   - *→ continues at* [keep](#dlg-halyard-keep) *(above)*
 
-<a id="dlg-halyard-notwithout"></a>`notwithout` **QUILL**: Not without you, cargo. <sub>dialogue/halyard.adv:15</sub>
+<a id="dlg-halyard-notwithout"></a>`notwithout` **QUILL**: Not without you. <sub>dialogue/halyard.adv:15</sub>
 - *→ continues at* [grab](#dlg-halyard-grab) *(above)*
 
 *[Act III closing cinematic: /assets/video/act-iii-outro.mp4]* <sub>acts.adv:21</sub>
@@ -3348,7 +3655,7 @@
 
 *[starts in Vela Docks]*
 
-> **CAPTION**: Port Vela, the night after. Cray's cutter got home first. At the dawn bell he means to write us all down as lost, and this time he's holding the pen. <sub>acts.adv:33</sub>
+> **CAPTION**: Port Vela, that same night. Cray's cutter got home first. At the dawn bell he means to write us all down as lost, and this time he's holding the pen. <sub>acts.adv:33</sub>
 
 **On start**
 
@@ -3359,10 +3666,10 @@
 
 *[source:* `dialogue quill4`*, starts at* `farewell`*]* <sub>dialogue/quill4.adv:2</sub>
 
-<a id="dlg-quill4-farewell"></a>`farewell` **QUILL**: Yellow flag on the harbour boom, cargo. Quarantine. Nobody off the Marrow sets foot in Port Vela, and the harbour guns have been told so. In writing. <sub>dialogue/quill4.adv:3</sub>
+<a id="dlg-quill4-farewell"></a>`farewell` **QUILL**: Yellow flag on the boom, cargo. Quarantine: nobody off the Marrow sets foot in Port Vela. Except customs. Dorrit swears it's a regulation. Congratulations, you're a clerk again. <sub>dialogue/quill4.adv:3</sub>
 - *→ continues at* [farewell2](#dlg-quill4-farewell2)
 
-<a id="dlg-quill4-farewell2"></a>`farewell2` **QUILL**: And if she's still at anchor when the dawn bell rings, Cray writes her down as a plague ship, and the guns get to practise. So we sail at dawn. Either way. <sub>dialogue/quill4.adv:5</sub>
+<a id="dlg-quill4-farewell2"></a>`farewell2` **QUILL**: And if she's still at anchor when the dawn bell rings, Cray writes her down as a plague ship, and the harbour guns get to practise. So we sail at dawn. Either way. <sub>dialogue/quill4.adv:5</sub>
 - **1.** **FENN**: Then I have until dawn. <sub>dialogue/quill4.adv:6</sub>
   - *[aff +1]* <sub>dialogue/quill4.adv:7</sub>
   - *→ continues at* [until](#dlg-quill4-until)
@@ -3408,7 +3715,7 @@
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
-*[rail: opened directly from rooms/dock.adv:48, rooms/dock.adv:125]*
+*[rail: opened directly from rooms/dock.adv:70, rooms/dock.adv:148]*
 
 <a id="dlg-quill4-rail"></a>`rail` **QUILL**: Still here, cargo? The bell won't wait because you look worried. I've asked bells. They don't. <sub>dialogue/quill4.adv:32</sub>
 - **1.** **FENN**: We did it. Cray's finished. *[if inquiry_done]* <sub>dialogue/quill4.adv:33</sub>
@@ -3427,182 +3734,223 @@
 - *[ends]*
 
 <a id="dlg-quill4-dad"></a>`dad` **QUILL**: Up and down the rail. He's moved flag sixteen to our masthead so the town can see it. Vane let him. I've never seen Vane let anybody do anything. <sub>dialogue/quill4.adv:40</sub>
+- *→ continues at* [crates](#dlg-quill4-crates)
+
+<a id="dlg-quill4-crates"></a>`crates` **QUILL**: Vane found out what was in her crates. She's been very quiet. Hobb hid the cargo book, in case she wants to throw it at someone and picks him. <sub>dialogue/quill4.adv:42</sub>
 - *[ends]*
 
-<a id="dlg-quill4-plan"></a>`plan` **QUILL**: You're asking the lookout? Fine. He lies on paper, so you beat him on paper. Find every page he wrote and hold it up to the light. Start with Bramwick; he's the one who knows the rules. <sub>dialogue/quill4.adv:41</sub>
+<a id="dlg-quill4-plan"></a>`plan` **QUILL**: You're asking the navigator? Good. He lies on paper, so take a bearing on every page he wrote and see where they cross. Start with Bramwick; he's where the lines meet. <sub>dialogue/quill4.adv:43</sub>
 - *[ends]*
 
-<a id="dlg-quill4-liar"></a>`liar` **QUILL**: There. Low over the lighthouse. …It's moved since I showed you. It always moves. I like that about it. Go on. Go and be a clerk at somebody. <sub>dialogue/quill4.adv:42</sub>
+<a id="dlg-quill4-liar"></a>`liar` **QUILL**: There. Low over the lighthouse. …It's moved since I showed you. It always moves. I like that about it. Go on. Go and be a clerk at somebody. <sub>dialogue/quill4.adv:44</sub>
 - *[ends]*
 
-<a id="dlg-quill4-back"></a>`back` **QUILL**: I know. I'm counting on it. I'm also counting the bells, so don't test me. <sub>dialogue/quill4.adv:43</sub>
+<a id="dlg-quill4-back"></a>`back` **QUILL**: I know. I'm counting on it. I'm also counting the bells, so don't test me. <sub>dialogue/quill4.adv:45</sub>
 - *[ends]*
 
-*[pier: opened directly from rooms/dock.adv:180]*
+*[pier: opened directly from rooms/dock.adv:203]*
 
-<a id="dlg-quill4-pier"></a>`pier` **QUILL**: Solid ground. I hate it. It just sits there. …The book, cargo. Fix the book, then come and find me. <sub>dialogue/quill4.adv:45</sub>
-- **1.** **FENN**: You came ashore. <sub>dialogue/quill4.adv:46</sub>
+<a id="dlg-quill4-pier"></a>`pier` **QUILL**: Solid ground. I hate it. It just sits there. …The book, cargo. Fix the book, take it up the steps to Upper Town, then come and find me. <sub>dialogue/quill4.adv:47</sub>
+- **1.** **FENN**: You came ashore. <sub>dialogue/quill4.adv:48</sub>
   - *→ continues at* [ashore](#dlg-quill4-ashore)
-- **2.** **FENN**: On my way. <sub>dialogue/quill4.adv:47</sub>
+- **2.** **FENN**: On my way. <sub>dialogue/quill4.adv:49</sub>
   - *[ends]*
 
-<a id="dlg-quill4-ashore"></a>`ashore` **QUILL**: Vane said stretch my legs. I've stretched them as far as this bollard. It's a good bollard. I'm keeping it. <sub>dialogue/quill4.adv:48</sub>
+<a id="dlg-quill4-ashore"></a>`ashore` **QUILL**: Vane said stretch my legs. I've stretched them as far as this bollard. It's a good bollard. I'm keeping it. <sub>dialogue/quill4.adv:50</sub>
 - *[ends]*
 
-*[dawn: opened directly from rooms/dock.adv:183]*
+*[dawn: opened directly from rooms/dock.adv:206]*
 
-<a id="dlg-quill4-dawn"></a>`dawn` **FENN (V.O.)**: The sky over the headland has gone the colour of weak tea. Quill is sitting on a bollard at the end of the pier, swinging one bare foot over the water, waiting for me as if she isn't. <sub>dialogue/quill4.adv:50</sub>
+<a id="dlg-quill4-dawn"></a>`dawn` **FENN (V.O.)**: The sky over the headland has gone the colour of weak tea. Quill is on a bollard at the pier end, swinging one bare foot over the water, waiting for me as if she isn't. <sub>dialogue/quill4.adv:52</sub>
 - *→ continues at* [sea](#dlg-quill4-sea)
 
-<a id="dlg-quill4-sea"></a>`sea` **QUILL**: Well, cargo. Sea or desk? <sub>dialogue/quill4.adv:52</sub>
-- **1.** **FENN**: You called me Fenn. Earlier. *[if seen:quill4.once = false]* <sub>dialogue/quill4.adv:53</sub>
-  - *→ continues at* [once](#dlg-quill4-once)
-- **2.** **FENN**: Sign me on. Purser. I'll keep the books and you'll keep the stars. <sub>dialogue/quill4.adv:54</sub>
-  - *→ continues at* [purser](#dlg-quill4-purser)
-- **3.** **FENN**: Someone has to keep the ledger honest. Come back every season? <sub>dialogue/quill4.adv:55</sub>
-  - *→ continues at* [season](#dlg-quill4-season)
+<a id="dlg-quill4-sea"></a>`sea` **QUILL**: Well, cargo. Sea or desk? Your father's been home one night, and Bramwick needs somebody who reads the backs. I know what I'm asking. <sub>dialogue/quill4.adv:54</sub>
+- *→ continues at* [tide](#dlg-quill4-tide)
 
-<a id="dlg-quill4-once"></a>`once` **QUILL**: Once. It's rationed, I told you. I'm saving the rest for when you've earned them. <sub>dialogue/quill4.adv:56</sub>
+<a id="dlg-quill4-tide"></a>`tide` **QUILL**: The tide doesn't care. I do. Don't tell the tide. <sub>dialogue/quill4.adv:56</sub>
+- **1.** **FENN**: You called me Fenn. Earlier. *[if seen:quill4.once = false]* <sub>dialogue/quill4.adv:57</sub>
+  - *→ continues at* [once](#dlg-quill4-once)
+- **2.** **FENN**: Sign me on. Purser. I'll keep the books and you'll keep the stars. <sub>dialogue/quill4.adv:58</sub>
+  - *→ continues at* [purser](#dlg-quill4-purser)
+- **3.** **FENN**: Someone has to keep the ledger honest. Come back every season? <sub>dialogue/quill4.adv:59</sub>
+  - *→ continues at* [season](#dlg-quill4-season)
+- **4.** **FENN**: Upper Town first. I owe somebody up there an ending. *[if seen:onn.home = false]* <sub>dialogue/quill4.adv:60</sub>
+  - *→ continues at* [upfirst](#dlg-quill4-upfirst)
+
+<a id="dlg-quill4-once"></a>`once` **QUILL**: Once. It's rationed. I'm saving the rest for when you've earned them. <sub>dialogue/quill4.adv:61</sub>
 - *→ continues at* [sea2](#dlg-quill4-sea2)
 
-<a id="dlg-quill4-sea2"></a>`sea2` **QUILL**: So. Sea or desk? The tide doesn't care. I do. Don't tell the tide. <sub>dialogue/quill4.adv:58</sub>
-- **1.** **FENN**: Sign me on. Purser. I'll keep the books and you'll keep the stars. <sub>dialogue/quill4.adv:59</sub>
+<a id="dlg-quill4-sea2"></a>`sea2` **QUILL**: So. Sea or desk? Take your time. Not that much. <sub>dialogue/quill4.adv:63</sub>
+- **1.** **FENN**: Sign me on. Purser. I'll keep the books and you'll keep the stars. <sub>dialogue/quill4.adv:64</sub>
   - *→ continues at* [purser](#dlg-quill4-purser)
-- **2.** **FENN**: Someone has to keep the ledger honest. Come back every season? <sub>dialogue/quill4.adv:60</sub>
+- **2.** **FENN**: Someone has to keep the ledger honest. Come back every season? <sub>dialogue/quill4.adv:65</sub>
   - *→ continues at* [season](#dlg-quill4-season)
+- **3.** **FENN**: Upper Town first. I owe somebody up there an ending. *[if seen:onn.home = false]* <sub>dialogue/quill4.adv:66</sub>
+  - *→ continues at* [upfirst](#dlg-quill4-upfirst)
 
-<a id="dlg-quill4-purser"></a>`purser` **FENN (V.O.)**: She tries very hard not to smile, and loses by a distance. <sub>dialogue/quill4.adv:61</sub>
+<a id="dlg-quill4-purser"></a>`purser` **FENN (V.O.)**: She tries very hard not to smile, and loses by a distance. <sub>dialogue/quill4.adv:68</sub>
 - *→ continues at* [biscuits](#dlg-quill4-biscuits)
 
-<a id="dlg-quill4-biscuits"></a>`biscuits` **QUILL**: Purser. Vane will make you count the biscuits. <sub>dialogue/quill4.adv:63</sub>
-- **1.** **FENN**: Then I'll count them beautifully. <sub>dialogue/quill4.adv:64</sub>
+<a id="dlg-quill4-biscuits"></a>`biscuits` **QUILL**: Purser. Vane will make you count the biscuits. <sub>dialogue/quill4.adv:70</sub>
+- **1.** **FENN**: Then I'll count them beautifully. <sub>dialogue/quill4.adv:71</sub>
   - *→ continues at* [aboard](#dlg-quill4-aboard)
-- **2.** **FENN**: (Kiss her.) *[if aff ≥ 14]* <sub>dialogue/quill4.adv:65</sub>
+- **2.** **FENN**: (Kiss her.) *[if aff ≥ 14]* <sub>dialogue/quill4.adv:72</sub>
   - *→ continues at* [pkiss](#dlg-quill4-pkiss)
 
-<a id="dlg-quill4-aboard"></a>`aboard` **QUILL**: Get aboard, then, cargo. The tide's turning. So, apparently, are you. <sub>dialogue/quill4.adv:70</sub>
-- **1.** **FENN**: (Go aboard.) <sub>dialogue/quill4.adv:71</sub>
-  - *[sets ending_pirate]* *[→ Act IV ends]* <sub>dialogue/quill4.adv:72</sub>
+<a id="dlg-quill4-aboard"></a>`aboard` **QUILL**: Get aboard, then, cargo. The tide's turning. So, apparently, are you. <sub>dialogue/quill4.adv:81</sub>
+- **1.** **FENN**: (Go aboard.) <sub>dialogue/quill4.adv:82</sub>
+  - *[sets ending_pirate]* *[→ Act IV ends]* <sub>dialogue/quill4.adv:83</sub>
   - *[ends]*
 
-<a id="dlg-quill4-pkiss"></a>`pkiss` **FENN (V.O.)**: I kiss her, on the pier, in front of the customs house, the lighthouse, and my father, who has found a reason to coil a rope very slowly nearby. <sub>dialogue/quill4.adv:66</sub>
+<a id="dlg-quill4-pkiss"></a>`pkiss` **FENN (V.O.)**: I kiss her, on the pier, in front of the customs house, the lighthouse, and my father, who has found a reason to coil a rope very slowly nearby. <sub>dialogue/quill4.adv:73</sub>
 - *→ continues at* [logging](#dlg-quill4-logging)
 
-<a id="dlg-quill4-logging"></a>`logging` **ANSEL FENN**: Don't mind me. I'm logging it. <sub>dialogue/quill4.adv:68</sub>
-- *→ continues at* [aboard](#dlg-quill4-aboard) *(above)*
+<a id="dlg-quill4-logging"></a>`logging` **ANSEL FENN**: Don't mind me. I'm logging it. <sub>dialogue/quill4.adv:75</sub>
+- *→ continues at* [ptwo](#dlg-quill4-ptwo)
 
-<a id="dlg-quill4-season"></a>`season` **FENN (V.O.)**: She looks at the customs house for a long moment, and then back at me. <sub>dialogue/quill4.adv:74</sub>
-- *→ continues at* [every](#dlg-quill4-every)
-
-<a id="dlg-quill4-every"></a>`every` **QUILL**: Every season. I'll bring you a new star each time. You can write it down. <sub>dialogue/quill4.adv:76</sub>
-- **1.** **FENN**: I'll underline it. *[if night_watch]* <sub>dialogue/quill4.adv:77</sub>
-  - *[aff +1]* <sub>dialogue/quill4.adv:78</sub>
-  - *→ continues at* [quay](#dlg-quill4-quay)
-- **2.** **FENN**: I'll stamp it. <sub>dialogue/quill4.adv:79</sub>
-  - *→ continues at* [quay](#dlg-quill4-quay)
-- **3.** **FENN**: (Kiss her.) *[if aff ≥ 14]* <sub>dialogue/quill4.adv:80</sub>
-  - *→ continues at* [dkiss](#dlg-quill4-dkiss)
-
-<a id="dlg-quill4-quay"></a>`quay` **QUILL**: Be on the quay when we come in. Don't be late. <sub>dialogue/quill4.adv:83</sub>
-- **1.** **FENN**: (Watch her go.) <sub>dialogue/quill4.adv:84</sub>
-  - *[sets ending_desk]* *[→ Act IV ends]* <sub>dialogue/quill4.adv:85</sub>
+<a id="dlg-quill4-ptwo"></a>`ptwo` **QUILL**: Get aboard, then. …Fenn. That's two. Don't get used to it. <sub>dialogue/quill4.adv:77</sub>
+- **1.** **FENN**: (Go aboard.) <sub>dialogue/quill4.adv:78</sub>
+  - *[sets ending_pirate]* *[→ Act IV ends]* <sub>dialogue/quill4.adv:79</sub>
   - *[ends]*
 
-<a id="dlg-quill4-dkiss"></a>`dkiss` **FENN (V.O.)**: I kiss her. Behind us the customs-house window bangs open, Bramwick says “Regulation—”, Marta says “Shut that window, you old fool”, and he does. Slowly. <sub>dialogue/quill4.adv:81</sub>
-- *→ continues at* [quay](#dlg-quill4-quay) *(above)*
+<a id="dlg-quill4-season"></a>`season` **FENN (V.O.)**: She looks at the customs house for a long moment, and then back at me. <sub>dialogue/quill4.adv:85</sub>
+- *→ continues at* [every](#dlg-quill4-every)
+
+<a id="dlg-quill4-every"></a>`every` **QUILL**: Every season. I'll bring you a new star each time. You can write it down. <sub>dialogue/quill4.adv:87</sub>
+- **1.** **FENN**: I'll underline it. *[if night_watch]* <sub>dialogue/quill4.adv:88</sub>
+  - *[aff +1]* <sub>dialogue/quill4.adv:89</sub>
+  - *→ continues at* [quay](#dlg-quill4-quay)
+- **2.** **FENN**: I'll stamp it. <sub>dialogue/quill4.adv:90</sub>
+  - *→ continues at* [quay](#dlg-quill4-quay)
+- **3.** **FENN**: (Kiss her.) *[if aff ≥ 14]* <sub>dialogue/quill4.adv:91</sub>
+  - *→ continues at* [dkiss](#dlg-quill4-dkiss)
+
+<a id="dlg-quill4-quay"></a>`quay` **QUILL**: Be on the quay when we come in. Don't be late. <sub>dialogue/quill4.adv:98</sub>
+- **1.** **FENN**: (Watch her go.) <sub>dialogue/quill4.adv:99</sub>
+  - *[sets ending_desk]* *[→ Act IV ends]* <sub>dialogue/quill4.adv:100</sub>
+  - *[ends]*
+
+<a id="dlg-quill4-dkiss"></a>`dkiss` **FENN (V.O.)**: I kiss her. Behind us the customs-house window bangs open, Bramwick says “Regulation—”, Marta says “Shut that window, you old fool”, and he does. Slowly. <sub>dialogue/quill4.adv:92</sub>
+- *→ continues at* [dtwo](#dlg-quill4-dtwo)
+
+<a id="dlg-quill4-dtwo"></a>`dtwo` **QUILL**: Be on the quay when we come in, Fenn. That's two. I'll want a receipt. <sub>dialogue/quill4.adv:94</sub>
+- **1.** **FENN**: (Watch her go.) <sub>dialogue/quill4.adv:95</sub>
+  - *[sets ending_desk]* *[→ Act IV ends]* <sub>dialogue/quill4.adv:96</sub>
+  - *[ends]*
+
+<a id="dlg-quill4-upfirst"></a>`upfirst` **QUILL**: Upper Town first, cargo. Go on. I was a lookout for years. Waiting's the job. <sub>dialogue/quill4.adv:67</sub>
+- *[ends]*
 
 <a id="act4-dock"></a>
 ## Vela Docks
 
 *[room* `dock`*; also in Act I; lines for every act are under Act I]* <sub>rooms/dock.adv:1</sub>
 
-**the Marrow** `ship` <sub>rooms/dock.adv:32</sub>
+**On arrival**
 
-- *When* *[Act IV, if quarantine_lifted]* *— called “the Marrow”* <sub>rooms/dock.adv:39</sub>
-  - **Look at:** The Marrow, warped in to the pier now the boom's open. Her crew are ashore, being hugged by people who'd stopped expecting to hug anybody. <sub>rooms/dock.adv:41</sub>
-  - **Talk to:** Everyone I'd want to talk to has come ashore. <sub>rooms/dock.adv:42</sub>
+- *Once,* *[Act IV, if inquiry_done = false and has harbour ledger and has Rook's purse and has claims book and dawn3 = false]* <sub>rooms/dock.adv:33</sub>
+  - *[sets dawn1]* *[sets dawn2]* *[sets dawn3]* <sub>rooms/dock.adv:34</sub>
+  - **FENN (V.O.)**: The bell-ringer has reached the top of the tower. He's sat down to wait, which is the most considerate thing anyone's done tonight. <sub>rooms/dock.adv:37</sub>
+- *Once,* *[Act IV, if inquiry_done = false and has harbour ledger and has Rook's purse and dawn2 = false]* <sub>rooms/dock.adv:38</sub>
+  - *[sets dawn1]* *[sets dawn2]* <sub>rooms/dock.adv:39</sub>
+  - **FENN (V.O.)**: The sky over the headland hasn't changed colour yet. It's thinking about it. <sub>rooms/dock.adv:41</sub>
+- *Once,* *[Act IV, if inquiry_done = false and has harbour ledger and has claims book and dawn2 = false]* <sub>rooms/dock.adv:42</sub>
+  - *[sets dawn1]* *[sets dawn2]* <sub>rooms/dock.adv:43</sub>
+  - **FENN (V.O.)**: The sky over the headland hasn't changed colour yet. It's thinking about it. <sub>rooms/dock.adv:45</sub>
+- *Once,* *[Act IV, if inquiry_done = false and has Rook's purse and has claims book and dawn2 = false]* <sub>rooms/dock.adv:46</sub>
+  - *[sets dawn1]* *[sets dawn2]* <sub>rooms/dock.adv:47</sub>
+  - **FENN (V.O.)**: The sky over the headland hasn't changed colour yet. It's thinking about it. <sub>rooms/dock.adv:49</sub>
+- *Once,* *[Act IV, if inquiry_done = false and (has harbour ledger or has Rook's purse or has claims book) and dawn1 = false]* <sub>rooms/dock.adv:50</sub>
+  - *[sets dawn1]* <sub>rooms/dock.adv:51</sub>
+  - **FENN (V.O.)**: Up the hill, the bell-ringer's lantern is moving. He's climbing early. Cray will have paid him for punctuality. <sub>rooms/dock.adv:52</sub>
+
+**the Marrow** `ship` <sub>rooms/dock.adv:54</sub>
+
+- *When* *[Act IV, if quarantine_lifted]* *— called “the Marrow”* <sub>rooms/dock.adv:61</sub>
+  - **Look at:** The Marrow, warped in to the pier now the boom's open. Her crew are ashore, being hugged by people who'd stopped expecting to hug anybody. <sub>rooms/dock.adv:63</sub>
+  - **Talk to:** Everyone I'd want to talk to has come ashore. <sub>rooms/dock.adv:64</sub>
     - *[nothing: cancels the usual effects]*
-- *When* *[Act IV only]* *— called “the Marrow”* <sub>rooms/dock.adv:44</sub>
-  - **Look at:** The Marrow, at anchor past the boom with a hundred and thirty people aboard who were written down as lost. Close enough to shout to. Not close enough to step onto. <sub>rooms/dock.adv:46</sub>
-  - **Talk to:** I call up to the rail. <sub>rooms/dock.adv:47</sub>
-    - *[→ conversation* [quill4 at rail](#dlg-quill4-rail) *— see Act IV › Opening]* <sub>rooms/dock.adv:48</sub>
+- *When* *[Act IV only]* *— called “the Marrow”* <sub>rooms/dock.adv:66</sub>
+  - **Look at:** The Marrow, at anchor past the boom with a hundred and thirty people aboard who were written down as lost. Close enough to shout to. Not close enough to step onto. <sub>rooms/dock.adv:68</sub>
+  - **Talk to:** I call up to the rail. <sub>rooms/dock.adv:69</sub>
+    - *[→ conversation* [quill4 at rail](#dlg-quill4-rail) *— see Act IV › Opening]* <sub>rooms/dock.adv:70</sub>
 
-**customs house** `office_door` <sub>rooms/dock.adv:74</sub>
+**customs house** `office_door` <sub>rooms/dock.adv:96</sub>
 
-- *When* *[Act IV, if inquiry_done = false]* <sub>rooms/dock.adv:81</sub>
-  - **Look at:** The customs house. A lamp is burning in Bramwick's window, and the man under it isn't Bramwick. <sub>rooms/dock.adv:82</sub>
+- *When* *[Act IV, if inquiry_done = false]* <sub>rooms/dock.adv:103</sub>
+  - **Look at:** The customs house. A lamp is burning in Bramwick's window, and the man under it isn't Bramwick. <sub>rooms/dock.adv:104</sub>
 
-**tavern** `tavern_door` <sub>rooms/dock.adv:84</sub>
+**tavern** `tavern_door` <sub>rooms/dock.adv:106</sub>
 
-- *When* *[Act IV only]* <sub>rooms/dock.adv:91</sub>
-  - **Look at:** The Salty Keel. Somebody inside is singing a song about the Marrow. Somebody else is telling him she isn't dead yet, so it's the wrong song. <sub>rooms/dock.adv:92</sub>
+- *When* *[Act IV only]* <sub>rooms/dock.adv:113</sub>
+  - **Look at:** The Salty Keel. Somebody inside is singing a song about the Marrow. Somebody else is telling him she isn't dead yet, so it's the wrong song. <sub>rooms/dock.adv:114</sub>
 
-**harbour water** `water` <sub>rooms/dock.adv:109</sub>
+**harbour water** `water` <sub>rooms/dock.adv:131</sub>
 
-- *When* *[Act IV only]* <sub>rooms/dock.adv:115</sub>
-  - **Look at:** Black water, and the Marrow on it. Quarantine is a very precise distance: exactly too far to jump. The compass in my pocket points out past her, at a reef I've actually seen. <sub>rooms/dock.adv:116</sub>
-  - **Talk to:** I tell the water I'm not done yet. It laps, unconvinced. <sub>rooms/dock.adv:117</sub>
+- *When* *[Act IV only]* <sub>rooms/dock.adv:138</sub>
+  - **Look at:** Black water, and the Marrow on it. Quarantine is a very precise distance: exactly too far to jump. The compass in my pocket points out past her, at a reef I've actually seen. <sub>rooms/dock.adv:139</sub>
+  - **Talk to:** I tell the water I'm not done yet. It laps, unconvinced. <sub>rooms/dock.adv:140</sub>
 
-**Quill** `quill_rail` *[present Act IV, if quarantine_lifted = false]* <sub>rooms/dock.adv:119</sub>
+**Quill** `quill_rail` *[present Act IV, if quarantine_lifted = false]* <sub>rooms/dock.adv:142</sub>
 
-- **Look at:** Quill, on the Marrow's rail, elbows on the bulwark, watching the town as if it owes her something. Every so often she checks that I'm still here. <sub>rooms/dock.adv:123</sub>
-- **Talk to:** I cup my hands and call up to her. <sub>rooms/dock.adv:124</sub>
-  - *[→ conversation* [quill4 at rail](#dlg-quill4-rail) *— see Act IV › Opening]* <sub>rooms/dock.adv:125</sub>
-- **Give:** “Throw it, cargo. No. Don't throw it. You throw like a clerk.” <sub>rooms/dock.adv:126</sub>
-- *When* *[if farewell = false]* <sub>rooms/dock.adv:127</sub>
-  - **Talk to:** *[→ conversation* [quill4](#dlg-quill4) *— see Act IV › Opening]* <sub>rooms/dock.adv:128</sub>
+- **Look at:** Quill, on the Marrow's rail, elbows on the bulwark, watching the town as if it owes her something. Every so often she checks that I'm still here. <sub>rooms/dock.adv:146</sub>
+- **Talk to:** I cup my hands and call up to her. <sub>rooms/dock.adv:147</sub>
+  - *[→ conversation* [quill4 at rail](#dlg-quill4-rail) *— see Act IV › Opening]* <sub>rooms/dock.adv:148</sub>
+- **Give:** “Throw it, cargo. No. Don't throw it. You throw like a clerk.” <sub>rooms/dock.adv:149</sub>
+- *When* *[if farewell = false]* <sub>rooms/dock.adv:150</sub>
+  - **Talk to:** *[→ conversation* [quill4](#dlg-quill4) *— see Act IV › Opening]* <sub>rooms/dock.adv:151</sub>
 
-**Ansel Fenn** `ansel_rail` *[present Act IV, if quarantine_lifted = false]* <sub>rooms/dock.adv:130</sub>
+**Ansel Fenn** `ansel_rail` *[present Act IV, if quarantine_lifted = false]* <sub>rooms/dock.adv:153</sub>
 
-- **Look at:** My father, at the rail beside Quill, waving at the town in general. The town, in general, doesn't know yet. <sub>rooms/dock.adv:134</sub>
-- **Talk to:** I call up. He waves with both arms, as though I might otherwise miss him. <sub>rooms/dock.adv:135</sub>
-  - *[→ conversation* [ansel4](#dlg-ansel4) *— below]* <sub>rooms/dock.adv:136</sub>
-- **Give:** “Keep it, son! I'm contagious. Allegedly.” <sub>rooms/dock.adv:137</sub>
+- **Look at:** My father, at the rail beside Quill, waving at the town in general. The town, in general, doesn't know yet. <sub>rooms/dock.adv:157</sub>
+- **Talk to:** I call up. He waves with both arms, as though I might otherwise miss him. <sub>rooms/dock.adv:158</sub>
+  - *[→ conversation* [ansel4](#dlg-ansel4) *— below]* <sub>rooms/dock.adv:159</sub>
+- **Give:** “Keep it, son! I'm contagious. Allegedly.” <sub>rooms/dock.adv:160</sub>
 
-**the quarantine flag** `boom` *[present Act IV only]* <sub>rooms/dock.adv:139</sub>
+**the quarantine flag** `boom` *[present Act IV only]* <sub>rooms/dock.adv:162</sub>
 
-- **Look at:** A yellow flag on the harbour boom. Quarantine: nobody lands, by order of the Acting Harbourmaster. The ink on that order is about an hour old, and so is his title. <sub>rooms/dock.adv:143</sub>
-- **Pull:** It's across fifty yards of water. And a regulation. The regulation is the wider of the two. <sub>rooms/dock.adv:144</sub>
-- **Pick up:** Not from here. Flags like that come down with a stamp, not a swim. <sub>rooms/dock.adv:145</sub>
-- *When* *[if quarantine_lifted]* *— called “the harbour boom”* <sub>rooms/dock.adv:146</sub>
-  - **Look at:** The harbour boom, swung open. The yellow flag's gone. Somebody has run a pair of long johns up in its place, which I gather is a local tradition. <sub>rooms/dock.adv:148</sub>
+- **Look at:** A yellow flag on the harbour boom. Quarantine: nobody lands, by order of the Acting Harbourmaster. The ink on that order is about an hour old, and so is his title. <sub>rooms/dock.adv:166</sub>
+- **Pull:** It's across fifty yards of water. And a regulation. The regulation is the wider of the two. <sub>rooms/dock.adv:167</sub>
+- **Pick up:** Not from here. Flags like that come down with a stamp, not a swim. <sub>rooms/dock.adv:168</sub>
+- *When* *[if quarantine_lifted]* *— called “the harbour boom”* <sub>rooms/dock.adv:169</sub>
+  - **Look at:** The harbour boom, swung open. The yellow flag's gone. Somebody has run a pair of long johns up in its place, which I gather is a local tradition. <sub>rooms/dock.adv:171</sub>
 
-**the pier end** `pier_way` *[present Act IV only]* <sub>rooms/dock.adv:150</sub>
+**the pier end** `pier_way` *[present Act IV only]* <sub>rooms/dock.adv:173</sub>
 
-- **Look at:** The pier runs on past the lamp to the pier end and the lighthouse, where the deep-water boats tie up. Lanterns are moving out there. Somebody's unloading at this hour. <sub>rooms/dock.adv:155</sub>
-- **Use / Walk to:** *[→ goes to The Pier End]* <sub>rooms/dock.adv:154</sub>
-- **Open:** I walk out along the pier, toward the light. <sub>rooms/dock.adv:156</sub>
-  - *[→ goes to The Pier End]* <sub>rooms/dock.adv:154</sub>
+- **Look at:** The pier runs on past the lamp to the pier end and the lighthouse, where the deep-water boats tie up. Lanterns are moving out there. Somebody's unloading at this hour. <sub>rooms/dock.adv:178</sub>
+- **Use / Walk to:** *[→ goes to The Pier End]* <sub>rooms/dock.adv:177</sub>
+- **Open:** I walk out along the pier, toward the light. <sub>rooms/dock.adv:179</sub>
+  - *[→ goes to The Pier End]* <sub>rooms/dock.adv:177</sub>
 
-**steps to Upper Town** `steps_shut` *[present Act IV, if ledger_written = false]* <sub>rooms/dock.adv:158</sub>
+**steps to Upper Town** `steps_shut` *[present Act IV, if ledger_written = false]* <sub>rooms/dock.adv:181</sub>
 
-- **Look at:** The steps up to Upper Town. Nine shirts on a line up there, and an old woman sweeping a clean step. I'm not knocking on anybody's door with “nearly”. <sub>rooms/dock.adv:162</sub>
-- **Open:** Not yet. When I go up those steps I want to be carrying the ledger, corrected. <sub>rooms/dock.adv:163</sub>
-- **Walk to:** Not yet. When I go up those steps I want to be carrying the ledger, corrected. <sub>rooms/dock.adv:164</sub>
+- **Look at:** The steps up to Upper Town. Ten shirts on a line up there, and an old woman sweeping a clean step. I'm not knocking on anybody's door with “nearly”. <sub>rooms/dock.adv:185</sub>
+- **Open:** Not yet. When I go up those steps I want to be carrying the ledger, corrected. <sub>rooms/dock.adv:186</sub>
+- **Walk to:** Not yet. When I go up those steps I want to be carrying the ledger, corrected. <sub>rooms/dock.adv:187</sub>
 
-**steps to Upper Town** `upper_steps` *[present Act IV, if ledger_written]* <sub>rooms/dock.adv:166</sub>
+**steps to Upper Town** `upper_steps` *[present Act IV, if ledger_written]* <sub>rooms/dock.adv:189</sub>
 
-- **Look at:** The steps up to Upper Town. Every lamp up there is lit tonight, and somebody is singing badly on purpose. <sub>rooms/dock.adv:171</sub>
-- **Use / Walk to:** *[→ goes to Upper Town]* <sub>rooms/dock.adv:170</sub>
-- **Open:** I go up the steps. I promised somebody up there the end of a story, and I've got it now, in ink. <sub>rooms/dock.adv:172</sub>
-  - *[→ goes to Upper Town]* <sub>rooms/dock.adv:170</sub>
+- **Look at:** The steps up to Upper Town. Every lamp up there is lit tonight, and somebody is singing badly on purpose. <sub>rooms/dock.adv:194</sub>
+- **Use / Walk to:** *[→ goes to Upper Town]* <sub>rooms/dock.adv:193</sub>
+- **Open:** I go up the steps. I promised somebody up there the end of a story, and I've got it now, in ink. <sub>rooms/dock.adv:195</sub>
+  - *[→ goes to Upper Town]* <sub>rooms/dock.adv:193</sub>
 
-**Quill** `quill_pier` *[present Act IV, if quarantine_lifted]* <sub>rooms/dock.adv:174</sub>
+**Quill** `quill_pier` *[present Act IV, if quarantine_lifted]* <sub>rooms/dock.adv:197</sub>
 
-- **Look at:** Quill, ashore at last, standing on the pier as if it might pitch at any moment. She's keeping one hand on a bollard, in case. <sub>rooms/dock.adv:178</sub>
-- **Talk to:** She's already turned round. <sub>rooms/dock.adv:179</sub>
-  - *[→ conversation* [quill4 at pier](#dlg-quill4-pier) *— see Act IV › Opening]* <sub>rooms/dock.adv:180</sub>
-- **Give:** “Give me something when you've finished, cargo. The book first.” <sub>rooms/dock.adv:181</sub>
-- *When* *[if ledger_written]* <sub>rooms/dock.adv:182</sub>
-  - **Talk to:** *[→ conversation* [quill4 at dawn](#dlg-quill4-dawn) *— see Act IV › Opening]* <sub>rooms/dock.adv:183</sub>
+- **Look at:** Quill, ashore at last, standing on the pier as if it might pitch at any moment. She's keeping one hand on a bollard, in case. <sub>rooms/dock.adv:201</sub>
+- **Talk to:** She's already turned round. <sub>rooms/dock.adv:202</sub>
+  - *[→ conversation* [quill4 at pier](#dlg-quill4-pier) *— see Act IV › Opening]* <sub>rooms/dock.adv:203</sub>
+- **Give:** “Give me something when you've finished, cargo. The book first.” <sub>rooms/dock.adv:204</sub>
+- *When* *[if ledger_written]* <sub>rooms/dock.adv:205</sub>
+  - **Talk to:** *[→ conversation* [quill4 at dawn](#dlg-quill4-dawn) *— see Act IV › Opening]* <sub>rooms/dock.adv:206</sub>
 
 **Combinations here**
 
-- **Use harbour ledger on Quill:** I hold up the ledger. Quill holds up a thumb, then, after a moment, the other one. <sub>rooms/dock.adv:186</sub>
-- **Use brass compass on Quill:** I hold up the compass. She points past me, out to sea, at the Old Nail, and shrugs: same as ever. <sub>rooms/dock.adv:188</sub>
-- **Use Ansel's log on Ansel Fenn:** I hold up his log. He salutes it. Then he salutes me, slightly less formally. <sub>rooms/dock.adv:190</sub>
-- **Use harbour stamp on the quarantine flag:** The stamp's no good to me out here. It's the harbourmaster's stamp that lifts a quarantine, and the harbourmaster's suspended. <sub>rooms/dock.adv:192</sub>
-- **Use harbour ledger on Quill:** *[if ledger_written]* She reads my entry upside down, and nods at it once, the way she'd nod at a good bearing. <sub>rooms/dock.adv:194</sub>
+- **Use harbour ledger on Quill:** I hold up the ledger. Quill holds up a thumb, then, after a moment, the other one. <sub>rooms/dock.adv:209</sub>
+- **Use brass compass on Quill:** I hold up the compass. She points past me, out to sea, at the Old Nail, and shrugs: same as ever. <sub>rooms/dock.adv:211</sub>
+- **Use Ansel's log on Ansel Fenn:** I hold up his log. He salutes it. Then he salutes me, slightly less formally. <sub>rooms/dock.adv:213</sub>
+- **Use harbour stamp on the quarantine flag:** The stamp's no good to me out here. It's the harbourmaster's stamp that lifts a quarantine, and the harbourmaster's suspended. <sub>rooms/dock.adv:215</sub>
+- **Use harbour ledger on Quill:** *[if ledger_written]* She reads my entry upside down, and nods at it once, the way she'd nod at a good bearing. <sub>rooms/dock.adv:217</sub>
 
 <a id="dlg-ansel4"></a>
 ### Conversation: ansel4 (Ansel Fenn, Old Rook)
@@ -3633,18 +3981,26 @@
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
-*[ashore: opened directly from rooms/tavern.adv:141]*
+*[ashore: opened directly from rooms/tavern.adv:151]*
 
 <a id="dlg-ansel4-ashore"></a>`ashore` **ANSEL FENN**: Son! Rook owes me a reef, and he's paying in rum, which isn't legal tender. I'm not proud. <sub>dialogue/ansel4.adv:13</sub>
-- **1.** **FENN**: What will you do now? <sub>dialogue/ansel4.adv:14</sub>
+- **1.** **FENN**: What will you do now? *[if seen:ansel4.shop = false]* <sub>dialogue/ansel4.adv:14</sub>
   - *→ continues at* [shop](#dlg-ansel4-shop)
-- **2.** **FENN**: (Leave them to it.) <sub>dialogue/ansel4.adv:15</sub>
+- **2.** **FENN**: Should I go with them? The Marrow. *[if seen:ansel4.point = false]* <sub>dialogue/ansel4.adv:15</sub>
+  - *→ continues at* [point](#dlg-ansel4-point)
+- **3.** **FENN**: (Leave them to it.) <sub>dialogue/ansel4.adv:16</sub>
   - *→ continues at* [leave](#dlg-ansel4-leave)
 
-<a id="dlg-ansel4-shop"></a>`shop` **ANSEL FENN**: Open a shop, I think. Compasses. Every one will point at the Old Nail and be useless anywhere else. I'll sell them as souvenirs of home. <sub>dialogue/ansel4.adv:16</sub>
+<a id="dlg-ansel4-shop"></a>`shop` **ANSEL FENN**: Open a shop, I think. Compasses. Every one will point at the Old Nail and be useless anywhere else. I'll sell them to people who want to come home. <sub>dialogue/ansel4.adv:17</sub>
 - *[ends]*
 
-<a id="dlg-ansel4-leave"></a>`leave` **OLD ROOK**: Go on, boy. Your captain and I have three years of lying to catch up on. <sub>dialogue/ansel4.adv:17</sub>
+<a id="dlg-ansel4-point"></a>`point` **ANSEL FENN**: I sailed twenty years, son, and the best navigating I ever did was leaving a compass on a hall table. Don't ask me where to point. <sub>dialogue/ansel4.adv:18</sub>
+- *→ continues at* [stake](#dlg-ansel4-stake)
+
+<a id="dlg-ansel4-stake"></a>`stake` **ANSEL FENN**: You've seen what I do at the third stake. <sub>dialogue/ansel4.adv:20</sub>
+- *[ends]*
+
+<a id="dlg-ansel4-leave"></a>`leave` **OLD ROOK**: Go on, boy. Your captain and I have three years of lying to catch up on. <sub>dialogue/ansel4.adv:21</sub>
 - *[ends]*
 
 <a id="act4-office"></a>
@@ -3751,115 +4107,132 @@
 
 **On arrival**
 
-- *Once,* *[Act IV, if inquiry_done = false and has harbour ledger and has Rook's purse and has claims book and cray_toast = false]* <sub>rooms/tavern.adv:34</sub>
-  - *[sets cray_toast]* <sub>rooms/tavern.adv:35</sub>
-  - **FENN (V.O.)**: Silas Cray is at the bar, in a coat that cost more than the bar, buying the room a drink to the Marrow's memory. Nobody is drinking it. <sub>rooms/tavern.adv:36</sub>
+- *Once,* *[Act IV, if inquiry_done = false and has harbour ledger and has Rook's purse and has claims book and cray_toast = false]* <sub>rooms/tavern.adv:36</sub>
+  - *[sets cray_toast]* <sub>rooms/tavern.adv:37</sub>
+  - **FENN (V.O.)**: Silas Cray is at the bar, in a coat that cost more than the bar, buying the room a drink to the Marrow's memory. Nobody is drinking it. <sub>rooms/tavern.adv:38</sub>
 
-**Marta** `marta` <sub>rooms/tavern.adv:38</sub>
+**Marta** `marta` <sub>rooms/tavern.adv:40</sub>
 
-- *When* *[Act IV, if iou_paid]* <sub>rooms/tavern.adv:46</sub>
-  - **Talk to:** *[→ conversation* [marta4 at cards](#dlg-marta4-cards) *— below]* <sub>rooms/tavern.adv:47</sub>
-- *When* *[Act IV, if ledger_written]* <sub>rooms/tavern.adv:48</sub>
-  - **Talk to:** *[→ conversation* [marta4 at ending](#dlg-marta4-ending) *— below]* <sub>rooms/tavern.adv:49</sub>
-- *When* *[Act IV, if inquiry_done]* <sub>rooms/tavern.adv:50</sub>
-  - **Talk to:** *[→ conversation* [marta4 at after](#dlg-marta4-after) *— below]* <sub>rooms/tavern.adv:51</sub>
-- *When* *[Act IV only]* <sub>rooms/tavern.adv:52</sub>
-  - **Look at:** Marta, behind the bar, polishing the same glass she was polishing when I left for the Straits. She's watching the door the way she'd watch a pot she suspects of boiling. <sub>rooms/tavern.adv:53</sub>
-  - **Talk to:** She points at me with the glass before I'm halfway across the room. <sub>rooms/tavern.adv:54</sub>
-    - *[→ conversation* [marta4](#dlg-marta4) *— below]* <sub>rooms/tavern.adv:55</sub>
+- *When* *[Act IV, if iou_paid]* <sub>rooms/tavern.adv:48</sub>
+  - **Talk to:** *[→ conversation* [marta4 at cards](#dlg-marta4-cards) *— below]* <sub>rooms/tavern.adv:49</sub>
+- *When* *[Act IV, if ledger_written]* <sub>rooms/tavern.adv:50</sub>
+  - **Talk to:** *[→ conversation* [marta4 at ending](#dlg-marta4-ending) *— below]* <sub>rooms/tavern.adv:51</sub>
+- *When* *[Act IV, if inquiry_done]* <sub>rooms/tavern.adv:52</sub>
+  - **Talk to:** *[→ conversation* [marta4 at after](#dlg-marta4-after) *— below]* <sub>rooms/tavern.adv:53</sub>
+- *When* *[Act IV only]* <sub>rooms/tavern.adv:54</sub>
+  - **Look at:** Marta, behind the bar, polishing the same glass she was polishing when I left for the Straits. She's watching the door the way she'd watch a pot she suspects of boiling. <sub>rooms/tavern.adv:55</sub>
+  - **Talk to:** She points at me with the glass before I'm halfway across the room. <sub>rooms/tavern.adv:56</sub>
+    - *[→ conversation* [marta4](#dlg-marta4) *— below]* <sub>rooms/tavern.adv:57</sub>
 
-**old sailor** `rook` <sub>rooms/tavern.adv:57</sub>
+**old sailor** `rook` <sub>rooms/tavern.adv:59</sub>
 
-- *When* *[Act IV, if purse_given]* *— called “Old Rook”* <sub>rooms/tavern.adv:64</sub>
-  - **Look at:** Rook, at his corner table, upright for once, with a drink he isn't drinking and a harbourmaster he is. <sub>rooms/tavern.adv:66</sub>
-  - **Talk to:** *[→ conversation* [rook4 at hub](#dlg-rook4-hub) *— below]* <sub>rooms/tavern.adv:67</sub>
-- *When* *[Act IV only]* *— called “Old Rook”* <sub>rooms/tavern.adv:68</sub>
-  - **Look at:** Rook, at his corner table, with company for once: Bramwick, out of uniform, matching him drink for drink and apology for apology. <sub>rooms/tavern.adv:70</sub>
-  - **Talk to:** He sees my face and puts his mug down very slowly. <sub>rooms/tavern.adv:71</sub>
-    - *[→ conversation* [rook4](#dlg-rook4) *— below]* <sub>rooms/tavern.adv:72</sub>
+- *When* *[Act IV, if purse_given]* *— called “Old Rook”* <sub>rooms/tavern.adv:66</sub>
+  - **Look at:** Rook, at his corner table, upright for once, with a drink he isn't drinking and a harbourmaster he is. <sub>rooms/tavern.adv:68</sub>
+  - **Talk to:** *[→ conversation* [rook4 at hub](#dlg-rook4-hub) *— below]* <sub>rooms/tavern.adv:69</sub>
+- *When* *[Act IV only]* *— called “Old Rook”* <sub>rooms/tavern.adv:70</sub>
+  - **Look at:** Rook, at his corner table, with company for once: Bramwick, out of uniform, matching him drink for drink and apology for apology. <sub>rooms/tavern.adv:72</sub>
+  - **Talk to:** He sees my face and puts his mug down very slowly. <sub>rooms/tavern.adv:73</sub>
+    - *[→ conversation* [rook4](#dlg-rook4) *— below]* <sub>rooms/tavern.adv:74</sub>
 
-**the regulars** `crowd` <sub>rooms/tavern.adv:89</sub>
+**the regulars** `crowd` <sub>rooms/tavern.adv:91</sub>
 
-- *When* *[Act IV, if wager_paid]* <sub>rooms/tavern.adv:96</sub>
-  - **Look at:** The regulars, lighter by three years' wages and somehow cheerful about it. They're toasting the Marrow. Properly, this time. <sub>rooms/tavern.adv:97</sub>
-  - **Talk to:** They raise their mugs at me before I'm halfway there. <sub>rooms/tavern.adv:98</sub>
-    - *[→ conversation* [regulars4 at after](#dlg-regulars4-after) *— below]* <sub>rooms/tavern.adv:99</sub>
-- *When* *[Act IV, if wager and quarantine_lifted]* <sub>rooms/tavern.adv:100</sub>
-  - **Look at:** The regulars, studying the betting slate with the faces of men who've just heard a ship come in. <sub>rooms/tavern.adv:101</sub>
-  - **Talk to:** I go over and tap the slate, under SHE COMES BACK. <sub>rooms/tavern.adv:102</sub>
-    - *[sets wager_paid]* *[→ conversation* [regulars4 at pay](#dlg-regulars4-pay) *— below]* <sub>rooms/tavern.adv:103</sub>
-- *When* *[Act IV, if wager]* <sub>rooms/tavern.adv:105</sub>
-  - **Look at:** The regulars. My three years' wages are still on their slate, stamped, under SHE COMES BACK. They keep not catching my eye. <sub>rooms/tavern.adv:106</sub>
-  - **Talk to:** I go over to the slate. Several of them discover something interesting in their mugs. <sub>rooms/tavern.adv:107</sub>
-    - *[→ conversation* [regulars4 at owe](#dlg-regulars4-owe) *— below]* <sub>rooms/tavern.adv:108</sub>
-- *When* *[Act IV only]* <sub>rooms/tavern.adv:109</sub>
-  - **Look at:** The regulars, drinking to the Marrow in the tone people use for ships that aren't coming back. They don't know she's anchored outside the window. Nobody's allowed to tell them. <sub>rooms/tavern.adv:110</sub>
-  - **Talk to:** I tell them she's back. They tell me that's very kind, and buy me a drink in her memory. <sub>rooms/tavern.adv:111</sub>
+- *When* *[Act IV, if wager_paid]* <sub>rooms/tavern.adv:98</sub>
+  - **Look at:** The regulars, lighter by three years' wages and somehow cheerful about it. They're toasting the Marrow. Properly, this time. <sub>rooms/tavern.adv:99</sub>
+  - **Talk to:** They raise their mugs at me before I'm halfway there. <sub>rooms/tavern.adv:100</sub>
+    - *[→ conversation* [regulars4 at after](#dlg-regulars4-after) *— below]* <sub>rooms/tavern.adv:101</sub>
+- *When* *[Act IV, if wager and quarantine_lifted]* <sub>rooms/tavern.adv:102</sub>
+  - **Look at:** The regulars, studying the betting slate with the faces of men who've just heard a ship come in. <sub>rooms/tavern.adv:103</sub>
+  - **Talk to:** I go over and tap the slate, under SHE COMES BACK. <sub>rooms/tavern.adv:104</sub>
+    - *[sets wager_paid]* *[→ conversation* [regulars4 at pay](#dlg-regulars4-pay) *— below]* <sub>rooms/tavern.adv:105</sub>
+- *When* *[Act IV, if wager]* <sub>rooms/tavern.adv:107</sub>
+  - **Look at:** The regulars. My three years' wages are still on their slate, stamped, under SHE COMES BACK. They keep not catching my eye. <sub>rooms/tavern.adv:108</sub>
+  - **Talk to:** I go over to the slate. Several of them discover something interesting in their mugs. <sub>rooms/tavern.adv:109</sub>
+    - *[→ conversation* [regulars4 at owe](#dlg-regulars4-owe) *— below]* <sub>rooms/tavern.adv:110</sub>
+- *When* *[Act IV only]* <sub>rooms/tavern.adv:111</sub>
+  - **Look at:** The regulars, drinking to the Marrow in the tone people use for ships that aren't coming back. They don't know she's anchored outside the window. Nobody's allowed to tell them. <sub>rooms/tavern.adv:112</sub>
+  - **Talk to:** I tell them she's back. They tell me that's very kind, and buy me a drink in her memory. <sub>rooms/tavern.adv:113</sub>
 
-**Bramwick** `bramwick_t` *[present Act IV only]* <sub>rooms/tavern.adv:115</sub>
+**Bramwick** `bramwick_t` *[present Act IV only]* <sub>rooms/tavern.adv:117</sub>
 
-- **Look at:** Harbourmaster Bramwick, suspended, out of uniform, at Rook's table. Without his coat he looks like a man who has been let out of a very small room and doesn't trust it. <sub>rooms/tavern.adv:119</sub>
-- **Talk to:** He straightens up as though I'm an inspection. <sub>rooms/tavern.adv:120</sub>
-  - *[→ conversation* [bramwick4](#dlg-bramwick4) *— below]* <sub>rooms/tavern.adv:121</sub>
-- **Give:** “I can't accept anything, Fenn. I'm suspended. I can barely accept this drink.” <sub>rooms/tavern.adv:122</sub>
-- *When* *[if quarantine_lifted and iou_paid = false]* *— called “Harbourmaster Bramwick”* <sub>rooms/tavern.adv:125</sub>
-  - **Talk to:** *[→ conversation* [bramwick4 at debt](#dlg-bramwick4-debt) *— below]* <sub>rooms/tavern.adv:127</sub>
-- *When* *[if inquiry_done]* *— called “Harbourmaster Bramwick”* <sub>rooms/tavern.adv:128</sub>
-  - **Talk to:** *[→ conversation* [bramwick4 at after](#dlg-bramwick4-after) *— below]* <sub>rooms/tavern.adv:130</sub>
-- *When* *[if iou_paid]* *— called “Harbourmaster Bramwick”* <sub>rooms/tavern.adv:131</sub>
-  - **Talk to:** *[→ conversation* [bramwick4 at cards](#dlg-bramwick4-cards) *— below]* <sub>rooms/tavern.adv:133</sub>
+- **Look at:** Harbourmaster Bramwick, suspended, out of uniform, at Rook's table. Without his coat he looks like a man who has been let out of a very small room and doesn't trust it. <sub>rooms/tavern.adv:121</sub>
+- **Talk to:** He straightens up as though I'm an inspection. <sub>rooms/tavern.adv:122</sub>
+  - *[→ conversation* [bramwick4](#dlg-bramwick4) *— below]* <sub>rooms/tavern.adv:123</sub>
+- **Give:** “I can't accept anything, Fenn. I'm suspended. I can barely accept this drink.” <sub>rooms/tavern.adv:124</sub>
+- *When* *[if quarantine_lifted and iou_paid = false]* *— called “Harbourmaster Bramwick”* <sub>rooms/tavern.adv:127</sub>
+  - **Look at:** Harbourmaster Bramwick, back in his coat, which he keeps touching as if it might be suspended again. <sub>rooms/tavern.adv:129</sub>
+  - **Talk to:** *[→ conversation* [bramwick4 at debt](#dlg-bramwick4-debt) *— below]* <sub>rooms/tavern.adv:131</sub>
+  - **Give:** “Not now, Fenn. I'm on duty again, and I've only just remembered how.” <sub>rooms/tavern.adv:130</sub>
+- *When* *[if iou_paid]* *— called “Harbourmaster Bramwick”* <sub>rooms/tavern.adv:132</sub>
+  - **Look at:** Bramwick, at cards with Marta, holding his hand very close to his coat. The coat is back on. So, from the look of him, is everything else. <sub>rooms/tavern.adv:134</sub>
+  - **Talk to:** *[→ conversation* [bramwick4 at cards](#dlg-bramwick4-cards) *— below]* <sub>rooms/tavern.adv:136</sub>
+  - **Give:** “Not now, Fenn. I'm losing, and it's taken thirty years to get this good at it.” <sub>rooms/tavern.adv:135</sub>
+- *When* *[if inquiry_done]* *— called “Harbourmaster Bramwick”* <sub>rooms/tavern.adv:137</sub>
+  - **Look at:** Harbourmaster Bramwick, back in his coat, which he keeps touching as if it might be suspended again. <sub>rooms/tavern.adv:139</sub>
+  - **Talk to:** *[→ conversation* [bramwick4 at after](#dlg-bramwick4-after) *— below]* <sub>rooms/tavern.adv:141</sub>
+  - **Give:** “Not now, Fenn. I'm on duty again, and I've only just remembered how.” <sub>rooms/tavern.adv:140</sub>
+- *When* *[if seen:bramwick4.badly]* <sub>rooms/tavern.adv:142</sub>
+  - **Talk to:** *[→ conversation* [bramwick4 at hub](#dlg-bramwick4-hub) *— below]* <sub>rooms/tavern.adv:143</sub>
 
-**Ansel Fenn** `ansel_t` *[present Act IV, if quarantine_lifted]* <sub>rooms/tavern.adv:135</sub>
+**Ansel Fenn** `ansel_t` *[present Act IV, if quarantine_lifted]* <sub>rooms/tavern.adv:145</sub>
 
-- **Look at:** My father, ashore, standing over Rook's table with his arms flung wide, in the middle of telling Rook a story Rook was there for. Rook is letting him. <sub>rooms/tavern.adv:139</sub>
-- **Talk to:** He turns round, beaming, before I've said a word. <sub>rooms/tavern.adv:140</sub>
-  - *[→ conversation* [ansel4 at ashore](#dlg-ansel4-ashore) *— see Act IV › Vela Docks]* <sub>rooms/tavern.adv:141</sub>
-- **Give:** “Keep it, son. I've got everything I came ashore for, and a navigator besides.” <sub>rooms/tavern.adv:142</sub>
+- **Look at:** My father, ashore, standing over Rook's table with his arms flung wide, in the middle of telling Rook a story Rook was there for. Rook is letting him. <sub>rooms/tavern.adv:149</sub>
+- **Talk to:** He turns round, beaming, before I've said a word. <sub>rooms/tavern.adv:150</sub>
+  - *[→ conversation* [ansel4 at ashore](#dlg-ansel4-ashore) *— see Act IV › Vela Docks]* <sub>rooms/tavern.adv:151</sub>
+- **Give:** “Keep it, son. I've got everything I came ashore for, and a navigator besides.” <sub>rooms/tavern.adv:152</sub>
 
-**Silas Cray** `cray_t` *[present Act IV, if cray_gone = false and (inquiry_done or has harbour ledger) and (inquiry_done or has Rook's purse) and (inquiry_done or has claims book)]* <sub>rooms/tavern.adv:144</sub>
+**Hobb** `hobb_t` *[present Act IV, if quarantine_lifted]* <sub>rooms/tavern.adv:154</sub>
 
-- **Look at:** Silas Cray, at the bar, with a glass raised to the window and the ship outside it. He has the dawn bell in one pocket and the harbour in the other. <sub>rooms/tavern.adv:148</sub>
-- **Talk to:** He turns, already smiling. <sub>rooms/tavern.adv:149</sub>
-  - *[→ conversation* [inquiry](#dlg-inquiry) *— below]* <sub>rooms/tavern.adv:150</sub>
-- **Give:** “Save it for the inquiry, clerk. Oh, don't look so surprised. I always know when I'm about to be inquired into. It's a gift.” <sub>rooms/tavern.adv:151</sub>
-- *When* *[if inquiry_done]* <sub>rooms/tavern.adv:152</sub>
-  - **Talk to:** *[→ conversation* [inquiry at waiting](#dlg-inquiry-waiting) *— below]* <sub>rooms/tavern.adv:153</sub>
+- **Look at:** Hobb, sleeve rolled to the shoulder, letting the regulars read his arm like a notice board. Under TAM, fresh and swollen: HOME. The ink is worse than ever. <sub>rooms/tavern.adv:158</sub>
+- **Talk to:** He holds his arm out before I've said a word, like a man showing his papers. <sub>rooms/tavern.adv:159</sub>
+  - *[→ conversation* [hobb4](#dlg-hobb4) *— below]* <sub>rooms/tavern.adv:160</sub>
+- **Give:** “Don't give me things, clerk. I'll only want them inked.” <sub>rooms/tavern.adv:161</sub>
+- *When* *[if seen:hobb4.room]* <sub>rooms/tavern.adv:162</sub>
+  - **Talk to:** *[→ conversation* [hobb4 at again](#dlg-hobb4-again) *— below]* <sub>rooms/tavern.adv:163</sub>
 
-**Dorrit** `dorrit_t` *[present Act IV, if inquiry_started]* <sub>rooms/tavern.adv:155</sub>
+**Silas Cray** `cray_t` *[present Act IV, if cray_gone = false and (inquiry_done or has harbour ledger) and (inquiry_done or has Rook's purse) and (inquiry_done or has claims book)]* <sub>rooms/tavern.adv:165</sub>
 
-- **Look at:** Dorrit, at the back, in his old customs waistcoat, which he says exempts him from quarantine. Nobody has had the heart to look it up. <sub>rooms/tavern.adv:159</sub>
-- **Talk to:** “Stamped and passed, clerk. I'm only here as a witness. And for the punch.” <sub>rooms/tavern.adv:160</sub>
+- **Look at:** Silas Cray, at the bar, with a glass raised to the window and the ship outside it. He has the dawn bell in one pocket and the harbour in the other. <sub>rooms/tavern.adv:169</sub>
+- **Talk to:** He turns, already smiling. <sub>rooms/tavern.adv:170</sub>
+  - *[→ conversation* [inquiry](#dlg-inquiry) *— below]* <sub>rooms/tavern.adv:171</sub>
+- **Give:** “Save it for the inquiry, clerk. Oh, don't look so surprised. I always know when I'm about to be inquired into. It's a gift.” <sub>rooms/tavern.adv:172</sub>
+- *When* *[if inquiry_done]* <sub>rooms/tavern.adv:173</sub>
+  - **Talk to:** *[→ conversation* [inquiry at waiting](#dlg-inquiry-waiting) *— below]* <sub>rooms/tavern.adv:174</sub>
+
+**Dorrit** `dorrit_t` *[present Act IV, if inquiry_started]* <sub>rooms/tavern.adv:176</sub>
+
+- **Look at:** Dorrit, at the back, guarding the punch bowl as though it might be smuggled. He has stamped his own cup. <sub>rooms/tavern.adv:180</sub>
+- **Talk to:** “Stamped and passed, clerk. I'm only here as a witness. And for the punch. I'm told customs inspected the rum personally.” <sub>rooms/tavern.adv:181</sub>
 
 **Combinations here**
 
-- **Use harbour stamp on the regulars:** *[Act IV, if wager]* My bet's on the slate already, stamped. The ink is dry. The Marrow is wet. Both count. <sub>rooms/tavern.adv:163</sub>
-- **Use harbour stamp on the regulars:** *[Act IV only]* Every bet on that slate says the Marrow won't come back, and she's anchored outside the window. Betting now would be robbery, and I'm the honest one tonight. <sub>rooms/tavern.adv:165</sub>
-- **Use harbour stamp on Bramwick:** *[if inquiry_done and quarantine_lifted = false]* I hold out the harbour stamp, handle first, the way you'd hand back a sword. <sub>rooms/tavern.adv:168</sub>
-  - *[sets quarantine_lifted]* *[sound: chime]* *[→ conversation* [bramwick4 at stamp](#dlg-bramwick4-stamp) *— below]* <sub>rooms/tavern.adv:169</sub>
-- **Use harbour stamp on Bramwick:** *[if inquiry_done = false]* “Put that away, Fenn. I'm suspended. If I so much as touch it, Cray will have me for theft of my own stamp.” <sub>rooms/tavern.adv:174</sub>
-- **Use harbour stamp on Bramwick:** *[if ledger_written = false]* “Use it first, Fenn. Then bring it back. The book's waiting.” <sub>rooms/tavern.adv:176</sub>
-- **Use harbour stamp on Bramwick:** He waves it off. “Keep it till dawn. A clerk without a stamp looks undressed.” <sub>rooms/tavern.adv:178</sub>
-- **Use harbour stamp on harbour ledger:** *[if quarantine_lifted and ledger_written = false]* I lay the ledger on the bar. The room notices before I've opened it. <sub>rooms/tavern.adv:181</sub>
-  - *[→ conversation* [ledger4](#dlg-ledger4) *— below]* <sub>rooms/tavern.adv:182</sub>
-- **Use harbour ledger on the bar:** *[if quarantine_lifted and ledger_written = false]* I lay the ledger on the bar. The room notices before I've opened it. <sub>rooms/tavern.adv:184</sub>
-  - *[→ conversation* [ledger4](#dlg-ledger4) *— below]* <sub>rooms/tavern.adv:185</sub>
-- **Use harbour ledger on the bar:** *[if ledger_written = false]* Not yet. Until Marta says otherwise, this book is evidence. You don't write in evidence; you hold it up. <sub>rooms/tavern.adv:187</sub>
-- **Use harbour ledger on the bar:** It's written. I keep opening it to check. It's still written. <sub>rooms/tavern.adv:189</sub>
-- **Use Rook's purse on old sailor:** He shakes his head. “Hold on to it, boy. When it's time, hand it back to me in front of everybody. That's the only way I'll be able to.” <sub>rooms/tavern.adv:191</sub>
-- **Use harbour ledger on Bramwick:** *[if ledger_written]* He reads the new line with his hat in both hands, the way men read a name on a church wall. <sub>rooms/tavern.adv:193</sub>
-- **Use harbour ledger on Bramwick:** *[if inquiry_done]* “Under my lie, Fenn, not over it. I want people to be able to read both.” <sub>rooms/tavern.adv:195</sub>
-- **Use harbour ledger on Bramwick:** He looks at his own handwriting and goes grey. “Yes. That's my lie. Bring it to the inquiry, Fenn. I'll stand next to it.” <sub>rooms/tavern.adv:197</sub>
-- **Use harbour ledger on Marta:** *[if ledger_written]* She reads my entry, then reads it again, which for Marta is a standing ovation. <sub>rooms/tavern.adv:199</sub>
-- **Use harbour ledger on Marta:** *[if inquiry_done]* “Don't show me, clerk. Write in it. The bar's right there, and so is everybody.” <sub>rooms/tavern.adv:201</sub>
-- **Use harbour ledger on Marta:** She pushes it back across the bar without opening it. “Not to me, clerk. To him, in front of me.” <sub>rooms/tavern.adv:203</sub>
-- **Use Rook's purse on Marta:** “Not to me, clerk. To him, in front of me. And let Rook do the handing; it's his to give back.” <sub>rooms/tavern.adv:205</sub>
-- **Use Rook's purse on Bramwick:** He won't touch it. “That's Rook's to give back, Fenn, not mine to take. I've taken quite enough off that man.” <sub>rooms/tavern.adv:207</sub>
-- **Use claims book on Bramwick:** He finds Vane's refusal, then the six payouts on the facing page, and closes the book gently, like a door on a sickroom. “That's the kind of paper, Fenn.” <sub>rooms/tavern.adv:209</sub>
-- **Use kelp manifest on Bramwick:** He reads “for fog” twice. “Somebody at Cray's writes down exactly what he's told. When this is over, bring me that clerk. I could use a man like that.” <sub>rooms/tavern.adv:211</sub>
-- **Use claims book on Marta:** She runs a finger down the page and stops at Vane's name. “Refused. I remember the month she drank that refusal. Hold on to that, clerk.” <sub>rooms/tavern.adv:213</sub>
-- **Use Ansel's log on old sailor:** He finds his own name in it and reads the line twice. “He wrote I was a good navigator. He always was a terrible liar.” <sub>rooms/tavern.adv:215</sub>
-- **Use kelp manifest on Marta:** She reads “for fog”, and laughs out loud, once, like a cork. “Keep that for afters.” <sub>rooms/tavern.adv:217</sub>
-- **Use harbour ledger on Silas Cray:** He raises his glass to it. “To the ledger. Long may it say what it says.” <sub>rooms/tavern.adv:219</sub>
+- **Use harbour stamp on the regulars:** *[Act IV, if wager]* My bet's on the slate already, stamped. The ink is dry. The Marrow is wet. Both count. <sub>rooms/tavern.adv:184</sub>
+- **Use harbour stamp on the regulars:** *[Act IV only]* Every bet on that slate says the Marrow won't come back, and she's anchored outside the window. Betting now would be robbery, and I'm the honest one tonight. <sub>rooms/tavern.adv:186</sub>
+- **Use harbour stamp on Bramwick:** *[if inquiry_done and quarantine_lifted = false]* I hold out the harbour stamp, handle first, the way you'd hand back a sword. <sub>rooms/tavern.adv:189</sub>
+  - *[sets quarantine_lifted]* *[sound: chime]* *[→ conversation* [bramwick4 at stamp](#dlg-bramwick4-stamp) *— below]* <sub>rooms/tavern.adv:190</sub>
+- **Use harbour stamp on Bramwick:** *[if inquiry_done = false]* “Put that away, Fenn. I'm suspended. If I so much as touch it, Cray will have me for theft of my own stamp.” <sub>rooms/tavern.adv:195</sub>
+- **Use harbour stamp on Bramwick:** *[if ledger_written = false]* “Use it first, Fenn. Then bring it back. The book's waiting.” <sub>rooms/tavern.adv:197</sub>
+- **Use harbour stamp on Bramwick:** He waves it off. “Keep it till dawn. A clerk without a stamp looks undressed.” <sub>rooms/tavern.adv:199</sub>
+- **Use harbour stamp on harbour ledger:** *[if quarantine_lifted and ledger_written = false]* I lay the ledger on the bar. The room notices before I've opened it. <sub>rooms/tavern.adv:202</sub>
+  - *[→ conversation* [ledger4](#dlg-ledger4) *— below]* <sub>rooms/tavern.adv:203</sub>
+- **Use harbour ledger on the bar:** *[if quarantine_lifted and ledger_written = false]* I lay the ledger on the bar. The room notices before I've opened it. <sub>rooms/tavern.adv:205</sub>
+  - *[→ conversation* [ledger4](#dlg-ledger4) *— below]* <sub>rooms/tavern.adv:206</sub>
+- **Use harbour ledger on the bar:** *[if ledger_written = false]* Not yet. Until Marta says otherwise, this book is evidence. You don't write in evidence; you hold it up. <sub>rooms/tavern.adv:208</sub>
+- **Use harbour ledger on the bar:** It's written. I keep opening it to check. It's still written. <sub>rooms/tavern.adv:210</sub>
+- **Use Rook's purse on old sailor:** He shakes his head. “Hold on to it, boy. When it's time, hand it back to me in front of everybody. That's the only way I'll be able to.” <sub>rooms/tavern.adv:212</sub>
+- **Use harbour ledger on Bramwick:** *[if ledger_written]* He reads the new line with his hat in both hands, the way men read a name on a church wall. <sub>rooms/tavern.adv:214</sub>
+- **Use harbour ledger on Bramwick:** *[if inquiry_done]* “Under my lie, Fenn, not over it. I want people to be able to read both.” <sub>rooms/tavern.adv:216</sub>
+- **Use harbour ledger on Bramwick:** He looks at his own handwriting and goes grey. “Yes. That's my lie. Bring it to the inquiry, Fenn. I'll stand next to it.” <sub>rooms/tavern.adv:218</sub>
+- **Use harbour ledger on Marta:** *[if ledger_written]* She reads my entry, then reads it again, which for Marta is a standing ovation. <sub>rooms/tavern.adv:220</sub>
+- **Use harbour ledger on Marta:** *[if inquiry_done]* “Don't show me, clerk. Write in it. The bar's right there, and so is everybody.” <sub>rooms/tavern.adv:222</sub>
+- **Use harbour ledger on Marta:** She pushes it back across the bar without opening it. “Not to me, clerk. To him, in front of me.” <sub>rooms/tavern.adv:224</sub>
+- **Use Rook's purse on Marta:** “Not to me, clerk. To him, in front of me. And let Rook do the handing; it's his to give back.” <sub>rooms/tavern.adv:226</sub>
+- **Use Rook's purse on Bramwick:** He won't touch it. “That's Rook's to give back, Fenn, not mine to take. I've taken quite enough off that man.” <sub>rooms/tavern.adv:228</sub>
+- **Use claims book on Bramwick:** He finds Vane's refusal, then the six payouts on the facing page, and closes the book gently, like a door on a sickroom. “That's the kind of paper, Fenn.” <sub>rooms/tavern.adv:230</sub>
+- **Use kelp manifest on Bramwick:** He reads “for fog” twice. “Somebody at Cray's writes down exactly what he's told. When this is over, bring me that clerk. I could use a man like that.” <sub>rooms/tavern.adv:232</sub>
+- **Use claims book on Marta:** She runs a finger down the page and stops at Vane's name. “Refused. I remember the month she drank that refusal. Hold on to that, clerk.” <sub>rooms/tavern.adv:234</sub>
+- **Use Ansel's log on old sailor:** He finds his own name in it and reads the line twice. “He wrote I was a good navigator. He always was a terrible liar.” <sub>rooms/tavern.adv:236</sub>
+- **Use kelp manifest on Marta:** She reads “for fog”, and laughs out loud, once, like a cork. “Keep that for afters.” <sub>rooms/tavern.adv:238</sub>
+- **Use harbour ledger on Silas Cray:** He raises his glass to it. “To the ledger. Long may it say what it says.” <sub>rooms/tavern.adv:240</sub>
 
 <a id="dlg-marta4"></a>
 ### Conversation: marta4 (Marta)
@@ -3876,14 +4249,14 @@
 - **4.** **FENN**: Goodnight, Marta. <sub>dialogue/marta4.adv:7</sub>
   - *→ continues at* [bye](#dlg-marta4-bye)
 
-<a id="dlg-marta4-father"></a>`father` **MARTA**: You never. (She puts down the glass she's been polishing since you came in.) Alive? Well, don't stand there being pleased at me. Where is he? <sub>dialogue/marta4.adv:8</sub>
+<a id="dlg-marta4-father"></a>`father` **MARTA**: You never. (She puts down the glass she's been polishing since the Marrow sailed.) Alive? Well, don't stand there being pleased at me. Where is he? <sub>dialogue/marta4.adv:8</sub>
 - *→ continues at* [where](#dlg-marta4-where)
 
-<a id="dlg-marta4-where"></a>`where` **MARTA**: On the Marrow? Under that yellow rag? Cray hoisted it before his cutter was even tied up. I've watched that boat all night like a pot. <sub>dialogue/marta4.adv:10</sub>
+<a id="dlg-marta4-where"></a>`where` **MARTA**: On the Marrow? Under that yellow rag? Cray hoisted it before his cutter was even tied up. I've watched that boat all night. It hasn't moved, and neither have I. <sub>dialogue/marta4.adv:10</sub>
 - **1.** **FENN**: Then I'd better get the rag down. <sub>dialogue/marta4.adv:11</sub>
   - *→ continues at* [rag](#dlg-marta4-rag)
 
-<a id="dlg-marta4-rag"></a>`rag` **MARTA**: You had. And Fenn: when you do, I want it told here. Every word. I've been owed this one three years. <sub>dialogue/marta4.adv:12</sub>
+<a id="dlg-marta4-rag"></a>`rag` **MARTA**: You'd better. And Fenn: when you do, I want it told here. Every word. I've been owed this one three years. <sub>dialogue/marta4.adv:12</sub>
 - *[ends]*
 
 <a id="dlg-marta4-unfinished"></a>`unfinished` **MARTA**: Then finish it. You know I hate an unfinished story. Finish it here, where I can see, and don't you dare skip to the end. <sub>dialogue/marta4.adv:13</sub>
@@ -3892,24 +4265,27 @@
 <a id="dlg-marta4-preside"></a>`preside` **MARTA**: In my tavern? Bring me the villain and the evidence, and I'll bring the cat. Tallow left it here at supper. It's been supervising the bar ever since. <sub>dialogue/marta4.adv:14</sub>
 - *[ends]*
 
-<a id="dlg-marta4-bye"></a>`bye` **MARTA**: Mind how you go. And go quickly; you look like a man with a bell after him. <sub>dialogue/marta4.adv:15</sub>
+<a id="dlg-marta4-bye"></a>`bye` **MARTA**: Go quickly. You look like a man with a bell after him, and I won't have a story end in my doorway. <sub>dialogue/marta4.adv:15</sub>
 - *[ends]*
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
-*[after: opened directly from rooms/tavern.adv:51]*
+*[after: opened directly from rooms/tavern.adv:53]*
 
 <a id="dlg-marta4-after"></a>`after` **MARTA**: Well. That's an ending. …No, it isn't. Not until it's in the book. Go on, clerk. You've the stamp and the ledger, and I've the whole room watching. <sub>dialogue/marta4.adv:17</sub>
 - *[ends]*
 
-*[ending: opened directly from rooms/tavern.adv:49]*
+*[ending: opened directly from rooms/tavern.adv:51]*
 
-<a id="dlg-marta4-ending"></a>`ending` **MARTA**: Now it's an ending. Go and find your navigator, Fenn. She's been sitting on the pier like a gull waiting for chips. <sub>dialogue/marta4.adv:19</sub>
+<a id="dlg-marta4-ending"></a>`ending` **MARTA**: Now it's an ending. Take it up the steps first; Onn's owed it before I am. Then go and find your navigator. <sub>dialogue/marta4.adv:19</sub>
+- *→ continues at* [gull](#dlg-marta4-gull)
+
+<a id="dlg-marta4-gull"></a>`gull` **MARTA**: She's been sitting on the pier like a gull waiting for chips. <sub>dialogue/marta4.adv:21</sub>
 - *[ends]*
 
-*[cards: opened directly from rooms/tavern.adv:47]*
+*[cards: opened directly from rooms/tavern.adv:49]*
 
-<a id="dlg-marta4-cards"></a>`cards` **MARTA**: Hush, clerk. He's bluffing. He's always bluffing. Thirty years I've let him think I can't tell. <sub>dialogue/marta4.adv:20</sub>
+<a id="dlg-marta4-cards"></a>`cards` **MARTA**: Hush, clerk. He's bluffing. He's always bluffing. Thirty years I've let him think I can't tell. <sub>dialogue/marta4.adv:22</sub>
 - *[ends]*
 
 <a id="dlg-rook4"></a>
@@ -3955,7 +4331,7 @@
 <a id="dlg-rook4-now"></a>`now` **OLD ROOK**: Not yet. I'll look at it when there's a room full of people looking with me. Take it, boy. Hold it up at somebody. <sub>dialogue/rook4.adv:30</sub>
 - *→ continues at* [take](#dlg-rook4-take)
 
-<a id="dlg-rook4-take"></a>`take` **FENN (V.O.)**: I take the purse. It's heavier than three hundred crowns ought to be. Guilt has a weight; Cray just never had to carry it. <sub>dialogue/rook4.adv:32</sub>
+<a id="dlg-rook4-take"></a>`take` **FENN (V.O.)**: I take the purse. It's heavier than a purse ought to be. Guilt has a weight; Cray just never had to carry it. <sub>dialogue/rook4.adv:32</sub>
 - *[ends]*
 
 <a id="dlg-rook4-reef"></a>`reef` **FENN (V.O.)**: A laugh comes out of Rook like something rusty being opened. He puts a hand over his eyes and leaves it there a while. <sub>dialogue/rook4.adv:12</sub>
@@ -3963,7 +4339,7 @@
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
-*[hub: opened directly from rooms/tavern.adv:67]*
+*[hub: opened directly from rooms/tavern.adv:69]*
 
 <a id="dlg-rook4-hub"></a>`hub` **OLD ROOK**: Still here, boy? There's a dawn coming, and I hear you've plans for it. <sub>dialogue/rook4.adv:34</sub>
 - **1.** **FENN**: Will you go back to sea? *[if seen:rook4.sea = false]* <sub>dialogue/rook4.adv:35</sub>
@@ -3992,7 +4368,7 @@
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
-*[pay: opened directly from rooms/tavern.adv:104]*
+*[pay: opened directly from rooms/tavern.adv:106]*
 
 <a id="dlg-regulars4-pay"></a>`pay` **A REGULAR**: She's back. Legally, stamped, the lot. Three years' wages, lads. Turn your pockets out. <sub>dialogue/regulars4.adv:4</sub>
 - *→ continues at* [paid](#dlg-regulars4-paid)
@@ -4003,7 +4379,7 @@
 <a id="dlg-regulars4-rest"></a>`rest` **MARTA**: And the second. And I know exactly what to do with the rest. Don't ask. Bramwick, don't you ask either. <sub>dialogue/regulars4.adv:8</sub>
 - *[ends]*
 
-*[after: opened directly from rooms/tavern.adv:99]*
+*[after: opened directly from rooms/tavern.adv:101]*
 
 <a id="dlg-regulars4-after"></a>`after` **A REGULAR**: Paid in full, clerk. It's the first bet we've lost gladly. Don't make a habit of it. <sub>dialogue/regulars4.adv:9</sub>
 - *[ends]*
@@ -4013,141 +4389,208 @@
 
 *[source:* `dialogue bramwick4`*, starts at* `root`*]* <sub>dialogue/bramwick4.adv:2</sub>
 
-<a id="dlg-bramwick4-root"></a>`root` **HARBOURMASTER BRAMWICK**: Fenn. You came back. Good. I've been suspended, which is the first evening off I've had in thirty years. I'm spending it badly. <sub>dialogue/bramwick4.adv:3</sub>
-- **1.** **FENN**: Cray says you were suspended for conduct. *[if seen:bramwick4.conduct = false]* <sub>dialogue/bramwick4.adv:4</sub>
+<a id="dlg-bramwick4-root"></a>`root` **HARBOURMASTER BRAMWICK**: Fenn. You came back. Good. Cray asked me to enter the Marrow as lost before she was even late. I said no. First time in three years. <sub>dialogue/bramwick4.adv:3</sub>
+- *→ continues at* [badly](#dlg-bramwick4-badly)
+
+<a id="dlg-bramwick4-badly"></a>`badly` **HARBOURMASTER BRAMWICK**: He had me suspended by supper. It's my first evening off in thirty years, and I'm spending it badly. <sub>dialogue/bramwick4.adv:5</sub>
+- **1.** **FENN**: Cray says you were suspended for conduct. *[if seen:bramwick4.conduct = false]* <sub>dialogue/bramwick4.adv:6</sub>
   - *→ continues at* [conduct](#dlg-bramwick4-conduct)
-- **2.** **FENN**: How do we get you reinstated? *[if seen:bramwick4.paper = false]* <sub>dialogue/bramwick4.adv:5</sub>
+- **2.** **FENN**: How do we get you reinstated? *[if seen:bramwick4.paper = false]* <sub>dialogue/bramwick4.adv:7</sub>
   - *→ continues at* [reg2](#dlg-bramwick4-reg2)
-- **3.** **FENN**: The ledger's chained to its desk. *[if seen:bramwick4.paper and ledger_taken = false]* <sub>dialogue/bramwick4.adv:6</sub>
+- **3.** **FENN**: The ledger's chained to its desk. *[if seen:bramwick4.paper and ledger_taken = false]* <sub>dialogue/bramwick4.adv:8</sub>
   - *→ continues at* [chain](#dlg-bramwick4-chain)
-- **4.** **FENN**: Where would Cray keep his insurance books? *[if seen:bramwick4.paper and doesn't have claims book]* <sub>dialogue/bramwick4.adv:7</sub>
+- **4.** **FENN**: Where would Cray keep his insurance books? *[if seen:bramwick4.paper and doesn't have claims book]* <sub>dialogue/bramwick4.adv:9</sub>
   - *→ continues at* [counting](#dlg-bramwick4-counting)
-- **5.** **FENN**: Who would preside over an inquiry? *[if seen:bramwick4.paper and seen:bramwick4.preside = false]* <sub>dialogue/bramwick4.adv:8</sub>
+- **5.** **FENN**: Who would preside over an inquiry? *[if seen:bramwick4.paper and seen:bramwick4.preside = false]* <sub>dialogue/bramwick4.adv:10</sub>
   - *→ continues at* [preside](#dlg-bramwick4-preside)
-- **6.** **FENN**: Goodnight, sir. <sub>dialogue/bramwick4.adv:9</sub>
+- **6.** **FENN**: Goodnight, sir. <sub>dialogue/bramwick4.adv:11</sub>
   - *→ continues at* [bye](#dlg-bramwick4-bye)
 
-<a id="dlg-bramwick4-conduct"></a>`conduct` **HARBOURMASTER BRAMWICK**: Conduct unbecoming. He asked me to enter the Marrow as lost before she was even late, and I refused. Apparently that was very unbecoming. He had it signed by supper. <sub>dialogue/bramwick4.adv:10</sub>
+<a id="dlg-bramwick4-conduct"></a>`conduct` **HARBOURMASTER BRAMWICK**: Conduct unbecoming. Saying no to Mr Cray is very unbecoming, it turns out. I'd forgotten how much I enjoy it. <sub>dialogue/bramwick4.adv:19</sub>
 - *→ continues at* [conduct2](#dlg-bramwick4-conduct2)
 
-<a id="dlg-bramwick4-conduct2"></a>`conduct2` **OLD ROOK**: First time he's said no to Cray in three years. He's been insufferable about it. <sub>dialogue/bramwick4.adv:12</sub>
+<a id="dlg-bramwick4-conduct2"></a>`conduct2` **OLD ROOK**: He's told me nine times. The last three, he stood up. <sub>dialogue/bramwick4.adv:21</sub>
 - *[ends]*
 
-<a id="dlg-bramwick4-reg2"></a>`reg2` **HARBOURMASTER BRAMWICK**: Regulation two, Fenn. A harbourmaster suspended by a party to fraud is reinstated on proof of the fraud. <sub>dialogue/bramwick4.adv:13</sub>
+<a id="dlg-bramwick4-reg2"></a>`reg2` **HARBOURMASTER BRAMWICK**: Regulation two, Fenn. A harbourmaster suspended by a party to fraud is reinstated on proof of the fraud. <sub>dialogue/bramwick4.adv:22</sub>
 - *→ continues at* [proof](#dlg-bramwick4-proof)
 
-<a id="dlg-bramwick4-proof"></a>`proof` **HARBOURMASTER BRAMWICK**: Proof. Not a story; Marta has stories. Paper. Before the bell. <sub>dialogue/bramwick4.adv:15</sub>
-- **1.** **FENN**: What paper? <sub>dialogue/bramwick4.adv:16</sub>
+<a id="dlg-bramwick4-proof"></a>`proof` **HARBOURMASTER BRAMWICK**: Proof. Not a story; Marta has stories. Paper. Before the bell. <sub>dialogue/bramwick4.adv:24</sub>
+- **1.** **FENN**: What paper? <sub>dialogue/bramwick4.adv:25</sub>
   - *→ continues at* [paper](#dlg-bramwick4-paper)
 
-<a id="dlg-bramwick4-paper"></a>`paper` **HARBOURMASTER BRAMWICK**: My ledger, with my own lie in it. Whatever Cray's counting house keeps on its insurance. And a man who was there when it happened. <sub>dialogue/bramwick4.adv:17</sub>
+<a id="dlg-bramwick4-paper"></a>`paper` **HARBOURMASTER BRAMWICK**: My ledger, with my own lie in it. Whatever Cray's counting house keeps on its insurance. And a man who was there when it happened. <sub>dialogue/bramwick4.adv:26</sub>
 - *→ continues at* [look](#dlg-bramwick4-look)
 
-<a id="dlg-bramwick4-look"></a>`look` **FENN (V.O.)**: He doesn't look at Rook. Very carefully, he doesn't look at Rook. <sub>dialogue/bramwick4.adv:19</sub>
+<a id="dlg-bramwick4-look"></a>`look` **FENN (V.O.)**: He doesn't look at Rook. Very carefully, he doesn't look at Rook. <sub>dialogue/bramwick4.adv:28</sub>
 - *[ends]*
 
-<a id="dlg-bramwick4-chain"></a>`chain` **HARBOURMASTER BRAMWICK**: I chained it there myself. Regulation thirty-one: the harbour ledger shall not leave the loft. …I wrote regulation thirty-one, Fenn. I can't think why. Bring something heavy. <sub>dialogue/bramwick4.adv:20</sub>
+<a id="dlg-bramwick4-chain"></a>`chain` **HARBOURMASTER BRAMWICK**: I chained it there myself. Regulation thirty-one: the harbour ledger shall not leave the loft. …I wrote regulation thirty-one, Fenn. I can't think why. Bring something heavy. <sub>dialogue/bramwick4.adv:29</sub>
 - *[ends]*
 
-<a id="dlg-bramwick4-counting"></a>`counting` **HARBOURMASTER BRAMWICK**: Cray & Co., up Chandler's Lane. He'll have left his clerk there; he leaves clerks the way other men leave a lamp on. Nothing comes out of that office without a requisition, stamped. <sub>dialogue/bramwick4.adv:21</sub>
+<a id="dlg-bramwick4-counting"></a>`counting` **HARBOURMASTER BRAMWICK**: Cray & Co., up Chandler's Lane. He'll have left his clerk there; he leaves clerks the way other men leave a lamp on. Nothing leaves that office without a stamped requisition. <sub>dialogue/bramwick4.adv:30</sub>
 - *[ends]*
 
-<a id="dlg-bramwick4-preside"></a>`preside` **HARBOURMASTER BRAMWICK**: Not me; I'm a party. Not Cray; he's the other party. Someone who owns licensed premises and hates an unfinished story. <sub>dialogue/bramwick4.adv:22</sub>
+<a id="dlg-bramwick4-preside"></a>`preside` **HARBOURMASTER BRAMWICK**: Not me; I'm a party. Not Cray; he's the other party. Someone who owns licensed premises and hates an unfinished story. <sub>dialogue/bramwick4.adv:31</sub>
 - *→ continues at* [presided](#dlg-bramwick4-presided)
 
-<a id="dlg-bramwick4-presided"></a>`presided` **FENN (V.O.)**: He looks at Marta. Marta finds something very interesting on the ceiling. <sub>dialogue/bramwick4.adv:24</sub>
+<a id="dlg-bramwick4-presided"></a>`presided` **FENN (V.O.)**: He looks at Marta. Marta finds something very interesting on the ceiling. <sub>dialogue/bramwick4.adv:33</sub>
 - *[ends]*
 
-<a id="dlg-bramwick4-bye"></a>`bye` **HARBOURMASTER BRAMWICK**: Goodnight, Fenn. Don't let him write anyone down. Not tonight. Not ever, ideally. <sub>dialogue/bramwick4.adv:25</sub>
+<a id="dlg-bramwick4-bye"></a>`bye` **HARBOURMASTER BRAMWICK**: Goodnight, Fenn. Don't let him write anyone down. Not tonight. Not ever, ideally. <sub>dialogue/bramwick4.adv:34</sub>
 - *[ends]*
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
-*[after: opened directly from rooms/tavern.adv:130]*
+*[hub: opened directly from rooms/tavern.adv:143]*
 
-<a id="dlg-bramwick4-after"></a>`after` **HARBOURMASTER BRAMWICK**: Reinstated, Fenn, by acclamation of licensed premises. It isn't in any regulation. It ought to be. Now, when you're ready: I'll need my stamp. <sub>dialogue/bramwick4.adv:27</sub>
+<a id="dlg-bramwick4-hub"></a>`hub` **HARBOURMASTER BRAMWICK**: Still suspended, Fenn. Still spending it badly. I've had two drinks and an apology, and the apology went down worse. <sub>dialogue/bramwick4.adv:12</sub>
+- **1.** **FENN**: Cray says you were suspended for conduct. *[if seen:bramwick4.conduct = false]* <sub>dialogue/bramwick4.adv:13</sub>
+  - *→ continues at* [conduct](#dlg-bramwick4-conduct) *(above)*
+- **2.** **FENN**: How do we get you reinstated? *[if seen:bramwick4.paper = false]* <sub>dialogue/bramwick4.adv:14</sub>
+  - *→ continues at* [reg2](#dlg-bramwick4-reg2) *(above)*
+- **3.** **FENN**: The ledger's chained to its desk. *[if seen:bramwick4.paper and ledger_taken = false]* <sub>dialogue/bramwick4.adv:15</sub>
+  - *→ continues at* [chain](#dlg-bramwick4-chain) *(above)*
+- **4.** **FENN**: Where would Cray keep his insurance books? *[if seen:bramwick4.paper and doesn't have claims book]* <sub>dialogue/bramwick4.adv:16</sub>
+  - *→ continues at* [counting](#dlg-bramwick4-counting) *(above)*
+- **5.** **FENN**: Who would preside over an inquiry? *[if seen:bramwick4.paper and seen:bramwick4.preside = false]* <sub>dialogue/bramwick4.adv:17</sub>
+  - *→ continues at* [preside](#dlg-bramwick4-preside) *(above)*
+- **6.** **FENN**: Goodnight, sir. <sub>dialogue/bramwick4.adv:18</sub>
+  - *→ continues at* [bye](#dlg-bramwick4-bye) *(above)*
+
+*[after: opened directly from rooms/tavern.adv:141]*
+
+<a id="dlg-bramwick4-after"></a>`after` **HARBOURMASTER BRAMWICK**: Reinstated, Fenn, by acclamation of licensed premises. It isn't in any regulation. It ought to be. Now, when you're ready: I'll need my stamp. <sub>dialogue/bramwick4.adv:36</sub>
 - *[ends]*
 
-*[stamp: opened directly from rooms/tavern.adv:171]*
+*[stamp: opened directly from rooms/tavern.adv:192]*
 
-<a id="dlg-bramwick4-stamp"></a>`stamp` **FENN (V.O.)**: I put the harbour stamp in his hand. He weighs it, the way you weigh something you'd already decided was lost. <sub>dialogue/bramwick4.adv:29</sub>
+<a id="dlg-bramwick4-stamp"></a>`stamp` **FENN (V.O.)**: I put the harbour stamp in his hand. He weighs it, the way you weigh something you'd already decided was lost. <sub>dialogue/bramwick4.adv:38</sub>
 - *→ continues at* [notice](#dlg-bramwick4-notice)
 
-<a id="dlg-bramwick4-notice"></a>`notice` **FENN (V.O.)**: “Notice to all shipping,” says Bramwick. He turns Cray's quarantine order over, writes on the back, and stamps it: QUARANTINE LIFTED. <sub>dialogue/bramwick4.adv:31</sub>
+<a id="dlg-bramwick4-notice"></a>`notice` **FENN (V.O.)**: “Notice to all shipping,” says Bramwick. He turns Cray's quarantine order over, writes on the back, and stamps it: QUARANTINE LIFTED. <sub>dialogue/bramwick4.adv:40</sub>
 - *→ continues at* [hate](#dlg-bramwick4-hate)
 
-<a id="dlg-bramwick4-hate"></a>`hate` **HARBOURMASTER BRAMWICK**: There. On the back of his own paper. He'll mind that more than the cell. <sub>dialogue/bramwick4.adv:33</sub>
+<a id="dlg-bramwick4-hate"></a>`hate` **HARBOURMASTER BRAMWICK**: There. On the back of his own paper. He'll mind that more than the cell. <sub>dialogue/bramwick4.adv:42</sub>
 - *→ continues at* [boom](#dlg-bramwick4-boom)
 
-<a id="dlg-bramwick4-boom"></a>`boom` **FENN (V.O.)**: A boy runs it down to the boom. Out on the black water the yellow flag comes down, and a hundred and thirty people on the Marrow cheer, and one of them, slightly late, is my father. <sub>dialogue/bramwick4.adv:35</sub>
+<a id="dlg-bramwick4-boom"></a>`boom` **FENN (V.O.)**: A boy runs it down to the boom. Out on the black water the yellow flag comes down, and a hundred and thirty people on the Marrow cheer, and one of them, slightly late, is my father. <sub>dialogue/bramwick4.adv:44</sub>
 - *→ continues at* [took](#dlg-bramwick4-took)
 
-<a id="dlg-bramwick4-took"></a>`took` **MARTA**: Took you long enough. <sub>dialogue/bramwick4.adv:37</sub>
+<a id="dlg-bramwick4-took"></a>`took` **MARTA**: Took you long enough. <sub>dialogue/bramwick4.adv:46</sub>
 - *→ continues at* [crying](#dlg-bramwick4-crying)
 
-<a id="dlg-bramwick4-crying"></a>`crying` **FENN (V.O.)**: She's crying. Everyone in the Salty Keel can see she's crying. <sub>dialogue/bramwick4.adv:39</sub>
+<a id="dlg-bramwick4-crying"></a>`crying` **FENN (V.O.)**: She's crying. Everyone in the Salty Keel can see she's crying. <sub>dialogue/bramwick4.adv:48</sub>
 - *→ continues at* [onions](#dlg-bramwick4-onions)
 
-<a id="dlg-bramwick4-onions"></a>`onions` **MARTA**: It's the onions. Somebody's been cutting onions. <sub>dialogue/bramwick4.adv:41</sub>
+<a id="dlg-bramwick4-onions"></a>`onions` **MARTA**: Nobody write that down. <sub>dialogue/bramwick4.adv:50</sub>
 - *→ continues at* [back](#dlg-bramwick4-back)
 
-<a id="dlg-bramwick4-back"></a>`back` **HARBOURMASTER BRAMWICK**: One entry still wants correcting, Fenn, and it shouldn't be in my hand. Use it. Then bring it back. Clerks always bring them back. <sub>dialogue/bramwick4.adv:43</sub>
+<a id="dlg-bramwick4-back"></a>`back` **FENN (V.O.)**: He presses the stamp back into my hand. <sub>dialogue/bramwick4.adv:52</sub>
+- *→ continues at* [entry](#dlg-bramwick4-entry)
+
+<a id="dlg-bramwick4-entry"></a>`entry` **HARBOURMASTER BRAMWICK**: One entry still wants correcting, and it shouldn't be in my hand. Use it. Then bring it back. Clerks always bring them back. <sub>dialogue/bramwick4.adv:54</sub>
+- *→ continues at* [fourteen](#dlg-bramwick4-fourteen)
+
+<a id="dlg-bramwick4-fourteen"></a>`fourteen` **FENN**: Regulation fourteen, sir. Any clerk of this house may stamp in the Harbourmaster's absence. <sub>dialogue/bramwick4.adv:56</sub>
+- *→ continues at* [absent](#dlg-bramwick4-absent)
+
+<a id="dlg-bramwick4-absent"></a>`absent` **HARBOURMASTER BRAMWICK**: I'm not absent, Fenn. I'm right here. (He turns to the window.) …Though I find the harbour very absorbing just now. <sub>dialogue/bramwick4.adv:58</sub>
 - *[ends]*
 
-*[debt: opened directly from rooms/tavern.adv:127]*
+*[debt: opened directly from rooms/tavern.adv:131]*
 
-<a id="dlg-bramwick4-debt"></a>`debt` **HARBOURMASTER BRAMWICK**: Fenn. I have a debt to settle, and I need a witness. Clerks make excellent witnesses. Nobody suspects them of having feelings. <sub>dialogue/bramwick4.adv:45</sub>
-- **1.** **FENN**: The IOU in your drawer. *[if seen_iou]* <sub>dialogue/bramwick4.adv:46</sub>
+<a id="dlg-bramwick4-debt"></a>`debt` **HARBOURMASTER BRAMWICK**: Fenn. I have a debt to settle, and I need a witness. Clerks make excellent witnesses. Nobody suspects them of having feelings. <sub>dialogue/bramwick4.adv:60</sub>
+- **1.** **FENN**: The IOU in your drawer. *[if seen_iou]* <sub>dialogue/bramwick4.adv:61</sub>
   - *→ continues at* [read](#dlg-bramwick4-read)
-- **2.** **FENN**: What debt? *[if seen_iou = false]* <sub>dialogue/bramwick4.adv:47</sub>
+- **2.** **FENN**: What debt? *[if seen_iou = false]* <sub>dialogue/bramwick4.adv:62</sub>
   - *→ continues at* [fished](#dlg-bramwick4-fished)
 
-<a id="dlg-bramwick4-read"></a>`read` **HARBOURMASTER BRAMWICK**: You read it. <sub>dialogue/bramwick4.adv:48</sub>
-- **1.** **FENN**: Including the small writing. <sub>dialogue/bramwick4.adv:49</sub>
+<a id="dlg-bramwick4-read"></a>`read` **HARBOURMASTER BRAMWICK**: You read it. <sub>dialogue/bramwick4.adv:63</sub>
+- **1.** **FENN**: Including the small writing. <sub>dialogue/bramwick4.adv:64</sub>
   - *→ continues at* [small](#dlg-bramwick4-small)
 
-<a id="dlg-bramwick4-small"></a>`small` **HARBOURMASTER BRAMWICK**: …Then you know what I owe. <sub>dialogue/bramwick4.adv:50</sub>
+<a id="dlg-bramwick4-small"></a>`small` **HARBOURMASTER BRAMWICK**: …Then you know what I owe. <sub>dialogue/bramwick4.adv:65</sub>
 - *→ continues at* [lay](#dlg-bramwick4-lay)
 
-<a id="dlg-bramwick4-lay"></a>`lay` **FENN (V.O.)**: He lays a creased slip on the bar in front of Marta. IOU, ONE GAME OF CARDS, UNPAID. She reads it. Then she reads the small writing, which takes longer, because she reads it twice. <sub>dialogue/bramwick4.adv:54</sub>
+<a id="dlg-bramwick4-lay"></a>`lay` **FENN (V.O.)**: He lays a creased slip on the bar in front of Marta. IOU, ONE GAME OF CARDS, UNPAID. She reads it. Then she reads the small writing, which takes longer, because she reads it twice. <sub>dialogue/bramwick4.adv:69</sub>
 - *→ continues at* [everything](#dlg-bramwick4-everything)
 
-<a id="dlg-bramwick4-everything"></a>`everything` **MARTA**: “And everything else.” Thirty years, you old fool. <sub>dialogue/bramwick4.adv:56</sub>
+<a id="dlg-bramwick4-everything"></a>`everything` **MARTA**: “And everything else.” Thirty years, you old fool. <sub>dialogue/bramwick4.adv:71</sub>
 - *→ continues at* [paying](#dlg-bramwick4-paying)
 
-<a id="dlg-bramwick4-paying"></a>`paying` **HARBOURMASTER BRAMWICK**: I'm paying it. <sub>dialogue/bramwick4.adv:58</sub>
+<a id="dlg-bramwick4-paying"></a>`paying` **HARBOURMASTER BRAMWICK**: I'm paying it. <sub>dialogue/bramwick4.adv:73</sub>
 - *→ continues at* [shuffle](#dlg-bramwick4-shuffle)
 
-<a id="dlg-bramwick4-shuffle"></a>`shuffle` **FENN (V.O.)**: Marta takes a pack of cards from her apron pocket, where it has evidently been waiting for thirty years, and shuffles. <sub>dialogue/bramwick4.adv:60</sub>
+<a id="dlg-bramwick4-shuffle"></a>`shuffle` **FENN (V.O.)**: Marta takes a pack of cards from her apron pocket, where it has evidently been waiting for thirty years, and shuffles. <sub>dialogue/bramwick4.adv:75</sub>
 - *→ continues at* [hand](#dlg-bramwick4-hand)
 
-<a id="dlg-bramwick4-hand"></a>`hand` **MARTA**: One more hand. For the debt. <sub>dialogue/bramwick4.adv:62</sub>
+<a id="dlg-bramwick4-hand"></a>`hand` **MARTA**: One more hand. For the debt. <sub>dialogue/bramwick4.adv:77</sub>
 - *→ continues at* [else](#dlg-bramwick4-else)
 
-<a id="dlg-bramwick4-else"></a>`else` **HARBOURMASTER BRAMWICK**: And everything else? <sub>dialogue/bramwick4.adv:64</sub>
-- *[sets iou_paid]* <sub>dialogue/bramwick4.adv:65</sub>
+<a id="dlg-bramwick4-else"></a>`else` **HARBOURMASTER BRAMWICK**: And everything else? <sub>dialogue/bramwick4.adv:79</sub>
+- *[sets iou_paid]* <sub>dialogue/bramwick4.adv:80</sub>
 - *→ continues at* [deal](#dlg-bramwick4-deal)
 
-<a id="dlg-bramwick4-deal"></a>`deal` **MARTA**: Deal. <sub>dialogue/bramwick4.adv:67</sub>
-- **1.** **FENN**: You'd have found it right at the front of the drawer. *[if seen:tavernkeeper.front]* <sub>dialogue/bramwick4.adv:68</sub>
+<a id="dlg-bramwick4-deal"></a>`deal` **MARTA**: Deal. <sub>dialogue/bramwick4.adv:82</sub>
+- **1.** **FENN**: You'd have found it right at the front of the drawer. *[if seen:tavernkeeper.front]* <sub>dialogue/bramwick4.adv:83</sub>
   - *→ continues at* [front](#dlg-bramwick4-front)
-- **2.** **FENN**: Shall I keep score? <sub>dialogue/bramwick4.adv:69</sub>
+- **2.** **FENN**: Shall I keep score? <sub>dialogue/bramwick4.adv:84</sub>
   - *→ continues at* [score](#dlg-bramwick4-score)
-- **3.** **FENN**: (Leave them to it.) <sub>dialogue/bramwick4.adv:70</sub>
+- **3.** **FENN**: (Leave them to it.) <sub>dialogue/bramwick4.adv:85</sub>
   - *[ends]*
 
-<a id="dlg-bramwick4-front"></a>`front` **MARTA**: Right at the front. I've thought about nothing else for three days. Now get out of my tavern, clerk, before I start liking you again. <sub>dialogue/bramwick4.adv:71</sub>
+<a id="dlg-bramwick4-front"></a>`front` **MARTA**: Right at the front. I've thought about nothing else for three days. Now get out of my tavern, clerk, before I start liking you again. <sub>dialogue/bramwick4.adv:86</sub>
 - *[ends]*
 
-<a id="dlg-bramwick4-score"></a>`score` **MARTA**: You'll keep your nose out of it, is what you'll keep. Thirty years I've waited to lose this one properly. <sub>dialogue/bramwick4.adv:72</sub>
+<a id="dlg-bramwick4-score"></a>`score` **MARTA**: You'll keep your nose out of it, is what you'll keep. Thirty years I've waited to lose this one properly. <sub>dialogue/bramwick4.adv:87</sub>
 - *[ends]*
 
-<a id="dlg-bramwick4-fished"></a>`fished` **HARBOURMASTER BRAMWICK**: Thirty years it lived in my drawer. Cray had the drawer emptied into a sack. I went through his rubbish on my knees tonight, Fenn. Don't put that in the ledger. <sub>dialogue/bramwick4.adv:52</sub>
+<a id="dlg-bramwick4-fished"></a>`fished` **HARBOURMASTER BRAMWICK**: Thirty years it lived in my drawer. Cray had the drawer emptied into a sack. I went through his rubbish on my knees tonight, Fenn. Don't put that in the ledger. <sub>dialogue/bramwick4.adv:67</sub>
 - *→ continues at* [lay](#dlg-bramwick4-lay) *(above)*
 
-*[cards: opened directly from rooms/tavern.adv:133]*
+*[cards: opened directly from rooms/tavern.adv:136]*
 
-<a id="dlg-bramwick4-cards"></a>`cards` **HARBOURMASTER BRAMWICK**: Shh, Fenn. I've a pair of threes, and this time it's a strategy. <sub>dialogue/bramwick4.adv:74</sub>
+<a id="dlg-bramwick4-cards"></a>`cards` **HARBOURMASTER BRAMWICK**: Shh, Fenn. I've a pair of threes, and this time it's a strategy. <sub>dialogue/bramwick4.adv:89</sub>
+- *[ends]*
+
+<a id="dlg-hobb4"></a>
+### Conversation: hobb4 (Hobb)
+
+*[source:* `dialogue hobb4`*, starts at* `root`*]* <sub>dialogue/hobb4.adv:2</sub>
+
+<a id="dlg-hobb4-root"></a>`root` **HOBB**: Clerk. …Started the other arm. <sub>dialogue/hobb4.adv:3</sub>
+- **1.** **FENN**: Who's on it? <sub>dialogue/hobb4.adv:4</sub>
+  - *→ continues at* [who](#dlg-hobb4-who)
+- **2.** **FENN**: Goodnight, Hobb. <sub>dialogue/hobb4.adv:5</sub>
+  - *→ continues at* [bye](#dlg-hobb4-bye)
+
+<a id="dlg-hobb4-who"></a>`who` **HOBB**: Tam. <sub>dialogue/hobb4.adv:6</sub>
+- *→ continues at* [holds](#dlg-hobb4-holds)
+
+<a id="dlg-hobb4-holds"></a>`holds` **FENN (V.O.)**: He holds it out. One name, and a great deal of skin. <sub>dialogue/hobb4.adv:8</sub>
+- *→ continues at* [room](#dlg-hobb4-room)
+
+<a id="dlg-hobb4-room"></a>`room` **HOBB**: That one's for the ones that come back. There's room. <sub>dialogue/hobb4.adv:10</sub>
+- **1.** **FENN**: Put me on it. <sub>dialogue/hobb4.adv:11</sub>
+  - *→ continues at* [me](#dlg-hobb4-me)
+- **2.** **FENN**: There's a lot of room. <sub>dialogue/hobb4.adv:12</sub>
+  - *→ continues at* [lot](#dlg-hobb4-lot)
+
+<a id="dlg-hobb4-me"></a>`me` **HOBB**: Don't rush me. Come back a few more times. Then we'll talk ink. <sub>dialogue/hobb4.adv:13</sub>
+- *[ends]*
+
+<a id="dlg-hobb4-lot"></a>`lot` **HOBB**: Good. <sub>dialogue/hobb4.adv:14</sub>
+- *[ends]*
+
+<a id="dlg-hobb4-bye"></a>`bye` **HOBB**: Mind the step. There isn't one. I just like saying it now. <sub>dialogue/hobb4.adv:15</sub>
+- *[ends]*
+
+*[entry points opened directly from elsewhere, or reached only from them:]*
+
+*[again: opened directly from rooms/tavern.adv:163]*
+
+<a id="dlg-hobb4-again"></a>`again` **HOBB**: Still room, clerk. I check. <sub>dialogue/hobb4.adv:16</sub>
 - *[ends]*
 
 <a id="dlg-inquiry"></a>
@@ -4173,250 +4616,274 @@
 <a id="dlg-inquiry-cat"></a>`cat` **FENN (V.O.)**: Marta sets a stool behind the bar like a bench. Mr Tallow's cat jumps up beside her, sits, and looks at Cray as if he were a ledger that doesn't balance. <sub>dialogue/inquiry.adv:13</sub>
 - *→ continues at* [dorrit](#dlg-inquiry-dorrit)
 
-<a id="dlg-inquiry-dorrit"></a>`dorrit` **FENN (V.O.)**: At the back, a round shape in a customs waistcoat has slipped in: Dorrit. Customs officers are exempt from quarantine, he says. He never resigned. He just stopped coming in. <sub>dialogue/inquiry.adv:15</sub>
+<a id="dlg-inquiry-dorrit"></a>`dorrit` **FENN (V.O.)**: At the back, a round shape in a customs waistcoat has slipped in: Dorrit. Customs can't be quarantined, he says. He never resigned. He just stopped coming in. <sub>dialogue/inquiry.adv:15</sub>
 - *[sets inquiry_started]* <sub>dialogue/inquiry.adv:16</sub>
 - *→ continues at* [open](#dlg-inquiry-open)
 
 <a id="dlg-inquiry-open"></a>`open` **MARTA**: This inquiry is open. Mr Cray will answer the charges. Fenn will bring them. Everybody else will drink quietly and not touch the cat. <sub>dialogue/inquiry.adv:18</sub>
+- *→ continues at* [liberty](#dlg-inquiry-liberty)
+
+<a id="dlg-inquiry-liberty"></a>`liberty` **SILAS CRAY**: Allow me. I've taken the liberty of drafting the charges against me. Mine will be tidier. <sub>dialogue/inquiry.adv:20</sub>
+- *→ continues at* [readthem](#dlg-inquiry-readthem)
+
+<a id="dlg-inquiry-readthem"></a>`readthem` **MARTA**: Read them, then. Fenn will answer them. <sub>dialogue/inquiry.adv:22</sub>
 - *→ continues at* [c1](#dlg-inquiry-c1)
 
-<a id="dlg-inquiry-c1"></a>`c1` **SILAS CRAY**: Charge the first, I suppose: the Arcadia. Lost at sea, three years ago. It's in the harbour ledger. I find the ledger very persuasive. <sub>dialogue/inquiry.adv:23</sub>
-- **1.** **FENN**: (Show Ansel's log.) <sub>dialogue/inquiry.adv:24</sub>
+<a id="dlg-inquiry-c1"></a>`c1` **SILAS CRAY**: Charge the first, I suppose: the Arcadia. Lost at sea, three years ago. It's in the harbour ledger. I find the ledger very persuasive. <sub>dialogue/inquiry.adv:27</sub>
+- **1.** **FENN**: (Show Ansel's log.) <sub>dialogue/inquiry.adv:28</sub>
   - *→ continues at* [c1ok](#dlg-inquiry-c1ok)
-- **2.** **FENN**: (Show the harbour ledger.) *[if has harbour ledger]* <sub>dialogue/inquiry.adv:25</sub>
+- **2.** **FENN**: (Show the harbour ledger.) *[if has harbour ledger]* <sub>dialogue/inquiry.adv:29</sub>
   - *→ continues at* [c1_ledger](#dlg-inquiry-c1_ledger)
-- **3.** **FENN**: (Show the claims book.) *[if has claims book]* <sub>dialogue/inquiry.adv:26</sub>
+- **3.** **FENN**: (Show the claims book.) *[if has claims book]* <sub>dialogue/inquiry.adv:30</sub>
   - *→ continues at* [c1_claims_book](#dlg-inquiry-c1_claims_book)
-- **4.** **FENN**: (Show Rook's purse.) *[if has Rook's purse]* <sub>dialogue/inquiry.adv:27</sub>
+- **4.** **FENN**: (Show Rook's purse.) *[if has Rook's purse]* <sub>dialogue/inquiry.adv:31</sub>
   - *→ continues at* [c1_purse](#dlg-inquiry-c1_purse)
-- **5.** **FENN**: (Show the kelp manifest.) *[if has kelp manifest]* <sub>dialogue/inquiry.adv:28</sub>
+- **5.** **FENN**: (Show the kelp manifest.) *[if has kelp manifest]* <sub>dialogue/inquiry.adv:32</sub>
   - *→ continues at* [c1_kelp](#dlg-inquiry-c1_kelp)
 
-<a id="dlg-inquiry-c1ok"></a>`c1ok` **SILAS CRAY**: A sailor's diary. Charming. Do they still write those? <sub>dialogue/inquiry.adv:43</sub>
+<a id="dlg-inquiry-c1ok"></a>`c1ok` **SILAS CRAY**: A sailor's diary. Charming. Do they still write those? <sub>dialogue/inquiry.adv:47</sub>
 - *→ continues at* [c1wave](#dlg-inquiry-c1wave)
 
-<a id="dlg-inquiry-c1wave"></a>`c1wave` **MARTA**: Written by a man standing on that ship out there, Mr Cray. Waving at you. <sub>dialogue/inquiry.adv:45</sub>
+<a id="dlg-inquiry-c1wave"></a>`c1wave` **MARTA**: Written by a man standing on that ship out there, Mr Cray. Waving at you. <sub>dialogue/inquiry.adv:49</sub>
 - *→ continues at* [lantern](#dlg-inquiry-lantern)
 
-<a id="dlg-inquiry-lantern"></a>`lantern` **FENN (V.O.)**: Everyone turns to the window. Out on the black water, a lantern on the Marrow's rail swings back and forth. My father. He's been waving for an hour, on the off chance. <sub>dialogue/inquiry.adv:47</sub>
+<a id="dlg-inquiry-lantern"></a>`lantern` **FENN (V.O.)**: Everyone turns to the window. Out on the black water, a lantern on the Marrow's rail swings back and forth. My father. He's been waving for an hour, on the off chance. <sub>dialogue/inquiry.adv:51</sub>
 - *→ continues at* [c2](#dlg-inquiry-c2)
 
-<a id="dlg-inquiry-c2"></a>`c2` **SILAS CRAY**: Very touching. Charge the second, then. Yes, my office paid harbour dues on the Arcadia. Dues are perfectly legal. Ask the harbour. <sub>dialogue/inquiry.adv:50</sub>
-- **1.** **FENN**: (Show Ansel's log.) <sub>dialogue/inquiry.adv:51</sub>
+<a id="dlg-inquiry-c2"></a>`c2` **SILAS CRAY**: Very touching. Charge the second, then. Yes, my office paid harbour dues on the Arcadia. Dues are perfectly legal. Ask the harbour. <sub>dialogue/inquiry.adv:54</sub>
+- **1.** **FENN**: (Show Ansel's log.) <sub>dialogue/inquiry.adv:55</sub>
   - *→ continues at* [c2_ansel_log](#dlg-inquiry-c2_ansel_log)
-- **2.** **FENN**: (Show the harbour ledger.) *[if has harbour ledger]* <sub>dialogue/inquiry.adv:52</sub>
+- **2.** **FENN**: (Show the harbour ledger.) *[if has harbour ledger]* <sub>dialogue/inquiry.adv:56</sub>
   - *→ continues at* [c2ok](#dlg-inquiry-c2ok)
-- **3.** **FENN**: (Show the claims book.) *[if has claims book]* <sub>dialogue/inquiry.adv:53</sub>
+- **3.** **FENN**: (Show the claims book.) *[if has claims book]* <sub>dialogue/inquiry.adv:57</sub>
   - *→ continues at* [c2_claims_book](#dlg-inquiry-c2_claims_book)
-- **4.** **FENN**: (Show Rook's purse.) *[if has Rook's purse]* <sub>dialogue/inquiry.adv:54</sub>
+- **4.** **FENN**: (Show Rook's purse.) *[if has Rook's purse]* <sub>dialogue/inquiry.adv:58</sub>
   - *→ continues at* [c2_purse](#dlg-inquiry-c2_purse)
-- **5.** **FENN**: (Show the kelp manifest.) *[if has kelp manifest]* <sub>dialogue/inquiry.adv:55</sub>
+- **5.** **FENN**: (Show the kelp manifest.) *[if has kelp manifest]* <sub>dialogue/inquiry.adv:59</sub>
   - *→ continues at* [c2_kelp](#dlg-inquiry-c2_kelp)
 
-<a id="dlg-inquiry-c2_ansel_log"></a>`c2_ansel_log` **SILAS CRAY**: Your father's diary again? I paid the harbour, clerk, not your father. He'd hardly have written down my receipts. <sub>dialogue/inquiry.adv:62</sub>
+<a id="dlg-inquiry-c2_ansel_log"></a>`c2_ansel_log` **SILAS CRAY**: Your father's diary again? I paid the harbour, clerk, not your father. He'd hardly have written down my receipts. <sub>dialogue/inquiry.adv:66</sub>
 - *→ continues at* [c2r](#dlg-inquiry-c2r)
 
-<a id="dlg-inquiry-c2r"></a>`c2r` **MARTA**: The charge is harbour dues, Fenn. Paid, he says, and legal. Show us where they were paid. And when. <sub>dialogue/inquiry.adv:56</sub>
-- **1.** **FENN**: (Show Ansel's log.) <sub>dialogue/inquiry.adv:57</sub>
+<a id="dlg-inquiry-c2r"></a>`c2r` **MARTA**: The charge is harbour dues, Fenn. Paid, he says, and legal. Show us where they were paid. And when. <sub>dialogue/inquiry.adv:60</sub>
+- **1.** **FENN**: (Show Ansel's log.) <sub>dialogue/inquiry.adv:61</sub>
   - *→ continues at* [c2_ansel_log](#dlg-inquiry-c2_ansel_log) *(above)*
-- **2.** **FENN**: (Show the harbour ledger.) *[if has harbour ledger]* <sub>dialogue/inquiry.adv:58</sub>
+- **2.** **FENN**: (Show the harbour ledger.) *[if has harbour ledger]* <sub>dialogue/inquiry.adv:62</sub>
   - *→ continues at* [c2ok](#dlg-inquiry-c2ok)
-- **3.** **FENN**: (Show the claims book.) *[if has claims book]* <sub>dialogue/inquiry.adv:59</sub>
+- **3.** **FENN**: (Show the claims book.) *[if has claims book]* <sub>dialogue/inquiry.adv:63</sub>
   - *→ continues at* [c2_claims_book](#dlg-inquiry-c2_claims_book)
-- **4.** **FENN**: (Show Rook's purse.) *[if has Rook's purse]* <sub>dialogue/inquiry.adv:60</sub>
+- **4.** **FENN**: (Show Rook's purse.) *[if has Rook's purse]* <sub>dialogue/inquiry.adv:64</sub>
   - *→ continues at* [c2_purse](#dlg-inquiry-c2_purse)
-- **5.** **FENN**: (Show the kelp manifest.) *[if has kelp manifest]* <sub>dialogue/inquiry.adv:61</sub>
+- **5.** **FENN**: (Show the kelp manifest.) *[if has kelp manifest]* <sub>dialogue/inquiry.adv:65</sub>
   - *→ continues at* [c2_kelp](#dlg-inquiry-c2_kelp)
 
-<a id="dlg-inquiry-c2ok"></a>`c2ok` **FENN**: Dues on a lost ship, entered three days before she was even late. Mr Cray, you're very punctual for a tragedy. <sub>dialogue/inquiry.adv:70</sub>
+<a id="dlg-inquiry-c2ok"></a>`c2ok` **FENN**: Dues on a lost ship, entered three days before she was even late. Mr Cray, you're very punctual for a tragedy. <sub>dialogue/inquiry.adv:74</sub>
 - *→ continues at* [wrote](#dlg-inquiry-wrote)
 
-<a id="dlg-inquiry-wrote"></a>`wrote` **HARBOURMASTER BRAMWICK**: I wrote that entry. He paid me three hundred crowns to write it. I'll say it to anyone. I've been practising on Rook all night. <sub>dialogue/inquiry.adv:72</sub>
+<a id="dlg-inquiry-wrote"></a>`wrote` **HARBOURMASTER BRAMWICK**: I wrote that entry. He paid me three hundred crowns to write it. I'll say it to anyone. I've been practising on Rook all night. <sub>dialogue/inquiry.adv:76</sub>
 - *→ continues at* [verse](#dlg-inquiry-verse)
 
-<a id="dlg-inquiry-verse"></a>`verse` **OLD ROOK**: He has. It was very moving. Twice it was in verse. <sub>dialogue/inquiry.adv:74</sub>
+<a id="dlg-inquiry-verse"></a>`verse` **OLD ROOK**: He has. It was very moving. Twice it was in verse. <sub>dialogue/inquiry.adv:78</sub>
 - *→ continues at* [c3](#dlg-inquiry-c3)
 
-<a id="dlg-inquiry-c3"></a>`c3` **SILAS CRAY**: Charge the third. My insurers paid out on six ships, for weather. The Straits have weather. It's practically all they have. <sub>dialogue/inquiry.adv:77</sub>
-- **1.** **FENN**: (Show Ansel's log.) <sub>dialogue/inquiry.adv:78</sub>
+<a id="dlg-inquiry-c3"></a>`c3` **SILAS CRAY**: Charge the third. My insurers paid out on six ships, for weather. The Straits have weather. It's practically all they have. <sub>dialogue/inquiry.adv:81</sub>
+- **1.** **FENN**: (Show Ansel's log.) <sub>dialogue/inquiry.adv:82</sub>
   - *→ continues at* [c3_ansel_log](#dlg-inquiry-c3_ansel_log)
-- **2.** **FENN**: (Show the harbour ledger.) *[if has harbour ledger]* <sub>dialogue/inquiry.adv:79</sub>
+- **2.** **FENN**: (Show the harbour ledger.) *[if has harbour ledger]* <sub>dialogue/inquiry.adv:83</sub>
   - *→ continues at* [c3_ledger](#dlg-inquiry-c3_ledger)
-- **3.** **FENN**: (Show the claims book.) *[if has claims book]* <sub>dialogue/inquiry.adv:80</sub>
+- **3.** **FENN**: (Show the claims book.) *[if has claims book]* <sub>dialogue/inquiry.adv:84</sub>
   - *→ continues at* [c3ok](#dlg-inquiry-c3ok)
-- **4.** **FENN**: (Show Rook's purse.) *[if has Rook's purse]* <sub>dialogue/inquiry.adv:81</sub>
+- **4.** **FENN**: (Show Rook's purse.) *[if has Rook's purse]* <sub>dialogue/inquiry.adv:85</sub>
   - *→ continues at* [c3_purse](#dlg-inquiry-c3_purse)
-- **5.** **FENN**: (Show the kelp manifest.) *[if has kelp manifest]* <sub>dialogue/inquiry.adv:82</sub>
+- **5.** **FENN**: (Show the kelp manifest.) *[if has kelp manifest]* <sub>dialogue/inquiry.adv:86</sub>
   - *→ continues at* [c3_kelp](#dlg-inquiry-c3_kelp)
 
-<a id="dlg-inquiry-c3_ansel_log"></a>`c3_ansel_log` **SILAS CRAY**: A captain's opinion of the weather isn't an insurance document. If it were, I'd be bankrupt and every sailor in Vela an astronomer. <sub>dialogue/inquiry.adv:89</sub>
+<a id="dlg-inquiry-c3_ansel_log"></a>`c3_ansel_log` **SILAS CRAY**: A captain's opinion of the weather isn't an insurance document. If it were, I'd be bankrupt and every sailor in Vela an astronomer. <sub>dialogue/inquiry.adv:93</sub>
 - *→ continues at* [c3r](#dlg-inquiry-c3r)
 
-<a id="dlg-inquiry-c3r"></a>`c3r` **MARTA**: The charge is the insurance, Fenn. Six ships, paid for weather. Who wrote down what they were paid for? <sub>dialogue/inquiry.adv:83</sub>
-- **1.** **FENN**: (Show Ansel's log.) <sub>dialogue/inquiry.adv:84</sub>
+<a id="dlg-inquiry-c3r"></a>`c3r` **MARTA**: The charge is the insurance, Fenn. Six ships, paid for weather. Who wrote down what they were paid for? <sub>dialogue/inquiry.adv:87</sub>
+- **1.** **FENN**: (Show Ansel's log.) <sub>dialogue/inquiry.adv:88</sub>
   - *→ continues at* [c3_ansel_log](#dlg-inquiry-c3_ansel_log) *(above)*
-- **2.** **FENN**: (Show the harbour ledger.) *[if has harbour ledger]* <sub>dialogue/inquiry.adv:85</sub>
+- **2.** **FENN**: (Show the harbour ledger.) *[if has harbour ledger]* <sub>dialogue/inquiry.adv:89</sub>
   - *→ continues at* [c3_ledger](#dlg-inquiry-c3_ledger)
-- **3.** **FENN**: (Show the claims book.) *[if has claims book]* <sub>dialogue/inquiry.adv:86</sub>
+- **3.** **FENN**: (Show the claims book.) *[if has claims book]* <sub>dialogue/inquiry.adv:90</sub>
   - *→ continues at* [c3ok](#dlg-inquiry-c3ok)
-- **4.** **FENN**: (Show Rook's purse.) *[if has Rook's purse]* <sub>dialogue/inquiry.adv:87</sub>
+- **4.** **FENN**: (Show Rook's purse.) *[if has Rook's purse]* <sub>dialogue/inquiry.adv:91</sub>
   - *→ continues at* [c3_purse](#dlg-inquiry-c3_purse)
-- **5.** **FENN**: (Show the kelp manifest.) *[if has kelp manifest]* <sub>dialogue/inquiry.adv:88</sub>
+- **5.** **FENN**: (Show the kelp manifest.) *[if has kelp manifest]* <sub>dialogue/inquiry.adv:92</sub>
   - *→ continues at* [c3_kelp](#dlg-inquiry-c3_kelp)
 
-<a id="dlg-inquiry-c3_ledger"></a>`c3_ledger` **SILAS CRAY**: The harbour ledger doesn't do insurance, clerk. It barely does arithmetic. Bramwick's sevens are a disgrace. <sub>dialogue/inquiry.adv:91</sub>
+<a id="dlg-inquiry-c3_ledger"></a>`c3_ledger` **SILAS CRAY**: The harbour ledger doesn't do insurance, clerk. It barely does arithmetic. Bramwick's sevens are a disgrace. <sub>dialogue/inquiry.adv:95</sub>
 - *→ continues at* [sevens](#dlg-inquiry-sevens)
 
-<a id="dlg-inquiry-sevens"></a>`sevens` **HARBOURMASTER BRAMWICK**: My sevens are continental. <sub>dialogue/inquiry.adv:93</sub>
+<a id="dlg-inquiry-sevens"></a>`sevens` **HARBOURMASTER BRAMWICK**: My sevens are continental. <sub>dialogue/inquiry.adv:97</sub>
 - *→ continues at* [c3r](#dlg-inquiry-c3r) *(above)*
 
-<a id="dlg-inquiry-c3ok"></a>`c3ok` **FENN**: Six ships, paid in full, for weather. And the same year, your office refused Captain Vane's claim for a real storm. On a technicality. <sub>dialogue/inquiry.adv:99</sub>
+<a id="dlg-inquiry-c3ok"></a>`c3ok` **FENN**: Six ships, paid in full, for weather. And the same year, your office refused Captain Vane's claim for a real storm. On a technicality. <sub>dialogue/inquiry.adv:103</sub>
 - *→ continues at* [stamped](#dlg-inquiry-stamped)
 
-<a id="dlg-inquiry-stamped"></a>`stamped` **DORRIT**: Stamped and passed, that book. I'd know. I passed its first page myself, before I went to sea. Thought it smelled off even then. <sub>dialogue/inquiry.adv:101</sub>
+<a id="dlg-inquiry-stamped"></a>`stamped` **DORRIT**: Requisitioned on a stamped form, handed over by the company's own clerk. Stamped and passed, that book. I'd serve soup on it. <sub>dialogue/inquiry.adv:105</sub>
 - *→ continues at* [vane](#dlg-inquiry-vane)
 
-<a id="dlg-inquiry-vane"></a>`vane` **MARTA**: Vane's claim. I remember. She drank here a month on credit, and paid back every penny. Go on, Mr Cray. <sub>dialogue/inquiry.adv:103</sub>
+<a id="dlg-inquiry-vane"></a>`vane` **MARTA**: Vane's claim. I remember. She drank here a month on credit, and paid back every penny. Go on, Mr Cray. <sub>dialogue/inquiry.adv:107</sub>
 - *→ continues at* [c4](#dlg-inquiry-c4)
 
-<a id="dlg-inquiry-c4"></a>`c4` **SILAS CRAY**: Even granting all that, clerk: nobody can say who was taken off those ships. Or by whom. Or that anyone was taken at all. <sub>dialogue/inquiry.adv:106</sub>
-- **1.** **FENN**: (Show Ansel's log.) <sub>dialogue/inquiry.adv:107</sub>
+<a id="dlg-inquiry-c4"></a>`c4` **SILAS CRAY**: Even granting all that, clerk: who was aboard? Everyone who could tell you is on a plague ship, under my yellow flag. Quarantine. I'm told it's catching. <sub>dialogue/inquiry.adv:110</sub>
+- **1.** **FENN**: (Show Ansel's log.) <sub>dialogue/inquiry.adv:111</sub>
   - *→ continues at* [c4_ansel_log](#dlg-inquiry-c4_ansel_log)
-- **2.** **FENN**: (Show the harbour ledger.) *[if has harbour ledger]* <sub>dialogue/inquiry.adv:108</sub>
+- **2.** **FENN**: (Show the harbour ledger.) *[if has harbour ledger]* <sub>dialogue/inquiry.adv:112</sub>
   - *→ continues at* [c4_ledger](#dlg-inquiry-c4_ledger)
-- **3.** **FENN**: (Show the claims book.) *[if has claims book]* <sub>dialogue/inquiry.adv:109</sub>
+- **3.** **FENN**: (Show the claims book.) *[if has claims book]* <sub>dialogue/inquiry.adv:113</sub>
   - *→ continues at* [c4_claims_book](#dlg-inquiry-c4_claims_book)
-- **4.** **FENN**: (Show Rook's purse.) *[if has Rook's purse]* <sub>dialogue/inquiry.adv:110</sub>
+- **4.** **FENN**: (Show Rook's purse.) *[if has Rook's purse]* <sub>dialogue/inquiry.adv:114</sub>
   - *→ continues at* [c4ok](#dlg-inquiry-c4ok)
-- **5.** **FENN**: (Show the kelp manifest.) *[if has kelp manifest]* <sub>dialogue/inquiry.adv:111</sub>
+- **5.** **FENN**: (Show the kelp manifest.) *[if has kelp manifest]* <sub>dialogue/inquiry.adv:115</sub>
   - *→ continues at* [c4_kelp](#dlg-inquiry-c4_kelp)
 
-<a id="dlg-inquiry-c4_ansel_log"></a>`c4_ansel_log` **SILAS CRAY**: Your father wrote that men came. He didn't write that I sent them. Sailors see a fog and blame the nearest gentleman. <sub>dialogue/inquiry.adv:118</sub>
+<a id="dlg-inquiry-c4_ansel_log"></a>`c4_ansel_log` **SILAS CRAY**: Your father wrote that men came. He didn't write that I sent them. Sailors see a fog and blame the nearest gentleman. <sub>dialogue/inquiry.adv:122</sub>
 - *→ continues at* [c4r](#dlg-inquiry-c4r)
 
-<a id="dlg-inquiry-c4r"></a>`c4r` **MARTA**: The charge is that nobody can say who was taken off, Fenn. Is there anybody in this room who can? <sub>dialogue/inquiry.adv:112</sub>
-- **1.** **FENN**: (Show Ansel's log.) <sub>dialogue/inquiry.adv:113</sub>
+<a id="dlg-inquiry-c4r"></a>`c4r` **MARTA**: The charge is that nobody ashore can say who was taken off, Fenn. Is there anybody in this room who can? <sub>dialogue/inquiry.adv:116</sub>
+- **1.** **FENN**: (Show Ansel's log.) <sub>dialogue/inquiry.adv:117</sub>
   - *→ continues at* [c4_ansel_log](#dlg-inquiry-c4_ansel_log) *(above)*
-- **2.** **FENN**: (Show the harbour ledger.) *[if has harbour ledger]* <sub>dialogue/inquiry.adv:114</sub>
+- **2.** **FENN**: (Show the harbour ledger.) *[if has harbour ledger]* <sub>dialogue/inquiry.adv:118</sub>
   - *→ continues at* [c4_ledger](#dlg-inquiry-c4_ledger)
-- **3.** **FENN**: (Show the claims book.) *[if has claims book]* <sub>dialogue/inquiry.adv:115</sub>
+- **3.** **FENN**: (Show the claims book.) *[if has claims book]* <sub>dialogue/inquiry.adv:119</sub>
   - *→ continues at* [c4_claims_book](#dlg-inquiry-c4_claims_book)
-- **4.** **FENN**: (Show Rook's purse.) *[if has Rook's purse]* <sub>dialogue/inquiry.adv:116</sub>
+- **4.** **FENN**: (Show Rook's purse.) *[if has Rook's purse]* <sub>dialogue/inquiry.adv:120</sub>
   - *→ continues at* [c4ok](#dlg-inquiry-c4ok)
-- **5.** **FENN**: (Show the kelp manifest.) *[if has kelp manifest]* <sub>dialogue/inquiry.adv:117</sub>
+- **5.** **FENN**: (Show the kelp manifest.) *[if has kelp manifest]* <sub>dialogue/inquiry.adv:121</sub>
   - *→ continues at* [c4_kelp](#dlg-inquiry-c4_kelp)
 
-<a id="dlg-inquiry-c4_ledger"></a>`c4_ledger` **SILAS CRAY**: The ledger records ships, clerk, not people. It's one of the things I like best about it. <sub>dialogue/inquiry.adv:120</sub>
+<a id="dlg-inquiry-c4_ledger"></a>`c4_ledger` **SILAS CRAY**: The ledger records ships, clerk, not people. It's one of the things I like best about it. <sub>dialogue/inquiry.adv:124</sub>
 - *→ continues at* [c4r](#dlg-inquiry-c4r) *(above)*
 
-<a id="dlg-inquiry-c4_claims_book"></a>`c4_claims_book` **SILAS CRAY**: Insurers pay for hulls. They're famously uninterested in who was aboard. It's why I went into the business. <sub>dialogue/inquiry.adv:122</sub>
+<a id="dlg-inquiry-c4_claims_book"></a>`c4_claims_book` **SILAS CRAY**: Hulls, clerk. That book is all hulls. Insurers are famously uninterested in who was aboard. It's why I went into the business. <sub>dialogue/inquiry.adv:126</sub>
 - *→ continues at* [c4r](#dlg-inquiry-c4r) *(above)*
 
-<a id="dlg-inquiry-c4ok"></a>`c4ok` **FENN (V.O.)**: I don't say anything. I hand the purse to Rook. He stands up, which takes him a while, and the whole room waits for him. <sub>dialogue/inquiry.adv:126</sub>
+<a id="dlg-inquiry-c4ok"></a>`c4ok` **FENN (V.O.)**: I don't say anything. I hand the purse to Rook. He stands up, which takes him a while, and the whole room waits for him. <sub>dialogue/inquiry.adv:130</sub>
 - *→ continues at* [first](#dlg-inquiry-first)
 
-<a id="dlg-inquiry-first"></a>`first` **OLD ROOK**: I can say. I was the first. <sub>dialogue/inquiry.adv:128</sub>
+<a id="dlg-inquiry-first"></a>`first` **OLD ROOK**: I'm ashore. I was the first. <sub>dialogue/inquiry.adv:132</sub>
 - *→ continues at* [fruit](#dlg-inquiry-fruit)
 
-<a id="dlg-inquiry-fruit"></a>`fruit` **OLD ROOK**: Taken off the Arcadia under a yellow flag, paid with this, and put on a fruit boat. Cray's seal, never opened. Open it, Marta. I want everyone looking. <sub>dialogue/inquiry.adv:130</sub>
+<a id="dlg-inquiry-fruit"></a>`fruit` **OLD ROOK**: Taken off the Arcadia under a yellow flag, paid with this, and put on a fruit boat. Cray's seal, never opened. Open it, Marta. I want everyone looking. <sub>dialogue/inquiry.adv:134</sub>
 - *→ continues at* [wax](#dlg-inquiry-wax)
 
-<a id="dlg-inquiry-wax"></a>`wax` **FENN (V.O.)**: Marta breaks the wax cloud. Three hundred crowns spill on the bar, and a folded slip in a neat hand: RECEIVED, ONE NAVIGATOR, SURPLUS TO REQUIREMENTS. S.C. <sub>dialogue/inquiry.adv:132</sub>
+<a id="dlg-inquiry-wax"></a>`wax` **FENN (V.O.)**: Marta breaks the wax cloud. Three hundred crowns spill on the bar, and a folded slip in a neat hand: RECEIVED, ONE NAVIGATOR, SURPLUS TO REQUIREMENTS. S.C. <sub>dialogue/inquiry.adv:136</sub>
 - *→ continues at* [surplus](#dlg-inquiry-surplus)
 
-<a id="dlg-inquiry-surplus"></a>`surplus` **OLD ROOK**: Surplus. I've been called worse. Mostly by me. <sub>dialogue/inquiry.adv:134</sub>
-- **1.** **FENN**: (Show the kelp manifest.) *[if has kelp manifest]* <sub>dialogue/inquiry.adv:135</sub>
-  - *[sets kelp_read]* <sub>dialogue/inquiry.adv:136</sub>
-  - *[casebook:* The fog is not weather. It is dried kelp, burned by the forkful in iron braziers, and Vane has been shipping it out in the Marrow's own crates.*]* <sub>dialogue/inquiry.adv:137</sub>
+<a id="dlg-inquiry-surplus"></a>`surplus` **MARTA**: Is that your hand, Mr Cray? <sub>dialogue/inquiry.adv:138</sub>
+- *→ continues at* [receipts](#dlg-inquiry-receipts)
+
+<a id="dlg-inquiry-receipts"></a>`receipts` **SILAS CRAY**: …It's a very good hand. I always did keep receipts. It's a weakness. <sub>dialogue/inquiry.adv:140</sub>
+- *→ continues at* [same](#dlg-inquiry-same)
+
+<a id="dlg-inquiry-same"></a>`same` **HARBOURMASTER BRAMWICK**: (quietly) Three hundred. Same as me. <sub>dialogue/inquiry.adv:142</sub>
+- *→ continues at* [pair](#dlg-inquiry-pair)
+
+<a id="dlg-inquiry-pair"></a>`pair` **OLD ROOK**: Then we're a matched pair. …Surplus. I've been called worse. Mostly by me. <sub>dialogue/inquiry.adv:144</sub>
+- **1.** **FENN**: (Show the kelp manifest.) *[if has kelp manifest]* <sub>dialogue/inquiry.adv:145</sub>
+  - *[sets kelp_read]* <sub>dialogue/inquiry.adv:146</sub>
+  - *[casebook:* The fog is not weather. It is dried kelp, burned by the forkful in iron braziers, and Vane has been shipping it out in the Marrow's own crates.*]* <sub>dialogue/inquiry.adv:147</sub>
   - *→ continues at* [c5](#dlg-inquiry-c5)
-- **2.** **FENN**: That's everything. <sub>dialogue/inquiry.adv:138</sub>
+- **2.** **FENN**: That's everything. <sub>dialogue/inquiry.adv:148</sub>
   - *→ continues at* [stands](#dlg-inquiry-stands)
 
-<a id="dlg-inquiry-c5"></a>`c5` **FENN (V.O.)**: I lay the kelp manifest on the bar and read it out, the way I've read ten thousand manifests: QUARANTINE STN, G.K. Briquettes, kelp, four hundred. Purpose: for fog. <sub>dialogue/inquiry.adv:140</sub>
+<a id="dlg-inquiry-c5"></a>`c5` **FENN (V.O.)**: I lay the kelp manifest on the bar and read it out, the way I've read ten thousand manifests: QUARANTINE STN, G.K. Briquettes, kelp, four hundred. Purpose: for fog. <sub>dialogue/inquiry.adv:150</sub>
 - *→ continues at* [laugh](#dlg-inquiry-laugh)
 
-<a id="dlg-inquiry-laugh"></a>`laugh` **FENN (V.O.)**: There's a silence. Then somebody laughs, and then everybody does, and Silas Cray is laughed at in Port Vela for the first time in his life. <sub>dialogue/inquiry.adv:142</sub>
+<a id="dlg-inquiry-laugh"></a>`laugh` **FENN (V.O.)**: There's a silence. Then somebody laughs, and then everybody does, and Silas Cray is laughed at in Port Vela for the first time in his life. <sub>dialogue/inquiry.adv:152</sub>
 - *→ continues at* [clerical](#dlg-inquiry-clerical)
 
-<a id="dlg-inquiry-clerical"></a>`clerical` **SILAS CRAY**: A clerical error. My men write down whatever they're told. I really must stop telling them things. <sub>dialogue/inquiry.adv:144</sub>
+<a id="dlg-inquiry-clerical"></a>`clerical` **SILAS CRAY**: A clerical error. My men write down whatever they're told. I really must stop telling them things. <sub>dialogue/inquiry.adv:154</sub>
 - *→ continues at* [stands](#dlg-inquiry-stands)
 
-<a id="dlg-inquiry-stands"></a>`stands` **FENN (V.O.)**: Cray stands. He brushes down his coat, straightens his cravat pin, and smiles at me, and it's very nearly a real smile. <sub>dialogue/inquiry.adv:147</sub>
+<a id="dlg-inquiry-stands"></a>`stands` **FENN (V.O.)**: Cray stands. He brushes down his coat, straightens his cravat pin, and smiles at me, and it's very nearly a real smile. <sub>dialogue/inquiry.adv:157</sub>
+- *→ continues at* [colleagues](#dlg-inquiry-colleagues)
+
+<a id="dlg-inquiry-colleagues"></a>`colleagues` **SILAS CRAY**: We're colleagues, really. I hear you wrote a form on a beach and a whole island walked out of it. I write it, you file it… and now you write it too. <sub>dialogue/inquiry.adv:159</sub>
+- *→ continues at* [true](#dlg-inquiry-true)
+
+<a id="dlg-inquiry-true"></a>`true` **FENN**: Yes. The difference is that mine were true. <sub>dialogue/inquiry.adv:161</sub>
+- *→ continues at* [fashioned](#dlg-inquiry-fashioned)
+
+<a id="dlg-inquiry-fashioned"></a>`fashioned` **SILAS CRAY**: Is that the difference? How very old-fashioned. <sub>dialogue/inquiry.adv:163</sub>
 - *→ continues at* [point](#dlg-inquiry-point)
 
-<a id="dlg-inquiry-point"></a>`point` **SILAS CRAY**: I collect things that point, clerk. I wanted your compass for three years. <sub>dialogue/inquiry.adv:149</sub>
-- **1.** **FENN**: You collected the wrong thing. This one pointed at you. <sub>dialogue/inquiry.adv:150</sub>
-  - *[Fenn hands over: Rook's purse]* *[Fenn hands over: claims book]* *[sets inquiry_done]* *[sound: chime]* <sub>dialogue/inquiry.adv:151</sub>
+<a id="dlg-inquiry-point"></a>`point` **SILAS CRAY**: I collect things that point, clerk. I wanted your compass for three years. <sub>dialogue/inquiry.adv:165</sub>
+- **1.** **FENN**: You should have collected clerks, Mr Cray. This one pointed at you. <sub>dialogue/inquiry.adv:166</sub>
+  - *[Fenn hands over: Rook's purse]* *[Fenn hands over: claims book]* *[sets inquiry_done]* *[sound: chime]* <sub>dialogue/inquiry.adv:167</sub>
   - *→ continues at* [sodid](#dlg-inquiry-sodid)
-- **2.** **FENN**: (Point at him.) <sub>dialogue/inquiry.adv:155</sub>
-  - *[Fenn hands over: Rook's purse]* *[Fenn hands over: claims book]* *[sets inquiry_done]* *[sound: chime]* <sub>dialogue/inquiry.adv:156</sub>
+- **2.** **FENN**: (Point at him.) <sub>dialogue/inquiry.adv:171</sub>
+  - *[Fenn hands over: Rook's purse]* *[Fenn hands over: claims book]* *[sets inquiry_done]* *[sound: chime]* <sub>dialogue/inquiry.adv:172</sub>
   - *→ continues at* [pointing](#dlg-inquiry-pointing)
 
-<a id="dlg-inquiry-sodid"></a>`sodid` **SILAS CRAY**: So it did. (He pulls on his gloves, finger by finger.) I should like all of this in writing. <sub>dialogue/inquiry.adv:162</sub>
+<a id="dlg-inquiry-sodid"></a>`sodid` **SILAS CRAY**: So it did. (He pulls on his gloves, finger by finger.) I should like all of this in writing. <sub>dialogue/inquiry.adv:178</sub>
 - *→ continues at* [triplicate](#dlg-inquiry-triplicate)
 
-<a id="dlg-inquiry-triplicate"></a>`triplicate` **MARTA**: You'll have it in triplicate, Mr Cray. Sit down. This inquiry finds… Bramwick, what does it find? <sub>dialogue/inquiry.adv:164</sub>
+<a id="dlg-inquiry-triplicate"></a>`triplicate` **MARTA**: You'll have it in triplicate, Mr Cray. Sit down. This inquiry finds… Bramwick, what does it find? <sub>dialogue/inquiry.adv:180</sub>
 - *→ continues at* [finds](#dlg-inquiry-finds)
 
-<a id="dlg-inquiry-finds"></a>`finds` **HARBOURMASTER BRAMWICK**: Regulation two. A harbourmaster suspended by a party to fraud is reinstated on proof of the fraud. <sub>dialogue/inquiry.adv:166</sub>
+<a id="dlg-inquiry-finds"></a>`finds` **HARBOURMASTER BRAMWICK**: Regulation two. A harbourmaster suspended by a party to fraud is reinstated on proof of the fraud. <sub>dialogue/inquiry.adv:182</sub>
 - *→ continues at* [proof](#dlg-inquiry-proof)
 
-<a id="dlg-inquiry-proof"></a>`proof` **MARTA**: And is there proof? <sub>dialogue/inquiry.adv:168</sub>
+<a id="dlg-inquiry-proof"></a>`proof` **MARTA**: And is there proof? <sub>dialogue/inquiry.adv:184</sub>
 - *→ continues at* [room](#dlg-inquiry-room)
 
-<a id="dlg-inquiry-room"></a>`room` **FENN (V.O.)**: The whole Salty Keel tells her there is. The cat, startled, leaves. <sub>dialogue/inquiry.adv:170</sub>
+<a id="dlg-inquiry-room"></a>`room` **FENN (V.O.)**: The whole Salty Keel tells her there is. The cat, startled, leaves. <sub>dialogue/inquiry.adv:186</sub>
 - *→ continues at* [detained](#dlg-inquiry-detained)
 
-<a id="dlg-inquiry-detained"></a>`detained` **HARBOURMASTER BRAMWICK**: Then I'm reinstated, and Mr Cray is detained, pending a great deal of paperwork. And Fenn: when you've a moment, I'll need my stamp. <sub>dialogue/inquiry.adv:172</sub>
+<a id="dlg-inquiry-detained"></a>`detained` **HARBOURMASTER BRAMWICK**: Then I'm reinstated, and Mr Cray is detained, pending a great deal of paperwork. And Fenn: when you've a moment, I'll need my stamp. <sub>dialogue/inquiry.adv:188</sub>
 - *→ continues at* [walked](#dlg-inquiry-walked)
 
-<a id="dlg-inquiry-walked"></a>`walked` **FENN (V.O.)**: Two of the regulars walk Cray to the door, very politely, because he asks them to. Marta puts the purse and the claims book under the bar, for the record. <sub>dialogue/inquiry.adv:174</sub>
-- *[sets cray_gone]* <sub>dialogue/inquiry.adv:175</sub>
+<a id="dlg-inquiry-walked"></a>`walked` **FENN (V.O.)**: Two of the regulars walk Cray to the door, very politely, because he asks them to. Marta puts the purse and the claims book under the bar, for the record. <sub>dialogue/inquiry.adv:190</sub>
+- *[sets cray_gone]* <sub>dialogue/inquiry.adv:191</sub>
 - *[ends]*
 
-<a id="dlg-inquiry-pointing"></a>`pointing` **FENN (V.O.)**: I point at him. It's very rude. Everybody in the Salty Keel points at him too, including, somehow, the cat. <sub>dialogue/inquiry.adv:160</sub>
+<a id="dlg-inquiry-pointing"></a>`pointing` **FENN (V.O.)**: I point at him. It's very rude. Everybody in the Salty Keel points at him too, including, somehow, the cat. <sub>dialogue/inquiry.adv:176</sub>
 - *→ continues at* [sodid](#dlg-inquiry-sodid) *(above)*
 
-<a id="dlg-inquiry-c4_kelp"></a>`c4_kelp` **MARTA**: The charge is people, Fenn, and that's kelp. Hold on to it. I can tell it wants an audience. <sub>dialogue/inquiry.adv:124</sub>
+<a id="dlg-inquiry-c4_kelp"></a>`c4_kelp` **MARTA**: The charge is people, Fenn, and that's kelp. Hold on to it. I can tell it wants an audience. <sub>dialogue/inquiry.adv:128</sub>
 - *→ continues at* [c4r](#dlg-inquiry-c4r) *(above)*
 
-<a id="dlg-inquiry-c3_purse"></a>`c3_purse` **OLD ROOK**: Still not my turn, boy. When it is, you'll hear my knees. <sub>dialogue/inquiry.adv:95</sub>
+<a id="dlg-inquiry-c3_purse"></a>`c3_purse` **OLD ROOK**: Still not my turn, boy. When it is, you'll hear my knees. <sub>dialogue/inquiry.adv:99</sub>
 - *→ continues at* [c3r](#dlg-inquiry-c3r) *(above)*
 
-<a id="dlg-inquiry-c3_kelp"></a>`c3_kelp` **MARTA**: Not yet. Whatever that paper says, I'd like it after the insurance, not instead of it. <sub>dialogue/inquiry.adv:97</sub>
+<a id="dlg-inquiry-c3_kelp"></a>`c3_kelp` **MARTA**: Not yet. Whatever that paper says, I'd like it after the insurance, not instead of it. <sub>dialogue/inquiry.adv:101</sub>
 - *→ continues at* [c3r](#dlg-inquiry-c3r) *(above)*
 
-<a id="dlg-inquiry-c2_claims_book"></a>`c2_claims_book` **SILAS CRAY**: Insurance is between me and my insurers. Dues are between me and the harbour. You're mixing your ledgers, clerk. I'd have thought you of all people… <sub>dialogue/inquiry.adv:64</sub>
+<a id="dlg-inquiry-c2_claims_book"></a>`c2_claims_book` **SILAS CRAY**: Insurance is between me and my insurers. Dues are between me and the harbour. You're mixing your ledgers, clerk. I'd have thought you of all people… <sub>dialogue/inquiry.adv:68</sub>
 - *→ continues at* [c2r](#dlg-inquiry-c2r) *(above)*
 
-<a id="dlg-inquiry-c2_purse"></a>`c2_purse` **MARTA**: Not yet. That purse is a man, Fenn, not a receipt. The charge is dues. Where are dues written down? <sub>dialogue/inquiry.adv:66</sub>
+<a id="dlg-inquiry-c2_purse"></a>`c2_purse` **MARTA**: Not yet. That purse is a man, Fenn, not a receipt. The charge is dues. Where are dues written down? <sub>dialogue/inquiry.adv:70</sub>
 - *→ continues at* [c2r](#dlg-inquiry-c2r) *(above)*
 
-<a id="dlg-inquiry-c2_kelp"></a>`c2_kelp` **MARTA**: That's a smell, Fenn, not a receipt. The charge is dues. Keep it in your pocket, and your pocket away from my bar. <sub>dialogue/inquiry.adv:68</sub>
+<a id="dlg-inquiry-c2_kelp"></a>`c2_kelp` **MARTA**: That's a smell, Fenn, not a receipt. The charge is dues. Keep it in your pocket, and your pocket away from my bar. <sub>dialogue/inquiry.adv:72</sub>
 - *→ continues at* [c2r](#dlg-inquiry-c2r) *(above)*
 
-<a id="dlg-inquiry-c1_ledger"></a>`c1_ledger` **SILAS CRAY**: The ledger says she was lost, clerk. You're proving my point at me. It's flattering, but slow. <sub>dialogue/inquiry.adv:35</sub>
+<a id="dlg-inquiry-c1_ledger"></a>`c1_ledger` **SILAS CRAY**: The ledger says she was lost, clerk. You're proving my point at me. It's flattering, but slow. <sub>dialogue/inquiry.adv:39</sub>
 - *→ continues at* [c1r](#dlg-inquiry-c1r)
 
-<a id="dlg-inquiry-c1r"></a>`c1r` **MARTA**: The charge is that she was lost, Fenn. Show me she wasn't. <sub>dialogue/inquiry.adv:29</sub>
-- **1.** **FENN**: (Show Ansel's log.) <sub>dialogue/inquiry.adv:30</sub>
+<a id="dlg-inquiry-c1r"></a>`c1r` **MARTA**: The charge is that she was lost, Fenn. Show me she wasn't. <sub>dialogue/inquiry.adv:33</sub>
+- **1.** **FENN**: (Show Ansel's log.) <sub>dialogue/inquiry.adv:34</sub>
   - *→ continues at* [c1ok](#dlg-inquiry-c1ok) *(above)*
-- **2.** **FENN**: (Show the harbour ledger.) *[if has harbour ledger]* <sub>dialogue/inquiry.adv:31</sub>
+- **2.** **FENN**: (Show the harbour ledger.) *[if has harbour ledger]* <sub>dialogue/inquiry.adv:35</sub>
   - *→ continues at* [c1_ledger](#dlg-inquiry-c1_ledger) *(above)*
-- **3.** **FENN**: (Show the claims book.) *[if has claims book]* <sub>dialogue/inquiry.adv:32</sub>
+- **3.** **FENN**: (Show the claims book.) *[if has claims book]* <sub>dialogue/inquiry.adv:36</sub>
   - *→ continues at* [c1_claims_book](#dlg-inquiry-c1_claims_book)
-- **4.** **FENN**: (Show Rook's purse.) *[if has Rook's purse]* <sub>dialogue/inquiry.adv:33</sub>
+- **4.** **FENN**: (Show Rook's purse.) *[if has Rook's purse]* <sub>dialogue/inquiry.adv:37</sub>
   - *→ continues at* [c1_purse](#dlg-inquiry-c1_purse)
-- **5.** **FENN**: (Show the kelp manifest.) *[if has kelp manifest]* <sub>dialogue/inquiry.adv:34</sub>
+- **5.** **FENN**: (Show the kelp manifest.) *[if has kelp manifest]* <sub>dialogue/inquiry.adv:38</sub>
   - *→ continues at* [c1_kelp](#dlg-inquiry-c1_kelp)
 
-<a id="dlg-inquiry-c1_claims_book"></a>`c1_claims_book` **SILAS CRAY**: My insurers paid out on a lost ship. That rather supports her being lost, doesn't it? Do keep helping. I'm enjoying it. <sub>dialogue/inquiry.adv:37</sub>
+<a id="dlg-inquiry-c1_claims_book"></a>`c1_claims_book` **SILAS CRAY**: My insurers paid out on a lost ship. That rather supports her being lost, doesn't it? Do keep helping. I'm enjoying it. <sub>dialogue/inquiry.adv:41</sub>
 - *→ continues at* [c1r](#dlg-inquiry-c1r) *(above)*
 
-<a id="dlg-inquiry-c1_purse"></a>`c1_purse` **OLD ROOK**: Not yet, boy. I'll know when it's my turn. I'll be the one standing up. <sub>dialogue/inquiry.adv:39</sub>
+<a id="dlg-inquiry-c1_purse"></a>`c1_purse` **OLD ROOK**: Not yet, boy. I'll know when it's my turn. I'll be the one standing up. <sub>dialogue/inquiry.adv:43</sub>
 - *→ continues at* [c1r](#dlg-inquiry-c1r) *(above)*
 
-<a id="dlg-inquiry-c1_kelp"></a>`c1_kelp` **MARTA**: Put that away, Fenn. I can smell it from here, and I've a feeling it's for afters. <sub>dialogue/inquiry.adv:41</sub>
+<a id="dlg-inquiry-c1_kelp"></a>`c1_kelp` **MARTA**: Put that away, Fenn. I can smell it from here, and I've a feeling it's for afters. <sub>dialogue/inquiry.adv:45</sub>
 - *→ continues at* [c1r](#dlg-inquiry-c1r) *(above)*
 
 <a id="dlg-inquiry-enjoy"></a>`enjoy` **SILAS CRAY**: Oh, I shall. It's on the harbour's account, and tonight I'm the harbour. <sub>dialogue/inquiry.adv:6</sub>
@@ -4424,14 +4891,14 @@
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
-*[waiting: opened directly from rooms/tavern.adv:153]*
+*[waiting: opened directly from rooms/tavern.adv:174]*
 
-<a id="dlg-inquiry-waiting"></a>`waiting` **SILAS CRAY**: I'm waiting for my escort, clerk. They're finishing their drinks. I told them not to hurry; I'd hate to be rushed out of my own ruin. <sub>dialogue/inquiry.adv:177</sub>
-- *[sets cray_gone]* <sub>dialogue/inquiry.adv:178</sub>
+<a id="dlg-inquiry-waiting"></a>`waiting` **SILAS CRAY**: I'm waiting for my escort, clerk. They're finishing their drinks. I told them not to hurry; I'd hate to be rushed out of my own ruin. <sub>dialogue/inquiry.adv:193</sub>
+- *[sets cray_gone]* <sub>dialogue/inquiry.adv:194</sub>
 - *[ends]*
 
 <a id="dlg-ledger4"></a>
-### Conversation: ledger4 (Marta)
+### Conversation: ledger4 (Harbourmaster Bramwick, Ansel Fenn, Marta)
 
 *[source:* `dialogue ledger4`*, starts at* `open`*]* <sub>dialogue/ledger4.adv:2</sub>
 
@@ -4439,103 +4906,132 @@
 - *→ continues at* [quiet](#dlg-ledger4-quiet)
 
 <a id="dlg-ledger4-quiet"></a>`quiet` **FENN (V.O.)**: The room goes quiet. Bramwick takes his hat off. Rook takes his off too, finds he isn't wearing one, and holds his mug to his chest instead. <sub>dialogue/ledger4.adv:5</sub>
-- **1.** **FENN**: (Write.) <sub>dialogue/ledger4.adv:6</sub>
+- **1.** **FENN**: (Write.) *[if pike_roll]* <sub>dialogue/ledger4.adv:6</sub>
   - *[sets ledger_written]* <sub>dialogue/ledger4.adv:7</sub>
   - *[casebook:* I wrote it all into the harbour ledger and signed my name under it, which is either the bravest or the most clerical thing I have ever done.*]* <sub>dialogue/ledger4.adv:8</sub>
+  - *→ continues at* [write_roll](#dlg-ledger4-write_roll)
+- **2.** **FENN**: (Write.) *[if pike_roll = false]* <sub>dialogue/ledger4.adv:9</sub>
+  - *[sets ledger_written]* <sub>dialogue/ledger4.adv:10</sub>
+  - *[casebook:* I wrote it all into the harbour ledger and signed my name under it, which is either the bravest or the most clerical thing I have ever done.*]* <sub>dialogue/ledger4.adv:11</sub>
   - *→ continues at* [write](#dlg-ledger4-write)
 
-<a id="dlg-ledger4-write"></a>`write` **FENN (V.O.)**: Underneath, in my best customs hand, I write: ARCADIA: returned. All hands. <sub>dialogue/ledger4.adv:9</sub>
+<a id="dlg-ledger4-write_roll"></a>`write_roll` **FENN (V.O.)**: Underneath, in my best customs hand, I write: ARCADIA: returned. All hands. <sub>dialogue/ledger4.adv:12</sub>
+- *→ continues at* [roll](#dlg-ledger4-roll)
+
+<a id="dlg-ledger4-roll"></a>`roll` **FENN (V.O.)**: Then the other five ships, one under another, every name off Pike's roll. It takes a while. Nobody in the Keel minds. <sub>dialogue/ledger4.adv:14</sub>
+- *→ continues at* [shake](#dlg-ledger4-shake)
+
+<a id="dlg-ledger4-shake"></a>`shake` **FENN (V.O.)**: By the last one my hand has stopped shaking, which is how I find out it was. <sub>dialogue/ledger4.adv:20</sub>
 - *→ continues at* [stamp](#dlg-ledger4-stamp)
 
-<a id="dlg-ledger4-stamp"></a>`stamp` **FENN (V.O.)**: Then I stamp it. The stamp comes down on the page like a door closing behind somebody who has come home. <sub>dialogue/ledger4.adv:11</sub>
-- *[sound: chime]* <sub>dialogue/ledger4.adv:12</sub>
+<a id="dlg-ledger4-stamp"></a>`stamp` **FENN (V.O.)**: Then I stamp it. The stamp comes down on the page like a door closing behind somebody who has come home. <sub>dialogue/ledger4.adv:22</sub>
+- *[sound: chime]* <sub>dialogue/ledger4.adv:23</sub>
+- *→ continues at* [desk](#dlg-ledger4-desk)
+
+<a id="dlg-ledger4-desk"></a>`desk` **HARBOURMASTER BRAMWICK**: There'll be a desk going at the customs house, Fenn. For somebody who reads the backs. I can't pay you much. I can pay you honestly. <sub>dialogue/ledger4.adv:25</sub>
+- *→ continues at* [account](#dlg-ledger4-account)
+
+<a id="dlg-ledger4-account"></a>`account` **ANSEL FENN**: Don't stay on my account, son. I managed three years on a reef. I can manage a shop. <sub>dialogue/ledger4.adv:27</sub>
 - *→ continues at* [ending](#dlg-ledger4-ending)
 
-<a id="dlg-ledger4-ending"></a>`ending` **MARTA**: Now that's an ending. <sub>dialogue/ledger4.adv:14</sub>
-- **1.** **FENN**: Not quite. There's a ship sailing at dawn. <sub>dialogue/ledger4.adv:15</sub>
+<a id="dlg-ledger4-ending"></a>`ending` **MARTA**: Now that's an ending. <sub>dialogue/ledger4.adv:29</sub>
+- **1.** **FENN**: Not quite. There's a ship sailing at dawn. <sub>dialogue/ledger4.adv:30</sub>
   - *→ continues at* [dawn](#dlg-ledger4-dawn)
-- **2.** **FENN**: (Close the book.) <sub>dialogue/ledger4.adv:16</sub>
+- **2.** **FENN**: (Close the book.) <sub>dialogue/ledger4.adv:31</sub>
   - *→ continues at* [closed](#dlg-ledger4-closed)
 
-<a id="dlg-ledger4-dawn"></a>`dawn` **MARTA**: Then go and catch it, you daft article. Or don't. But go and say so to her face. <sub>dialogue/ledger4.adv:17</sub>
+<a id="dlg-ledger4-dawn"></a>`dawn` **MARTA**: Then go and catch it, you daft article. Or don't. But go and say so to her face. <sub>dialogue/ledger4.adv:32</sub>
+- *→ continues at* [closed](#dlg-ledger4-closed)
+
+<a id="dlg-ledger4-closed"></a>`closed` **FENN (V.O.)**: I close the book. For the first time in three years I don't know what the next page says, and I find I like it. <sub>dialogue/ledger4.adv:34</sub>
 - *[ends]*
 
-<a id="dlg-ledger4-closed"></a>`closed` **FENN (V.O.)**: I close the book. For the first time in three years I don't know what the next page says, and I find I like it. <sub>dialogue/ledger4.adv:18</sub>
-- *[ends]*
+<a id="dlg-ledger4-write"></a>`write` **FENN (V.O.)**: Underneath, in my best customs hand, I write: ARCADIA: returned. All hands. <sub>dialogue/ledger4.adv:16</sub>
+- *→ continues at* [five](#dlg-ledger4-five)
+
+<a id="dlg-ledger4-five"></a>`five` **FENN (V.O.)**: Then the other five ships, one under another. Returned. All hands. Returned. All hands. <sub>dialogue/ledger4.adv:18</sub>
+- *→ continues at* [shake](#dlg-ledger4-shake) *(above)*
 
 <a id="act4-alley"></a>
 ## Chandler's Lane
 
 *[room* `alley`*; also in Act I; lines for every act are under Act I]* <sub>rooms/alley.adv:1</sub>
 
-**Cray & Co.** `counting_door` *[present Act IV only]* <sub>rooms/alley.adv:77</sub>
+**Cray & Co.** `counting_door` *[present Act IV only]* <sub>rooms/alley.adv:82</sub>
 
-- **Look at:** Further up the lane, past where Cray used to stand and wait for me: a brass plate, a polished door, a little cloud. CRAY & CO., FACTORS. There's a light on. <sub>rooms/alley.adv:82</sub>
-- **Use / Walk to:** *[→ goes to Cray & Co., Factors]* <sub>rooms/alley.adv:81</sub>
-- **Open:** I go up the lane to Cray & Co. The brass plate has been polished so hard it's nearly gone. <sub>rooms/alley.adv:83</sub>
-  - *[→ goes to Cray & Co., Factors]* <sub>rooms/alley.adv:81</sub>
+- **Look at:** Further up the lane, past where Cray used to stand and wait for me: a brass plate, a polished door, a little cloud. CRAY & CO., FACTORS. There's a light on. <sub>rooms/alley.adv:87</sub>
+- **Use / Walk to:** *[→ goes to Cray & Co., Factors]* <sub>rooms/alley.adv:86</sub>
+- **Open:** I go up the lane to Cray & Co. The brass plate has been polished so hard it's nearly gone. <sub>rooms/alley.adv:88</sub>
+  - *[→ goes to Cray & Co., Factors]* <sub>rooms/alley.adv:86</sub>
 
 <a id="act4-pier_end"></a>
 ## The Pier End
 
 *[room* `pier_end`*]* <sub>rooms/pier_end.adv:2</sub>
 
-**back along the pier** `town` <sub>rooms/pier_end.adv:16</sub>
+**back along the pier** `town` <sub>rooms/pier_end.adv:18</sub>
 
-- **Look at:** Back along the pier, the lights of Port Vela, and somewhere among them the Salty Keel, singing. <sub>rooms/pier_end.adv:20</sub>
-- **Use / Open / Walk to:** *[→ goes to Vela Docks]* <sub>rooms/pier_end.adv:19</sub>
+- **Look at:** Back along the pier, the lights of Port Vela, and somewhere among them the Salty Keel, singing. <sub>rooms/pier_end.adv:22</sub>
+- **Use / Open / Walk to:** *[→ goes to Vela Docks]* <sub>rooms/pier_end.adv:21</sub>
 
-**Cray's cutter** `cutter` <sub>rooms/pier_end.adv:22</sub>
+**Cray's cutter** `cutter` <sub>rooms/pier_end.adv:24</sub>
 
-- **Look at:** A grey cutter with a cloud on her furled sail: the one that ran out of the lagoon ahead of us. Fast, neat, and built for getting home first, which is the whole of Cray's business. <sub>rooms/pier_end.adv:25</sub>
-- **Talk to:** I say something cutting to the cutter. It's the best I can do at this hour. <sub>rooms/pier_end.adv:27</sub>
-- **Open:** There's nothing aboard but the smell of kelp and the feeling of being watched by a gangplank. <sub>rooms/pier_end.adv:26</sub>
+- **Look at:** A grey cutter with a cloud on her furled sail: the one that ran out of the lagoon ahead of us. Fast, neat, and built for getting home first, which is the whole of Cray's business. <sub>rooms/pier_end.adv:27</sub>
+- **Talk to:** I say something cutting to the cutter. It's the best I can do at this hour. <sub>rooms/pier_end.adv:29</sub>
+- **Open:** There's nothing aboard but the smell of kelp and the feeling of being watched by a gangplank. <sub>rooms/pier_end.adv:28</sub>
 
-**Weather man** `wilf` *[present if inquiry_done = false]* <sub>rooms/pier_end.adv:29</sub>
+**Weather man** `wilf` *[present if inquiry_done = false]* <sub>rooms/pier_end.adv:31</sub>
 
-- **Look at:** One of Cray's men, grey coat, yellow armband, carrying a crate of kelp to the cart as if it were a sleeping child. He is very polite and very large. <sub>rooms/pier_end.adv:33</sub>
-- **Talk to:** He sets the crate down on the cart and touches his hat. <sub>rooms/pier_end.adv:34</sub>
-  - *[→ conversation* [weather4](#dlg-weather4) *— below]* <sub>rooms/pier_end.adv:35</sub>
-- **Give:** “Can't take anything without a docket, sir. Mr Cray's very strict.” <sub>rooms/pier_end.adv:36</sub>
+- **Look at:** One of Cray's men, grey coat, yellow armband, carrying a crate of kelp to the cart as if it were a sleeping child. He is very polite and very large. <sub>rooms/pier_end.adv:35</sub>
+- **Talk to:** He sets the crate down on the cart and touches his hat. <sub>rooms/pier_end.adv:36</sub>
+  - *[→ conversation* [weather4](#dlg-weather4) *— below]* <sub>rooms/pier_end.adv:37</sub>
+- **Give:** “Can't take anything without a docket, sir. Mr Cray's very strict.” <sub>rooms/pier_end.adv:38</sub>
 
-**Weather man** `bartle` *[present if inquiry_done = false]* <sub>rooms/pier_end.adv:38</sub>
+**Weather man** `bartle` *[present if inquiry_done = false]* <sub>rooms/pier_end.adv:40</sub>
 
-- **Look at:** Another of Cray's men, by the lamp, holding a crate and a grudge. The grudge is about whose turn it is. <sub>rooms/pier_end.adv:42</sub>
-- **Talk to:** He nods at his colleague. “Talk to Wilf, sir. Wilf's on menacing.” <sub>rooms/pier_end.adv:43</sub>
-  - *[→ conversation* [weather4](#dlg-weather4) *— below]* <sub>rooms/pier_end.adv:44</sub>
-- **Give:** “Docket first, sir.” <sub>rooms/pier_end.adv:45</sub>
+- **Look at:** Another of Cray's men, by the lamp, holding a crate and a grudge. The grudge is about whose turn it is. <sub>rooms/pier_end.adv:44</sub>
+- **Talk to:** He nods at his colleague. “Talk to Wilf, sir. Wilf's on menacing.” <sub>rooms/pier_end.adv:45</sub>
+  - *[→ conversation* [weather4](#dlg-weather4) *— below]* <sub>rooms/pier_end.adv:46</sub>
+- **Give:** “Docket first, sir.” <sub>rooms/pier_end.adv:47</sub>
 
-**kelp crates** `crates` <sub>rooms/pier_end.adv:47</sub>
+**Captain Vane** `vane` *[present if quarantine_lifted]* <sub>rooms/pier_end.adv:49</sub>
 
-- **Look at:** Crates stencilled QUARANTINE STN, G.K., with a little cloud painted over the stencil, badly, which is how you know the stencil mattered. <sub>rooms/pier_end.adv:50</sub>
-- **Open:** Nailed shut, and two large men are standing next to them, being polite in my direction. <sub>rooms/pier_end.adv:51</sub>
-- *When* *[if kelp_seen]* <sub>rooms/pier_end.adv:52</sub>
-  - **Look at:** The same crates as on the Marrow's deck: QUARANTINE STN, G.K., with a cloud painted over it. I've seen what's inside. It burns like a lie. <sub>rooms/pier_end.adv:53</sub>
+- **Look at:** Captain Vane, ashore, by the lamp, with her hands behind her back, inspecting Cray's kelp crates the way she'd inspect a crew she was about to flog. <sub>rooms/pier_end.adv:53</sub>
+- **Talk to:** She doesn't turn round. “Clerk.” <sub>rooms/pier_end.adv:54</sub>
+  - *[→ conversation* [vane4](#dlg-vane4) *— below]* <sub>rooms/pier_end.adv:55</sub>
+- **Give:** “Keep it, clerk. I've carried enough of other people's cargo.” <sub>rooms/pier_end.adv:56</sub>
 
-**manifest on the crate** `kelp_manifest` *[present if doesn't have kelp manifest and kelp_proof = false]* *[Pick up gives: kelp manifest]* <sub>rooms/pier_end.adv:55</sub>
+**kelp crates** `crates` <sub>rooms/pier_end.adv:58</sub>
 
-- **Look at:** A manifest, tacked to the top crate for whoever signs for it. Nobody's signing for it. They're too busy deciding whose turn it is to be menacing. <sub>rooms/pier_end.adv:60</sub>
-- **Pick up:** While they argue about whose turn it is to be menacing, I lift the manifest off the crate. I'm customs. Manifests come to me the way cats come to people who don't want cats. <sub>rooms/pier_end.adv:61</sub>
-  - *[sets kelp_proof]* <sub>rooms/pier_end.adv:62</sub>
+- **Look at:** Crates stencilled QUARANTINE STN, G.K., with a little cloud painted over the stencil, badly, which is how you know the stencil mattered. <sub>rooms/pier_end.adv:61</sub>
+- **Open:** Nailed shut, and two large men are standing next to them, being polite in my direction. <sub>rooms/pier_end.adv:62</sub>
+- *When* *[if kelp_seen]* <sub>rooms/pier_end.adv:63</sub>
+  - **Look at:** The same crates as on the Marrow's deck: QUARANTINE STN, G.K., with a cloud painted over it. I've seen what's inside. It burns like a lie. <sub>rooms/pier_end.adv:64</sub>
 
-**stacked crates** `stack` <sub>rooms/pier_end.adv:64</sub>
+**manifest on the crate** `kelp_manifest` *[present if doesn't have kelp manifest and kelp_proof = false]* *[Pick up gives: kelp manifest]* <sub>rooms/pier_end.adv:66</sub>
 
-- **Look at:** More of Cray's kelp, stacked for the cart, sacked and stencilled. Enough fog for a month of Tuesdays. <sub>rooms/pier_end.adv:67</sub>
+- **Look at:** A manifest, tacked to the top crate for whoever signs for it. Nobody's signing for it. They're too busy deciding whose turn it is to be menacing. <sub>rooms/pier_end.adv:71</sub>
+- **Pick up:** While they argue about whose turn it is to be menacing, I lift the manifest off the crate. I'm customs. Manifests come to me the way cats come to people who don't want cats. <sub>rooms/pier_end.adv:72</sub>
+  - *[sets kelp_proof]* <sub>rooms/pier_end.adv:73</sub>
 
-**the lighthouse** `lighthouse` <sub>rooms/pier_end.adv:69</sub>
+**stacked crates** `stack` <sub>rooms/pier_end.adv:75</sub>
 
-- **Look at:** The Vela light, turning over the harbour mouth. Three years I watched ships leave by it. Last night I came home by it. It looks smaller from the sea, which I'm told is the point. <sub>rooms/pier_end.adv:72</sub>
+- **Look at:** More of Cray's kelp, stacked for the cart, sacked and stencilled. Enough fog for a month of Tuesdays. <sub>rooms/pier_end.adv:78</sub>
 
-**the harbour mouth** `sea` <sub>rooms/pier_end.adv:74</sub>
+**the lighthouse** `lighthouse` <sub>rooms/pier_end.adv:80</sub>
 
-- **Look at:** The harbour mouth, black and moving, and past it the Straits. They don't look any different. I am, I think. <sub>rooms/pier_end.adv:77</sub>
+- **Look at:** The Vela light, turning over the harbour mouth. Three years I watched ships leave by it. Tonight I came home by it. It looks smaller from the sea, which I'm told is the point. <sub>rooms/pier_end.adv:83</sub>
+
+**the harbour mouth** `sea` <sub>rooms/pier_end.adv:85</sub>
+
+- **Look at:** The harbour mouth, black and moving, and past it the Straits. They don't look any different. I am, I think. <sub>rooms/pier_end.adv:88</sub>
 
 **Combinations here**
 
-- **Use crowbar on kelp crates:** *[if kelp_seen]* I've already seen inside one of these, on the Marrow. Once was plenty. Kelp smells exactly like a lie on fire. <sub>rooms/pier_end.adv:80</sub>
-- **Use crowbar on kelp crates:** One of the Weather men clears his throat, politely, and shifts a crate to his other arm, so his hand is free. I put the crowbar away. <sub>rooms/pier_end.adv:82</sub>
-- **Use harbour stamp on Weather man:** “Customs, Wilf,” says one. “Told you,” says the other. Neither of them stops unloading. <sub>rooms/pier_end.adv:84</sub>
-- **Use kelp manifest on Weather man:** “You keep that, sir. It's only kelp.” He thinks about it. “Don't keep it too hard.” <sub>rooms/pier_end.adv:86</sub>
+- **Use crowbar on kelp crates:** *[if kelp_seen]* I've already seen inside one of these, on the Marrow. Once was plenty. Kelp smells exactly like a lie on fire. <sub>rooms/pier_end.adv:91</sub>
+- **Use crowbar on kelp crates:** One of the Weather men clears his throat, politely, and shifts a crate to his other arm, so his hand is free. I put the crowbar away. <sub>rooms/pier_end.adv:93</sub>
+- **Use harbour stamp on Weather man:** “Customs, Wilf,” says one. “Told you,” says the other. Neither of them stops unloading. <sub>rooms/pier_end.adv:95</sub>
+- **Use kelp manifest on Weather man:** “You keep that, sir. It's only kelp.” He thinks about it. “Don't keep it too hard.” <sub>rooms/pier_end.adv:97</sub>
 
 <a id="dlg-weather4"></a>
 ### Conversation: weather4 (A Weather man, Another Weather man)
@@ -4554,7 +5050,7 @@
 - **5.** **FENN**: Goodnight. <sub>dialogue/weather4.adv:8</sub>
   - *→ continues at* [bye](#dlg-weather4-bye)
 
-<a id="dlg-weather4-for"></a>`for` **A WEATHER MAN**: Fog. — <sub>dialogue/weather4.adv:9</sub>
+<a id="dlg-weather4-for"></a>`for` **A WEATHER MAN**: Fog— <sub>dialogue/weather4.adv:9</sub>
 - *→ continues at* [fires](#dlg-weather4-fires)
 
 <a id="dlg-weather4-fires"></a>`fires` **ANOTHER WEATHER MAN**: Fires! It's for fires, sir. Fog's just what fires do if you're not careful. We're very careful. <sub>dialogue/weather4.adv:11</sub>
@@ -4588,6 +5084,31 @@
 - *→ continues at* [anyway](#dlg-weather4-anyway)
 
 <a id="dlg-weather4-anyway"></a>`anyway` **A WEATHER MAN**: Mind it anyway. <sub>dialogue/weather4.adv:27</sub>
+- *[ends]*
+
+<a id="dlg-vane4"></a>
+### Conversation: vane4 (Captain Vane)
+
+*[source:* `dialogue vane4`*, starts at* `root`*]* <sub>dialogue/vane4.adv:2</sub>
+
+<a id="dlg-vane4-root"></a>`root` **CAPTAIN VANE**: Four hundred crates of fog, clerk. I carried them in my own hold for Cray, at a crown a crate, and was grateful for the crown. <sub>dialogue/vane4.adv:3</sub>
+- *→ continues at* [weather](#dlg-vane4-weather)
+
+<a id="dlg-vane4-weather"></a>`weather` **CAPTAIN VANE**: Funny thing, weather. <sub>dialogue/vane4.adv:5</sub>
+- **1.** **FENN**: You didn't know what was in them. *[if seen:vane4.ask = false]* <sub>dialogue/vane4.adv:6</sub>
+  - *→ continues at* [ask](#dlg-vane4-ask)
+- **2.** **FENN**: Your claim's in his book. Refused, on the same page as six paid. *[if seen:vane4.page = false]* <sub>dialogue/vane4.adv:7</sub>
+  - *→ continues at* [page](#dlg-vane4-page)
+- **3.** **FENN**: Goodnight, captain. <sub>dialogue/vane4.adv:8</sub>
+  - *→ continues at* [bye](#dlg-vane4-bye)
+
+<a id="dlg-vane4-ask"></a>`ask` **CAPTAIN VANE**: I didn't ask. That's worse, clerk, and cheaper. I was very proud of how cheap I was. <sub>dialogue/vane4.adv:9</sub>
+- *[ends]*
+
+<a id="dlg-vane4-page"></a>`page` **CAPTAIN VANE**: Then put my name in your ledger, under his. Pell always said I'd end up in somebody's paperwork. He meant a warrant. <sub>dialogue/vane4.adv:10</sub>
+- *[ends]*
+
+<a id="dlg-vane4-bye"></a>`bye` **CAPTAIN VANE**: Go on. The Marrow sails at dawn, with or without a purser. I've no preference. Quill has several. <sub>dialogue/vane4.adv:11</sub>
 - *[ends]*
 
 <a id="act4-village"></a>
@@ -4626,7 +5147,7 @@
 **washing line** `washing` <sub>rooms/village.adv:90</sub>
 
 - *When* *[Act IV only]* <sub>rooms/village.adv:94</sub>
-  - **Look at:** The washing line. Nine shirts, and a tenth, pegged up still dripping, big enough to sail a dinghy. Somebody on this street is washing for a man who came home. <sub>rooms/village.adv:95</sub>
+  - **Look at:** The washing line. Ten shirts, all of them dripping, one big enough to sail a dinghy. This street is washing for men who came home. <sub>rooms/village.adv:95</sub>
 
 **the houses** `cottages` <sub>rooms/village.adv:97</sub>
 
@@ -4643,17 +5164,17 @@
 - *When* *[Act IV only]* <sub>rooms/chandlery.adv:17</sub>
   - **Look at:** The counter. Every invoice on the spike is stamped PAID now. Mr Tallow has framed the first one and hung it over the till. <sub>rooms/chandlery.adv:18</sub>
 
-**back room** `back_room` <sub>rooms/chandlery.adv:28</sub>
+**back room** `back_room` <sub>rooms/chandlery.adv:29</sub>
 
-- *When* *[Act IV only]* <sub>rooms/chandlery.adv:36</sub>
-  - **Look at:** The back room is dark. A note on the door, in Mr Tallow's harassed capitals: GONE TO THE KEEL. CAT IN CHARGE. <sub>rooms/chandlery.adv:37</sub>
-  - **Talk to:** Nobody answers. Mr Tallow has gone to the Keel, and the cat has gone with him, in charge. <sub>rooms/chandlery.adv:38</sub>
+- *When* *[Act IV only]* <sub>rooms/chandlery.adv:37</sub>
+  - **Look at:** The back room is dark. A note on the door, in Mr Tallow's harassed capitals: GONE TO THE KEEL. CAT IN CHARGE. <sub>rooms/chandlery.adv:38</sub>
+  - **Talk to:** Nobody answers. Mr Tallow has gone to the Keel, and the cat has gone with him, in charge. <sub>rooms/chandlery.adv:39</sub>
     - *[nothing: cancels the usual effects]*
-  - **Open:** It's his back room. Even with the cat out, I'm not that sort of clerk. <sub>rooms/chandlery.adv:40</sub>
+  - **Open:** It's his back room. Even with the cat out, I'm not that sort of clerk. <sub>rooms/chandlery.adv:41</sub>
 
 **Combinations here**
 
-- **Use harbour stamp on the counter:** *[Act IV only]* Everything's paid. Stamping it again would just be showing off, and Mr Tallow isn't here to see. <sub>rooms/chandlery.adv:49</sub>
+- **Use harbour stamp on the counter:** *[Act IV only]* Everything's paid. Stamping it again would just be showing off, and Mr Tallow isn't here to see. <sub>rooms/chandlery.adv:50</sub>
 
 <a id="act4-warehouse"></a>
 ## Harbour Loft
@@ -4662,23 +5183,23 @@
 
 **harbour ledger** `ledger` *[present if ledger_taken = false]* <sub>rooms/warehouse.adv:13</sub>
 
-- *When* *[Act IV only]* <sub>rooms/warehouse.adv:26</sub>
-  - **Look at:** The harbour ledger, still chained to its desk. The Arcadia's entry is where I left it: lost at sea, three days early, paid for by Cray & Co. <sub>rooms/warehouse.adv:27</sub>
-  - **Use:** I've read it. Reading it won't be enough; Cray's counting on that. The inquiry will want the book itself, and the book is chained to the desk. <sub>rooms/warehouse.adv:30</sub>
+- *When* *[Act IV only]* <sub>rooms/warehouse.adv:29</sub>
+  - **Look at:** The harbour ledger, still chained to its desk. The Arcadia's entry is where I left it: lost at sea, three days early, paid for by Cray & Co. <sub>rooms/warehouse.adv:30</sub>
+  - **Use:** I've read it. Reading it won't be enough; Cray's counting on that. The inquiry will want the book itself, and the book is chained to the desk. <sub>rooms/warehouse.adv:33</sub>
     - *[nothing: cancels the usual effects]*
-  - **Open:** I've read it. Reading it won't be enough; Cray's counting on that. The inquiry will want the book itself, and the book is chained to the desk. <sub>rooms/warehouse.adv:28</sub>
+  - **Open:** I've read it. Reading it won't be enough; Cray's counting on that. The inquiry will want the book itself, and the book is chained to the desk. <sub>rooms/warehouse.adv:31</sub>
     - *[nothing: cancels the usual effects]*
-  - **Pull:** Chained. Bramwick chained it there himself, by regulation, so it could never go anywhere it might be embarrassed. <sub>rooms/warehouse.adv:32</sub>
-  - **Pick up:** It's chained to the desk. Regulation thirty-one, and a very good padlock. <sub>rooms/warehouse.adv:33</sub>
+  - **Pull:** Chained. Bramwick chained it there himself, by regulation, so it could never go anywhere it might be embarrassed. <sub>rooms/warehouse.adv:35</sub>
+  - **Pick up:** It's chained to the desk. Regulation thirty-one, and a very good padlock. <sub>rooms/warehouse.adv:36</sub>
 
-**broken chain** `chain` *[present Act IV, if ledger_taken]* <sub>rooms/warehouse.adv:49</sub>
+**broken chain** `chain` *[present Act IV, if ledger_taken]* <sub>rooms/warehouse.adv:52</sub>
 
-- **Look at:** A broken chain, and a clean oblong in the dust where the ledger sat for thirty years. Regulation thirty-one has been suspended, like its author. <sub>rooms/warehouse.adv:53</sub>
+- **Look at:** A broken chain, and a clean oblong in the dust where the ledger sat for thirty years. Regulation thirty-one has been suspended, like its author. <sub>rooms/warehouse.adv:56</sub>
 
 **Combinations here**
 
-- **Use crowbar on harbour ledger:** *[Act IV only]* I get the crowbar through the chain where it meets the desk, and lean. The staple comes out of thirty years of oak with a noise like a held breath let go. The ledger is mine to carry. <sub>rooms/warehouse.adv:56</sub>
-  - *[Fenn receives: harbour ledger]* *[sets ledger_taken]* *[sound: pickup]* <sub>rooms/warehouse.adv:57</sub>
+- **Use crowbar on harbour ledger:** *[Act IV only]* I get the crowbar through the chain where it meets the desk, and lean. The staple comes out of thirty years of oak with a noise like a held breath let go. The ledger is mine to carry. <sub>rooms/warehouse.adv:59</sub>
+  - *[Fenn receives: harbour ledger]* *[sets ledger_taken]* *[sound: pickup]* <sub>rooms/warehouse.adv:60</sub>
 
 <a id="act4-counting_house"></a>
 ## Cray & Co., Factors
@@ -4801,8 +5322,7 @@
 - *→ continues at* [ruin](#dlg-nib-ruin)
 
 <a id="dlg-nib-ruin"></a>`ruin` **FENN**: Your employer's ruin, more or less. <sub>dialogue/nib.adv:28</sub>
-- **1.** **FENN**: … <sub>dialogue/nib.adv:29</sub>
-  - *→ continues at* [stamped](#dlg-nib-stamped)
+- *→ continues at* [stamped](#dlg-nib-stamped)
 
 <a id="dlg-nib-stamped"></a>`stamped` **NIB**: Was it stamped? Then it's not my problem. It's the stamp's. <sub>dialogue/nib.adv:30</sub>
 - *[ends]*
@@ -4826,7 +5346,7 @@
 - **Use harbour stamp on Bill of Health:** It's stamped. Stamping it twice would look desperate, and Pike can smell desperate. <sub>combos.adv:19</sub>
 - **Use calendar leaf on Bill of Health:** I copy today's date onto the bill in my neatest figures, and pin the leaf behind it as a receipt. Dated. Nobody ever does the dating. <sub>combos.adv:22</sub>
   - *[Fenn hands over: calendar leaf]* *[sets bill_dated]* *[sound: chime]* <sub>combos.adv:23</sub>
-- **Use harbour stamp on requisition:** *[if req_stamped = false]* Any clerk of this house may stamp in the Harbourmaster's absence. Tonight the Harbourmaster is very absent. I stamp the requisition: HARBOUR OF PORT VELA, square in the middle of Cray's little cloud. <sub>combos.adv:29</sub>
+- **Use harbour stamp on requisition:** *[if req_stamped = false]* Any clerk of this house may stamp in the Harbourmaster's absence. Tonight he's very absent. I stamp the requisition: HARBOUR OF PORT VELA, square in the middle of Cray's little cloud. <sub>combos.adv:29</sub>
   - *[sets req_stamped]* *[sound: chime]* <sub>combos.adv:30</sub>
 - **Use harbour stamp on requisition:** It's stamped. Nib only looks for one. Two would make him nervous, and then he might read it. <sub>combos.adv:34</sub>
 - **Use harbour stamp on harbour ledger:** *[if quarantine_lifted = false]* Not yet. Until Marta says otherwise, this book is evidence, and you don't stamp evidence. You hold it up. <sub>combos.adv:38</sub>
@@ -4840,26 +5360,26 @@
 
 **crowbar** `crowbar` — A crowbar with ambitions well beyond leaning on bollards. <sub>items.adv:4</sub>
 
-**jet-caps** `mushroom` — Jet-caps. Black-capped, wet, and worth more than they look. They grow in timber the fog has been at, and Marta will not serve her broth without them. <sub>items.adv:7</sub>
+**inspected rum** `rum` — One bottle of Marta's rum, removed for inspection. I have inspected the label, the cork and the colour. The rest is between Marta and her punch bowl. <sub>items.adv:7</sub>
 
 **licence form** `licence_form` — A blank Seafarer's Licence. Name, rank, and a box marked “previous piracy, if any”. Worthless until it carries the harbour stamp. <sub>items.adv:10</sub>
 
-**drawer key** `drawer_key` — Bramwick's drawer key. Lost at cards, traded for a handful of mushrooms. A distinguished career, for a key. <sub>items.adv:13</sub>
+**drawer key** `drawer_key` — Bramwick's drawer key. Lost at cards, traded for a bottle of inspected rum. A distinguished career, for a key. <sub>items.adv:13</sub>
 
 **harbour stamp** `stamp` — The harbour stamp. Brass, heavy, and far more powerful than it looks. <sub>items.adv:16</sub>
 
 **stamped licence** `licence` — My Seafarer's Licence, stamped by a clerk of the customs house in the Harbourmaster's legal absence. The ink is still wet. <sub>items.adv:19</sub>
 
-**brass compass** `compass` — My father's compass. My grandfather made it, my father sailed by it, and then one morning he left it on the hall table and sailed without it. It has never once pointed north. <sub>items.adv:22</sub>
+**brass compass** `compass` — My father's compass. My grandfather made it, my father sailed by it, and he left it on the hall table the morning he sailed. I assumed he'd be back for it. I'm still assuming. <sub>items.adv:22</sub>
 
 - *[Act I, if has stamped licence and has manifest copy and ledger_read]* The needle points at the customs house like a dog that's found something. Bramwick, then. With everything. <sub>items.adv:24</sub>
 - *[Act I, if has stamped licence and ledger_read = false]* The needle leans toward the lane. The harbour ledger is up in the loft over the chandler's. <sub>items.adv:26</sub>
 - *[Act I, if has stamped licence and doesn't have manifest copy]* Bramwick wants the Arcadia's manifest copy. The chandler keeps one, if somebody settles his invoices. <sub>items.adv:28</sub>
 - *[Act I, if has harbour stamp and doesn't have stamped licence]* A harbour stamp and a clerk who knows where the licence forms are. Even the needle can see where this is going. <sub>items.adv:30</sub>
 - *[Act I, if has drawer key]* Bramwick's drawer key. The needle points at the customs house, or at least doesn't object to it. <sub>items.adv:32</sub>
-- *[Act I, if has jet-caps]* Someone in Port Vela wants what grows under the pier. The needle swings toward the tavern, and waits. <sub>items.adv:34</sub>
-- *[Act I, if knows_key]* Marta has the drawer key and wants jet-caps. They come up under the stacked crate on the pier. <sub>items.adv:36</sub>
-- *[Act I only]* My father's compass. It has never once pointed north. Tonight it leans toward the customs house: Bramwick will know how a clerk gets a licence. <sub>items.adv:38</sub>
+- *[Act I, if has inspected rum]* One bottle of evidence, and a tavern with a dry punch bowl. The needle swings toward the Salty Keel, and waits. <sub>items.adv:34</sub>
+- *[Act I, if knows_key]* Marta has the drawer key and wants her rum. It's on the pier, in a crate marked HELD FOR CUSTOMS INSPECTION. I am customs. <sub>items.adv:36</sub>
+- *[Act I only]* My father's compass. It points wherever it likes, and tonight it likes the customs house: Bramwick will know how a clerk gets a licence. <sub>items.adv:38</sub>
 - *[Act II, if vane_convinced]* The needle has stopped pretending to be a compass. It points over the bow, into the fog, at a reef nobody sails. Forward, then. <sub>items.adv:40</sub>
 - *[Act II, if quill_navigator and crew_agree]* A navigator, a crew, and Pell's last sentence in my pocket. The needle points aft, at the captain's cabin, and waits. <sub>items.adv:42</sub>
 - *[Act II, if has Pell's sextant and vane_terms]* Pell's sextant. The needle swings toward the one person on board who wants to be a navigator more than she wants breakfast. <sub>items.adv:44</sub>
@@ -4887,7 +5407,7 @@
 - *[Act III, if hatch_open]* The needle points down the hatch, at my father's desk. It's been waiting three years. So have I. <sub>items.adv:88</sub>
 - *[Act III only]* The needle points at the Arcadia's deck hatch, which is jammed. Quill packed a crowbar. Of course she did. <sub>items.adv:90</sub>
 - *[Act IV, if ledger_written]* The needle points down the pier, at a bollard with a navigator sitting on it. For once I don't need telling. <sub>items.adv:92</sub>
-- *[Act IV, if quarantine_lifted and iou_paid = false]* A stamp, a ledger, and a page that's been wrong for three years. The needle points at the bar of the Salty Keel, though it keeps glancing at Bramwick, who keeps patting his coat pocket as if something in it might make a run for it. <sub>items.adv:94</sub>
+- *[Act IV, if quarantine_lifted and iou_paid = false]* A stamp, a ledger, and a page that's been wrong for three years. The needle points at the Salty Keel, and keeps glancing at Bramwick, who keeps patting his coat pocket as if it might make a run for it. <sub>items.adv:94</sub>
 - *[Act IV, if quarantine_lifted]* A stamp, a ledger, and a page that's been wrong for three years. The needle points at the bar of the Salty Keel. <sub>items.adv:96</sub>
 - *[Act IV, if inquiry_done]* Bramwick is reinstated in everything but his stamp, which is in my pocket. The needle points at him, a little reproachfully. <sub>items.adv:98</sub>
 - *[Act IV, if has harbour ledger and has Rook's purse and has claims book and kelp_proof = false]* Everything Bramwick asked for. The needle points at the Keel, where Cray is raising a glass. Then it twitches once toward the pier end, as if it's heard something about kelp. <sub>items.adv:100</sub>
@@ -4935,7 +5455,7 @@
 
 - *[if req_stamped]* REQUISITION: one claims book, insurance, all of it. Authorised: Harbour of Port Vela. Stamped. Nib won't read a word of it, which is the beauty of the thing. <sub>items.adv:170</sub>
 
-**claims book** `claims_book` — Cray & Co.'s insurance claims. Six ships paid in full, for weather. On the facing page, the same year: Captain Vane's storm, refused on a technicality. Somebody underlined it, smugly. <sub>items.adv:173</sub>
+**claims book** `claims_book` — Cray & Co.'s claims. Six ships paid in full, for weather. On the facing page, the same year: Captain Vane's storm, refused on a technicality. Somebody underlined it. Smugly. <sub>items.adv:173</sub>
 
 **harbour ledger** `ledger` — The harbour ledger, with a length of broken chain still hanging off it. ARCADIA: lost at sea, three days before she was late. Paid, Cray & Co. The page is waiting for a correction. <sub>items.adv:176</sub>
 
@@ -4966,13 +5486,13 @@
 
 **8.** *[Act I, if has drawer key]* Use the drawer key on Bramwick's drawer in the customs house. <sub>tips.adv:24</sub>
 
-**9.** *[Act I, if has jet-caps and knows_key]* Give the jet-caps to Marta in the Salty Keel. <sub>tips.adv:26</sub>
+**9.** *[Act I, if has inspected rum and knows_key]* Give the inspected rum to Marta in the Salty Keel. <sub>tips.adv:26</sub>
 
-**10.** *[Act I, if has jet-caps]* Ask Bramwick how a clerk could stamp a licence. Marta wants jet-caps for her broth. <sub>tips.adv:28</sub>
+**10.** *[Act I, if has inspected rum]* Ask Bramwick how a clerk could stamp a licence. Marta will want her rum. <sub>tips.adv:28</sub>
 
-**11.** *[Act I, if knows_key and has crowbar]* Marta wants jet-caps. Use the crowbar on the stacked crate on the pier. <sub>tips.adv:30</sub>
+**11.** *[Act I, if knows_key and has crowbar]* Marta wants her rum. Use the crowbar on the impounded crate on the pier. <sub>tips.adv:30</sub>
 
-**12.** *[Act I, if knows_key]* Marta wants jet-caps from under the crate on the pier. Pick up the crowbar by the bollard first. <sub>tips.adv:32</sub>
+**12.** *[Act I, if knows_key]* Marta's rum is in the impounded crate on the pier. Pick up the crowbar by the bollard first. <sub>tips.adv:32</sub>
 
 **13.** *[Act I only]* Talk to Bramwick in the customs house (the stone building on the right) about signing on. <sub>tips.adv:34</sub>
 
@@ -5069,25 +5589,35 @@
 - **Title** *[if ending_desk]* THE HONEST LEDGER <sub>acts.adv:41</sub>
 - *[if ending_pirate]* Dawn, from the Marrow's crow's nest. Quill points. “That's the Liar. It moves.” “I'll write it down.” “You do that.” <sub>acts.adv:44</sub>
 - *[if ending_pirate and aff ≥ 14]* Her hand is in mine before the Liar has even set. Neither of us writes that down. <sub>acts.adv:46</sub>
-- *[if ending_pirate and not aff ≥ 14]* She doesn't hold my hand. She does stand close enough that it would be very easy to. <sub>acts.adv:48</sub>
-- *[if ending_pirate]* Flag sixteen flies at the masthead. My mother would have hated the colour. <sub>acts.adv:50</sub>
-- *[if ending_desk]* A year later, at the customs-house window: a sail on the horizon, a patchwork flag at her masthead. I stamp her ARRIVED before she's even rounded the light. <sub>acts.adv:53</sub>
-- *[if ending_desk and aff ≥ 14]* She comes up the quay at a run, as she does every season, with a new star for me. I've written down four. One of them moves. <sub>acts.adv:55</sub>
-- *[if ending_desk and aff ≥ 14 and night_watch]* Every one of them is underlined. <sub>acts.adv:57</sub>
-- *[if ending_desk and not aff ≥ 14]* She still calls me cargo. She brings a new star every season, and lets me write it down. <sub>acts.adv:59</sub>
-- *[always]* Quill was named navigator of the Marrow. She had it written into the articles, then read out, then read out again. <sub>acts.adv:62</sub>
-- *[always]* Captain Vane's storm claim was paid at last, with three years' interest. She uses the letter as a bookmark. <sub>acts.adv:64</sub>
-- *[always]* Rook went back to sea, sober. Mostly. On weekdays, and twice on Tuesdays. <sub>acts.adv:66</sub>
-- *[if wager and iou_paid]* Bramwick and Marta were married in the spring, paid for by a betting slate and a clerk who backed the right ship. <sub>acts.adv:68</sub>
-- *[if wager and iou_paid = false]* My winnings off the betting slate went into a jar behind the Salty Keel's bar, labelled WEDDING, IF HE EVER PAYS UP. It is filling nicely. So, slowly, is his courage. <sub>acts.adv:70</sub>
-- *[if iou_paid and wager = false]* Bramwick and Marta are still playing for it, one hand a night. He loses on purpose. She lets him think she can't tell. <sub>acts.adv:72</sub>
-- *[if iou_paid = false and wager = false]* Bramwick and Marta are still playing for it, after a fashion. The IOU is in his breast pocket, unpaid, and she has stopped pretending she doesn't know which pocket. <sub>acts.adv:74</sub>
-- *[always]* My father opened an instrument shop on the quay. Every compass in it points at Port Vela. He says that isn't a fault; it's a feature, and the feature is home. <sub>acts.adv:76</sub>
-- *[if kelp_read]* The last of Cray's kelp went on the Salty Keel's fire. For a week the whole harbour smelled of fog, and laughed. <sub>acts.adv:78</sub>
-- *[if kelp_proof and kelp_read = false]* I kept the kelp manifest. FOR FOG. Nobody else ever read it out, and on very clear days I read it to myself. <sub>acts.adv:80</sub>
-- *[if silas_refused]* Cray asked for my compass once more, through the bars, very politely. I said no. It runs in the family. <sub>acts.adv:82</sub>
-- *[always]* Silas Cray filed an appeal from his cell, in triplicate, as is his right. Nib stamped all three copies without reading them. <sub>acts.adv:84</sub>
-- *[always]* ARCADIA: returned. All hands. <sub>acts.adv:86</sub>
+- *[if ending_pirate and not aff ≥ 14]* She kissed me once, on a salt pan, and has since filed it under heatstroke. She stands close enough to amend the record. <sub>acts.adv:48</sub>
+- *[if ending_pirate]* My father's compass sits in the Marrow's binnacle. Quill steers by it and pretends she doesn't need to. It still points at the Old Nail. So, most days, do we. <sub>acts.adv:50</sub>
+- *[if ending_pirate]* I brought Bramwick his stamp. He gave me a smaller one from his drawer: PURSER, THE MARROW. He'd had it cut that morning, before I'd decided. <sub>acts.adv:52</sub>
+- *[if ending_pirate]* Flag sixteen flies at the masthead. It's mustard. My mother would have hated it. <sub>acts.adv:54</sub>
+- *[if ending_desk]* A year later, at the customs-house window: a sail on the horizon, a patchwork flag at her masthead. I stamp her ARRIVED before she's even rounded the light. <sub>acts.adv:57</sub>
+- *[if ending_desk and aff ≥ 14]* She comes up the quay at a run, as she does every season, with a new star for me. I've written down four. One of them moves. <sub>acts.adv:59</sub>
+- *[if ending_desk and aff ≥ 14 and night_watch]* Every one of them is underlined. <sub>acts.adv:61</sub>
+- *[if ending_desk and aff ≥ 14]* On the quay she calls me cargo. On the steps, where nobody's counting, she doesn't. <sub>acts.adv:63</sub>
+- *[if ending_desk and not aff ≥ 14]* She still calls me cargo. She said my name once, across a harbour, and is rationing the rest. Every season she brings a star and lets me write it down. <sub>acts.adv:65</sub>
+- *[if ending_desk]* I gave Quill the compass. It points at the Old Nail, which lines up the Needle, which leads here. She has never once been late. <sub>acts.adv:67</sub>
+- *[if ending_desk]* Bramwick moved my desk six inches nearer the window. He says it's regulation. He wrote it that morning. <sub>acts.adv:69</sub>
+- *[always]* Quill was named navigator of the Marrow. She had it written into the articles, then read out, then read out again. <sub>acts.adv:72</sub>
+- *[always]* Captain Vane's storm claim was paid at last, with three years' interest. She uses the letter as a bookmark. <sub>acts.adv:74</sub>
+- *[always]* My father opened a shop on the quay. Every compass in it points at the Old Nail, and is useless anywhere else. He says that isn't a fault. It's how you find your way home. <sub>acts.adv:76</sub>
+- *[always]* Rook works the counter in my father's shop. He tests every compass himself, sober, and the two of them argue about the reef until closing. Neither has ever let the other win. <sub>acts.adv:78</sub>
+- *[if wager and iou_paid]* Bramwick and Marta were married in the spring, paid for by a betting slate and a clerk who backed the right ship. <sub>acts.adv:80</sub>
+- *[if wager and iou_paid = false]* My winnings off the betting slate went into a jar behind the Salty Keel's bar, labelled WEDDING, IF HE EVER PAYS UP. It is filling nicely. So, slowly, is his courage. <sub>acts.adv:82</sub>
+- *[if iou_paid and wager = false]* Bramwick and Marta are still playing for it, one hand a night. He loses on purpose. She lets him think she can't tell. <sub>acts.adv:84</sub>
+- *[if iou_paid = false and wager = false]* Bramwick and Marta are still playing for it, after a fashion. The IOU is in his breast pocket, unpaid, and she has stopped pretending she doesn't know which pocket. <sub>acts.adv:86</sub>
+- *[always]* Marta tells the whole story every night at nine, every word, and charges for the ending. Nobody has ever been allowed to skip to it. <sub>acts.adv:88</sub>
+- *[always]* Old Onn never swept that step again. Tam ran out of wall and started on the lighthouse. He's up to a hundred and thirty, and one ship. <sub>acts.adv:90</sub>
+- *[always]* Hobb's other arm is filling up nicely. He's put me on it, spelled wrong, which I'm told is an honour. <sub>acts.adv:92</sub>
+- *[always]* Pike is junior clerk at the customs house. He dates everything, including the cat. Bramwick says it's the first time in thirty years the ledger has known what day it is. <sub>acts.adv:94</sub>
+- *[if kelp_read]* The last of Cray's kelp went on the Salty Keel's fire. For a week the whole harbour smelled of fog, and laughed. <sub>acts.adv:96</sub>
+- *[if kelp_proof and kelp_read = false]* I kept the kelp manifest. FOR FOG. Nobody else ever read it out, and on very clear days I read it to myself. <sub>acts.adv:98</sub>
+- *[if silas_refused]* Cray asked for my compass once more, through the bars, very politely. I said no. It runs in the family. <sub>acts.adv:100</sub>
+- *[if ending_desk]* Silas Cray appealed from his cell, in triplicate. They crossed my desk. I stamped all three RECEIVED: SURPLUS TO REQUIREMENTS. <sub>acts.adv:102</sub>
+- *[if ending_pirate]* Silas Cray appealed from his cell, in triplicate. Nib filed all three in pigeonhole one, unread. It's where things go to be safe. <sub>acts.adv:104</sub>
+- *[always]* ARCADIA: returned. All hands. <sub>acts.adv:106</sub>
 
 <a id="fallback"></a>
 # Appendix: Fallback Lines
@@ -5096,179 +5626,181 @@
 
 **Nothing written for this verb — a person, look**
 
-- ⟨target⟩. Exactly as advertised. <sub>game/lines.ts:61</sub>
-- I look at ⟨target⟩. ⟨target⟩ looks back, which is about as far as that goes. <sub>game/lines.ts:62</sub>
-- ⟨target⟩, in full. Nothing I'd write down, and I write down everything. <sub>game/lines.ts:63</sub>
-- I study ⟨target⟩ with a clerk's eye. Nothing's out of order, except possibly me, for staring. <sub>game/lines.ts:64</sub>
+- ⟨target⟩. Exactly as advertised. <sub>game/lines.ts:65</sub>
+- I look at ⟨target⟩. ⟨target⟩ looks back, which is about as far as that goes. <sub>game/lines.ts:66</sub>
+- ⟨target⟩, in full. Nothing I'd write down, and I write down everything. <sub>game/lines.ts:67</sub>
+- I study ⟨target⟩ with a clerk's eye. Nothing's out of order, except possibly me, for staring. <sub>game/lines.ts:68</sub>
 
 **Nothing written for this verb — a person, talk**
 
-- ⟨target⟩ isn't in the mood. <sub>game/lines.ts:67</sub>
-- ⟨target⟩ has nothing more to say to me just now. I respect that; I've nothing more to say either. <sub>game/lines.ts:68</sub>
-- I open my mouth. ⟨target⟩ raises an eyebrow. I close my mouth. <sub>game/lines.ts:69</sub>
-- ⟨target⟩ gives me the look people give a clerk who arrives at five to closing. <sub>game/lines.ts:70</sub>
+- ⟨target⟩ has the look of someone whose office hours ended a while ago. <sub>game/lines.ts:71</sub>
+- ⟨target⟩ has nothing more to say to me just now. I respect that; I've nothing more to say either. <sub>game/lines.ts:72</sub>
+- I open my mouth. ⟨target⟩ raises an eyebrow. I close my mouth. <sub>game/lines.ts:73</sub>
+- ⟨target⟩ gives me the look people give a clerk who arrives at five to closing. <sub>game/lines.ts:74</sub>
 
 **Nothing written for this verb — a person, pickup**
 
-- ⟨target⟩ would object to being carried, and so would my back. <sub>game/lines.ts:73</sub>
-- I am not going to pick up ⟨target⟩. There are laws, and some of them are mine. <sub>game/lines.ts:74</sub>
-- ⟨target⟩ is not luggage, whatever the manifest says. <sub>game/lines.ts:75</sub>
-- I consider lifting ⟨target⟩. ⟨target⟩ considers me considering it. <sub>game/lines.ts:76</sub>
+- ⟨target⟩ would object to being carried, and so would my back. <sub>game/lines.ts:77</sub>
+- I am not going to pick up ⟨target⟩. There are laws, and some of them are mine. <sub>game/lines.ts:78</sub>
+- ⟨target⟩ is not luggage, whatever the manifest says. <sub>game/lines.ts:79</sub>
+- I consider lifting ⟨target⟩. ⟨target⟩ considers me considering it. <sub>game/lines.ts:80</sub>
 
 **Nothing written for this verb — a person, push/pull**
 
-- Manhandling ⟨target⟩ would end this conversation and possibly my career. <sub>game/lines.ts:79</sub>
-- ⟨target⟩ has a firm look that says "try it". <sub>game/lines.ts:80</sub>
-- I keep my hands to myself. It's the one regulation I've never had to look up. <sub>game/lines.ts:81</sub>
-- ⟨target⟩ is not a door, a drawer or a stubborn crate, and would like that on record. <sub>game/lines.ts:82</sub>
+- Manhandling ⟨target⟩ would end this conversation and possibly my career. <sub>game/lines.ts:83</sub>
+- ⟨target⟩ has a firm look that says "try it". <sub>game/lines.ts:84</sub>
+- I keep my hands to myself. It's the one regulation I've never had to look up. <sub>game/lines.ts:85</sub>
+- ⟨target⟩ is not a door, a drawer or a stubborn crate, and would like that on record. <sub>game/lines.ts:86</sub>
 
 **Nothing written for this verb — a person, open/close**
 
-- ⟨target⟩ is a person, not a cupboard. <sub>game/lines.ts:85</sub>
-- ⟨target⟩ is not available for opening. Try conversation. <sub>game/lines.ts:86</sub>
+- ⟨target⟩ is a person, not a cupboard. <sub>game/lines.ts:89</sub>
+- ⟨target⟩ is not available for opening. Try conversation. <sub>game/lines.ts:90</sub>
 
 **Nothing written for this verb — a person, turnon/turnoff**
 
-- ⟨target⟩ doesn't have a switch. I checked, with my eyes. <sub>game/lines.ts:88</sub>
+- ⟨target⟩ doesn't have a switch. I checked, with my eyes. <sub>game/lines.ts:92</sub>
 
 **Nothing written for this verb — a person, use**
 
-- I don't use people. That's what factors are for. <sub>game/lines.ts:90</sub>
-- ⟨target⟩ is not a tool, and would be the first to say so. <sub>game/lines.ts:91</sub>
-- Using ⟨target⟩ for anything would want their consent and a countersignature. <sub>game/lines.ts:92</sub>
+- I don't use people. That's what factors are for. <sub>game/lines.ts:94</sub>
+- ⟨target⟩ is not a tool, and would be the first to say so. <sub>game/lines.ts:95</sub>
+- Using ⟨target⟩ for anything would want their consent and a countersignature. <sub>game/lines.ts:96</sub>
 
 **Nothing written for this verb — a person, any other verb**
 
-- ⟨target⟩ gives me a look that ends the idea. <sub>game/lines.ts:94</sub>
+- ⟨target⟩ gives me a look that ends the idea. <sub>game/lines.ts:98</sub>
 
 **Nothing written for this verb — look**
 
-- ⟨target⟩. Exactly as advertised. <sub>game/lines.ts:99</sub>
-- ⟨target⟩. I've filed less interesting things, but not many. <sub>game/lines.ts:100</sub>
-- I look at ⟨target⟩ for a while. It holds up well under inspection, which is more than most things do. <sub>game/lines.ts:101</sub>
-- ⟨target⟩, present and correct. I'd stamp it if anyone asked. <sub>game/lines.ts:102</sub>
-- Nothing about ⟨target⟩ needs reporting. I make a mental note of that anyway. <sub>game/lines.ts:103</sub>
+- ⟨target⟩. Exactly as advertised. <sub>game/lines.ts:103</sub>
+- ⟨target⟩. I've filed less interesting things, but not many. <sub>game/lines.ts:104</sub>
+- I look at ⟨target⟩ for a while. It holds up well under inspection, which is more than most things do. <sub>game/lines.ts:105</sub>
+- ⟨target⟩, present and correct. I'd stamp it if anyone asked. <sub>game/lines.ts:106</sub>
+- Nothing about ⟨target⟩ needs reporting. I make a mental note of that anyway. <sub>game/lines.ts:107</sub>
 
 **Nothing written for this verb — talk**
 
-- ⟨target⟩ has nothing to say. Restful. <sub>game/lines.ts:106</sub>
-- I could talk to ⟨target⟩, but I'd only be practising. <sub>game/lines.ts:107</sub>
-- I say a few words to ⟨target⟩. It takes them better than most of my supervisors. <sub>game/lines.ts:108</sub>
-- ⟨target⟩ keeps its own counsel. I've worked with worse colleagues. <sub>game/lines.ts:109</sub>
+- ⟨target⟩ has nothing to say. Restful. <sub>game/lines.ts:110</sub>
+- I could talk to ⟨target⟩, but I'd only be practising. <sub>game/lines.ts:111</sub>
+- I say a few words to ⟨target⟩. It takes them better than most of my supervisors. <sub>game/lines.ts:112</sub>
+- ⟨target⟩ keeps its own counsel. I've worked with worse colleagues. <sub>game/lines.ts:113</sub>
 
 **Nothing written for this verb — open**
 
-- ⟨target⟩ isn't the sort of thing that opens. <sub>game/lines.ts:112</sub>
-- I look for a way to open ⟨target⟩. There isn't one, which is its own kind of answer. <sub>game/lines.ts:113</sub>
-- ⟨target⟩ has no lid, no latch and no intention. <sub>game/lines.ts:114</sub>
-- I'd need a hinge to work with, and ⟨target⟩ has declined to provide one. <sub>game/lines.ts:115</sub>
+- ⟨target⟩ isn't the sort of thing that opens. I've checked the regulations; it's within its rights. <sub>game/lines.ts:116</sub>
+- I look for a way to open ⟨target⟩. There isn't one, which is its own kind of answer. <sub>game/lines.ts:117</sub>
+- ⟨target⟩ has no lid, no latch and no intention. <sub>game/lines.ts:118</sub>
+- I'd need a hinge to work with, and ⟨target⟩ has declined to provide one. <sub>game/lines.ts:119</sub>
 
 **Nothing written for this verb — close**
 
-- ⟨target⟩ is already as closed as it intends to be. <sub>game/lines.ts:118</sub>
-- There's nothing on ⟨target⟩ to close. I check twice, out of habit. <sub>game/lines.ts:119</sub>
+- ⟨target⟩ is already as closed as it intends to be. <sub>game/lines.ts:122</sub>
+- There's nothing on ⟨target⟩ to close. I check twice, out of habit. <sub>game/lines.ts:123</sub>
 
 **Nothing written for this verb — pickup**
 
-- I can't carry ⟨target⟩. Not without a second career. <sub>game/lines.ts:122</sub>
-- ⟨target⟩ stays where it is. It was here first. <sub>game/lines.ts:123</sub>
-- My pockets are generous, but not that generous. <sub>game/lines.ts:124</sub>
-- I'd have to sign for ⟨target⟩, and nobody's offering the form. <sub>game/lines.ts:125</sub>
+- I can't carry ⟨target⟩. Not without a second career. <sub>game/lines.ts:126</sub>
+- ⟨target⟩ stays where it is. It was here first. <sub>game/lines.ts:127</sub>
+- My pockets are generous, but not that generous. <sub>game/lines.ts:128</sub>
+- I'd have to sign for ⟨target⟩, and nobody's offering the form. <sub>game/lines.ts:129</sub>
 
 **Nothing written for this verb — push/pull**
 
-- I ⟨verb⟩ ⟨target⟩. Nothing moves except my dignity. <sub>game/lines.ts:128</sub>
-- ⟨target⟩ doesn't budge. Neither of us is surprised. <sub>game/lines.ts:129</sub>
-- I give ⟨target⟩ a good ⟨verb⟩. It gives me nothing back but splinters of self-respect. <sub>game/lines.ts:130</sub>
-- ⟨target⟩ has been where it is for years, and a clerk isn't going to change its mind. <sub>game/lines.ts:131</sub>
+- I ⟨verb⟩ ⟨target⟩. Nothing moves except my dignity. <sub>game/lines.ts:132</sub>
+- ⟨target⟩ doesn't budge. Neither of us is surprised. <sub>game/lines.ts:133</sub>
+- I give ⟨target⟩ a good ⟨verb⟩. It gives me nothing back but splinters of self-respect. <sub>game/lines.ts:134</sub>
+- ⟨target⟩ has been where it is for years, and a clerk isn't going to change its mind. <sub>game/lines.ts:135</sub>
+- I give ⟨target⟩ a heave, like a sailor. It stays put, like a clerk. <sub>game/lines.ts:136</sub>
 
 **Nothing written for this verb — turnon/turnoff**
 
-- ⟨target⟩ has no switch, and I have no ideas. <sub>game/lines.ts:133</sub>
+- ⟨target⟩ has no switch, and I have no ideas. <sub>game/lines.ts:138</sub>
 
 **Nothing written for this verb — use**
 
-- I can't see how to use ⟨target⟩ on its own. <sub>game/lines.ts:135</sub>
-- I fiddle with ⟨target⟩. It's patient with me, which is worse. <sub>game/lines.ts:136</sub>
-- ⟨target⟩ doesn't do anything by itself. Neither did I, for three years. <sub>game/lines.ts:137</sub>
-- I'd need a reason, or at least something to use it with. <sub>game/lines.ts:138</sub>
+- I can't see how to use ⟨target⟩ on its own. <sub>game/lines.ts:140</sub>
+- I fiddle with ⟨target⟩. It's patient with me, which is worse. <sub>game/lines.ts:141</sub>
+- ⟨target⟩ doesn't do anything by itself. Neither did I, for three years. <sub>game/lines.ts:142</sub>
+- I'd need a reason, or at least something to use it with. <sub>game/lines.ts:143</sub>
+- I've been to sea and back, and I still can't see what ⟨target⟩ is for. <sub>game/lines.ts:144</sub>
 
 **Nothing written for this verb — give**
 
-- I'd need something to give first. <sub>game/lines.ts:140</sub>
+- I'd need something to give first. <sub>game/lines.ts:146</sub>
 
 **Nothing written for this verb — any other verb**
 
-- Nothing happens, but politely. <sub>game/lines.ts:141</sub>
+- Nothing happens, but politely. <sub>game/lines.ts:147</sub>
 
 **Using or giving an item with no combination — give, a person**
 
-- ⟨target⟩ has no use for ⟨item⟩. <sub>game/lines.ts:152</sub>
-- ⟨target⟩ looks at ⟨item⟩, then at me, and declines both. <sub>game/lines.ts:153</sub>
-- ⟨target⟩ hands ⟨item⟩ straight back, the way you'd return a wrong order. <sub>game/lines.ts:154</sub>
-- "What would I do with that?" is written all over ⟨target⟩'s face, in a good firm hand. <sub>game/lines.ts:155</sub>
-- I'm not handing ⟨item⟩ to ⟨target⟩. It has no hands. <sub>game/lines.ts:158</sub>
-- ⟨target⟩ can't take ⟨item⟩. It's not that kind of relationship. <sub>game/lines.ts:159</sub>
-- I offer ⟨item⟩ to ⟨target⟩. The silence is very understanding. <sub>game/lines.ts:160</sub>
-- Giving things to ⟨target⟩ is how clerks end up talking to furniture. <sub>game/lines.ts:161</sub>
+- ⟨target⟩ has no use for ⟨item⟩, and says so without a word. Some people can. <sub>game/lines.ts:158</sub>
+- ⟨target⟩ looks at ⟨item⟩, then at me, and declines both. <sub>game/lines.ts:159</sub>
+- ⟨target⟩ hands ⟨item⟩ straight back, the way you'd return a wrong order. <sub>game/lines.ts:160</sub>
+- "What would I do with that?" is written all over ⟨target⟩'s face, in a good firm hand. <sub>game/lines.ts:161</sub>
+- I'm not handing ⟨item⟩ to ⟨target⟩. It has no hands. <sub>game/lines.ts:164</sub>
+- ⟨target⟩ can't take ⟨item⟩. It's not that kind of relationship. <sub>game/lines.ts:165</sub>
+- I offer ⟨item⟩ to ⟨target⟩. The silence is very understanding. <sub>game/lines.ts:166</sub>
+- Giving things to ⟨target⟩ is how clerks end up talking to furniture. <sub>game/lines.ts:167</sub>
 
 **Using or giving an item with no combination — a person**
 
-- I'd rather not use ⟨item⟩ on ⟨target⟩. Not yet, anyway. <sub>game/lines.ts:165</sub>
-- ⟨target⟩ looks at ⟨item⟩, then at me, and the idea quietly leaves the room. <sub>game/lines.ts:166</sub>
-- I hold out ⟨item⟩. ⟨target⟩ waits politely for me to explain. I can't. <sub>game/lines.ts:167</sub>
-- There's no regulation against using ⟨item⟩ on ⟨target⟩. There's a look, though, and it's worse. <sub>game/lines.ts:168</sub>
-- ⟨item⟩ doesn't work on ⟨target⟩. <sub>game/lines.ts:171</sub>
-- I try ⟨item⟩ on ⟨target⟩. Nothing. Not even a promising noise. <sub>game/lines.ts:172</sub>
-- ⟨item⟩ and ⟨target⟩ have nothing to say to each other. <sub>game/lines.ts:173</sub>
-- I put ⟨item⟩ to ⟨target⟩ several ways. None of them are the right way, if there is one. <sub>game/lines.ts:174</sub>
+- I'd rather not use ⟨item⟩ on ⟨target⟩. Not yet, anyway. <sub>game/lines.ts:171</sub>
+- ⟨target⟩ looks at ⟨item⟩, then at me, and the idea quietly leaves the room. <sub>game/lines.ts:172</sub>
+- I hold out ⟨item⟩. ⟨target⟩ waits politely for me to explain. I can't. <sub>game/lines.ts:173</sub>
+- There's no regulation against using ⟨item⟩ on ⟨target⟩. There's a look, though, and it's worse. <sub>game/lines.ts:174</sub>
+- I try ⟨item⟩ on ⟨target⟩ and file the result under "no". <sub>game/lines.ts:177</sub>
+- I try ⟨item⟩ on ⟨target⟩. Nothing. Not even a promising noise. <sub>game/lines.ts:178</sub>
+- ⟨item⟩ and ⟨target⟩ have nothing to say to each other. <sub>game/lines.ts:179</sub>
+- I put ⟨item⟩ to ⟨target⟩ several ways. None of them are the right way, if there is one. <sub>game/lines.ts:180</sub>
 
 **An item used on nothing — pickup**
 
-- I already have ⟨item⟩. That's how pockets work. <sub>game/lines.ts:183</sub>
-- ⟨item⟩ is already mine. Picking it up again would be greedy. <sub>game/lines.ts:184</sub>
+- I already have ⟨item⟩. That's how pockets work. <sub>game/lines.ts:189</sub>
+- ⟨item⟩ is already mine. Picking it up again would be greedy. <sub>game/lines.ts:190</sub>
 
 **An item used on nothing — talk**
 
-- I'm not going to talk to ⟨item⟩. Not out loud. <sub>game/lines.ts:187</sub>
-- I have a quiet word with ⟨item⟩. It keeps it to itself. <sub>game/lines.ts:188</sub>
+- I'm not going to talk to ⟨item⟩. Not out loud. <sub>game/lines.ts:193</sub>
+- I have a quiet word with ⟨item⟩. It keeps it to itself. <sub>game/lines.ts:194</sub>
 
 **An item used on nothing — open**
 
-- There's nothing to open on ⟨item⟩. <sub>game/lines.ts:190</sub>
-- ⟨item⟩ needs something to work on. <sub>game/lines.ts:192</sub>
-- I wave ⟨item⟩ about. It wants a target, and so, frankly, do I. <sub>game/lines.ts:193</sub>
-- ⟨item⟩ on its own does nothing. It's waiting for me to have an idea. <sub>game/lines.ts:194</sub>
-- I'd use ⟨item⟩ on something, if I could decide what. <sub>game/lines.ts:195</sub>
+- There's nothing to open on ⟨item⟩. <sub>game/lines.ts:196</sub>
+- ⟨item⟩ needs something to work on. <sub>game/lines.ts:198</sub>
+- I wave ⟨item⟩ about. It wants a target, and so, frankly, do I. <sub>game/lines.ts:199</sub>
+- ⟨item⟩ on its own does nothing. It's waiting for me to have an idea. <sub>game/lines.ts:200</sub>
+- I'd use ⟨item⟩ on something, if I could decide what. <sub>game/lines.ts:201</sub>
 
 <a id="coverage"></a>
 # Coverage
 
 **rooms:** 21/21
 
-**conversations:** 33/33
+**conversations:** 35/35
 
-**nodes:** 590/590
+**nodes:** 698/698
 
-**room blocks (hotspots, states, scenes, combos):** 465/465
+**room blocks (hotspots, states, scenes, combos):** 478/478
 
-**hotspot verb lines:** 503/503
+**hotspot verb lines:** 517/517
 
-**choices:** 482
+**choices:** 535
 
-**narrated lines (say):** 2
+**narrated lines (say):** 13
 
-**casebook notes:** 11
+**casebook notes:** 17
 
-**combinations:** 174 (11 global)
+**combinations:** 175 (11 global)
 
 **items:** 22/22
 
 **tips:** 55/55
 
-**ending lines:** 24
+**ending lines:** 34
 
-**fallback lines:** 78
+**fallback lines:** 80
 
-**total lines with a source:** 2003
+**total lines with a source:** 2208
 
