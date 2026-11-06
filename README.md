@@ -266,7 +266,7 @@ Keys typed in the panel never reach the game.
   coordinates are rewritten in place in the script line (then Save).
 
 `npm run test:editor` drives all of this in headless Chrome and saves screenshots to
-`reference/screens/editor-*.png`.
+`test-output/screens/editor-*.png` (ignored by git).
 
 ### Tests
 
@@ -275,7 +275,8 @@ complete Act I chain with real pointer events, then verifies the alternative dia
 both trades, and exercises title, verb, inventory, hotspot, and dialogue keyboard controls. It derives scene clicks from live hotspot/camera coordinates and also checks camera
 scrolling, walk-before-exit transitions, directional frames, cinematic display/skip, rejection
 feedback, dialogue links, examination, pause/resume, and save/reload. Screenshots are saved to
-`reference/screens/test-*.png`. Set `CHROME_BIN` if Chromium is installed under another name.
+`test-output/screens/test-*.png` (ignored by git; the curated shots in `reference/screens/` are
+kept by hand). Set `CHROME_BIN` if Chromium is installed under another name.
 The test requires Node 22+ (the game itself supports Node 18+). It uses Chrome DevTools Protocol
 directly, so it adds no package dependency.
 

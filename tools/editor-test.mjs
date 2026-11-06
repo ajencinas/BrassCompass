@@ -2,7 +2,7 @@
  * The Adventure Editor, end to end in headless Chrome: F2, the script tab (errors, Apply,
  * hot-swap without losing state), keyboard isolation, Alt+click, the save endpoint's guard,
  * the State, Log and Map panels, and dragging a stand point on the overlay. Screenshots of
- * each panel land in reference/screens/editor-*.png.
+ * each panel land in test-output/screens/editor-*.png (ignored by git).
  *
  *   node tools/editor-test.mjs
  */
@@ -12,7 +12,7 @@ import { mkdtemp, readFile, writeFile, mkdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
-const outDir = resolve("reference/screens");
+const outDir = resolve("test-output/screens");
 const pause = (ms) => new Promise((r) => setTimeout(r, ms));
 async function until(fn, label, timeout = 20000) {
   const end = Date.now() + timeout;
@@ -59,7 +59,7 @@ try {
     await pause(250);
     const { data } = await send("Page.captureScreenshot", { format: "png" });
     await writeFile(join(outDir, name), Buffer.from(data, "base64"));
-    console.log("  " + join("reference/screens", name));
+    console.log("  " + join("test-output/screens", name));
   };
   const key = async (k, extra = {}) => {
     await send("Input.dispatchKeyEvent", { type: "keyDown", key: k, ...extra });
@@ -126,9 +126,18 @@ try {
   for (const path of ["../rooms.ts", "rooms/../../rooms.ts", "/etc/passwd", "rooms/dock.ts", "rooms\\dock.adv", "nofolder/x.adv"]) {
     assert.equal((await post({ path, text: "x" })).status, 403, `save refuses ${path}`);
   }
-  const dock = await readFile("src/content/scripts/rooms/dock.adv", "utf8");
-  assert.equal((await post({ path: "rooms/dock.adv", text: dock })).status, 200, "save writes a script");
-  assert.equal(await readFile("src/content/scripts/rooms/dock.adv", "utf8"), dock);
+  // The endpoint only writes into existing script folders, so a throwaway file would land in
+  // src/ and be picked up by the editor and HMR. Rewrite dock.adv with its own text instead, and
+  // put the original bytes back if anything differs afterwards.
+  const dockPath = "src/content/scripts/rooms/dock.adv";
+  const dockBytes = await readFile(dockPath);
+  const dock = dockBytes.toString("utf8");
+  try {
+    assert.equal((await post({ path: "rooms/dock.adv", text: dock })).status, 200, "save writes a script");
+    assert.ok((await readFile(dockPath)).equals(dockBytes), "save writes the text byte for byte");
+  } finally {
+    if (!(await readFile(dockPath)).equals(dockBytes)) await writeFile(dockPath, dockBytes);
+  }
   assert.equal((await fetch(base + "/__adv/files")).ok, true);
 
   // ---- Alt+click a hotspot opens its script line

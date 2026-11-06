@@ -14,7 +14,8 @@ async function until(fn, label, timeout = 20000) {
   throw new Error(`Timed out waiting for ${label}`);
 }
 
-const output = resolve("reference/screens");
+// Test screenshots go to an ignored folder; reference/screens holds the curated, tracked shots.
+const output = resolve("test-output/screens");
 await mkdir(output, { recursive: true });
 const profile = await mkdtemp(join(tmpdir(), "brass-compass-test-"));
 // Picking a fixed port makes back-to-back runs collide when a previous server lingers.
