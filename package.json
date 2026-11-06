@@ -10,6 +10,8 @@
     "test": "node tools/test-scripts.mjs && node tools/editor-test.mjs && node tools/playthrough.mjs",
     "gen": "python3 tools/generate.py",
     "test:scripts": "node tools/test-scripts.mjs",
+    "typecheck": "tsc --noEmit",
+    "test:fast": "tsc --noEmit && node tools/test-scripts.mjs",
     "to-adv": "node tools/to-adv.mjs",
     "test:editor": "node tools/editor-test.mjs"
   },
