@@ -21,7 +21,7 @@ dialogue bramwick4
   node counting bramwick "Cray & Co., up Chandler's Lane. He'll have left his clerk there; he leaves clerks the way other men leave a lamp on. Nothing comes out of that office without a requisition, stamped."
   node preside bramwick "Not me; I'm a party. Not Cray; he's the other party. Someone who owns licensed premises and hates an unfinished story."
     -> presided
-  node presided narrator "He looks at Marta. Marta looks at the ceiling, as if it owes her money."
+  node presided narrator "He looks at Marta. Marta finds something very interesting on the ceiling."
   node bye bramwick "Goodnight, Fenn. Don't let him write anyone down. Not tonight. Not ever, ideally."
   # After the inquiry, before he has his stamp.
   node after bramwick "Reinstated, Fenn, by acclamation of licensed premises. It isn't in any regulation. It ought to be. Now, when you're ready: I'll need my stamp."

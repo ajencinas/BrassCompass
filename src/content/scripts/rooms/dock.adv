@@ -156,12 +156,20 @@ room dock "Vela Docks"
     open "I walk out along the pier, toward the light."
 
   hotspot steps_shut "steps to Upper Town"
-    show if act 4
+    show if act 4 and not ledger_written
     area 1730,300 190x280
     stand 1800,700
     look "The steps up to Upper Town. Nine shirts on a line up there, and an old woman sweeping a clean step. I'm not knocking on anybody's door with “nearly”."
     open "Not yet. When I go up those steps I want to be carrying the ledger, corrected."
     walk "Not yet. When I go up those steps I want to be carrying the ledger, corrected."
+
+  hotspot upper_steps "steps to Upper Town"
+    show if act 4 and ledger_written
+    area 1730,300 190x280
+    stand 1800,700
+    exit village
+    look "The steps up to Upper Town. Every lamp up there is lit tonight, and somebody is singing badly on purpose."
+    open "I go up the steps. I promised somebody up there the end of a story, and I've got it now, in ink."
 
   hotspot quill_pier "Quill"
     show if act 4 and quarantine_lifted

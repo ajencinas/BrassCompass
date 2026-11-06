@@ -21,3 +21,9 @@ dialogue nell
   node taken nell "No. It isn't. But I sell rope, clerk, not answers. Ask the old woman on the steps — she lost people, and she isn't afraid to say so."
     > "I will. Goodnight." -> bye
   node bye nell "Mind how you go. It's all steps and wet stone up here."
+  # Act IV: the news, arriving at a run.
+  node news nell "Clerk! They're saying the Marrow came in with a hundred and thirty dead men aboard, and the dead men are buying drinks. Tell me it's true. I've sold it twice already."
+    > "It's true. All of it." -> true
+    > "You were right, Nell. Weather doesn't tie off a wheel." if seen:nell.wheel -> wheel4
+  node true nell "Then I'll put my prices up. …Go on. Old Onn's been on that step for three years, waiting for somebody in particular, and I think it's you."
+  node wheel4 nell "I said that. I said it three years ago, to anybody who'd buy a herring. Write down that I said it, clerk. I want it in a ledger somewhere."

@@ -48,9 +48,9 @@ room lagoon_shore "Gullet Key — the Lagoon Shore"
     area 555,480 170x310
     stand 820,800
     look "Quill, shading her eyes at the grey cutter across the lagoon. She doesn't like it. She doesn't like most things, but she's specific about this one."
-    talk "She's already looking at me. She's been looking at me since the boat."
+    talk "She answers without taking her eyes off the cutter."
       talk quill3 at boat
-    give "“Keep it, cargo. You're the one with pockets.”"
+    give "“Hold on to it. If that cutter comes across, I want both hands free.”"
     states none
 
   combos fill_bucket

@@ -50,7 +50,7 @@ room tavern "The Salty Keel"
     state if act 4 and inquiry_done
       talk: talk marta4 at after
     state if act 4
-      look "Marta, behind the bar, polishing the same glass she was polishing when I left for the Straits. She's watching the door like it owes her a story."
+      look "Marta, behind the bar, polishing the same glass she was polishing when I left for the Straits. She's watching the door the way she'd watch a pot she suspects of boiling."
       talk "She points at me with the glass before I'm halfway across the room."
         talk marta4
 

@@ -63,7 +63,7 @@ dialogue inquiry
     -> c2r
   node c2_purse marta "Not yet. That purse is a man, Fenn, not a receipt. The charge is dues. Where are dues written down?"
     -> c2r
-  node c2_kelp marta "Put that away, Fenn. I can smell it from here, and I've a feeling it's for afters."
+  node c2_kelp marta "That's a smell, Fenn, not a receipt. The charge is dues. Keep it in your pocket, and your pocket away from my bar."
     -> c2r
   node c2ok fenn "Dues on a lost ship, entered three days before she was even late. Mr Cray, you're very punctual for a tragedy."
     -> wrote
@@ -92,7 +92,7 @@ dialogue inquiry
     -> c3r
   node c3_purse rook "Still not my turn, boy. When it is, you'll hear my knees."
     -> c3r
-  node c3_kelp marta "Put that away, Fenn. I can smell it from here, and I've a feeling it's for afters."
+  node c3_kelp marta "Not yet. Whatever that paper says, I'd like it after the insurance, not instead of it."
     -> c3r
   node c3ok fenn "Six ships, paid in full, for weather. And the same year, your office refused Captain Vane's claim for a real storm. On a technicality."
     -> stamped
@@ -119,7 +119,7 @@ dialogue inquiry
     -> c4r
   node c4_claims_book silas "Insurers pay for hulls. They're famously uninterested in who was aboard. It's why I went into the business."
     -> c4r
-  node c4_kelp marta "Put that away, Fenn. I can smell it from here, and I've a feeling it's for afters."
+  node c4_kelp marta "The charge is people, Fenn, and that's kelp. Hold on to it. I can tell it wants an audience."
     -> c4r
   node c4ok narrator "I don't say anything. I hand the purse to Rook. He stands up, which takes him a while, and the whole room waits for him."
     -> first

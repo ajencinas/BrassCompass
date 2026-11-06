@@ -72,7 +72,7 @@ tip if act 3 and gate_open
   "Pick up the bucket in the Arcadia's cabin and fill it at the lagoon."
 tip if act 3 and has bill and bill_smoked and bill_stamped and bill_signed and bill_dated
   "Give the finished Bill of Health to Pike at the gate."
-tip if act 3 and has calendar_leaf
+tip if act 3 and has calendar_leaf and has bill
   "Use the calendar leaf on the Bill of Health."
 tip if act 3 and has bill and not bill_smoked
   "Use the Bill of Health on the fumigation brazier beside the gate."
@@ -91,10 +91,12 @@ tip if act 3 and hatch_open
 tip if act 3
   "Use the crowbar on the jammed hatch on the wreck's deck."
 # Act IV
+tip if act 4 and ledger_written and not iou_paid
+  "Go back to the docks and talk to Quill on the pier. Sea or desk? (Optional first: Bramwick has a debt to settle in the Keel, and the steps to Upper Town are open.)"
 tip if act 4 and ledger_written
-  "Go back to the docks and talk to Quill on the pier. Sea or desk?"
+  "Go back to the docks and talk to Quill on the pier. Sea or desk? (Optional first: the steps to Upper Town are open, and somebody up there asked to be told.)"
 tip if act 4 and quarantine_lifted and not iou_paid
-  "Talk to Bramwick in the Salty Keel: he has a debt to pay."
+  "Use the harbour stamp on the harbour ledger, in the Salty Keel. (Optional: talk to Bramwick there; he has a debt to pay.)"
 tip if act 4 and quarantine_lifted
   "Use the harbour stamp on the harbour ledger, in the Salty Keel."
 tip if act 4 and inquiry_done

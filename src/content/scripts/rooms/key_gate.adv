@@ -94,9 +94,9 @@ room key_gate "Gullet Key — the Quarantine Gate"
     area 2000,550 170x290
     stand 1950,845
     look "Quill, leaning on the palisade with her arms folded, enjoying this enormously."
-    talk "She's already looking at me. She's been looking at me since the boat."
+    talk "She doesn't unfold her arms, but she does make room on the palisade."
       talk quill3 at gate
-    give "“Keep it, cargo. You're the one with pockets.”"
+    give "“Don't hand me things in front of Pike, cargo. He'll want a docket.”"
     states none
 
   use bill on brazier if not bill_smoked

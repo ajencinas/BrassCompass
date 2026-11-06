@@ -86,9 +86,9 @@ room weather_works "Gullet Key — the Weather Works"
     area 1975,550 170x290
     stand 1900,840
     look "Quill, with her neckerchief over her mouth, eyeing the gantry and the halyard and the long drop. She looks happy. It's unnerving."
-    talk "She's already looking at me. She's been looking at me since the boat."
+    talk "She pulls her neckerchief down just far enough to be rude to me."
       talk quill3 at works
-    give "“Keep it, cargo. You're the one with pockets.”"
+    give "“Not now. My hands are for halyards.”"
     states none
 
   use bucket_water on great_brazier if not fog_down

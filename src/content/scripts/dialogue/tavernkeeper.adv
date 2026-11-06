@@ -25,7 +25,7 @@ dialogue tavernkeeper
   node straits marta "Six ships in three years. Your father's was the first. They find the hulls drifting, sails set, nobody aboard. Not so much as a cat. You're not thinking of signing on? …You are. He had that exact look."
     > "Goodnight, Marta." -> bye
   node favour marta "A clerk asking favours after the bell. Come back when you know what you want, and bring something worth the trade. My broth is as thin as a ledger."
-    > "Something sour. Noted." -> bye
+    > "Something for the broth. Noted." -> bye
   node key marta "Won it off him at cards. He bet it on a pair of threes, the old fool. It's yours in trade. My broth is as thin as a ledger tonight. Bring me a handful of jet-caps."
     > "I've got some right here." if has mushroom -> traded
       take mushroom
@@ -35,7 +35,7 @@ dialogue tavernkeeper
       sound pickup
     > "A handful. Done." if not has mushroom -> bye
     > "Where do I find jet-caps at this hour?" if not has mushroom -> nofungus
-  node nofungus marta "Under the pier, mostly. There's a crate on the quay nobody's shifted in years, and they come up thick in the black timber beneath it. You'd want a crowbar the way they plunder."
+  node nofungus marta "Under the pier, mostly. There's a crate on the quay nobody's shifted in years, and they come up thick in the black timber beneath it. You'd want a crowbar; that crate's been nailed down since the last harbourmaster but one."
     > "A crowbar. Noted." -> bye
   node traded marta "Jet-caps! The broth lives. Here's his key. And tell him a pair of threes is not a strategy."
     > "Goodnight, Marta." -> bye

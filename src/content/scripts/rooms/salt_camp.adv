@@ -92,9 +92,9 @@ room salt_camp "Gullet Key — the Salt Camp"
     area 1800,520 170x290
     stand 1740,800
     look "Quill, free, with salt in her hair and a look on her face I'd like to file somewhere safe."
-    talk "She's already looking at me. She's been looking at me since the boat."
+    talk "She turns round before I get there. She's stopped pretending she doesn't."
       talk quill3 at camp
-    give "“Keep it, cargo. You're the one with pockets.”"
+    give "“Keep it. You've already given me the best thing on this island, and it was a form.”"
     state if has flag16
       talk: talk quill3 at flag
 

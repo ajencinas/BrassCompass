@@ -35,7 +35,7 @@ dialogue hobb
   node brother hobb "My brother. Lost with the Arcadia, three years back. …South it is. I'll tell the lads."
     > "It says lost. Nobody ever found him, Hobb." -> room
       set crew_agree
-      note crew_stand "The crew will stand with me against Cray, on condition that I put it in writing and that the writing is good. I am a clerk. The writing will be good."
+      note crew_stand "Hobb found his brother on the Arcadia's manifest: Tam Hobb, able seaman, lost. The crew will sail south. The bosun rolled up his sleeve to tell me so, which I gather is the equivalent of a signature."
     > "Thank you, Hobb." -> dont
       set crew_agree
   node room hobb "Then I'll leave the room on my arm empty. For now."

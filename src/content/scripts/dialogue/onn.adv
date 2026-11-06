@@ -4,7 +4,7 @@ dialogue onn
     > "What's wrong with the Straits?" -> straits
     > "Do you need help with anything?" -> help
     > "I'll leave you to it." -> bye
-  node crew onn "My husband's cousin. And the boy from the end house, and the two brothers who kept the chandlery before the chandler. Twenty-two off this street. I counted them out and I counted them back, and only the first part worked."
+  node crew onn "My husband's cousin. And the boy from the end house, and the two brothers who kept the chandlery before the chandler. Ten off this street, and twelve more from down the hill. I counted them out and I counted them back, and only the first part worked."
     > "What happened to them?" -> straits
   node straits onn "There's a place past the reef where the water goes quiet. Not calm — quiet. The fishermen won't say the name of it. They call it the Lull."
     > "You believe that?" -> believe
@@ -18,3 +18,15 @@ dialogue onn
   node promise onn "Then try. And clerk — when the paperwork's done, come and tell me. Not the harbourmaster. Me."
     > "I will." -> bye
   node bye onn "Step. Wet. Mind it."
+  # Act IV: the Marrow home, and the clerk come to tell her.
+  node home onn "The clerk. You've the face of somebody at the end of something. Go on, then."
+    > "You asked me to come and tell you. Not the harbourmaster. You." if seen:onn.promise -> salt
+    > "They're home, Onn. All hands." if not seen:onn.promise -> salt
+  node salt fenn "All hands. They were on Gullet Key, raking salt for Silas Cray. Three years."
+    -> swept
+  node swept onn "Salt. Three years I swept this step for drowned men, and they were raking salt."
+    > "And the Lull: something did call the Marrow's name in the fog. Through a speaking-trumpet. Nobody answered." if seen:onn.lull -> trumpet
+    > "Not a drop of it was weather." -> count
+  node trumpet onn "A trumpet. (She laughs, once, like a door nobody's opened in years.) Three years the fishermen have been frightened of a man with a trumpet and a form."
+    -> count
+  node count onn "Ten off this street. I'll count them back now; I said I would. (She leans the broom against the door.) Mind the step, clerk. It's wet, and I'm not sweeping it again tonight."

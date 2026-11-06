@@ -48,6 +48,7 @@ dialogue quill3
     > "It looks good." -> looks
       add aff 1
     > "It looks adequate." -> adequate
+      add aff 1
   node looks quill "I said don't. …Thank you. Take it before I underline it."
   node adequate quill "Adequate. I'll take it. That's a whole rank above what the lookout used to get."
   # The Weather Works.

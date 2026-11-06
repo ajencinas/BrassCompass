@@ -152,6 +152,8 @@ choices. It changes lines and the ending, never whether you can finish.
 | Act II: "cargo" | Act IV: "Fenn." |
 | Act II: Dorrit's stamp rule | Act IV: Dorrit vouches for the evidence ("stamped and passed") |
 | Act II: Hobb's TAM tattoo | Act III: Tam Hobb in the salt camp |
+| Act I: young Tam in Upper Town, "tell them I kept counting" | Act III: Fenn tells his father, Tam Hobb; Act IV: father and son on the wall |
+| Act I: Old Onn, "come and tell me. Not the harbourmaster. Me." and the Lull | Act II: a polite voice in the fog knows the Marrow's name; Act IV: Fenn climbs the steps and tells her |
 | Act II: kelp crates on the Marrow | Act III: the braziers; Act IV: the pier-end proof |
 | Act III: flag number fifteen | Ending: number sixteen flies on the Marrow |
 
@@ -163,3 +165,4 @@ choices. It changes lines and the ending, never whether you can finish.
 - The quarantine flag is **yellow**; the fake fog is **kelp smoke**.
 - The compass points at the **Old Nail**, which lines up the **Needle**.
 - Ansel's flags carry an **L** for Lise.
+- Young **Tam** in Upper Town is Tam Hobb's son, named for him. Ten of the Arcadia's twenty-two came off his street.

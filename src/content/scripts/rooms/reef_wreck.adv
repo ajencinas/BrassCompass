@@ -103,9 +103,9 @@ room reef_wreck "The Arcadia, on the Reef"
     area 1205,500 170x290
     stand 1440,800
     look "Quill, barefoot on the coral, with the oars over her shoulder as if she might need to hit something with them. She might."
-    talk "She's already looking at me. She's been looking at me since the boat."
+    talk "She leans on the oars and waits for me to say something worth the row."
       talk quill3 at boat
-    give "“Keep it, cargo. You're the one with pockets.”"
+    give "“Keep it, cargo. I've got oars. My hands are spoken for.”"
     state if flag16_up
       talk: talk signal at about
     state if has flag16

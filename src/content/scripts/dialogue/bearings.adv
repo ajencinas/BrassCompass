@@ -16,6 +16,8 @@ dialogue bearings
   node oneRock quill "That was a rock, cargo."
     -> one
   node oneOk quill "Port! Port it is!"
+    -> hail
+  node hail narrator "Out of the white to port comes a voice, polite as a doorman, through a speaking-trumpet: “Ahoy, the Marrow! Quarantine inspection! Heave to!” It knows our name. Nobody aboard answers it, and it falls astern, sounding hurt."
     -> two
   node two narrator "Dead ahead. The needle is perfectly still, and so is everyone."
     > "“Steady as she goes.”" -> twoOk

@@ -22,6 +22,7 @@ dialogue quill4
     -> late
   node late quill "Don't be late."
     > "I'm never late. I'm a civil servant." -> civil
+      add aff 1
     > "Say it again." -> again
       add aff 1
     > "(Nod, and go.)" -> END

@@ -64,14 +64,22 @@ ending "ALL HANDS RETURNED"
     "Captain Vane's storm claim was paid at last, with three years' interest. She uses the letter as a bookmark."
   line
     "Rook went back to sea, sober. Mostly. On weekdays, and twice on Tuesdays."
-  line if wager
+  line if wager and iou_paid
     "Bramwick and Marta were married in the spring, paid for by a betting slate and a clerk who backed the right ship."
-  line if not wager
+  line if wager and not iou_paid
+    "My winnings off the betting slate went into a jar behind the Salty Keel's bar, labelled WEDDING, IF HE EVER PAYS UP. It is filling nicely. So, slowly, is his courage."
+  line if iou_paid and not wager
     "Bramwick and Marta are still playing for it, one hand a night. He loses on purpose. She lets him think she can't tell."
+  line if not iou_paid and not wager
+    "Bramwick and Marta are still playing for it, after a fashion. The IOU is in his breast pocket, unpaid, and she has stopped pretending she doesn't know which pocket."
   line
     "My father opened an instrument shop on the quay. Every compass in it points at Port Vela. He says that isn't a fault; it's a feature, and the feature is home."
   line if kelp_read
     "The last of Cray's kelp went on the Salty Keel's fire. For a week the whole harbour smelled of fog, and laughed."
+  line if kelp_proof and not kelp_read
+    "I kept the kelp manifest. FOR FOG. Nobody else ever read it out, and on very clear days I read it to myself."
+  line if silas_refused
+    "Cray asked for my compass once more, through the bars, very politely. I said no. It runs in the family."
   line
     "Silas Cray filed an appeal from his cell, in triplicate, as is his right. Nib stamped all three copies without reading them."
   line

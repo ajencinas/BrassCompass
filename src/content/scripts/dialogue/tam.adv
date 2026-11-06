@@ -13,9 +13,16 @@ dialogue tam
   node strange tam "The Arcadia was the biggest one ever came in here. My dad said she was so wide they had to bring her alongside in the morning light. She never came back."
     > "Lots of ships don't." -> dad
     > "I'm sorry." -> dad
-  node dad tam "Dad went with her. So did nine others off this street. Mum says I'm not to talk about it, so I talk about it to strangers instead."
+  node dad tam "Dad went with her. Tam Hobb, able seaman. I'm Tam as well, after him; Mum says that way she only has to shout once. Nine others went with him off this street. Mum says I'm not to talk about it, so I talk about it to strangers instead."
     > "I'll look for her." -> promise
     > "Goodnight, Tam." -> bye
   node promise tam "Will you? If you find her, tell them the tally's still running. Tell them I kept counting."
     > "I'll tell them." -> bye
   node bye tam "Watch the step. Mum says it's a killer. It's just a step."
+  # Act IV: his father, home.
+  node home tam "You found her! Dad came up the steps an hour ago. I counted him. Then I made him go down and come up again so I could count him twice."
+    > "Did you tell him you kept counting?" if seen:tam.promise -> kept
+    > "How many is that now?" -> many
+    > "Goodnight, Tam." -> bye
+  node kept tam "He's seen the tally. It's on the back of all Mum's recipes. She's very cross. She's also crying, so it's hard to tell which."
+  node many tam "A hundred and thirty, and one ship. People are harder than ships. They won't stand still to be counted, and they keep hugging."

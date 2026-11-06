@@ -91,7 +91,7 @@ item compass "brass compass"
   state if act 4 and ledger_written
     look "The needle points down the pier, at a bollard with a navigator sitting on it. For once I don't need telling."
   state if act 4 and quarantine_lifted and not iou_paid
-    look "The needle swings toward Bramwick, who keeps patting his coat pocket as if something in it might make a run for it."
+    look "A stamp, a ledger, and a page that's been wrong for three years. The needle points at the bar of the Salty Keel, though it keeps glancing at Bramwick, who keeps patting his coat pocket as if something in it might make a run for it."
   state if act 4 and quarantine_lifted
     look "A stamp, a ledger, and a page that's been wrong for three years. The needle points at the bar of the Salty Keel."
   state if act 4 and inquiry_done

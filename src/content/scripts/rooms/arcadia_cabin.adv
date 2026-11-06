@@ -104,9 +104,9 @@ room arcadia_cabin "The Arcadia — Captain's Cabin"
     area 720,360 200x440
     stand 1000,800
     look "Quill, keeping to the far end of the cabin, away from the desk, which is the most tactful thing I've ever seen a pirate do."
-    talk "She's already looking at me. She's been looking at me since the boat."
+    talk "She keeps her voice down, as if the cabin might be asleep."
       talk quill3 at cabin
-    give "“Keep it, cargo. You're the one with pockets.”"
+    give "“Not in here, cargo. Leave his cabin the way he left it. Mostly.”"
     state if log_read
       talk: talk quill3 at shaken
 

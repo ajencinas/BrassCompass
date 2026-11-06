@@ -2,6 +2,7 @@
 dialogue watch
   node root quill "Took you long enough. Most cargo is sick on the second ratline."
     > "I was sick on the first. I'm efficient." -> laugh
+      add aff 1
     > "I wanted to see what you see up here." -> stars
       add aff 1
   node laugh narrator "She laughs, despite herself, and then looks annoyed with both of us."
@@ -23,6 +24,7 @@ dialogue watch
     > "He left the compass for me. You don't do that if you're planning to be dead." -> we
       add aff 1
     > "He owes me three years of birthdays. I intend to collect." -> collect
+      add aff 1
   node collect quill "With interest. You're a clerk; you'll have worked it out to the penny."
     -> we
   node we quill "Then we'll find out. …We. Don't read into it."
