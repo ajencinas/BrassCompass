@@ -14,7 +14,8 @@
     "test:fast": "tsc --noEmit && node tools/test-scripts.mjs && npm run test:unit",
     "test:unit": "node --test tests/unit/*.test.mjs",
     "to-adv": "node tools/to-adv.mjs",
-    "test:editor": "node tools/editor-test.mjs"
+    "test:editor": "node tools/editor-test.mjs",
+    "script:export": "node tools/export-script.mjs"
   },
   "devDependencies": {
     "typescript": "^5.6.0",
