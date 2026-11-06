@@ -17,15 +17,17 @@ dialogue inquiry
     -> open
   node open marta "This inquiry is open. Mr Cray will answer the charges. Fenn will bring them. Everybody else will drink quietly and not touch the cat."
     -> c1
+  # The log needs no "if has": Act IV starts with it and nothing takes it, and an
+  # unconditional choice keeps every charge node from ever being a dead end.
   # Charge the first: the Arcadia, lost at sea.
   node c1 silas "Charge the first, I suppose: the Arcadia. Lost at sea, three years ago. It's in the harbour ledger. I find the ledger very persuasive."
-    > "(Show Ansel's log.)" if has ansel_log -> c1ok
+    > "(Show Ansel's log.)" -> c1ok
     > "(Show the harbour ledger.)" if has ledger -> c1_ledger
     > "(Show the claims book.)" if has claims_book -> c1_claims_book
     > "(Show Rook's purse.)" if has purse -> c1_purse
     > "(Show the kelp manifest.)" if has kelp_manifest -> c1_kelp
   node c1r marta "The charge is that she was lost, Fenn. Show me she wasn't."
-    > "(Show Ansel's log.)" if has ansel_log -> c1ok
+    > "(Show Ansel's log.)" -> c1ok
     > "(Show the harbour ledger.)" if has ledger -> c1_ledger
     > "(Show the claims book.)" if has claims_book -> c1_claims_book
     > "(Show Rook's purse.)" if has purse -> c1_purse
@@ -46,13 +48,13 @@ dialogue inquiry
     -> c2
   # Charge the second: harbour dues.
   node c2 silas "Very touching. Charge the second, then. Yes, my office paid harbour dues on the Arcadia. Dues are perfectly legal. Ask the harbour."
-    > "(Show Ansel's log.)" if has ansel_log -> c2_ansel_log
+    > "(Show Ansel's log.)" -> c2_ansel_log
     > "(Show the harbour ledger.)" if has ledger -> c2ok
     > "(Show the claims book.)" if has claims_book -> c2_claims_book
     > "(Show Rook's purse.)" if has purse -> c2_purse
     > "(Show the kelp manifest.)" if has kelp_manifest -> c2_kelp
   node c2r marta "The charge is harbour dues, Fenn. Paid, he says, and legal. Show us where they were paid. And when."
-    > "(Show Ansel's log.)" if has ansel_log -> c2_ansel_log
+    > "(Show Ansel's log.)" -> c2_ansel_log
     > "(Show the harbour ledger.)" if has ledger -> c2ok
     > "(Show the claims book.)" if has claims_book -> c2_claims_book
     > "(Show Rook's purse.)" if has purse -> c2_purse
@@ -73,13 +75,13 @@ dialogue inquiry
     -> c3
   # Charge the third: the insurance.
   node c3 silas "Charge the third. My insurers paid out on six ships, for weather. The Straits have weather. It's practically all they have."
-    > "(Show Ansel's log.)" if has ansel_log -> c3_ansel_log
+    > "(Show Ansel's log.)" -> c3_ansel_log
     > "(Show the harbour ledger.)" if has ledger -> c3_ledger
     > "(Show the claims book.)" if has claims_book -> c3ok
     > "(Show Rook's purse.)" if has purse -> c3_purse
     > "(Show the kelp manifest.)" if has kelp_manifest -> c3_kelp
   node c3r marta "The charge is the insurance, Fenn. Six ships, paid for weather. Who wrote down what they were paid for?"
-    > "(Show Ansel's log.)" if has ansel_log -> c3_ansel_log
+    > "(Show Ansel's log.)" -> c3_ansel_log
     > "(Show the harbour ledger.)" if has ledger -> c3_ledger
     > "(Show the claims book.)" if has claims_book -> c3ok
     > "(Show Rook's purse.)" if has purse -> c3_purse
@@ -102,13 +104,13 @@ dialogue inquiry
     -> c4
   # Charge the fourth: who was taken off.
   node c4 silas "Even granting all that, clerk: nobody can say who was taken off those ships. Or by whom. Or that anyone was taken at all."
-    > "(Show Ansel's log.)" if has ansel_log -> c4_ansel_log
+    > "(Show Ansel's log.)" -> c4_ansel_log
     > "(Show the harbour ledger.)" if has ledger -> c4_ledger
     > "(Show the claims book.)" if has claims_book -> c4_claims_book
     > "(Show Rook's purse.)" if has purse -> c4ok
     > "(Show the kelp manifest.)" if has kelp_manifest -> c4_kelp
   node c4r marta "The charge is that nobody can say who was taken off, Fenn. Is there anybody in this room who can?"
-    > "(Show Ansel's log.)" if has ansel_log -> c4_ansel_log
+    > "(Show Ansel's log.)" -> c4_ansel_log
     > "(Show the harbour ledger.)" if has ledger -> c4_ledger
     > "(Show the claims book.)" if has claims_book -> c4_claims_book
     > "(Show Rook's purse.)" if has purse -> c4ok

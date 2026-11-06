@@ -21,7 +21,9 @@ top-level blocks, and blocks can move between files; file names are only for peo
 
 ## The shape of a script
 
-- One statement per line. Nesting is by indentation, **two spaces** per level (no tabs).
+- One statement per line. Nesting is by indentation, **two spaces** per level (no tabs). An
+  odd indent, or a line indented more than one level deeper than the line above it, is an
+  error, so a slip of the keyboard can't quietly nest a line under the wrong parent.
 - `#` starts a comment, anywhere outside a string.
 - Text is in double quotes, JSON style: `"She said \"no\"."`. Curly quotes and dashes can be
   typed as they are.
@@ -151,9 +153,30 @@ dialogue tavernkeeper
 ```
 
 `node <id> <speaker> "<line>"`: the speaker is a character id or `narrator`. The first node
-is where the conversation starts (`start <node>` overrides it). `-> END` (or no next and no
-choices) closes the conversation. Every node shown sets `seen:<tree>.<node>`, so a choice can
-wait for something: `if seen:rook.who`.
+is where the conversation starts (`start <node>` overrides it). Every node shown sets
+`seen:<tree>.<node>`, so a choice can wait for something: `if seen:rook.who`.
+
+A node either offers choices or carries on with `-> <node>`, never both (that is an error:
+the player always picks a choice, so the next would never be used). The conversation closes
+when a node with no choices has `-> END` or no next, when the player picks a choice that leads
+to `END`, or when **every choice on the node is hidden** by its condition. That last case is
+easy to reach by accident, so the compiler warns about a node whose choices all have
+conditions, unless two of them are each other's opposite (`if has x` beside `if not has x`,
+or `if a and b` beside `if (not a or not b)`). Give such a node one unconditional choice.
+
+**When effects run.** A node's effects run **once, as the node appears**, before the player
+has read it, so a node is a good place for `set`, `give` or `note`. The exceptions are the
+effects that end the conversation (`go`, `talk`, `act`, `win`): they wait until the player
+leaves the node. A choice's effects run when it is picked, before its target node appears.
+
+Because they end the conversation, `go`, `talk`, `act` and `win` are only allowed where the
+conversation really ends: on a choice that leads to `END`, or on a node with no choices whose
+next is `END` or absent. Anywhere else they are errors.
+
+**Right-click** walks away from a conversation, but lines the player was about to hear still
+count: it runs on through every node that has no choices to show, applying each one's effects
+(and, at the very end, its `go`/`talk`/`act`/`win`), and stops at the first node with a
+choice to make, closing the conversation there.
 
 ## Items, tips, acts
 
@@ -208,6 +231,7 @@ Example: `if has lemon and not knows_key and act 1 and (aff >= 14 or night_watch
 | write | does |
 |---|---|
 | `say "text"` | narrate a line (waits for the previous one to be read) |
+| `note id "text"` | add an entry to the casebook (J), once per id |
 | `set flag` / `set flag = false` | set a flag (to `true`, or any value) |
 | `add aff 1` | raise a counter (`-1` lowers it) |
 | `give lemon` / `take lemon` | add to or remove from the inventory |
@@ -215,15 +239,39 @@ Example: `if has lemon and not knows_key and act 1 and (aff >= 14 or night_watch
 | `talk tavernkeeper` / `talk marta4 at cards` | open a conversation, at its start or a node |
 | `act 2` | finish act 2 (outro, then the next act) |
 | `win` | the ending card |
-| `sound chime` | `click pickup chime deny door gulls` |
-| `music music_tavern` | change the music |
+| `sound chime` | one of `click pickup chime deny door gulls` |
+| `music music_tavern` | change the music (the track must exist) |
 | `nothing` | an explicitly empty list (a state cancelling the base effects) |
+
+Effects run in order. `go`, `talk`, `act` and `win` hand the screen over, so they must come
+**last** in their list: a line after one would never run, and is an error.
+
+When a list reaches `say`, `talk`, `act` or `win` while a line is still on screen (outside a
+conversation), what's left of the list waits until that line has been read, or until a click.
+Only what the player sees and hears waits: the **state** effects in the waiting part (`set`,
+`add`, `give`, `take`, `note`) apply at once. The waiting part is kept in the save, so quitting
+mid-line resumes it on Continue rather than losing it.
 
 ## Checks
 
-The compiler checks every name: items, rooms, conversations and nodes, speakers, images,
-hotspots named by sprites and combinations. Flags read but never set are errors; flags set but
-never read are warnings. The end-to-end test (`npm test`) also runs the content lint and the
+The compiler checks every name: items, rooms (including the rooms named by `arrive`),
+conversations and nodes, speakers, images, music tracks, sounds, act numbers (in `act` effects
+and in `act` conditions), and hotspots named by sprites and combinations. Flags read but never
+set are errors; flags set but never read are warnings. An error in a hotspot's `show if` points
+at that line.
+
+It also catches mistakes of structure:
+
+| check | |
+|---|---|
+| an effect after `go`/`talk`/`act`/`win` in the same list | error |
+| `go`/`talk`/`act`/`win` on a choice that doesn't lead to `END`, or on a node that has choices or a next other than `END` | error |
+| a node with both choices and `-> next` | error |
+| odd or over-deep indentation | error |
+| a node whose choices all have conditions (and none is the opposite of another) | warning |
+| a combination that an earlier one for the same pair always beats (no condition, or the same one) | warning |
+
+`npm run test:scripts` prints the warnings; keep it at none. The end-to-end test (`npm test`) also runs the content lint and the
 placement lint over the compiled data.
 
 ## Converting and round trips
