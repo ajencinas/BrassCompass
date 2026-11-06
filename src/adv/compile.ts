@@ -514,6 +514,7 @@ export function compile(files: SourceFile[], options: CompileOptions = {}): Comp
           room.ambience = a as Room["ambience"]; leaf(); break;
         }
         case "grade": room.grade = cc.str("a CSS filter in quotes"); leaf(); break;
+        case "backdrop": room.backdrop = cc.str("a CSS filter in quotes"); leaf(); break;
         case "stars": room.stars = { y: cc.num() }; leaf(); break;
         case "perspective": {
           cc.kw("horizon"); const horizon = cc.num();

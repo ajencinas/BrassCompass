@@ -113,9 +113,9 @@ wins, so put the most specific first:
 ## Combinations
 
 ```
-  use mushroom on marta if not marta_paid
-    "Jet-caps! The broth lives."    # the line, first
-    take mushroom
+  use rum on marta if not marta_paid
+    "The rum! The room lives."    # the line, first
+    take rum
     give drawer_key
     set marta_paid
 ```

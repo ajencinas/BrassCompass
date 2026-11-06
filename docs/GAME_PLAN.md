@@ -126,9 +126,9 @@ room tavern "The Salty Keel" act 1
     talk  "I catch Marta's eye. It takes some catching."
       -> talk tavernkeeper
 
-  use mushroom on marta
-    say "Jet-caps! The broth lives."
-    take mushroom
+  use rum on marta
+    say "The rum! The room lives."
+    take rum
     give drawer_key
     set marta_paid
 
@@ -175,7 +175,7 @@ love beat, and the conversations that carry it.
 ### Act I: A Licence to Sail (Port Vela, night). Built; polish only.
 
 **Rooms (6):** dock, customs house, Salty Keel, Chandler's Lane, the Chandler's, Harbour Loft.
-**Chain:** crowbar → jet-caps → Marta's key → stamp → licence; stamp → Tallow's invoices →
+**Chain:** crowbar → impounded rum → Marta's key → stamp → licence; stamp → Tallow's invoices →
 manifest; crowbar → loft → ledger; confront Bramwick → confession → berth.
 
 **Additions for the full game:**

@@ -4,7 +4,8 @@ room crows_nest "The Marrow — Night Watch"
   width 2560
   music music_fog
   ambience wind
-  grade "brightness(0.78) saturate(0.55) hue-rotate(190deg) contrast(1.05)"
+  backdrop "brightness(0.34) saturate(0.45) hue-rotate(195deg)"
+  grade "brightness(0.62) saturate(0.7)"
   stars 420
   perspective horizon 230 ref 875 height 330
   walk (80,875) (110,690) (1320,690) (1320,875)

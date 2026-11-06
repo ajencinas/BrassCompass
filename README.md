@@ -103,8 +103,8 @@ saved). The final save is kept, so Continue returns you to just before the last 
 
 **Walkthrough** (spoilers): Bramwick can't stamp after the night bell, but a clerk may stamp in
 his "legal absence" — and the stamp is locked in his drawer, whose key he lost to Marta at cards.
-Take the crowbar, lever aside the stacked crate on the pier to get at the jet-caps growing in the
-timber beneath, and trade them to Marta for the key (Give them, or offer them when she asks). Take a licence form from the desk, unlock the drawer, and
+Take the crowbar to the impounded crate on the pier, take a bottle of the rum, and trade it to
+Marta for the key (Give it, or offer it when she asks). Take a licence form from the desk, unlock the drawer, and
 stamp the form.
 
 A stamped licence isn't enough. Bramwick refuses to sign until he's seen what he wrote about your
@@ -151,9 +151,9 @@ documented in [docs/SCRIPTING.md](docs/SCRIPTING.md); a taste:
     look "Marta, who runs the Salty Keel and, by most accounts, Port Vela."
     talk: talk tavernkeeper
 
-  use mushroom on marta if not marta_paid
-    "Jet-caps! The broth lives."
-    take mushroom
+  use rum on marta if not marta_paid
+    "The rum! The room lives."
+    take rum
     give drawer_key
     set marta_paid
 ```

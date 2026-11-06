@@ -86,7 +86,7 @@ html, body {
 .settings section {
   width: min(560px, 100%); padding: 32px; background: #101d29;
   border: 1px solid #9b7c46; box-shadow: 0 24px 80px #0009;
-  margin: auto;
+  margin: auto; max-height: calc(100vh - 40px); overflow-y: auto;
 }
 .settings h2 {
   color: #c6a365; font: 13px system-ui; letter-spacing: .2em; text-transform: uppercase;

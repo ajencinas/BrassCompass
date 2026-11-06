@@ -12,6 +12,14 @@ import { SOUNDS, type Effect } from "./types";
 /** Bumped when the meaning of a field changes; saves without one are version 1. */
 export const SAVE_VERSION = 2;
 
+/**
+ * Items that were renamed by a content rewrite. A save holding the old id would otherwise lose
+ * it on load, and Act I's crate only hands out the new one once — which would strand the player.
+ */
+const LEGACY_ITEMS: Record<string, string> = {
+  mushroom: "rum",
+};
+
 export interface SaveData {
   /** Shape version; see SAVE_VERSION. */
   version: number;
@@ -97,7 +105,11 @@ export function normalizeSave(raw: unknown, known: SaveKnown): SaveData | null {
 
   const act = isNum(raw.act) && known.act(raw.act) ? raw.act : known.firstAct;
   const inventory: string[] = [];
-  for (const id of raw.inventory) if (isStr(id) && known.item(id) && !inventory.includes(id)) inventory.push(id);
+  for (const raw_id of raw.inventory) {
+    if (!isStr(raw_id)) continue;
+    const id = LEGACY_ITEMS[raw_id] ?? raw_id;
+    if (known.item(id) && !inventory.includes(id)) inventory.push(id);
+  }
   const notes: CaseNote[] = [];
   if (Array.isArray(raw.notes)) {
     for (const n of raw.notes) {

@@ -225,7 +225,10 @@ export class Game {
     return this.prefs.reducedMotion ?? osReducedMotion();
   }
   private get textSpeed() {
-    return this.prefs.textSpeed ?? (this.reduced ? "instant" : "normal");
+    // Reduced motion is a statement about the player, not a style preference: it beats a speed
+    // chosen before the setting was on, or the typewriter comes back and never leaves.
+    if (this.reduced) return "instant" as const;
+    return this.prefs.textSpeed ?? "normal";
   }
   /** Seconds the typewriter takes over `chars` characters of narration. */
   private typeTime(chars: number): number {
@@ -357,9 +360,9 @@ export class Game {
       if (k === "Enter" || k === " " || k === "Tab" || k.startsWith("Arrow")) event.preventDefault();
       return;
     }
-    // A held key must not race through lines and choices the player hasn't read.
-    if (event.repeat && (k === "Enter" || k === " " || /^[1-9]$/.test(k)) &&
-      (this.dialogue || this.queue || this.narration)) {
+    // A held key must never act twice. On the title that meant a repeat could confirm "New
+    // Voyage" and overwrite the save; in dialogue it races lines the player hasn't read.
+    if (event.repeat && (k === "Enter" || k === " " || /^[1-9]$/.test(k) || k.toLowerCase() === "m")) {
       event.preventDefault();
       return;
     }
@@ -1523,6 +1526,10 @@ export class Game {
     this.room = room;
     this.trace?.({ kind: "room", room: id });
     this.mesh = new WalkMesh(room.walk, room.width ?? LOGICAL_W, SCENE_H);
+    this.roomWait = 0;
+    // Rooms entered by Continue or a dialogue transition never went through goRoom's priority
+    // hint, so ask for this room's art explicitly.
+    this.assets.prioritize([room.bg, ...(room.sprites ?? []).map((s) => s.key)]);
     // Arrive at the door we came through; saved positions may predate a floor change.
     const start = clampToFloor(pos ?? (from ? room.arrive?.[from] : undefined) ?? room.entry, room.walk);
     this.x = start.x;
@@ -1925,7 +1932,11 @@ export class Game {
     const worldWidth = this.room.width ?? LOGICAL_W;
     ctx.save();
     ctx.translate(-this.cameraX, 0);
-    if (bg) ctx.drawImage(bg, 0, 0, worldWidth, SCENE_H);
+    if (bg) {
+      ctx.filter = this.room.backdrop ?? "none";
+      ctx.drawImage(bg, 0, 0, worldWidth, SCENE_H);
+      ctx.filter = "none";
+    }
 
     // Depth-sorted drawables: static props/NPCs and the player share one list.
     const drawables: { y: number; draw: () => void }[] = [];
@@ -1946,7 +1957,11 @@ export class Game {
       drawables.push({ y: o.y, draw: () => {
         ctx.save(); ctx.beginPath();
         o.area.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y));
-        ctx.closePath(); ctx.clip(); ctx.drawImage(bg, 0, 0, worldWidth, SCENE_H); ctx.restore();
+        ctx.closePath(); ctx.clip();
+        ctx.filter = this.room.backdrop ?? "none";
+        ctx.drawImage(bg, 0, 0, worldWidth, SCENE_H);
+        ctx.filter = "none";
+        ctx.restore();
       } });
     }
     drawables.sort((a, b) => a.y - b.y);
@@ -2217,6 +2232,10 @@ export class Game {
     if (!room) return;
     this.room = room;
     this.mesh = new WalkMesh(room.walk, room.width ?? LOGICAL_W, SCENE_H);
+    this.roomWait = 0;
+    // Rooms entered by Continue or a dialogue transition never went through goRoom's priority
+    // hint, so ask for this room's art explicitly.
+    this.assets.prioritize([room.bg, ...(room.sprites ?? []).map((s) => s.key)]);
     const at = clampToFloor({ x: this.x, y: this.y }, room.walk);
     this.x = at.x;
     this.y = at.y;

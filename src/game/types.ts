@@ -151,10 +151,16 @@ export interface Room {
   scenes?: { if: Cond[]; do: Effect[] }[];
   ambience?: "gulls" | "sea" | "wind" | "tavern";
   /**
-   * CSS filter applied to the background (and its occluders), e.g. a night grade that lets one
-   * painting serve as another time of day. A grade also dims the figures to a moonlit cast.
+   * CSS filter applied to the figures in this room, on top of each sprite's own. This is the one
+   * to reach for: a night scene's characters should sit in the light, not glow.
    */
   grade?: string;
+  /**
+   * CSS filter applied to the background plate and its occluders. Only for rooms that repaint a
+   * daylight painting as another time of day — a grade here also dims the lanterns and the sky
+   * that make the scene work, so use it sparingly and tint the figures separately.
+   */
+  backdrop?: string;
   /** Stars over the top `y` pixels of the scene (a night sky painted on at runtime). */
   stars?: { y: number };
   /** World width in scene pixels; defaults to the 1920px viewport. */
