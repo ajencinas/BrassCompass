@@ -6,6 +6,10 @@ export type VerbId =
   | "open" | "close" | "push" | "pull" | "walk" | "pickup"
   | "talk" | "give" | "use" | "look" | "turnon" | "turnoff";
 
+/** The synthesised sound effects a script can play; AudioEngine has a method for each. */
+export const SOUNDS = ["click", "pickup", "chime", "deny", "door", "gulls"] as const;
+export type SoundId = (typeof SOUNDS)[number];
+
 export interface Rect { x: number; y: number; w: number; h: number }
 export type Area = Poly | { rect: Rect };
 
@@ -36,7 +40,7 @@ export type Effect =
   | { k: "win" }
   /** Narrate a line. Waits for the previous line to be read first. */
   | { k: "say"; text: string }
-  | { k: "sound"; id: "click" | "pickup" | "chime" | "deny" | "door" | "gulls" }
+  | { k: "sound"; id: SoundId }
   | { k: "music"; track: string }
   /** Record an entry in Fenn's casebook. Ignored if the same id is already filed. */
   | { k: "note"; id: string; text: string };

@@ -11,8 +11,9 @@
 import type { Pt, Poly } from "../engine/walkbox";
 import type {
   Area, Combo, Cond, DialogueChoice, DialogueNode, DialogueTree, Effect, Hotspot, Item, Room,
-  SceneSprite, VerbId,
+  SceneSprite, SoundId, VerbId,
 } from "../game/types";
+import { SOUNDS } from "../game/types";
 import type { ActDef, EndingDef } from "../content/acts";
 import type { Tip } from "../content/hints";
 
@@ -49,12 +50,14 @@ export interface CompileOptions {
   characters?: Record<string, unknown>;
   /** Known image keys; when given, unknown backgrounds and sprites are errors. */
   images?: Record<string, unknown>;
+  /** Known music tracks; when given, unknown room music and `music` effects are errors. */
+  music?: Record<string, unknown>;
 }
 
 export const VERB_IDS: VerbId[] = [
   "open", "close", "push", "pull", "walk", "pickup", "talk", "give", "use", "look", "turnon", "turnoff",
 ];
-export const SOUNDS = ["click", "pickup", "chime", "deny", "door", "gulls"] as const;
+export { SOUNDS };
 
 // ---------------------------------------------------------------- tokens and lines
 
@@ -155,6 +158,14 @@ function parseLines(file: string, text: string, errors: AdvError[]): Line[] {
     }
     if (!toks.length) return;
     while (stack.length > 1 && stack[stack.length - 1].indent >= indent) stack.pop();
+    // Two spaces per level: an odd indent, or a jump of more than one level, is a slip of the
+    // keyboard that would otherwise quietly nest a line under the wrong parent.
+    const parent = stack[stack.length - 1];
+    if (indent % 2 !== 0) {
+      errors.push({ file, line: lineNo, col: indent + 1, message: "indent by two spaces per level (this line has an odd number)" });
+    } else if (indent > parent.indent + 2 + (parent.indent < 0 ? -1 : 0)) {
+      errors.push({ file, line: lineNo, col: indent + 1, message: "indented too far: nest one level (two spaces) at a time" });
+    }
     const line: Line = { file, line: lineNo, indent, toks, children: [] };
     stack[stack.length - 1].children.push(line);
     stack.push(line);
@@ -375,7 +386,7 @@ export function compile(files: SourceFile[], options: CompileOptions = {}): Comp
         const t = c.peek();
         const id = c.id("a sound");
         if (!(SOUNDS as readonly string[]).includes(id)) c.fail(`no sound '${id}' (sounds: ${SOUNDS.join(", ")})`, t);
-        e = { k: "sound", id: id as (typeof SOUNDS)[number] };
+        e = { k: "sound", id: id as SoundId };
         break;
       }
       case "music": e = { k: "music", track: c.id("a music track") }; break;
@@ -621,7 +632,7 @@ export function compile(files: SourceFile[], options: CompileOptions = {}): Comp
           leaf(); break;
         }
         case "stand": hs.stand = point(cc, false); leaf(); break;
-        case "show": cc.kw("if"); hs.showIf = conds(cc); leaf(); break;
+        case "show": cc.kw("if"); hs.showIf = at(conds(cc), lineLoc(child)); leaf(); break;
         case "person": hs.person = true; leaf(); break;
         case "thing": hs.person = false; leaf(); break;
         case "nowalk": hs.noWalk = true; leaf(); break;
@@ -880,17 +891,29 @@ function validate(out: Compiled, options: CompileOptions): void {
     errors.push({ ...loc, message, ...(warning ? { warning } : {}) });
   };
   const flagSet = new Map<string, object>(), flagRead = new Map<string, object>();
+  const hasActs = Object.keys(out.acts).length > 0;
   const item = (where: object, id: string): void => { if (!items[id]) err(where, `no item '${id}'`); };
+  const music = (where: object, track: string): void => {
+    if (options.music && !options.music[track]) err(where, `no music track '${track}'`);
+  };
   const cond = (where: object, list?: Cond[]): void => list?.forEach((c) => {
     if ("flag" in c) { if (!flagRead.has(c.flag)) flagRead.set(c.flag, where); }
     else if ("has" in c) item(where, c.has);
     else if ("notHas" in c) item(where, c.notHas);
     else if ("room" in c) { if (!rooms[c.room]) err(where, `no room '${c.room}'`); }
+    else if ("act" in c) {
+      for (const n of Array.isArray(c.act) ? c.act : [c.act]) if (hasActs && !out.acts[n]) err(where, `no act ${n}`);
+    }
     else if ("any" in c) cond(where, c.any);
     else if ("not" in c) cond(where, [c.not]);
   });
-  const fx = (list?: Effect[], fallback?: object): void => list?.forEach((e) => {
+  /** A list's first effect that hands the screen over (go, talk, act, win), if any. */
+  const terminal = (list?: Effect[]): Effect | undefined => list?.find((e) => TERMINAL_EFFECTS.has(e.k));
+  const fx = (list?: Effect[], fallback?: object): void => list?.forEach((e, i) => {
     const where = locs.has(e) ? e : fallback ?? e;
+    if (i > 0 && TERMINAL_EFFECTS.has(list[i - 1].k) && !list.slice(0, i - 1).some((p) => TERMINAL_EFFECTS.has(p.k))) {
+      err(where, `nothing runs after '${effectWord(list[i - 1])}': move this line above it`);
+    }
     switch (e.k) {
       case "flag": case "add": if (!flagSet.has(e.id)) flagSet.set(e.id, where); break;
       case "give": case "take": item(where, e.item); break;
@@ -901,7 +924,8 @@ function validate(out: Compiled, options: CompileOptions): void {
         else if (e.node && !tree.nodes[e.node]) err(where, `dialogue '${e.tree}' has no node '${e.node}'`);
         break;
       }
-      case "act": if (Object.keys(out.acts).length && !out.acts[e.n]) err(where, `no act ${e.n}`); break;
+      case "act": if (hasActs && !out.acts[e.n]) err(where, `no act ${e.n}`); break;
+      case "music": music(where, e.track); break;
     }
   });
   const combo = (c: Combo, room?: Room): void => {
@@ -911,8 +935,23 @@ function validate(out: Compiled, options: CompileOptions): void {
     }
     cond(c, c.if); fx(c.do, c);
   };
+  /** Warn about a combo that an earlier one for the same pair always beats (first match wins). */
+  const warnedShadow = new Set<Combo>();
+  const shadowed = (list: Combo[]): void => list.forEach((c, j) => {
+    const earlier = list.slice(0, j).find((p) =>
+      ((p.item === c.item && p.with === c.with) || (p.item === c.with && p.with === c.item)) &&
+      (!p.if?.length || sameConds(p.if, c.if ?? [])));
+    if (!earlier || warnedShadow.has(c)) return;
+    warnedShadow.add(c);
+    const at = locs.get(earlier);
+    err(c, `this combination is never used: the one${at ? ` at ${at.file}:${at.line}` : ""} for the same pair always matches first`, true);
+  });
   for (const room of Object.values(rooms)) {
     if (options.images && room.bg && !options.images[room.bg]) err(room, `no image '${room.bg}'`);
+    if (room.music) music(room, room.music);
+    for (const [from, pt] of Object.entries(room.arrive ?? {})) {
+      if (!rooms[from]) err(pt, `no room '${from}' to arrive from`);
+    }
     for (const s of room.sprites ?? []) {
       if (options.images && !options.images[s.key]) err(s, `no image '${s.key}'`);
       if (options.characters && s.speaker && !options.characters[s.speaker]) err(s, `no character '${s.speaker}'`);
@@ -923,15 +962,17 @@ function validate(out: Compiled, options: CompileOptions): void {
     for (const sc of room.scenes ?? []) { cond(sc, sc.if); fx(sc.do, sc); }
     for (const h of room.hotspots) {
       if (h.item) item(h, h.item);
-      cond(h, h.showIf);
+      cond(h.showIf && locs.has(h.showIf) ? h.showIf : h, h.showIf);
       for (const st of [h, ...(h.states ?? [])]) {
         if ("if" in st) cond(st, st.if);
         for (const list of Object.values(st.do ?? {})) fx(list, st);
       }
     }
     for (const c of room.combos ?? []) combo(c, room);
+    shadowed(room.combos ?? []);
   }
   for (const c of out.combos) combo(c);
+  shadowed(out.combos);
   for (const tree of Object.values(dialogues)) {
     if (tree.start && !tree.nodes[tree.start]) err(tree, `no node '${tree.start}' to start at`);
     for (const node of Object.values(tree.nodes)) {
@@ -940,9 +981,23 @@ function validate(out: Compiled, options: CompileOptions): void {
       }
       fx(node.do, node);
       if (node.next && node.next !== "END" && !tree.nodes[node.next]) err(node, `no node '${node.next}' in ${tree.id}`);
+      if (node.choices?.length && node.next !== undefined) {
+        err(node, `node '${node.id}' has both choices and '-> ${node.next}': the player picks a choice, so the next would never be used`);
+      }
+      const nodeEnd = terminal(node.do);
+      if (nodeEnd && (node.choices?.length || (node.next !== undefined && node.next !== "END"))) {
+        err(locs.has(nodeEnd) ? nodeEnd : node, `'${effectWord(nodeEnd)}' ends the conversation, so this node can't go on to ${node.choices?.length ? "choices" : `'${node.next}'`}`);
+      }
       for (const ch of node.choices ?? []) {
         if (ch.to !== "END" && !tree.nodes[ch.to]) err(ch, `no node '${ch.to}' in ${tree.id}`);
         cond(ch, ch.if); fx(ch.do, ch);
+        const end = terminal(ch.do);
+        if (end && ch.to !== "END") {
+          err(locs.has(end) ? end : ch, `'${effectWord(end)}' ends the conversation, so this choice must lead to END, not '${ch.to}'`);
+        }
+      }
+      if (node.choices?.length && node.choices.every((ch) => ch.if?.length) && !complementary(node.choices)) {
+        err(node, `every choice on node '${node.id}' has a condition: if none holds the conversation simply ends here`, true);
       }
     }
   }
@@ -958,6 +1013,44 @@ function validate(out: Compiled, options: CompileOptions): void {
   const auto = (f: string): boolean => f.startsWith("seen:") || f.startsWith("looked:");
   for (const [f, where] of flagRead) if (!flagSet.has(f) && !auto(f)) err(where, `flag '${f}' is read but never set`);
   for (const [f, where] of flagSet) if (!flagRead.has(f)) err(where, `flag '${f}' is set but never read`, true);
+}
+
+/** Effects that hand the screen to something else; nothing after one in a list runs. */
+const TERMINAL_EFFECTS: ReadonlySet<Effect["k"]> = new Set(["go", "talk", "act", "win"]);
+
+/** How an effect is written, for messages. */
+function effectWord(e: Effect): string {
+  switch (e.k) {
+    case "go": return `go ${e.room}`;
+    case "talk": return `talk ${e.tree}${e.node ? " at " + e.node : ""}`;
+    case "act": return `act ${e.n}`;
+    default: return e.k;
+  }
+}
+
+/** The opposite of a condition, written the way the compiler itself would write it. */
+function negate(c: Cond): Cond {
+  if ("has" in c) return { notHas: c.has };
+  if ("notHas" in c) return { has: c.notHas };
+  if ("not" in c) return c.not;
+  if ("flag" in c && !("atLeast" in c)) {
+    if (!("is" in c)) return { flag: c.flag, is: false };
+    if (c.is === false) return { flag: c.flag };
+  }
+  return { not: c };
+}
+const sameConds = (a: Cond[], b: Cond[]): boolean => JSON.stringify(a) === JSON.stringify(b);
+
+/**
+ * Whether two of the choices' conditions are each other's opposite, so one of them always
+ * shows: `if has x` beside `if not has x`, or `if a and b` beside `if (not a or not b)`.
+ */
+function complementary(choices: DialogueChoice[]): boolean {
+  const conds = choices.map((ch) => ch.if ?? []);
+  return conds.some((a) => {
+    const opposite: Cond[] = a.length === 1 ? [negate(a[0])] : [{ any: a.map(negate) }];
+    return conds.some((b) => b !== a && sameConds(b, opposite));
+  });
 }
 
 /** `file:line:col: message`, for consoles and test output. */

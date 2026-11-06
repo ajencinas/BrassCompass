@@ -14,7 +14,7 @@ const raw = import.meta.glob("./scripts/**/*.adv", { query: "?raw", import: "def
 /** The script files the game was built from, paths relative to src/content/scripts. */
 export const SOURCES: SourceFile[] = Object.entries(raw).map(([path, text]) => ({ path: path.replace(/^\.\/scripts\//, ""), text }));
 
-export const COMPILE_OPTIONS: CompileOptions = { characters: CHARACTERS, images: MANIFEST.images };
+export const COMPILE_OPTIONS: CompileOptions = { characters: CHARACTERS, images: MANIFEST.images, music: MANIFEST.audio };
 
 const first = compile(SOURCES, COMPILE_OPTIONS);
 const fatal = first.errors.filter((e) => !e.warning);

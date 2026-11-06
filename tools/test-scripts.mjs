@@ -21,7 +21,7 @@ try {
   const ser = await vite.load("/src/adv/serialize.ts");
   const { CHARACTERS } = await vite.load("/src/content/characters.ts");
   const { MANIFEST } = await vite.load("/src/content/assets.ts");
-  const options = { characters: CHARACTERS, images: MANIFEST.images };
+  const options = { characters: CHARACTERS, images: MANIFEST.images, music: MANIFEST.audio };
 
   const files = readScripts();
   const t0 = performance.now();
