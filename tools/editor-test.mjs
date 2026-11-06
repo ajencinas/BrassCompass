@@ -211,7 +211,7 @@ try {
     return ROOMS.dock.hotspots.find((h) => h.id === "crate").stand; })()`);
   assert.deepEqual(crate, { x: 1150, y: 820 }, "the drag moves the live stand point");
   const dockBuf = await evaluate("window.__editor.buffers.get('rooms/dock.adv').text");
-  assert.match(dockBuf, /hotspot crate "stacked crate"\n(?:.*\n){2}    stand 1150,820\n/, "the drag rewrites the script line");
+  assert.match(dockBuf, /hotspot crate "[^"]*"\n(?:.*\n){2}    stand 1150,820\n/, "the drag rewrites the script line");
   await evaluate("window.__game.devHandle = { x: 1150, y: 820 }; window.__game.render()");
   await shot("editor-overlay.png");
   // Put it back without saving.

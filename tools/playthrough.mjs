@@ -273,6 +273,31 @@ try {
     }
     throw new Error("No options appeared for pick(" + n + ")");
   }
+  /** Read on through lines without options until `expression` holds; fails on a choice. */
+  async function advance(expression, label, max = 40) {
+    for (let i = 0; i < max; i++) {
+      if (await evaluate(expression)) return;
+      const state = await evaluate("(() => { const g = window.__game; return g.dialogue ? g.visibleChoices().length : -1; })()");
+      if (state > 0) throw new Error("Stopped at a choice (" + await node() + ") before: " + label);
+      if (state === 0) await key("Enter");
+      else await frame(60);
+    }
+    throw new Error("Never satisfied: " + label);
+  }
+  /** Read on to the next choice and pick the option whose text matches. */
+  async function pickText(match) {
+    for (let i = 0; i < 30; i++) {
+      const texts = await evaluate("(() => { const g = window.__game; return g.dialogue ? g.visibleChoices().map((c) => c.text) : null; })()");
+      if (texts && texts.length) {
+        const n = texts.findIndex((t) => typeof match === "string" ? t === match : match.test(t));
+        if (n < 0) throw new Error("No option " + match + " at " + await node() + ": " + JSON.stringify(texts));
+        return choose(n);
+      }
+      if (texts) await key("Enter");
+      else await frame(60);
+    }
+    throw new Error("No options appeared for " + match);
+  }
   const node = () => evaluate("window.__game.dialogue?.nodeId ?? null");
   const flag = (id) => evaluate(`window.__game.flags[${JSON.stringify(id)}]`);
   const visible = (id) => evaluate(`window.__game.visibleHotspots().some((h) => h.id === ${JSON.stringify(id)})`);
@@ -473,7 +498,7 @@ try {
   await click(390, 960); // Use
   await clickItem("crowbar");
   await clickHotspot("crate");
-  await has("mushroom");
+  await has("rum");
   assert.equal(await evaluate("window.__game.rejection"), 0);
   await clickHotspot("tavern_door", "left", 0);
   assert.equal(await evaluate("window.__game.pendingRoom"), null);
@@ -506,7 +531,7 @@ try {
   assert.equal(await evaluate("window.__game.dialogue"), null);
   assert.equal(await evaluate("window.__game.flags['looked:tavern.marta']"), true);
   await click(220, 960); // Give
-  await clickItem("mushroom");
+  await clickItem("rum");
   await clickHotspot("marta");
   await has("drawer_key");
   await click(250, 800);
@@ -573,6 +598,10 @@ try {
   // ---- the story gate: manifest from the chandler, then the loft ledger ----
   await goTo("door_out", "dock");
   await goTo("alley_mouth", "alley");
+  // The first time into the lane, Cray steps out: a line, then his conversation.
+  for (let i = 0; i < 40 && (await evaluate("window.__game.dialogue?.tree.id ?? null")) !== "silas"; i++) await frame(60);
+  assert.equal(await node(), "root");
+  await closeDialogue();
   await shot("test-alley.png");
   await goTo("chandlery_door", "chandlery");
   await click(390, 960); // Use
@@ -668,7 +697,7 @@ try {
   await click(220, 960); // Give
   await clickItem("sextant");
   await clickHotspot("quill");
-  assert.match(await said(), /Your feelings/);
+  assert.match(await said(), /long way steers itself/);
   await has("sextant");
   // Optional clue: Cray's kelp in the deck crates.
   await click(390, 960); // Use
@@ -772,8 +801,8 @@ try {
   await choose(1);
   assert.equal(await node(), "look");
   await pick(0); // "That's the Arcadia."
-  // The Act II outro plays, then the Act III title card.
-  await until(() => evaluate("window.__game.cinematic.active"), "act II outro");
+  // Vane gives her orders, then the Act II outro plays, then the Act III title card.
+  await advance("window.__game.cinematic.active", "act II outro");
   await until(() => evaluate("document.querySelector('.cinematic video').currentTime > 4.5"), "outro line");
   await shot("test-act2-outro.png");
   await key("Enter");
@@ -955,24 +984,30 @@ try {
   await key("Enter");
   assert.equal(await node(), "ansel");
   await shot("test-act3-kiss.png");
-  for (let i = 0; i < 6 && (await node()) !== null; i++) await key("Enter");
   assert.equal(await flag("quill_free"), true);
-  assert.equal(await visible("quill"), true);
-  assert.equal(await visible("ansel"), true);
 
-  // ---- The reunion ----
-  await click(70, 960); // Talk to
-  await clickHotspot("ansel");
-  assert.equal(await node(), "taller");
-  await pick(0); // "Hello, Father." (+aff)
-  await pick(0); // "I read the log. The L is for her."
-  await pick(0); // the ship outside the Needle
+  // ---- The reunion, straight on from the kiss ----
+  await advance("window.__game.dialogue?.tree.id === 'ansel' && window.__game.dialogue.nodeId === 'taller'", "the reunion");
+  await pickText("Hello, Father."); // (+aff)
+  await pick(0); // "They wrote you down as lost."
+  await pickText("I read the log. The L is for her.");
+  await pickText(/ship outside the Needle/);
   await has("flag16");
-  await pick(0); // "Then why that colour?" (+aff)
+  assert.equal(await flag("ansel_met"), true);
+  await pickText("Why mustard?"); // (+aff)
   assert.equal(await node(), "why");
   await shot("test-act3-reunion.png");
   await closeDialogue();
-  assert.equal(await flag("ansel_met"), true);
+  assert.equal(await visible("quill"), true);
+  assert.equal(await visible("ansel"), true);
+  // Pike files the form and hands over his roll of the crews.
+  await click(70, 960); // Talk to
+  await clickUntil("pike", "window.__game.dialogue?.tree.id === 'pike'", "Pike's roll");
+  assert.equal(await node(), "done");
+  await pickText("Customs is hiring. We have a great many forms.");
+  assert.equal(await flag("pike_roll"), true);
+  assert.equal(await node(), "hiring");
+  await closeDialogue();
 
   // ---- The signal ----
   await goTo("flats", "reef_wreck");
@@ -1125,7 +1160,7 @@ try {
   await click(70, 960); // Talk to
   await clickUntil("cray_t", "window.__game.dialogue?.tree.id === 'inquiry'", "the inquiry");
   await pick(0); // "I've come to hold an inquiry."
-  for (let i = 0; i < 12 && (await node()) !== "c1"; i++) await key("Enter");
+  await advance("window.__game.dialogue?.nodeId === 'c1'", "charge the first");
   assert.equal(await flag("inquiry_started"), true);
   assert.equal(await visible("dorrit_t"), true);
   assert.equal(await evaluate("window.__game.visibleChoices().length"), 5); // log, ledger, book, purse, kelp
@@ -1141,11 +1176,11 @@ try {
   assert.equal(await node(), "c3ok");
   for (let i = 0; i < 6 && (await node()) !== "c4"; i++) await key("Enter");
   await choose(3); // the purse: Rook stands up
-  for (let i = 0; i < 6 && (await node()) !== "surplus"; i++) await key("Enter");
-  await choose(0); // the kelp manifest: "for fog"
+  await advance("window.__game.dialogue?.nodeId === 'pair'", "the receipt");
+  await pickText("(Show the kelp manifest.)"); // "for fog"
   assert.equal(await flag("kelp_read"), true);
-  for (let i = 0; i < 6 && (await node()) !== "point"; i++) await key("Enter");
-  await choose(0); // "This one pointed at you."
+  await advance("window.__game.dialogue?.nodeId === 'point'", "Cray's last word");
+  await pickText(/This one pointed at you/);
   for (let i = 0; i < 12 && (await node()) !== null; i++) await key("Enter");
   assert.equal(await flag("inquiry_done"), true);
   assert.equal(await evaluate("window.__game.inventory.includes('purse') || window.__game.inventory.includes('claims_book')"), false);
@@ -1182,8 +1217,8 @@ try {
   await clickItem("ledger");
   for (let i = 0; i < 20 && (await evaluate("window.__game.dialogue?.tree.id ?? null")) !== "ledger4"; i++) await frame(30);
   await pick(0); // (Write.)
-  assert.equal(await node(), "write");
-  for (let i = 0; i < 4 && (await node()) !== "ending"; i++) await key("Enter");
+  assert.equal(await node(), "write_roll"); // Pike's roll goes in too
+  await advance("window.__game.dialogue?.nodeId === 'ending'", "the ledger entry");
   assert.equal(await flag("ledger_written"), true);
   await shot("test-act4-ledger.png");
   await pick(0);
@@ -1265,19 +1300,19 @@ try {
   await key("Escape");
   assert.equal(await evaluate("window.__game.roomMenu"), false);
   await evaluate("window.__game.explore = false; window.__game.title = true");
-  // Second solutions: trade the mushrooms and present the licence in conversation instead of Give.
+  // Second solutions: trade the rum and present the licence in conversation instead of Give.
   const alt = await evaluate(`(() => {
     const g = window.__game;
     g.title = false; g.newGame();
     g.narration = null; // the opening line has been read
-    g.inventory = ["mushroom"];
+    g.inventory = ["rum"];
     g.flags = { knows_key: true };
     g.runEffects([{ k: "talk", tree: "tavernkeeper" }]);
     const opening = g.visibleChoices().map((c) => c.text);
     g.pickChoice(1);
     const asked = g.dialogue.nodeId;
     g.pickChoice(0);
-    const traded = g.inventory.includes("drawer_key") && !g.inventory.includes("mushroom") && g.flags.marta_paid === true;
+    const traded = g.inventory.includes("drawer_key") && !g.inventory.includes("rum") && g.flags.marta_paid === true;
     g.dialogue = null;
     g.runEffects([{ k: "talk", tree: "tavernkeeper" }]);
     const after = g.visibleChoices().map((c) => c.text);
@@ -1297,8 +1332,8 @@ try {
     for (let i = 0; i < 4 && g.cinematic.active; i++) g.cinematic.skip();
     g.title = false; g.newGame(); g.narration = null;
     const hintStart = g.itemLook("compass");
-    g.inventory.push("mushroom");
-    const hintFungus = g.itemLook("compass");
+    g.inventory.push("rum");
+    const hintRum = g.itemLook("compass");
     g.inventory = ["compass"];
     g.speak("Marta looks up.");
     g.runEffects([{ k: "talk", tree: "tavernkeeper" }]);
@@ -1328,7 +1363,7 @@ try {
     const quick = g.dialogue?.tree.id;
     g.dialogue = null;
     const tip = g.currentTip();
-    return { waited, opened, hint, pending, person: carry.person, hintStart, hintFungus, suggest, suggestLine, quick, tip };
+    return { waited, opened, hint, pending, person: carry.person, hintStart, hintRum, suggest, suggestLine, quick, tip };
   })()`);
   assert.equal(fixes.waited, true);
   assert.equal(fixes.opened, true);
@@ -1336,7 +1371,7 @@ try {
   assert.equal(fixes.pending, "counter");
   assert.equal(fixes.person, true);
   assert.match(fixes.hintStart, /customs house/);
-  assert.match(fixes.hintFungus, /tavern/);
+  assert.match(fixes.hintRum, /tavern/);
   assert.equal(fixes.suggest, "talk");
   assert.equal(fixes.suggestLine, "Talk to Marta");
   assert.equal(fixes.quick, "tavernkeeper");
@@ -1357,9 +1392,9 @@ try {
     g.flags = { farewell: true, inquiry_done: true, quarantine_lifted: true, ledger_written: true, night_watch: true, aff: 3 };
     g.loadRoom("dock");
     g.runEffects([{ k: "talk", tree: "quill4", node: "dawn" }]);
-    g.advanceDialogue();
+    g.advanceDialogue(); g.advanceDialogue(); // sea, then tide
     const offered = g.visibleChoices().map((c) => c.text);
-    g.pickChoice(2); // keep the ledger honest
+    g.pickChoice(offered.findIndex((t) => /keep the ledger honest/.test(t)));
     g.advanceDialogue();
     const kiss = g.visibleChoices().some((c) => c.text === "(Kiss her.)");
     g.pickChoice(0); // "I'll underline it."
@@ -1368,7 +1403,8 @@ try {
     const ok = (l) => !l.if || l.if.every((c) => g.check(c));
     return { offered, kiss, won: g.won, title: ENDING.titles.find(ok)?.text, lines: ENDING.lines.filter(ok).map((l) => l.text) };
   })()`);
-  assert.equal(desk.offered.length, 3);
+  assert.equal(desk.offered.some((t) => /^Sign me on/.test(t)), true);
+  assert.equal(desk.offered.some((t) => /keep the ledger honest/.test(t)), true);
   assert.equal(desk.kiss, false); // not enough affection for the kiss
   assert.equal(desk.won, true);
   assert.equal(desk.title, "THE HONEST LEDGER");
