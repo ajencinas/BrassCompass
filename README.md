@@ -69,24 +69,37 @@ To regenerate any asset from its prompt, see `tools/generate.py` (requires `RUNC
 
 | Action | Input |
 |---|---|
-| Select a verb | Click it in the bottom-left grid |
-| Act on something | Click the object in the scene |
-| Keyboard navigation | `Tab` / `Shift+Tab` cycle verbs, inventory and hotspots; arrows move within a zone; `Enter` activates |
+| Do the obvious thing (talk, take, open, look) | Left-click it — the verb it would use lights up as you hover |
+| Look at something | Right-click it (in the scene or your inventory) |
+| A specific verb | Click it in the bottom-left grid, then click the object |
 | Two-object verbs (`Use`, `Give`) | Pick the verb, click the item, then click the target |
-| Walk somewhere | Click the floor with no verb selected; click a doorway to enter |
-| Cancel action or close dialogue | Right-click |
+| Walk somewhere | Click the floor; double-click (or click the same spot again) to run |
+| Go through a door or exit | Click it to walk through; double-click to leave at once |
+| Cancel a sentence or leave a conversation | Right-click anywhere that isn't an object |
+| Reveal everything interactive | Hold `Q`, or toggle the Reveal button in the top bar |
+| Keyboard navigation | `Tab` / `Shift+Tab` cycle verbs, inventory and hotspots; arrows move within a zone; `Enter` activates (with no verb chosen, the lit-up one) |
 | Casebook — everything you've learned | `J`, or the Casebook button |
+| Line history — the last 30 lines | `L`, or the Log button |
 | Pause / settings | `Escape` or the Pause button |
 | Restart / return to title | Pause menu |
-| Master volume | Slider in pause menu; settings are remembered |
 | Skip text | Click or press a key |
 | Skip cinematic | Click, `Enter`, or `Escape`; Continue bypasses the opening |
 | Mute music | `M` |
-| Start / continue from title | `Enter` starts; `C` continues |
-| Dialogue choices | Number keys, or arrows and `Enter` |
+| Start / continue from title | `Enter` starts; `C` continues. Starting over a save asks you to confirm |
+| Dialogue choices | Click, number keys, or arrows and `Enter` |
+| Touch | Tap a thing to see its name and verb, tap again to act; long-press to look; tap the floor to walk, double-tap to run |
 
-Hovering anything interactive draws a soft outline, and the cursor shows its name. Keyboard
-focus uses a steady high-contrast outline and works independently of pointer hover.
+The pause menu holds the settings, remembered per browser: master, music and effects volume;
+text speed (Slow / Normal / Fast / Instant); **Wait for click** (lines that something is waiting
+on stay up until you click, instead of moving on once read); text size (100 / 125 / 150%);
+reduced motion (follows the OS unless set); fullscreen; and a controls reference.
+
+Hovering anything interactive draws a soft outline, the cursor shows its name, and the pointer
+changes over things and exits. Keyboard focus uses a steady high-contrast outline and works
+independently of pointer hover; focus changes, rooms and lines are announced to screen readers.
+
+Finishing the voyage unlocks **Chapter select** on the title screen (walk any scene; nothing is
+saved). The final save is kept, so Continue returns you to just before the last choice.
 
 **Walkthrough** (spoilers): Bramwick can't stamp after the night bell, but a clerk may stamp in
 his "legal absence" — and the stamp is locked in his drawer, whose key he lost to Marta at cards.
@@ -237,10 +250,12 @@ makes timing-dependent playtests impossible otherwise.
 
 Save data lives in `localStorage` under `brasscompass.save.v3` and is written after every action,
 room change and conversation. Older v2 saves keep their flags and restart at the beginning of their
-act. The ending clears it. Dev hooks (`__game`, `__ff`, `__act(n)`) exist only under `npm run dev`.
+act. The ending keeps it (Continue returns to just before the final choice) and sets
+`brasscompass.completed`, which unlocks Chapter select. Dev hooks (`__game`, `__ff`, `__act(n)`) exist only under `npm run dev`.
 
-**Explore Scenes** on the title screen lets you walk any room without solving anything: R opens a
-menu of every scene, D toggles the walk-area/hotspot overlay, and nothing is saved.
+**Chapter select** on the title screen (always under `npm run dev`; for players once they have
+finished) lets you walk any room without solving anything: R opens a menu of every scene, D (dev
+only) toggles the walk-area/hotspot overlay, and nothing is saved.
 `node tools/shoot.mjs <room> [x,y …] [--act N] [--clean]` takes calibration screenshots with
 Fenn placed at given points.
 
@@ -309,10 +324,12 @@ choice on the pier.
   choose: sea or desk. The ending card changes with the choice and with what you did on the way
   (affection, the night watch, the wager, the kelp).
 - 12-verb interface with a sentence line; **verb suggestions** (the natural verb lights up on
-  hover, and right-click does it); full keyboard navigation
+  hover, and a plain click does it; right-click looks); hold Q to reveal every hotspot; full
+  keyboard navigation, touch controls and screen-reader announcements
 - **Tips**: the Tip button or H gives one plain line about the next step, and tip mode keeps it
   on screen; looking at the compass gives the same nudge in character
-- **Explore Scenes** from the title: jump to any room of any act, with the calibration overlay
+- **Chapter select** from the title (after finishing, or on the dev server): jump to any room of
+  any act
 - Dialogue trees that remember the whole voyage (`seen:`/`looked:` flags, affection),
   conditional hotspot states, sprites and arrival scenes per act, depth-sorted figures and
   occluders, night grades
@@ -334,8 +351,9 @@ hotspots plus a focused hotspot name. Unsupported actions retain their narration
 short denial sound and cursor cue.
 
 Escape opens an accessible settings dialog with resume, confirmed restart, return to title,
-mute, and master volume. Music and effects share the volume setting, which persists separately
-from your saved voyage. Right-click remains the action/dialogue cancel control.
+mute, master/music/effects volume, text speed, wait-for-click, text size, reduced motion,
+fullscreen and a controls reference; all persist separately from your saved voyage. Right-click
+looks at a thing, and cancels a sentence or a conversation anywhere else.
 
 Room sprites support subtle idle/talk motion and a rendering color grade. Collected props
 disappear with their hotspots. Rooms can declare foreground polygons restored from the

@@ -111,6 +111,34 @@ try {
       for (let i = 0; i < 400 && ((g.narration && g.narration.shown < g.narration.text.length) || g.queue); i++) window.__ff(1);
     })()`);
   }
+  /** A real double-click: two presses, the second with clickCount 2 (event.detail === 2). */
+  async function doubleClick(x, y, frames = 0) {
+    await settle();
+    const p = await evaluate(`(() => {
+      const r = document.querySelector("canvas").getBoundingClientRect();
+      return { x: r.left + ${x} * r.width / 1920, y: r.top + ${y} * r.height / 1080 };
+    })()`);
+    for (const clickCount of [1, 2]) {
+      await send("Input.dispatchMouseEvent", { type: "mousePressed", x: p.x, y: p.y, button: "left", clickCount });
+      await send("Input.dispatchMouseEvent", { type: "mouseReleased", x: p.x, y: p.y, button: "left", clickCount });
+    }
+    await frame(frames);
+  }
+  /** Where a hotspot is on screen, with the camera brought round to it first. */
+  async function hotspotPoint(id) {
+    await settle();
+    return evaluate(`(() => {
+      const g = window.__game;
+      const h = g.room.hotspots.find((c) => c.id === "${id}");
+      if (!h) throw new Error("Missing hotspot: ${id}");
+      const c = h.area.rect ? { x: h.area.rect.x + h.area.rect.w / 2, y: h.area.rect.y + h.area.rect.h / 2 }
+        : { x: h.area.reduce((s, p) => s + p.x, 0) / h.area.length, y: h.area.reduce((s, p) => s + p.y, 0) / h.area.length };
+      const max = Math.max(0, (g.room.width ?? 1920) - 1920);
+      g.cameraX = Math.max(0, Math.min(max, c.x - 960));
+      g.focusCameraX = c.x;
+      return { x: c.x - g.cameraX, y: c.y };
+    })()`);
+  }
   async function clickWorld(x, y, button = "left", frames = 240) {
     await click(x - await evaluate("window.__game.cameraX"), y, button, frames);
   }
@@ -460,8 +488,10 @@ try {
   await key("c");
   await room("tavern");
   await click(1450, 800);
-  await click(70, 960); // Talk to
+  // Smart click: with no verb chosen, a plain click on Marta does the lit-up verb (Talk to).
+  assert.equal(await evaluate("window.__game.sentence.verb"), null);
   await clickHotspot("marta");
+  assert.equal(await evaluate("window.__game.dialogue?.tree.id"), "tavernkeeper");
   assert.equal(await evaluate("window.__game.facing"), 1); // turned toward Marta
   await shot("test-dialogue.png");
   await key("ArrowDown");
@@ -470,14 +500,28 @@ try {
   await key("Enter");
   assert.equal(await evaluate("window.__game.dialogue.nodeId"), "favour"); // she wants to know what for
   await click(960, 760, "right"); // close dialogue
+  assert.equal(await evaluate("window.__game.dialogue"), null);
+  // Right-click on a thing looks at it.
+  await clickHotspot("marta", "right");
+  assert.equal(await evaluate("window.__game.dialogue"), null);
+  assert.equal(await evaluate("window.__game.flags['looked:tavern.marta']"), true);
   await click(220, 960); // Give
   await clickItem("mushroom");
   await clickHotspot("marta");
   await has("drawer_key");
   await click(250, 800);
-  await goTo("door_out", "dock");
+  // Double-click a way out: through it at once, without the walk.
+  const door = await hotspotPoint("door_out");
+  await doubleClick(door.x, door.y);
+  assert.equal(await evaluate("window.__game.path.length"), 0);
+  assert.equal(await evaluate("window.__game.pendingRoom"), "dock");
+  await room("dock");
   assert.equal(await evaluate("Math.hypot(window.__game.x - 1390, window.__game.y - 600) < 2"), true); // out of the tavern door
-  await click(1750, 800);
+  // Double-click the floor: Fenn runs there.
+  await doubleClick(1750, 800);
+  assert.equal(await evaluate("window.__game.running && window.__game.path.length > 0"), true);
+  await frame();
+  assert.equal(await evaluate("window.__game.running"), false); // arrived
   assert.equal(await evaluate("window.__game.cameraX > 300"), true);
   await shot("test-dock-scrolled.png");
   await goTo("office_door", "office");
@@ -1180,12 +1224,31 @@ try {
   assert.equal(card.lines.some((l) => /smelled of fog/.test(l)), true);
   assert.equal(card.lines.some((l) => /customs-house window/.test(l)), false);
   assert.equal(card.lines.at(-1), "ARCADIA: returned. All hands.");
-  assert.equal(await evaluate("localStorage.getItem('brasscompass.save.v3')"), null);
+  // The ending keeps the save (Continue goes back to choose again) and unlocks Chapter select.
+  assert.notEqual(await evaluate("localStorage.getItem('brasscompass.save.v3')"), null);
+  assert.equal(await evaluate("localStorage.getItem('brasscompass.completed')"), "1");
   await shot("test-ending.png");
   await key("Enter");
-  // Explore Scenes from the title: every room reachable from a menu, and nothing saved.
   assert.equal(await evaluate("window.__game.title"), true);
+  // New Voyage over a save asks first; Escape keeps the save.
+  const savedBefore = await evaluate("localStorage.getItem('brasscompass.save.v3')");
+  const startButton = await evaluate("window.__game.titleButtons().find((b) => b.id === 'start')");
+  await click(960, startButton.y + 29);
+  assert.equal(await evaluate("window.__game.confirmNew"), true);
+  assert.equal(await evaluate("window.__game.title && !window.__game.cinematic.active"), true);
+  assert.equal(await evaluate("window.__game.titleButtons()[0].label"), "Yes — start anew");
+  await shot("test-title-confirm.png");
+  await key("Escape");
+  assert.equal(await evaluate("window.__game.confirmNew || window.__game.paused"), false);
+  assert.equal(await evaluate("localStorage.getItem('brasscompass.save.v3')"), savedBefore);
+  // Choosing it twice does start anew (the intro plays); back to the title for Chapter select.
+  await click(960, startButton.y + 29);
+  await click(960, startButton.y + 29);
+  assert.equal(await evaluate("window.__game.cinematic.active"), true);
+  await evaluate("(() => { const g = window.__game; g.cinematic.skip(); g.title = true; })()");
+  // Chapter select from the title: every room reachable from a menu, and nothing saved.
   await shot("test-title-explore.png");
+  const saveBeforeExplore = await evaluate("localStorage.getItem('brasscompass.save.v3')");
   const exploreButton = await evaluate("window.__game.titleButtons().find((b) => b.id === 'explore')");
   await click(960, exploreButton.y + 29);
   assert.equal(await evaluate("window.__game.explore && window.__game.roomMenu"), true);
@@ -1196,7 +1259,7 @@ try {
   await click(cabin.x + 40, cabin.y + 20);
   assert.equal(await evaluate("window.__game.room.id"), "marrow_cabin");
   assert.equal(await evaluate("window.__game.act"), 2);
-  assert.equal(await evaluate("localStorage.getItem('brasscompass.save.v3')"), null);
+  assert.equal(await evaluate("localStorage.getItem('brasscompass.save.v3')"), saveBeforeExplore);
   await key("r");
   assert.equal(await evaluate("window.__game.roomMenu"), true);
   await key("Escape");
@@ -1252,7 +1315,7 @@ try {
     g.loadRoom("tavern");
     const marta = g.room.hotspots.find((h) => h.id === "marta");
     const carry = g.hotspotTarget(marta);
-    // Easy play: hovering Marta lights up "Talk to"; right-clicking her starts the conversation.
+    // Easy play: hovering Marta lights up "Talk to"; a plain click on her starts the conversation.
     g.hoverHotspot = "marta";
     const suggest = g.panelModel().suggestVerb;
     const suggestLine = g.panelModel().suggestLine;
@@ -1260,7 +1323,7 @@ try {
     g.narration = null;
     const r = marta.area.rect;
     g.cameraX = Math.max(0, Math.min(640, r.x - 900)); g.focusCameraX = r.x + r.w / 2;
-    g.onClick(r.x + r.w / 2 - g.cameraX, r.y + r.h / 2, 2);
+    g.onClick(r.x + r.w / 2 - g.cameraX, r.y + r.h / 2, 0);
     window.__ff(400);
     const quick = g.dialogue?.tree.id;
     g.dialogue = null;
