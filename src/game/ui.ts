@@ -30,8 +30,16 @@ export interface PanelModel {
   selectedItem: string | null;
   /** The natural verb for whatever the pointer is over: lit up as a suggestion. */
   suggestVerb: VerbId | null;
-  /** "Talk to Marta": what a right-click on the hovered thing would do. */
+  /** "Talk to Marta": what a click on the hovered thing would do. */
   suggestLine: string | null;
+  /** The hovered thing is a way out: a click walks through it. */
+  suggestExit?: boolean;
+  /** UI text scale (1, 1.25, 1.5). Layout grows to fit. */
+  scale: number;
+  /** The last pointer was a finger: hints speak of taps. */
+  touch: boolean;
+  /** The line on screen is fully shown and something is waiting for a click. */
+  waiting: boolean;
 }
 
 export type PanelHit =
@@ -56,14 +64,29 @@ export function pageItems(model: PanelModel): Chip[] {
 const PANEL_Y = SCENE_H;
 
 const V_X = 40;
-const V_Y = 892;
 const V_W = 152;
-const V_H = 40;
 const V_GAP_X = 6;
-const V_GAP_Y = 8;
+
+/**
+ * The panel's vertical layout at a text scale. At 100% this is the original layout; larger
+ * text makes the verb buttons taller and moves the sentence line down into the slack.
+ */
+function panelLayout(scale: number) {
+  const vh = Math.round(40 + (scale - 1) * 28);      // 40, 47, 54
+  const gap = scale > 1 ? 6 : 8;
+  const vy = scale > 1 ? 888 : 892;
+  const sentY = vy + 2 * vh + gap + (scale > 1 ? 6 : 12);
+  const line1 = Math.round(Math.min(34, 27 * scale));
+  return {
+    vy, vh, gap, sentY,
+    /** Sentence line sizes: the main line, and the hint or second object below it. */
+    line1,
+    line2: Math.round(Math.min(23, 20 * scale)),
+    line2Y: sentY + line1 + (scale > 1 ? 3 : 11),
+  };
+}
 
 const SENT_X = 40;
-const SENT_Y = 992;
 const SENT_W = 940;
 
 const INV_X = 1010;
@@ -83,15 +106,25 @@ export const COLORS = {
   gold: "#c9a24a",
 };
 
-export function verbRect(i: number): { x: number; y: number; w: number; h: number } {
+export function verbRect(i: number, scale = 1): { x: number; y: number; w: number; h: number } {
+  const l = panelLayout(scale);
   const col = i % 6;
   const row = Math.floor(i / 6);
   return {
     x: V_X + col * (V_W + V_GAP_X),
-    y: V_Y + row * (V_H + V_GAP_Y),
+    y: l.vy + row * (l.vh + l.gap),
     w: V_W,
-    h: V_H,
+    h: l.vh,
   };
+}
+
+/** The largest size, from `size` down to `min`, at which `text` fits in `maxWidth`. */
+function fitSize(ctx: CanvasRenderingContext2D, text: string, maxWidth: number, size: number, min: number, weight = "normal"): number {
+  for (; size > min; size--) {
+    ctx.font = `${weight} ${size}px Georgia, "Times New Roman", serif`;
+    if (ctx.measureText(text).width <= maxWidth) break;
+  }
+  return size;
 }
 
 function itemRect(i: number): { x: number; y: number; w: number; h: number } {
@@ -117,7 +150,7 @@ export function hitTestPanel(x: number, y: number, model: PanelModel): PanelHit 
   if (y < PANEL_Y) return null;
 
   for (let i = 0; i < VERBS.length; i++) {
-    if (inRect(x, y, verbRect(i))) return { kind: "verb", id: VERBS[i].id };
+    if (inRect(x, y, verbRect(i, model.scale))) return { kind: "verb", id: VERBS[i].id };
   }
   const shown = pageItems(model);
   for (let i = 0; i < shown.length; i++) {
@@ -127,7 +160,8 @@ export function hitTestPanel(x: number, y: number, model: PanelModel): PanelHit 
     if (inRect(x, y, PAGE_PREV)) return { kind: "page", delta: -1 };
     if (inRect(x, y, PAGE_NEXT)) return { kind: "page", delta: 1 };
   }
-  if (inRect(x, y, { x: SENT_X, y: SENT_Y - 8, w: SENT_W, h: 84 })) {
+  const l = panelLayout(model.scale);
+  if (inRect(x, y, { x: SENT_X, y: l.sentY - 8, w: SENT_W, h: LOGICAL_H - l.sentY + 8 })) {
     return { kind: "sentence" };
   }
   return null;
@@ -165,7 +199,7 @@ export function drawPanel(ctx: CanvasRenderingContext2D, model: PanelModel): voi
 
 function drawVerbs(ctx: CanvasRenderingContext2D, model: PanelModel): void {
   VERBS.forEach((v, i) => {
-    const r = verbRect(i);
+    const r = verbRect(i, model.scale);
     const active = model.verb === v.id;
     const hover = model.hoverVerb === v.id;
     const focused = model.focusVerb === v.id;
@@ -197,27 +231,39 @@ function drawVerbs(ctx: CanvasRenderingContext2D, model: PanelModel): void {
       ctx.strokeRect(r.x + 3, r.y + 3, r.w - 6, r.h - 6);
     }
 
-    drawText(ctx, v.label, r.x + 14, r.y + 9, {
-      size: 21,
+    const weight = active ? "bold" : "normal";
+    const size = fitSize(ctx, v.label, r.w - 20, Math.round(21 * model.scale), 18, weight);
+    drawText(ctx, v.label, r.x + (model.scale > 1 ? r.w / 2 : 14), r.y + Math.round((r.h - size) / 2) - 1, {
+      size,
       color: focused || active || suggested ? COLORS.verbActive : hover ? COLORS.verbHover : COLORS.verb,
-      weight: active ? "bold" : "normal",
+      weight,
+      align: model.scale > 1 ? "center" : "left",
       shadow: false,
     });
   });
 }
 
 function drawSentence(ctx: CanvasRenderingContext2D, model: PanelModel): void {
+  const l = panelLayout(model.scale);
   if (model.narration) {
-    const lines = wrap(ctx, model.narrationFull ?? model.narration, 1760, { size: 26, color: "" });
-    const height = Math.max(92, lines.length * 34 + 46);
-    const top = SCENE_H - height - 12;
+    const size = Math.round(26 * model.scale);
+    const lh = Math.round(size * 1.31);
+    const lines = wrap(ctx, model.narrationFull ?? model.narration, 1760, { size, color: "" });
+    const height = Math.max(Math.round(92 * model.scale), lines.length * lh + 46);
+    const top = Math.max(76, SCENE_H - height - 12);
     ctx.fillStyle = "rgba(5,13,22,0.94)";
     ctx.fillRect(40, top, 1840, height);
     ctx.fillStyle = COLORS.gold;
     ctx.fillRect(40, top, 4, height);
     drawWrapped(ctx, model.narration, 68, top + 20, {
-      size: 26, color: COLORS.narration, maxWidth: 1760, lineHeight: 34,
+      size, color: COLORS.narration, maxWidth: 1760, lineHeight: lh,
     });
+    if (model.waiting && model.narration === model.narrationFull) {
+      // Something is waiting on this line: say how to move on.
+      drawText(ctx, model.touch ? "tap \u25B8" : "click \u25B8", 1860, top + height - 34, {
+        size: 20, color: "#e8c98a", align: "right", shadow: false,
+      });
+    }
   }
 
   const verbLabel = model.verb ? VERBS.find((v) => v.id === model.verb)?.label ?? "" : "";
@@ -225,56 +271,62 @@ function drawSentence(ctx: CanvasRenderingContext2D, model: PanelModel): void {
   const b = model.objB ?? "";
   const line1 = [verbLabel, a].filter(Boolean).join(" ");
 
+  const hint = (text: string) => drawText(ctx, text, SENT_X, l.line2Y, {
+    size: fitSize(ctx, text, SENT_W, l.line2, 18), color: "#c3d3da", shadow: false,
+  });
   if (line1) {
-    drawText(ctx, line1, SENT_X, SENT_Y + 4, {
-      size: 27,
+    drawText(ctx, line1, SENT_X, l.sentY + 4, {
+      size: fitSize(ctx, line1, SENT_W, l.line1, 20, "bold"),
       color: COLORS.sentence,
       weight: "bold",
     });
   } else if (model.suggestLine) {
-    drawText(ctx, model.suggestLine, SENT_X, SENT_Y + 4, {
-      size: 27, color: "rgba(232,201,138,0.85)", weight: "bold",
+    drawText(ctx, model.suggestLine, SENT_X, l.sentY + 4, {
+      size: fitSize(ctx, model.suggestLine, SENT_W, l.line1, 20, "bold"), color: "#ecd29a", weight: "bold",
     });
-    drawText(ctx, "right-click to do it · or choose another verb", SENT_X, SENT_Y + 42, {
-      size: 20, color: "#b6c9d0", shadow: false,
-    });
+    if (!b) {
+      hint(model.touch
+        ? (model.suggestExit ? "tap again to go through · long-press to look" : "tap again to do it · long-press to look · or pick a verb")
+        : (model.suggestExit ? "click to go through (double-click: at once) · right-click to look" : "click to do it · right-click to look · or pick a verb"));
+    }
   } else {
-    drawText(ctx, "Click to walk · Choose a verb · J — casebook", SENT_X, SENT_Y + 6, {
-      size: 22,
-      color: "#a9bac7",
+    const idle = model.touch
+      ? "Tap a thing to see it, again to act · tap the floor to walk"
+      : "Click a thing to act · right-click to look · hold Q to reveal";
+    drawText(ctx, idle, SENT_X, l.sentY + 6, {
+      size: fitSize(ctx, idle, SENT_W, Math.round(Math.min(28, 22 * model.scale)), 18),
+      color: "#b9c8d3",
       weight: "normal",
       shadow: false,
     });
   }
 
   if (b) {
-    drawText(ctx, `${model.verb === "give" ? "to" : "with"} ${b}`, SENT_X, SENT_Y + 42, {
-      size: 25,
+    drawText(ctx, `${model.verb === "give" ? "to" : "with"} ${b}`, SENT_X, l.line2Y, {
+      size: Math.round(Math.min(28, 25 * model.scale)),
       color: COLORS.sentence,
     });
   } else if (model.objA && (model.verb === "use" || model.verb === "give")) {
-    drawText(ctx, model.verb === "give" ? "Choose who receives it" : "Choose an object to use it with", SENT_X, SENT_Y + 42, {
-      size: 20, color: "#b6c9d0", shadow: false,
-    });
+    hint(model.verb === "give" ? "Choose who receives it" : "Choose an object to use it with");
   }
 }
 
 function drawInventory(ctx: CanvasRenderingContext2D, model: PanelModel): void {
-  drawText(ctx, "INVENTORY", INV_X, 890, {
-    size: 13,
-    color: "rgba(201,162,74,0.75)",
+  drawText(ctx, "INVENTORY", INV_X, 889, {
+    size: 18,
+    color: "#d4b064",
     weight: "bold",
     shadow: false,
   });
-  ctx.font = "bold 13px Georgia, serif";
+  ctx.font = "bold 18px Georgia, serif";
   const w = ctx.measureText("INVENTORY").width;
-  ctx.fillStyle = "rgba(201,162,74,0.28)";
-  ctx.fillRect(INV_X + w + 12, 897, 220, 1);
+  ctx.fillStyle = "rgba(201,162,74,0.35)";
+  ctx.fillRect(INV_X + w + 12, 899, 220, 1);
 
   if (model.inventory.length === 0) {
     drawText(ctx, "empty pockets", INV_X, INV_Y + 22, {
-      size: 19,
-      color: "rgba(160,150,170,0.5)",
+      size: Math.round(20 * model.scale),
+      color: "rgba(176,166,186,0.8)",
       weight: "normal",
       shadow: false,
     });
@@ -296,9 +348,9 @@ function drawInventory(ctx: CanvasRenderingContext2D, model: PanelModel): void {
     };
     arrow(PAGE_PREV, "\u2039", page > 0);
     arrow(PAGE_NEXT, "\u203A", page < pages - 1);
-    drawText(ctx, `${page + 1}/${pages}`, (PAGE_PREV.x + PAGE_NEXT.x + PAGE_NEXT.w) / 2, 886, {
-      size: 16,
-      color: "rgba(201,162,74,0.7)",
+    drawText(ctx, `${page + 1}/${pages}`, (PAGE_PREV.x + PAGE_NEXT.x + PAGE_NEXT.w) / 2, 884, {
+      size: 18,
+      color: "#d4b064",
       align: "center",
       shadow: false,
     });
@@ -324,10 +376,18 @@ function drawInventory(ctx: CanvasRenderingContext2D, model: PanelModel): void {
       ctx.lineWidth = 2.5;
       ctx.strokeRect(r.x + 3, r.y + 3, r.w - 6, r.h - 6);
     }
-    const lines = wrap(ctx, it.name, r.w - 24, { size: 18, color: "" });
+    // Largest size, up to the scale, at which the name fits in two lines.
+    let size = Math.round(19 * model.scale);
+    let lines = wrap(ctx, it.name, r.w - 24, { size, color: "" });
+    while (size > 18 && (lines.length > 2 || lines.length * (size + 4) > r.h - 12)) {
+      size--;
+      lines = wrap(ctx, it.name, r.w - 24, { size, color: "" });
+    }
+    const lh = size + 4;
+    const top = r.y + Math.round((r.h - Math.min(2, lines.length) * lh) / 2) + 1;
     lines.slice(0, 2).forEach((ln, li) => {
-      drawText(ctx, ln, r.x + 12, r.y + 14 + li * 22, {
-        size: 18,
+      drawText(ctx, ln, r.x + 12, top + li * lh, {
+        size,
         color: focused || hover ? COLORS.itemHover : COLORS.item,
         shadow: false,
       });
@@ -342,16 +402,18 @@ export function drawCursor(
   x: number,
   y: number,
   label: string | null,
-  rejected = false
+  rejected = false,
+  scale = 1
 ): void {
   if (label) {
     ctx.save();
-    ctx.font = "italic 20px Georgia, serif";
+    const size = Math.round(20 * scale);
+    ctx.font = `italic ${size}px Georgia, serif`;
     const w = ctx.measureText(label).width;
     const bx = Math.max(8, Math.min(x + 24, LOGICAL_W - w - 28));
-    const by = Math.max(8, Math.min(y + 22, LOGICAL_H - 44));
+    const by = Math.max(8, Math.min(y + 22, LOGICAL_H - size - 24));
     ctx.fillStyle = "rgba(4,6,12,0.82)";
-    ctx.fillRect(bx - 8, by - 4, w + 16, 30);
+    ctx.fillRect(bx - 8, by - 4, w + 16, size + 10);
     ctx.fillStyle = "#f2e7c9";
     ctx.textBaseline = "top";
     ctx.fillText(label, bx, by + 2);
@@ -385,6 +447,9 @@ export interface DialogueModel {
   choices: { text: string; index: number }[];
   hoverIndex: number;
   layout: DialogueLayout;
+  /** Text scale, as in the panel. */
+  scale: number;
+  touch: boolean;
 }
 
 interface DialogueLayout {
@@ -392,21 +457,31 @@ interface DialogueLayout {
   bodyY: number; rects: { x: number; y: number; w: number; h: number }[];
 }
 
-export function dialogueLayout(ctx: CanvasRenderingContext2D, text: string, choices: string[]): DialogueLayout {
-  let size = 27, lineHeight = 38;
+export function dialogueLayout(ctx: CanvasRenderingContext2D, text: string, choices: string[], scale = 1): DialogueLayout {
+  // Start at the scaled size and shrink only as far as needed to fit; never below 20px.
+  let size = Math.round(27 * scale), lineHeight = 38;
   let bodyHeight = 0, heights: number[] = [], height = 0;
+  const pad = Math.round(16 * scale);
+  const footer = dialogueFooterSize(scale);
+  const bodyOffset = 76 + Math.round(12 * (scale - 1));
   do {
-    lineHeight = size + 11;
+    lineHeight = size + Math.round(11 * Math.min(scale, 1.25));
     bodyHeight = wrap(ctx, text, 1430, { size, color: "" }).length * lineHeight;
-    heights = choices.map(c => Math.max(48, wrap(ctx, c, 1350, { size: size - 2, color: "" }).length * lineHeight + 16));
-    height = Math.max(420, 140 + bodyHeight + heights.reduce((sum, h) => sum + h + 6, 0));
-    if (height <= 940 || size <= 16) break;
+    heights = choices.map(c => Math.max(48, wrap(ctx, c, 1350, { size: size - 2, color: "" }).length * lineHeight + pad));
+    const choicesHeight = heights.reduce((sum, h) => sum + h + 6, 0);
+    height = Math.max(420, bodyOffset + bodyHeight + 30 + choicesHeight + 8 + footer + 20);
+    if (height <= 1040 || size <= 20) break;
     size--;
   } while (true);
-  const top = Math.max(40, 1040 - height);
-  let y = top + 88 + bodyHeight + 18;
-  return { top, height, size, lineHeight, bodyY: top + 76,
+  const top = Math.max(20, 1060 - height);
+  const bodyY = top + bodyOffset;
+  let y = bodyY + bodyHeight + 30;
+  return { top, height, size, lineHeight, bodyY,
     rects: heights.map(h => { const r = { x: 386, y, w: 1430, h }; y += h + 6; return r; }) };
+}
+
+function dialogueFooterSize(scale: number): number {
+  return Math.round(Math.min(24, 19 * scale));
 }
 
 export function drawDialogue(ctx: CanvasRenderingContext2D, m: DialogueModel): void {
@@ -425,7 +500,7 @@ export function drawDialogue(ctx: CanvasRenderingContext2D, m: DialogueModel): v
       p.y + (p.h - m.portrait.height * s) / 2, m.portrait.width * s, m.portrait.height * s);
     ctx.restore();
   }
-  drawText(ctx, m.speaker, 386, l.top + 30, { size: 22, color: m.speakerAccent ?? "#edce91", weight: "bold" });
+  drawText(ctx, m.speaker, 386, l.top + 30, { size: Math.round(Math.min(30, 22 * m.scale)), color: m.speakerAccent ?? "#edce91", weight: "bold" });
   drawWrapped(ctx, typewriterSlice(m.text, m.reveal), 386, l.bodyY, {
     size: l.size, color: "#f0e7d6", maxWidth: 1430, lineHeight: l.lineHeight,
   });
@@ -433,13 +508,17 @@ export function drawDialogue(ctx: CanvasRenderingContext2D, m: DialogueModel): v
     const r = l.rects[i], hover = m.hoverIndex === i;
     ctx.fillStyle = hover ? "#304955" : "#152e3c";
     ctx.fillRect(r.x, r.y, r.w, r.h);
-    drawText(ctx, String(i + 1), r.x + 14, r.y + 12, { size: l.size - 2, color: "#e8c98a" });
-    drawWrapped(ctx, choice.text, r.x + 56, r.y + 10, {
+    const inset = Math.round((l.lineHeight - (l.size - 2)) / 2) + 6;
+    drawText(ctx, String(i + 1), r.x + 14, r.y + inset, { size: l.size - 2, color: "#e8c98a" });
+    drawWrapped(ctx, choice.text, r.x + 56, r.y + inset - 2, {
       size: l.size - 2, color: hover ? "#ffffff" : "#cbd9de", maxWidth: 1350, lineHeight: l.lineHeight,
     });
   });
-  drawText(ctx, m.choices.length ? "Number keys choose · Right-click closes" : "Click to continue",
-    386, l.top + l.height - 28, { size: 16, color: "#a4b9c3", shadow: false });
+  const footer = m.choices.length
+    ? (m.touch ? "Tap a reply · long-press to leave" : "Click a reply or press its number · right-click to leave")
+    : (m.touch ? "Tap to continue" : "Click to continue");
+  const fs = dialogueFooterSize(m.scale);
+  drawText(ctx, footer, 386, l.top + l.height - fs - 20, { size: fs, color: "#c3d3da", shadow: false });
 }
 
 export function dialogueHit(x: number, y: number, m: DialogueModel): number | null {

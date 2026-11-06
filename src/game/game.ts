@@ -11,6 +11,11 @@ import {
   INV_PER_PAGE, COLORS, type PanelModel, type DialogueModel, type Chip,
 } from "./ui";
 import { Settings } from "./settings";
+import { History } from "./history";
+import {
+  loadPrefs, savePrefs, osReducedMotion, hasCompleted, markCompleted,
+  NARRATION_CPS, DIALOGUE_CPS, type Prefs,
+} from "./prefs";
 import { CinematicPlayer } from "./cinematic";
 import { VERBS } from "./verbs";
 import { characterOf } from "../content/characters";
@@ -34,8 +39,17 @@ import { DIALOGUES } from "../content/dialogue";
 import { GLOBAL_COMBOS } from "../content/combos";
 import { TIPS } from "../content/hints";
 
-/** Top-bar buttons: one definition, used for both drawing and hit-testing. */
-const BAR = { y: 18, h: 44, tip: [1300, 160], casebook: [1470, 190], pause: [1690, 206] } as const;
+/** Top-bar buttons: one definition, used for both drawing and hit-testing. Right-aligned. */
+const BAR = {
+  y: 18, h: 44,
+  reveal: [1126, 150], log: [1286, 120], tip: [1416, 120], casebook: [1546, 170], pause: [1726, 170],
+} as const;
+type BarId = "reveal" | "log" | "tip" | "casebook" | "pause";
+const BAR_LABELS: Record<BarId, string> = {
+  reveal: "Reveal (Q)", log: "Log (L)", tip: "Tip (H)", casebook: "Casebook (J)", pause: "Pause (Esc)",
+};
+/** Below the top bar: where the tip-mode line and other banners sit, clear of the buttons. */
+const BANNER_Y = 70;
 
 const TIPS_KEY = "brasscompass.tips.v1";
 
@@ -75,12 +89,15 @@ const STRIDE = 0.85; // body heights per full walk cycle (two steps)
 // Floor seen from eye height is foreshortened: a stride toward the camera covers far fewer screen
 // pixels than a stride across it. Physically ~0.25 here; 0.45 keeps depth walks from dragging.
 const DEPTH_SPEED = 0.45;
-const NARRATION_SPEED = 62;
 /**
- * How long a line stays up, once fully shown, before an effect that would replace it runs.
- * A click skips the wait.
+ * How long a line stays up, once fully shown, before an effect that would replace it runs: at
+ * least this, and at least long enough to read it (see `lineDue`). A click skips the wait.
  */
-const HOLD: Partial<Record<Effect["k"], number>> = { talk: 0.5, say: 0.6, act: 2.4, win: 2.5 };
+const HOLD: Partial<Record<Effect["k"], number>> = { talk: 1.5, say: 1.5, act: 2.4, win: 2.5 };
+/** Reading speed, characters per second, for how long a line must stay up. */
+const READ_CPS = 18;
+/** Running is this much quicker than walking (double-click the floor). */
+const RUN_FACTOR = 2.2;
 /** Effects that hand the screen to something else; nothing after one in a list runs. */
 const TERMINAL: ReadonlySet<Effect["k"]> = new Set(["go", "talk", "act", "win"]);
 /**
@@ -134,6 +151,18 @@ export class Game {
   private hoverHotspot: string | null = null;
   private hoverChoice = -1;
   private keyboardFocus: KeyboardFocus | null = null;
+  /** Reveal: every hotspot outlined and named. Held with Q, or toggled by its button. */
+  private revealHeld = false;
+  private revealToggled = false;
+  /** Touch: the hotspot a first tap showed; a second tap on it acts. */
+  private touchArmed: string | null = null;
+  private touch = false;
+  /** Running (double-click), and where the current walk is headed. */
+  private running = false;
+  private walkGoal: Pt | null = null;
+  /** New Voyage is asking for confirmation before it replaces the save. */
+  private confirmNew = false;
+  private cursorStyle = "";
   private cameraX = 0;
   private focusCameraX: number | null = null;
   private rejection = 0;
@@ -143,6 +172,8 @@ export class Game {
   private settings: Settings;
   private cinematic: CinematicPlayer;
   private casebook: Casebook;
+  private history: History;
+  private prefs: Prefs = loadPrefs();
 
   constructor(
     private view: View,
@@ -164,21 +195,51 @@ export class Game {
       },
       mute: () => { this.audio.toggleMute(); },
       volume: (value) => this.audio.setVolume(value),
+      musicVolume: (value) => this.audio.setMusicVolume(value),
+      sfxVolume: (value) => this.audio.setSfxVolume(value),
       audio: () => this.audio,
       tips: () => this.tipMode,
       toggleTips: () => this.setTipMode(!this.tipMode),
+      prefs: () => this.prefs,
+      setPrefs: (change) => {
+        this.prefs = { ...this.prefs, ...change };
+        savePrefs(this.prefs);
+      },
+      reduced: () => this.reduced,
     });
     try { this.tipMode = localStorage.getItem(TIPS_KEY) === "on"; } catch { this.tipMode = false; }
     this.cinematic = new CinematicPlayer(() => this.audio);
     const titles: Record<number, string> = {};
     for (const [n, a] of Object.entries(ACTS)) titles[Number(n)] = `${a.title}`;
     this.casebook = new Casebook(titles, () => this.persist());
+    this.history = new History(() => { /* nothing to resume */ });
   }
   /** Tip mode keeps the current tip on screen. Remembered per browser, separate from saves. */
   private tipMode = false;
   private saveBroken = false;
-  /** Respect the OS setting: no typewriter, no breathing, no twinkle, no pulsing outline. */
-  private reduced = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  /**
+   * Reduced motion (the setting, else the OS): no breathing, no twinkle, no pulsing outline, and
+   * text appears at once unless a text speed has been chosen.
+   */
+  private get reduced(): boolean {
+    return this.prefs.reducedMotion ?? osReducedMotion();
+  }
+  private get textSpeed() {
+    return this.prefs.textSpeed ?? (this.reduced ? "instant" : "normal");
+  }
+  /** Seconds the typewriter takes over `chars` characters of narration. */
+  private typeTime(chars: number): number {
+    const cps = NARRATION_CPS[this.textSpeed];
+    return Number.isFinite(cps) ? chars / cps : 0;
+  }
+  /** When (on the narration clock) the line on screen has been up long enough to replace. */
+  private lineDue(kind: Effect["k"]): number {
+    const chars = this.narration?.text.length ?? 0;
+    return this.typeTime(chars) + Math.max(HOLD[kind] ?? 0, chars / READ_CPS);
+  }
+  private get textScale(): number {
+    return this.prefs.textScale;
+  }
   private live: HTMLElement | null = null;
   /** Seconds spent waiting for a room's art to arrive. */
   private roomWait = 0;
@@ -198,7 +259,7 @@ export class Game {
     this.speak(`Tip: ${this.currentTip()}`);
   }
 
-  /** The verb a sensible person would use on this: lit up on hover, done by right-click. */
+  /** The verb a sensible person would use on this: lit up on hover, done by a plain click. */
   private suggestedVerb(hs: Hotspot): VerbId {
     if (hs.verb) return hs.verb;
     if (hs.do?.talk) return "talk";
@@ -232,9 +293,18 @@ export class Game {
         this.startAct(n);
       };
     }
-    this.input.onDown((x, y, button) => this.onClick(x, y, button));
-    this.input.onMove((x, y) => this.onMove(x, y));
+    this.input.onDown((x, y, button, info) => {
+      this.touch = info.kind !== "mouse";
+      this.onClick(x, y, button, info.clicks);
+    });
+    this.input.onMove((x, y, _b, info) => {
+      if (info.kind === "mouse") this.touch = false;
+      this.onMove(x, y);
+    });
     this.input.onKey((k, event) => this.onKey(k, event));
+    this.input.onKeyUp((k) => {
+      if (k === "" || k.toLowerCase() === "q") this.revealHeld = false;
+    });
     this.loadRoom(START_ROOM, START_POS);
     requestAnimationFrame((t) => this.frame(t));
   }
@@ -264,13 +334,19 @@ export class Game {
   private onKey(k: string, event: KeyboardEvent): void {
     if (this.paused || this.cinematic.active) return;
     if (this.explore && this.exploreKey(k, event)) return;
-    if (this.casebook.open) {
+    if (this.casebook.open || this.history.open) {
       // The overlay has focus of its own; never let a stray key reach the game behind it.
       event.preventDefault();
       if (k === "Escape" || k.toLowerCase() === "j") this.casebook.hide();
+      if (k === "Escape" || k.toLowerCase() === "l") this.history.hide();
       return;
     }
     this.audio.unlock();
+    if (this.title && this.confirmNew && k === "Escape") {
+      event.preventDefault();
+      this.cancelConfirmNew();
+      return;
+    }
     if (k === "Escape" && !this.won) {
       event.preventDefault();
       this.setPaused(true);
@@ -292,6 +368,18 @@ export class Game {
       this.casebook.show(this.notes);
       return;
     }
+    if (k.toLowerCase() === "l" && !this.title && !this.cinematic.active) {
+      event.preventDefault();
+      this.history.show();
+      return;
+    }
+    if (k.toLowerCase() === "q" && !this.title && !this.won) {
+      // Held, not toggled: let go and the outlines go with it.
+      event.preventDefault();
+      if (!this.revealHeld && !event.repeat) this.announce(this.revealSummary());
+      this.revealHeld = true;
+      return;
+    }
     if ((k === "h" || k === "H") && !this.title && !this.won && !this.dialogue && !this.queue) {
       this.showTip();
       return;
@@ -306,11 +394,14 @@ export class Game {
       const buttons = this.titleButtons();
       const focus = buttons.findIndex((b) => b.id === this.titleFocus);
       if ((k === "c" || k === "C") && this.hasSave) this.titleActivate("continue");
-      else if (k === "e" || k === "E") this.titleActivate("explore");
+      else if ((k === "e" || k === "E") && this.chaptersUnlocked()) this.titleActivate("explore");
       else if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Tab"].includes(k)) {
         event.preventDefault();
-        const delta = k === "ArrowUp" || k === "ArrowLeft" ? -1 : 1;
-        this.titleFocus = buttons[(focus + delta + buttons.length) % buttons.length].id;
+        const delta = k === "ArrowUp" || k === "ArrowLeft" || (k === "Tab" && event.shiftKey) ? -1 : 1;
+        const next = buttons[(focus + delta + buttons.length) % buttons.length];
+        this.titleFocus = next.id;
+        if (next.id !== "start") this.confirmNew = false;
+        this.announce(`${next.label}, button ${buttons.indexOf(next) + 1} of ${buttons.length}`);
       } else if (k === "Enter" || k === " ") {
         event.preventDefault();
         this.titleActivate(focus < 0 ? "start" : this.titleFocus!);
@@ -320,7 +411,7 @@ export class Game {
     if (this.narration && this.narration.shown < this.narration.text.length) {
       event.preventDefault();
       this.narration.shown = this.narration.text.length;
-      this.narrationClock = this.narration.text.length / NARRATION_SPEED;
+      this.narrationClock = this.typeTime(this.narration.text.length);
       return;
     }
     if (this.queue) {
@@ -337,6 +428,7 @@ export class Game {
         event.preventDefault();
         const delta = k === "ArrowUp" || k === "ArrowLeft" ? -1 : 1;
         this.hoverChoice = (this.hoverChoice + delta + choices.length) % choices.length;
+        this.announce(`${this.hoverChoice + 1} of ${choices.length}: ${choices[this.hoverChoice].text}`);
       } else if (k === "Enter" || k === " ") {
         event.preventDefault();
         const node = this.currentNode();
@@ -403,6 +495,7 @@ export class Game {
       : (current + delta + targets.length) % targets.length;
     this.keyboardFocus = targets[next];
     this.syncKeyboardCamera();
+    this.announceFocus();
   }
 
   private moveFocusGrid(key: string): void {
@@ -420,6 +513,7 @@ export class Game {
       const next = targets[(current + delta + targets.length) % targets.length];
       this.keyboardFocus = { kind: "hotspot", id: next.id };
       this.syncKeyboardCamera();
+      this.announceFocus();
       return;
     }
     const columns = focus.kind === "verb" ? 6 : 4;
@@ -439,6 +533,28 @@ export class Game {
     const next = Math.min(ids.length - 1, nextRow * columns + nextCol);
     this.keyboardFocus = { kind: focus.kind, id: ids[next] } as KeyboardFocus;
     this.syncKeyboardCamera();
+    this.announceFocus();
+  }
+
+  /** Say what keyboard focus landed on: the canvas can't tell a screen reader itself. */
+  private announceFocus(): void {
+    const f = this.keyboardFocus;
+    if (!f) return;
+    if (f.kind === "verb") {
+      const i = VERBS.findIndex((v) => v.id === f.id);
+      this.announce(`Verb: ${VERBS[i]?.label ?? f.id}, ${i + 1} of ${VERBS.length}`);
+    } else if (f.kind === "item") {
+      const items = this.pageInventory();
+      this.announce(`Item: ${ITEMS[f.id]?.name ?? f.id}, ${items.indexOf(f.id) + 1} of ${items.length}`);
+    } else {
+      const all = this.visibleHotspots();
+      const raw = all.find((h) => h.id === f.id);
+      if (!raw) return;
+      const hs = this.hotspotState(raw);
+      const verb = this.isExit(hs) ? "Go through" : VERBS.find((v) => v.id === this.suggestedVerb(hs))?.label;
+      const action = this.sentence.verb ? "" : ` Enter: ${verb}.`;
+      this.announce(`${hs.name}, ${all.indexOf(raw) + 1} of ${all.length}.${action}`);
+    }
   }
 
   private syncKeyboardCamera(): void {
@@ -498,22 +614,50 @@ export class Game {
     this.hoverHotspot = hs?.id ?? null;
   }
 
-  private onClick(x: number, y: number, button: number): void {
-    if (this.paused || this.cinematic.active || this.casebook.open) return;
+  /** Which top-bar button a point is on, if any. */
+  private barHit(x: number, y: number): BarId | null {
+    if (this.title || this.won || y < BAR.y || y > BAR.y + BAR.h) return null;
+    for (const id of Object.keys(BAR_LABELS) as BarId[]) {
+      const b = BAR[id];
+      if (x >= b[0] && x <= b[0] + b[1]) return id;
+    }
+    return null;
+  }
+
+  /** Whether the reveal outlines are showing (Q held, or the button toggled on). */
+  private get revealing(): boolean {
+    return (this.revealHeld || this.revealToggled) && !this.title && !this.won && !this.dialogue;
+  }
+  private revealSummary(): string {
+    const names = this.visibleHotspots().map((h) => this.hotspotState(h).name);
+    return names.length ? `In ${this.room.name}: ${names.join(", ")}.` : `Nothing to use in ${this.room.name}.`;
+  }
+
+  /** A way out: walking to it runs its walk effects (a door, a gangway, the stairs). */
+  private isExit(hs: Hotspot): boolean {
+    return Boolean(this.hotspotState(hs).do?.walk?.length);
+  }
+
+  private onClick(x: number, y: number, button: number, clicks = 1): void {
+    if (this.paused || this.cinematic.active || this.casebook.open || this.history.open) return;
     if (this.roomMenu) { this.roomMenuClick(x, y); return; }
     this.audio.unlock();
     this.keyboardFocus = null;
     this.focusCameraX = null;
 
-    if (!this.title && !this.won && y <= BAR.y + BAR.h) {
-      const inBar = (b: readonly [number, number]) => x >= b[0] && x <= b[0] + b[1];
-      if (inBar(BAR.pause)) { this.setPaused(true); return; }
-      if (inBar(BAR.casebook)) { this.casebook.show(this.notes); return; }
-      if (inBar(BAR.tip)) {
-        // Like H: a tip would talk over a conversation or a line still waiting its turn.
-        if (!this.dialogue && !this.queue && !this.inputLocked()) this.showTip();
-        return;
-      }
+    const bar = this.barHit(x, y);
+    if (bar === "pause") { this.setPaused(true); return; }
+    if (bar === "casebook") { this.casebook.show(this.notes); return; }
+    if (bar === "log") { this.history.show(); return; }
+    if (bar === "reveal") {
+      this.revealToggled = !this.revealToggled;
+      this.announce(this.revealToggled ? this.revealSummary() : "Reveal off.");
+      return;
+    }
+    if (bar === "tip") {
+      // Like H: a tip would talk over a conversation or a line still waiting its turn.
+      if (!this.dialogue && !this.queue && !this.inputLocked()) this.showTip();
+      return;
     }
     if (this.inputLocked()) return;
 
@@ -526,12 +670,13 @@ export class Game {
     if (this.title) {
       const hit = this.titleButtons().find((b) => this.hitTitle(b.y, x, y));
       if (hit) this.titleActivate(hit.id);
+      else if (this.confirmNew) this.cancelConfirmNew();
       return;
     }
 
     if (this.narration && this.narration.shown < this.narration.text.length) {
       this.narration.shown = this.narration.text.length;
-      this.narrationClock = this.narration.text.length / NARRATION_SPEED;
+      this.narrationClock = this.typeTime(this.narration.text.length);
       return;
     }
     if (this.queue) {
@@ -559,22 +704,32 @@ export class Game {
       return;
     }
 
+    const hit = hitTestPanel(x, y, this.panelModel());
+
     if (button === 2) {
-      // Right-click on a thing does its natural verb; anywhere else, or mid-sentence, cancels.
-      const quick = !this.sentence.verb && !this.sentence.a && y < SCENE_H
-        ? this.hotspotAt(x + this.cameraX, y) : null;
-      if (quick) {
-        this.setVerb(this.suggestedVerb(quick));
-        this.onHotspotClick(quick);
+      // Right-click looks at a thing (in the scene or the satchel). Mid-sentence, or on
+      // anything else, it cancels.
+      this.touchArmed = null;
+      const fresh = !this.sentence.verb && !this.sentence.a;
+      if (fresh && hit?.kind === "item") {
+        this.audio.click();
+        this.setVerb("look");
+        this.pickItem(hit.id);
         return;
       }
-      this.path = []; this.onArrive = null;
+      const look = fresh && y < SCENE_H ? this.hotspotAt(x + this.cameraX, y) : null;
+      if (look) {
+        this.setVerb("look");
+        this.onHotspotClick(look);
+        return;
+      }
+      this.path = []; this.onArrive = null; this.walkGoal = null; this.running = false;
       this.clearSentence();
       return;
     }
 
-    const hit = hitTestPanel(x, y, this.panelModel());
     if (hit) {
+      this.touchArmed = null;
       this.onPanelHit(hit);
       return;
     }
@@ -583,11 +738,27 @@ export class Game {
 
     const hs = this.hotspotAt(x + this.cameraX, y);
     if (!hs) {
-      this.walkTo(clampToFloor({ x: x + this.cameraX, y }, this.room.walk), true);
+      this.touchArmed = null;
+      const target = clampToFloor({ x: x + this.cameraX, y }, this.room.walk);
+      // A double-click, or a second click on where Fenn is already headed, runs.
+      const again = this.path.length > 0 && this.walkGoal !== null &&
+        Math.hypot(target.x - this.walkGoal.x, target.y - this.walkGoal.y) < 60;
+      this.walkTo(target, true);
+      if ((clicks >= 2 || again) && this.path.length > 0) this.running = true;
       return;
     }
 
-    this.onHotspotClick(hs);
+    // Touch has no hover: a first tap on a thing names it and lights up what a tap would do;
+    // a second tap does it. With a verb already chosen the player has said what they want.
+    if (this.touch && !this.sentence.verb && this.touchArmed !== hs.id && clicks < 2) {
+      this.touchArmed = hs.id;
+      this.hoverHotspot = hs.id;
+      const what = this.suggestion();
+      this.announce(`${hs.name}. Tap again: ${what.suggestLine ?? "act"}.`);
+      return;
+    }
+    this.touchArmed = null;
+    this.onHotspotClick(hs, clicks);
   }
 
   private onPanelHit(hit: NonNullable<ReturnType<typeof hitTestPanel>>): void {
@@ -649,17 +820,37 @@ export class Game {
     if (!def?.twoObject) this.execute();
   }
 
-  private onHotspotClick(hs: Hotspot): void {
+  /**
+   * A click on a hotspot. With a verb chosen, that verb; without one, the obvious thing: walk
+   * through a way out, otherwise its suggested verb (talk, pick up, open, look). `clicks` is 2
+   * for a double-click, which takes a way out at once instead of walking there first.
+   */
+  private onHotspotClick(hs: Hotspot, clicks = 1): void {
     this.audio.click();
-    const verb = this.sentence.verb ?? "walk";
+    const state = this.hotspotState(hs);
+    let verb = this.sentence.verb;
+    if (!verb) {
+      verb = this.isExit(state) ? "walk" : this.suggestedVerb(state);
+      if (verb !== "walk") this.setVerb(verb);
+    }
     if (verb === "walk") {
       const target = hs.stand ?? this.areaStand(hs.area);
-      const effects = hs.do?.walk;
-      const line = hs.say.walk;
+      const effects = state.do?.walk;
+      const line = state.say.walk;
+      if (effects && clicks >= 2) {
+        // Double-click a door: out at once.
+        this.path = []; this.onArrive = null; this.walkGoal = null; this.running = false;
+        this.clearSentence();
+        this.runEffects(effects);
+        return;
+      }
+      const again = this.path.length > 0 && this.walkGoal !== null &&
+        Math.hypot(target.x - this.walkGoal.x, target.y - this.walkGoal.y) < 2;
       const arrive = effects
         ? () => this.runEffects(effects)
         : line ? () => { this.faceToward(hs); this.speak(line); } : undefined;
       this.walkTo(target, true, arrive);
+      if (again && this.path.length > 0) this.running = true;
       return;
     }
 
@@ -867,7 +1058,7 @@ export class Game {
       const e = list[i];
       const hold = HOLD[e.k];
       if (hold !== undefined && this.narration && !this.dialogue) {
-        const due = this.narration.text.length / NARRATION_SPEED + hold;
+        const due = this.lineDue(e.k);
         if (this.narrationClock < due) {
           const parked: Effect[] = [];
           let ended = false;
@@ -984,6 +1175,7 @@ export class Game {
     }
     this.dialogue = { tree, nodeId, shown: 0 };
     this.markSeen(tree.id, nodeId);
+    this.history.add({ speaker: characterOf(node.speaker).name, text: node.text });
     this.hoverChoice = -1;
     const now = node.do?.filter((e) => !TERMINAL.has(e.k));
     if (now?.length) this.runEffects(now);
@@ -1063,6 +1255,7 @@ export class Game {
     const choice = node.choices[chosen.index];
     this.audio.click();
     this.trace?.({ kind: "choice", tree: tree.id, choice });
+    this.history.add({ speaker: characterOf("fenn").name, text: choice.text, choice: true });
 
     if (choice.do) this.runEffects(choice.do);
     // An effect that took over (another conversation, the end of an act) has the last word.
@@ -1121,16 +1314,29 @@ export class Game {
 
   private speak(text: string): void {
     this.trace?.({ kind: "say", text });
-    this.narration = { text, shown: this.reduced ? text.length : 0 };
+    this.narration = { text, shown: this.textSpeed === "instant" ? text.length : 0 };
     this.narrationClock = 0;
+    const tip = /^Tip: /.test(text);
+    this.history.add({ speaker: tip ? "Tip" : characterOf("fenn").name, text: tip ? text.slice(5) : text });
     this.announce(text);
   }
 
-  /** Mirror the current line into an aria-live region: the canvas is opaque to a screen reader. */
+  /**
+   * Mirror text into an aria-live region: the canvas is opaque to a screen reader. Everything
+   * announced in one turn (a room's name, then its opening line) is read together.
+   */
   private announce(text: string): void {
     if (!this.live && typeof document !== "undefined") this.live = document.getElementById("sr");
-    if (this.live) this.live.textContent = text;
+    if (!this.live) return;
+    if (!this.announcing.length) {
+      queueMicrotask(() => {
+        if (this.live) this.live.textContent = this.announcing.join(" ");
+        this.announcing = [];
+      });
+    }
+    this.announcing.push(text);
   }
+  private announcing: string[] = [];
 
   private reject(text: string): void {
     this.speak(text);
@@ -1147,6 +1353,8 @@ export class Game {
   private walkTo(target: Pt, clearSentence: boolean, onArrive?: () => void): void {
     const from = { x: this.x, y: this.y };
     this.path = this.mesh.path(from, target);
+    this.walkGoal = this.path.length ? target : null;
+    this.running = false;
     this.walkStarting = this.path.length > 0;
     this.onArrive = onArrive ?? null;
     if (clearSentence) this.clearSentence();
@@ -1234,17 +1442,21 @@ export class Game {
     // narration typewriter
     if (this.narration) {
       this.narrationClock += dt;
-      this.narration.shown = this.reduced
+      const cps = NARRATION_CPS[this.textSpeed];
+      this.narration.shown = !Number.isFinite(cps)
         ? this.narration.text.length
-        : Math.min(this.narration.text.length, Math.floor(this.narrationClock * NARRATION_SPEED) + 1);
+        : Math.min(this.narration.text.length, Math.floor(this.narrationClock * cps) + 1);
     }
 
     // dialogue typewriter
     if (this.dialogue) {
-      this.dialogue.shown = this.reduced ? 1e6 : this.dialogue.shown + dt * 70;
+      const cps = DIALOGUE_CPS[this.textSpeed];
+      this.dialogue.shown = Number.isFinite(cps) ? this.dialogue.shown + dt * cps : 1e6;
     }
 
-    if (this.queue && (!this.narration || this.narrationClock >= this.queueDue)) {
+    // Parked effects run once the line has been read — or, with "wait for click", on a click.
+    const waitForClick = this.prefs.waitForClick && this.narration !== null;
+    if (this.queue && !waitForClick && (!this.narration || this.narrationClock >= this.queueDue)) {
       const q = this.queue;
       this.queue = null;
       this.runEffects(q);
@@ -1263,6 +1475,8 @@ export class Game {
         if (this.path.length === 0) {
           const cb = this.onArrive;
           this.onArrive = null;
+          this.walkGoal = null;
+          this.running = false;
           cb?.();
         }
       } else {
@@ -1270,7 +1484,8 @@ export class Game {
         // Screen pixels per body height along this heading: full size across, foreshortened in depth.
         const ux = dx / d, uy = dy / d;
         const metric = Math.hypot(ux, uy / DEPTH_SPEED);
-        const step = Math.min(d, (WALK_SPEED * dt * this.personHeight(this.y)) / metric);
+        const speed = WALK_SPEED * (this.running ? RUN_FACTOR : 1);
+        const step = Math.min(d, (speed * dt * this.personHeight(this.y)) / metric);
         this.x += ux * step;
         this.y += uy * step;
         const beat = Math.floor(this.walkPhase / (STRIDE / 2));
@@ -1320,6 +1535,10 @@ export class Game {
     this.sentence = { verb: null, a: null, b: null };
     this.keyboardFocus = null;
     this.hoverHotspot = null;
+    this.touchArmed = null;
+    this.walkGoal = null;
+    this.running = false;
+    if (!this.title) this.announce(`${room.name}.`);
     if (room.music) this.audio.playMusic(room.music);
     this.cancelGulls();
     if (room.ambience === "gulls") this.gullsTimer = setTimeout(() => { this.gullsTimer = null; this.audio.gulls(); }, 900);
@@ -1505,6 +1724,7 @@ export class Game {
     this.inventoryPage = 0;
     this.flags = {};
     this.notes = [];
+    this.history.clear();
   }
 
   private newGame(): void {
@@ -1512,12 +1732,15 @@ export class Game {
     this.startAct(FIRST_ACT);
   }
 
+  /**
+   * The ending. The save stays where it was — the last moment before the final choice — so
+   * Continue can go back and choose again; finishing once unlocks Chapter select.
+   */
   private win(): void {
     this.resetTransient();
     this.won = true;
     this.audio.chime();
-    clearSave();
-    this.hasSave = false;
+    markCompleted();
   }
 
   // ------------------------------------------------------------ hit tests
@@ -1568,19 +1791,24 @@ export class Game {
       focusItem: this.keyboardFocus?.kind === "item" ? this.keyboardFocus.id : null,
       selectedItem: this.sentence.a?.kind === "item" ? this.sentence.a.id : null,
       ...this.suggestion(),
+      scale: this.textScale,
+      touch: this.touch,
+      waiting: Boolean(this.queue && this.narration),
     };
   }
 
   /** What the hovered (or keyboard-focused) hotspot suggests, when no sentence is started. */
-  private suggestion(): { suggestVerb: VerbId | null; suggestLine: string | null } {
+  private suggestion(): { suggestVerb: VerbId | null; suggestLine: string | null; suggestExit: boolean } {
     const id = this.hoverHotspot ?? (this.keyboardFocus?.kind === "hotspot" ? this.keyboardFocus.id : null);
     const raw = id && !this.sentence.verb && !this.sentence.a
       ? this.visibleHotspots().find((h) => h.id === id) : undefined;
-    if (!raw) return { suggestVerb: null, suggestLine: null };
+    if (!raw) return { suggestVerb: null, suggestLine: null, suggestExit: false };
     const hs = this.hotspotState(raw);
-    const verb = this.suggestedVerb(hs);
+    // A way out is walked through; anything else gets its natural verb. Either way, a click.
+    const exit = this.isExit(hs);
+    const verb = exit ? "walk" : this.suggestedVerb(hs);
     const label = VERBS.find((v) => v.id === verb)?.label ?? "";
-    return { suggestVerb: verb, suggestLine: `${label} ${hs.name}` };
+    return { suggestVerb: verb, suggestLine: `${label} ${hs.name}`, suggestExit: exit };
   }
 
   private dialogueModel(): DialogueModel {
@@ -1597,7 +1825,9 @@ export class Game {
       portrait,
       choices: this.visibleChoices().map((c, i) => ({ text: c.text, index: i })),
       hoverIndex: this.hoverChoice,
-      layout: dialogueLayout(this.view.ctx, node?.text ?? "", this.visibleChoices().map(c => c.text)),
+      layout: dialogueLayout(this.view.ctx, node?.text ?? "", this.visibleChoices().map(c => c.text), this.textScale),
+      scale: this.textScale,
+      touch: this.touch,
     };
   }
 
@@ -1605,6 +1835,7 @@ export class Game {
     const ctx = this.view.ctx;
     ctx.clearRect(0, 0, LOGICAL_W, LOGICAL_H);
 
+    this.updateCursor();
     if (this.title) {
       this.renderTitle(ctx);
       this.renderFade(ctx);
@@ -1631,8 +1862,42 @@ export class Game {
         label = ITEMS[this.hoverItem]?.name ?? null;
       }
     }
-    drawCursor(ctx, this.input.x, this.input.y, label, this.rejection > 0);
+    // A finger has no pointer to follow: its label sits by the tap, and only for a thing.
+    drawCursor(ctx, this.input.x, this.input.y, this.touch && !this.touchArmed && !this.hoverItem ? null : label,
+      this.rejection > 0, this.textScale);
     this.renderFade(ctx);
+  }
+
+  /** The OS cursor says what a click would do: a hand on things, an arrow toward a way out. */
+  private updateCursor(): void {
+    let cursor = "default";
+    const x = this.input.x, y = this.input.y;
+    if (this.touch || this.paused || this.cinematic.active) cursor = "default";
+    else if (this.title) cursor = this.titleButtons().some((b) => this.hitTitle(b.y, x, y)) ? "pointer" : "default";
+    else if (this.roomMenu) cursor = "default";
+    else if (this.barHit(x, y)) cursor = "pointer";
+    else if (this.dialogue) cursor = this.hoverChoice >= 0 ? "pointer" : "default";
+    else if (this.hoverVerb || this.hoverItem) cursor = "pointer";
+    else if (this.hoverHotspot && !this.won) {
+      const raw = this.room.hotspots.find((h) => h.id === this.hoverHotspot);
+      if (raw && !this.sentence.verb && this.isExit(raw)) {
+        const c = this.areaCentre(raw.area);
+        const dx = c.x - this.x;
+        cursor = Math.abs(dx) > 160 ? (dx < 0 ? "w-resize" : "e-resize") : c.y < this.y ? "n-resize" : "s-resize";
+      } else cursor = "pointer";
+    }
+    if (cursor !== this.cursorStyle) {
+      this.cursorStyle = cursor;
+      this.view.canvas.style.cursor = cursor;
+    }
+  }
+
+  private areaCentre(area: Area): Pt {
+    if ("rect" in area) return { x: area.rect.x + area.rect.w / 2, y: area.rect.y + area.rect.h / 2 };
+    return {
+      x: area.reduce((sum, p) => sum + p.x, 0) / area.length,
+      y: area.reduce((sum, p) => sum + p.y, 0) / area.length,
+    };
   }
 
   /**
@@ -1704,40 +1969,99 @@ export class Game {
 
     ctx.save();
     ctx.translate(-this.cameraX, 0);
+    if (this.revealing) this.drawReveal(ctx);
     this.drawHoverGlow(ctx);
     this.drawKeyboardFocus(ctx);
     ctx.restore();
     ctx.fillStyle = "rgba(5,13,22,0.8)";
     ctx.fillRect(24, 18, 400, 44);
     drawText(ctx, this.room.name, 40, 29, { size: 22, color: "#e8c98a", shadow: false });
-    const bar = (b: readonly [number, number], label: string, centred: boolean) => {
-      ctx.fillStyle = "rgba(5,13,22,0.8)";
+    const hover = this.barHit(this.input.x, this.input.y);
+    for (const id of Object.keys(BAR_LABELS) as BarId[]) {
+      const b = BAR[id];
+      const on = id === "reveal" && this.revealing;
+      ctx.fillStyle = on ? "rgba(232,201,138,0.28)" : hover === id ? "rgba(30,48,64,0.92)" : "rgba(5,13,22,0.8)";
       ctx.fillRect(b[0], BAR.y, b[1], BAR.h);
-      drawText(ctx, label, centred ? b[0] + b[1] / 2 : b[0] + 20, BAR.y + 11, {
-        size: 20, color: "#e8c98a", align: centred ? "center" : "left", shadow: false,
-      });
-    };
-    bar(BAR.pause, "Pause / Esc", false);
-    bar(BAR.casebook, "Casebook (J)", true);
-    bar(BAR.tip, "Tip  (H)", true);
-    if (this.tipMode && !this.dialogue && !this.won) {
-      const tip = this.currentTip();
-      ctx.save();
-      ctx.font = "italic 21px Georgia, serif";
-      const w = ctx.measureText("Tip: " + tip).width + 40;
-      ctx.restore();
-      // Short tips sit in the top bar beside the buttons; long ones get their own row.
-      const x = 1515 - w;
-      if (w <= 1040) {
-        ctx.fillStyle = "rgba(5,13,22,0.82)";
-        ctx.fillRect(x, 18, w, 44);
-        drawText(ctx, "Tip: " + tip, x + 20, 30, { size: 19, color: "#cfe3ee", maxWidth: w - 40, shadow: false });
-      } else {
-        ctx.fillStyle = "rgba(5,13,22,0.82)";
-        ctx.fillRect(440, 70, 1456, 44);
-        drawText(ctx, "Tip: " + tip, 460, 82, { size: 19, color: "#cfe3ee", maxWidth: 1416, shadow: false });
+      if (on || hover === id) {
+        ctx.strokeStyle = "rgba(232,201,138,0.7)";
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(b[0] + 0.75, BAR.y + 0.75, b[1] - 1.5, BAR.h - 1.5);
       }
+      drawText(ctx, BAR_LABELS[id], b[0] + b[1] / 2, BAR.y + 11, {
+        size: 20, color: on ? "#fff3cf" : "#e8c98a", align: "center", shadow: false,
+      });
     }
+    if (this.tipMode && !this.dialogue && !this.won) {
+      // Its own row under the bar, so it never covers the buttons.
+      const text = "Tip: " + this.currentTip();
+      const lines = wrap(ctx, text, 1830, { size: 20, color: "", weight: "normal" });
+      const h = lines.length * 27 + 17;
+      ctx.save();
+      ctx.font = "20px Georgia, serif";
+      const w = Math.min(1872, Math.max(...lines.map((l) => ctx.measureText(l).width)) + 40);
+      ctx.restore();
+      ctx.fillStyle = "rgba(5,13,22,0.86)";
+      ctx.fillRect(24, BANNER_Y, w, h);
+      ctx.fillStyle = COLORS.gold;
+      ctx.fillRect(24, BANNER_Y, 3, h);
+      lines.forEach((line, i) => drawText(ctx, line, 44, BANNER_Y + 10 + i * 27, { size: 20, color: "#dcebf2", shadow: false }));
+    }
+  }
+
+  /** Reveal: every thing in the room outlined and named, ways out marked with an arrow. */
+  private drawReveal(ctx: CanvasRenderingContext2D): void {
+    for (const raw of this.visibleHotspots()) {
+      if (raw.id === this.hoverHotspot || (this.keyboardFocus?.kind === "hotspot" && this.keyboardFocus.id === raw.id)) continue;
+      const hs = this.hotspotState(raw);
+      const exit = this.isExit(hs);
+      this.markHotspot(ctx, hs, exit ? `\u2192 ${hs.name}` : hs.name, {
+        stroke: exit ? "rgba(159,211,255,0.85)" : "rgba(232,201,138,0.85)",
+        fill: exit ? "rgba(159,211,255,0.07)" : "rgba(232,201,138,0.07)",
+        text: exit ? "#d6ecff" : "#f6e6c0", dash: [8, 6], width: 2,
+      });
+    }
+  }
+
+  /** Outline a hotspot and set its name above it, kept on screen. */
+  private markHotspot(ctx: CanvasRenderingContext2D, hs: Hotspot, name: string,
+    style: { stroke: string; fill: string; text: string; dash?: number[]; width: number }): void {
+    let centerX = 0;
+    let top = 0;
+    ctx.save();
+    ctx.beginPath();
+    if ("rect" in hs.area) {
+      const r = hs.area.rect;
+      ctx.rect(r.x, r.y, r.w, r.h);
+      centerX = r.x + r.w / 2;
+      top = r.y;
+    } else {
+      hs.area.forEach((p, i) => (i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)));
+      ctx.closePath();
+      centerX = hs.area.reduce((sum, p) => sum + p.x, 0) / hs.area.length;
+      top = Math.min(...hs.area.map((p) => p.y));
+    }
+    ctx.fillStyle = style.fill;
+    ctx.fill();
+    ctx.strokeStyle = style.stroke;
+    ctx.lineWidth = style.width;
+    if (style.dash) ctx.setLineDash(style.dash);
+    ctx.stroke();
+    ctx.restore();
+
+    const size = Math.round(20 * this.textScale);
+    ctx.save();
+    ctx.font = `italic ${size}px Georgia, serif`;
+    const width = ctx.measureText(name).width;
+    const x = Math.max(
+      this.cameraX + 16 + width / 2,
+      Math.min(centerX, this.cameraX + LOGICAL_W - width / 2 - 16)
+    );
+    // Below the top bar (and the tip line), above the thing, or just inside its top edge.
+    const y = Math.max(this.tipMode ? 124 : 74, top - size - 22);
+    ctx.fillStyle = "rgba(4,6,12,0.88)";
+    ctx.fillRect(x - width / 2 - 10, y - 5, width + 20, size + 14);
+    ctx.restore();
+    drawText(ctx, name, x, y, { size, color: style.text, align: "center", shadow: false });
   }
 
   /** A fixed scatter of stars above `maxY`, twinkling slowly; the same sky every visit. */
@@ -1793,42 +2117,9 @@ export class Game {
     if (this.keyboardFocus?.kind !== "hotspot" || this.dialogue || this.won) return;
     const hs = this.visibleHotspots().find((hotspot) => hotspot.id === this.keyboardFocus?.id);
     if (!hs) return;
-
-    let centerX = 0;
-    let top = 0;
-    ctx.save();
-    ctx.beginPath();
-    if ("rect" in hs.area) {
-      const r = hs.area.rect;
-      ctx.rect(r.x, r.y, r.w, r.h);
-      centerX = r.x + r.w / 2;
-      top = r.y;
-    } else {
-      hs.area.forEach((p, i) => (i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)));
-      ctx.closePath();
-      centerX = hs.area.reduce((sum, p) => sum + p.x, 0) / hs.area.length;
-      top = Math.min(...hs.area.map((p) => p.y));
-    }
-    ctx.fillStyle = "rgba(255,243,207,0.06)";
-    ctx.fill();
-    ctx.strokeStyle = "#fff3cf";
-    ctx.lineWidth = 3;
-    ctx.stroke();
-    ctx.restore();
-
-    const name = this.hotspotState(hs).name;
-    ctx.save();
-    ctx.font = "italic 20px Georgia, serif";
-    const width = ctx.measureText(name).width;
-    const x = Math.max(
-      this.cameraX + 16 + width / 2,
-      Math.min(centerX, this.cameraX + LOGICAL_W - width / 2 - 16)
-    );
-    const y = Math.max(74, top - 42);
-    ctx.fillStyle = "rgba(4,6,12,0.88)";
-    ctx.fillRect(x - width / 2 - 10, y - 5, width + 20, 34);
-    ctx.restore();
-    drawText(ctx, name, x, y, { size: 20, color: "#fff3cf", align: "center", shadow: false });
+    this.markHotspot(ctx, hs, this.hotspotState(hs).name, {
+      stroke: "#fff3cf", fill: "rgba(255,243,207,0.06)", text: "#fff3cf", width: 3,
+    });
   }
 
   /** Height in pixels of a standing adult whose feet are at `y` (measured curve, else perspective). */
@@ -2033,7 +2324,7 @@ export class Game {
   private exploreKey(k: string, event: KeyboardEvent): boolean {
     if (this.title) return false;
     if (k === "r" || k === "R") { this.roomMenu = !this.roomMenu; return true; }
-    if (k === "d" || k === "D") { this.debugOverlay = !this.debugOverlay; return true; }
+    if ((k === "d" || k === "D") && import.meta.env.DEV) { this.debugOverlay = !this.debugOverlay; return true; }
     if (!this.roomMenu) return false;
     const count = this.exploreRooms().length;
     event.preventDefault();
@@ -2060,8 +2351,9 @@ export class Game {
 
   private renderExplore(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = "rgba(5,13,22,0.8)";
-    ctx.fillRect(440, 18, 760, 44);
-    drawText(ctx, "EXPLORE  ·  R rooms  ·  D overlay  ·  nothing is saved", 820, 29, {
+    ctx.fillRect(440, 18, 670, 44);
+    const banner = `CHAPTER SELECT  ·  R scenes${import.meta.env.DEV ? "  ·  D overlay" : ""}  ·  nothing is saved`;
+    drawText(ctx, banner, 775, 29, {
       size: 20, color: "#9fd3ff", align: "center", shadow: false,
     });
     if (!this.roomMenu) return;
@@ -2081,7 +2373,7 @@ export class Game {
       drawText(ctx, label, box.x + 18, box.y + 16, { size: 21, color: focus ? "#fff6e0" : "#d9c9a4", shadow: false });
     });
     drawText(ctx, "click a scene, or arrows + Enter  ·  R or Escape to close", LOGICAL_W / 2, 960, {
-      size: 20, color: "rgba(201,162,74,0.8)", align: "center",
+      size: 20, color: "#d4b064", align: "center",
     });
   }
   // ------------------------------------------------------------ title
@@ -2089,7 +2381,15 @@ export class Game {
   private titleFocus: TitleId | null = null;
 
   private titleButtons() {
-    return titleButtons(this.hasSave);
+    return titleButtons(this.hasSave, this.chaptersUnlocked(), this.confirmNew);
+  }
+  /** Chapter select: for players once they have finished; always on the dev server. */
+  private chaptersUnlocked(): boolean {
+    return import.meta.env.DEV || hasCompleted();
+  }
+  private cancelConfirmNew(): void {
+    this.confirmNew = false;
+    this.announce("Kept your saved voyage.");
   }
   private hitTitle(top: number, x: number, y: number): boolean {
     return hitTitleButton(top, x, y);
@@ -2100,9 +2400,19 @@ export class Game {
       buttons: this.titleButtons(),
       focus: this.titleFocus,
       dev: import.meta.env.DEV,
+      confirmNew: this.confirmNew,
     });
   }
   private titleActivate(id: "start" | "continue" | "explore"): void {
+    if (id === "start" && this.hasSave && !this.confirmNew) {
+      // A new voyage replaces the save: ask first, the way Restart does.
+      this.confirmNew = true;
+      this.titleFocus = "start";
+      this.audio.deny();
+      this.announce("Starting a new voyage replaces your saved one. Choose New Voyage again to confirm, or press Escape to keep it.");
+      return;
+    }
+    this.confirmNew = false;
     this.titleFocus = null;
     if (id === "start") { this.explore = false; this.beginNewVoyage(); }
     else if (id === "continue" && this.hasSave) { this.explore = false; this.title = false; this.loadGame(); }
@@ -2133,14 +2443,16 @@ export class Game {
         lineHeight: Math.round(size * 1.4), weight: last ? "bold" : "normal",
       }) + Math.round(size * 0.6);
     });
-    drawText(ctx, "click to return to the title", LOGICAL_W / 2, Math.max(1000, y + 30), {
-      size: 20, color: "rgba(201,162,74,0.8)", align: "center",
+    drawText(ctx, "click to return to the title — Chapter select is open to you now", LOGICAL_W / 2, Math.max(1000, y + 30), {
+      size: 20, color: "#d4b064", align: "center",
     });
   }
 
   private renderFade(ctx: CanvasRenderingContext2D): void {
     if (this.fade > 0.001) {
-      ctx.fillStyle = `rgba(0,0,0,${this.fade})`;
+      // Eased, so the curtain settles in and out rather than starting and stopping hard.
+      const f = this.fade;
+      ctx.fillStyle = `rgba(0,0,0,${f * f * (3 - 2 * f)})`;
       ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
     }
   }

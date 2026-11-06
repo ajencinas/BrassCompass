@@ -64,7 +64,7 @@ export interface Hotspot {
    * for anything you can talk to or that has a speaking figure.
    */
   person?: boolean;
-  /** The natural verb, lit up on hover and done by right-click. Guessed when not given. */
+  /** The natural verb, lit up on hover and done by a plain click. Guessed when not given. */
   verb?: VerbId;
   /** Article for fallback lines. Defaults to "the" unless the name is proper or has one. */
   article?: "the" | "a" | "none";

@@ -21,6 +21,11 @@ html, body {
 #game {
   display: block;
   cursor: default;
+  /* Taps and long presses are the game's own: no scrolling, zooming or callout menu. */
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
   image-rendering: auto;
   box-shadow: 0 0 80px rgba(0, 0, 0, 0.9);
 }
@@ -79,21 +84,41 @@ html, body {
   background: rgba(3, 8, 16, .88); padding: 20px; overflow: auto;
 }
 .settings section {
-  width: min(480px, 100%); padding: 32px; background: #101d29;
+  width: min(560px, 100%); padding: 32px; background: #101d29;
   border: 1px solid #9b7c46; box-shadow: 0 24px 80px #0009;
+  margin: auto;
 }
+.settings h2 {
+  color: #c6a365; font: 13px system-ui; letter-spacing: .2em; text-transform: uppercase;
+  margin: 26px 0 4px; padding-top: 14px; border-top: 1px solid #2b3a44;
+}
+.settings select {
+  width: 100%; padding: 10px; background: #1a3040; border: 1px solid #65726f; color: #f3e7cb;
+  font: 17px Georgia, serif;
+}
+.settings select:focus-visible, .settings input:focus-visible, .settings summary:focus-visible {
+  outline: 2px solid #dfbf7d; outline-offset: 2px;
+}
+.settings details { margin: 18px 0 6px; }
+.settings summary { cursor: pointer; color: #f3e7cb; font: 17px Georgia, serif; padding: 8px 0; }
+.settings dl.controls {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 8px 16px;
+  margin: 10px 0 0; font: 15px/1.4 Georgia, serif;
+}
+.settings dl.controls dt { color: #f3d99e; }
+.settings dl.controls dd { color: #d5dde2; margin: 0; }
 .settings h1 { color: #f3d99e; font-size: 30px; margin: 10px 0; }
-.settings p, .settings small { color: #bdc7ce; line-height: 1.5; }
-.settings .eyebrow { color: #c6a365; font: 12px system-ui; letter-spacing: .2em; }
+.settings p, .settings small { color: #c9d2d8; line-height: 1.5; }
+.settings .eyebrow { color: #c6a365; font: 13px system-ui; letter-spacing: .2em; }
 .settings button {
   display: block; width: 100%; padding: 13px; margin: 12px 0;
   background: #1a3040; border: 1px solid #65726f; color: #f3e7cb;
   font: 17px Georgia, serif; cursor: pointer;
 }
 .settings button:hover, .settings button:focus-visible { background: #304651; outline: 2px solid #dfbf7d; }
-.settings label { display: grid; gap: 10px; margin: 18px 0; }
+.settings label { display: grid; gap: 10px; margin: 18px 0; color: #e8e2d0; font-size: 17px; }
 .settings input { width: 100%; accent-color: #d6b46c; }
-.settings small { display: block; margin-top: 18px; font: 12px/1.5 system-ui; }
+.settings small { display: block; margin-top: 18px; font: 14px/1.5 system-ui; }
 
 .cinematic[hidden] { display: none; }
 .cinematic {
@@ -146,7 +171,13 @@ html, body {
   color: #f3e7cb; font: 16px Georgia, serif; cursor: pointer;
 }
 .casebook button:hover, .casebook button:focus-visible { background: #304651; outline: 2px solid #dfbf7d; }
-.casebook footer small { display: block; margin-top: 12px; color: #7d8b95; font: 11px system-ui; text-align: center; }
+.casebook footer small { display: block; margin-top: 12px; color: #a3b0b9; font: 13px system-ui; text-align: center; }
+
+/* ---- line history (shares the casebook's frame) ---- */
+.history-body { list-style: none; margin: 0; }
+.history-body li { margin-top: 14px; }
+.history-body strong { color: #f3d99e; font-weight: bold; }
+.history-choice { border-left-color: #c9a24a; color: #c9d7de; font-style: italic; }
 
 /* ---- screen-reader only, until asked for ---- */
 .sr-only {
