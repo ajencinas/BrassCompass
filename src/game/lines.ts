@@ -51,10 +51,14 @@ function pick<T>(options: T[], seed: string): T {
   return options[(hash(seed) + n) % options.length];
 }
 
-/** The line for a verb on a hotspot that has nothing written for it. */
-export function defaultLine(verb: VerbId, t: Target, seed: string): string {
+/**
+ * The line for a verb on a hotspot that has nothing written for it. `act` is the current act,
+ * if known: from Act III, after the voyage, Fenn's shrugs start to sound like a sailor's.
+ */
+export function defaultLine(verb: VerbId, t: Target, seed: string, act = 0): string {
   const n = phrase(t);
   const N = cap(n);
+  const sailor = act >= 3;
   if (t.person) {
     switch (verb) {
       case "look": return pick([
@@ -64,7 +68,7 @@ export function defaultLine(verb: VerbId, t: Target, seed: string): string {
         `I study ${n} with a clerk's eye. Nothing's out of order, except possibly me, for staring.`,
       ], verb + seed);
       case "talk": return pick([
-        `${N} isn't in the mood.`,
+        `${N} has the look of someone whose office hours ended a while ago.`,
         `${N} has nothing more to say to me just now. I respect that; I've nothing more to say either.`,
         `I open my mouth. ${N} raises an eyebrow. I close my mouth.`,
         `${N} gives me the look people give a clerk who arrives at five to closing.`,
@@ -109,7 +113,7 @@ export function defaultLine(verb: VerbId, t: Target, seed: string): string {
       `${N} keeps its own counsel. I've worked with worse colleagues.`,
     ], verb + seed);
     case "open": return pick([
-      `${N} isn't the sort of thing that opens.`,
+      `${N} isn't the sort of thing that opens. I've checked the regulations; it's within its rights.`,
       `I look for a way to open ${n}. There isn't one, which is its own kind of answer.`,
       `${N} has no lid, no latch and no intention.`,
       `I'd need a hinge to work with, and ${n} has declined to provide one.`,
@@ -129,6 +133,7 @@ export function defaultLine(verb: VerbId, t: Target, seed: string): string {
       `${N} doesn't budge. Neither of us is surprised.`,
       `I give ${n} a good ${verb}. It gives me nothing back but splinters of self-respect.`,
       `${N} has been where it is for years, and a clerk isn't going to change its mind.`,
+      ...(sailor ? [`I give ${n} a heave, like a sailor. It stays put, like a clerk.`] : []),
     ], verb + seed);
     case "turnon": case "turnoff": return `${N} has no switch, and I have no ideas.`;
     case "use": return pick([
@@ -136,6 +141,7 @@ export function defaultLine(verb: VerbId, t: Target, seed: string): string {
       `I fiddle with ${n}. It's patient with me, which is worse.`,
       `${N} doesn't do anything by itself. Neither did I, for three years.`,
       `I'd need a reason, or at least something to use it with.`,
+      ...(sailor ? [`I've been to sea and back, and I still can't see what ${n} is for.`] : []),
     ], verb + seed);
     case "give": return `I'd need something to give first.`;
     default: return `Nothing happens, but politely.`;
@@ -149,7 +155,7 @@ export function noComboLine(verb: VerbId, item: Target, target: Target, seed: st
   const T = cap(t);
   if (verb === "give") {
     if (target.person) return pick([
-      `${T} has no use for ${i}.`,
+      `${T} has no use for ${i}, and says so without a word. Some people can.`,
       `${T} looks at ${i}, then at me, and declines both.`,
       `${T} hands ${i} straight back, the way you'd return a wrong order.`,
       `"What would I do with that?" is written all over ${t}'s face, in a good firm hand.`,
@@ -168,7 +174,7 @@ export function noComboLine(verb: VerbId, item: Target, target: Target, seed: st
     `There's no regulation against using ${i} on ${t}. There's a look, though, and it's worse.`,
   ], "use" + seed);
   return pick([
-    `${cap(i)} doesn't work on ${t}.`,
+    `I try ${i} on ${t} and file the result under "no".`,
     `I try ${i} on ${t}. Nothing. Not even a promising noise.`,
     `${cap(i)} and ${t} have nothing to say to each other.`,
     `I put ${i} to ${t} several ways. None of them are the right way, if there is one.`,

@@ -21,7 +21,7 @@ room crows_nest "The Marrow — Night Watch"
   hotspot shrouds "the shrouds"
     area 470,0 200x330
     stand 660,720
-    look "The shrouds, up to the crow's nest. I've been up them once tonight, which is once more than my knees agreed to."
+    look "The shrouds. I got two ratlines up them tonight. Quill has entered it as a fall."
     use "I've done my climbing for the night. Quill says it's the coming down that kills you."
 
   hotspot below "hatch to below decks"

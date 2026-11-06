@@ -91,7 +91,7 @@ item compass "brass compass"
   state if act 4 and ledger_written
     look "The needle points down the pier, at a bollard with a navigator sitting on it. For once I don't need telling."
   state if act 4 and quarantine_lifted and not iou_paid
-    look "A stamp, a ledger, and a page that's been wrong for three years. The needle points at the bar of the Salty Keel, though it keeps glancing at Bramwick, who keeps patting his coat pocket as if something in it might make a run for it."
+    look "A stamp, a ledger, and a page that's been wrong for three years. The needle points at the Salty Keel, and keeps glancing at Bramwick, who keeps patting his coat pocket as if it might make a run for it."
   state if act 4 and quarantine_lifted
     look "A stamp, a ledger, and a page that's been wrong for three years. The needle points at the bar of the Salty Keel."
   state if act 4 and inquiry_done
@@ -170,7 +170,7 @@ item requisition "requisition"
     look "REQUISITION: one claims book, insurance, all of it. Authorised: Harbour of Port Vela. Stamped. Nib won't read a word of it, which is the beauty of the thing."
 
 item claims_book "claims book"
-  look "Cray & Co.'s insurance claims. Six ships paid in full, for weather. On the facing page, the same year: Captain Vane's storm, refused on a technicality. Somebody underlined it, smugly."
+  look "Cray & Co.'s claims. Six ships paid in full, for weather. On the facing page, the same year: Captain Vane's storm, refused on a technicality. Somebody underlined it. Smugly."
 
 item ledger "harbour ledger"
   look "The harbour ledger, with a length of broken chain still hanging off it. ARCADIA: lost at sea, three days before she was late. Paid, Cray & Co. The page is waiting for a correction."

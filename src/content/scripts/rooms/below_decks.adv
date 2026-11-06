@@ -80,6 +80,7 @@ room below_decks "The Marrow — Below Decks"
         give pell_log
         set chest_open
         sound pickup
+        say "I leaf back through it. Three years ago: “Arcadia overdue. Harbour says lost. Harbour wrote it Monday. She wasn't due till Thursday.”"
 
   hotspot hobb "Hobb"
     show if not dinner
@@ -94,7 +95,7 @@ room below_decks "The Marrow — Below Decks"
     show if dinner
     area 990,380 190x200
     stand 1100,810
-    look "Hobb, eating stew with the steady attention of a man who has waited three days for it."
+    look "Hobb, eating stew with the steady attention of a man who has been on biscuit since dawn and took it personally."
     talk "He puts down his spoon. That's a compliment from Hobb."
       talk hobb at table
     give "“Not money. Don't insult me with money.”"
@@ -126,6 +127,6 @@ room below_decks "The Marrow — Below Decks"
   use manifest on hobb_table
     "Hobb pushes it back with one finger. “Captain hasn't said south. Till she does, that's just a list.”"
   use manifest on hobb
-    "“I don't read on an empty stomach, clerk. Nobody on this ship has eaten since Dorrit lost his stamp.”"
+    "“I don't read on an empty stomach, clerk. Nobody on this ship has eaten since Port Vela.”"
   use crowbar on chest
     "I look at the crowbar, and then at Hobb, and then I put the crowbar away."

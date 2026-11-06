@@ -17,7 +17,7 @@ room marrow_quarterdeck "The Marrow — Quarterdeck"
   hotspot seas "the Straits"
     area 1400,180 900x280
     nowalk
-    look "The Straits, ahead and to starboard, grey where the weather sits on them. Six ships in three years went in there. None of them came out with a crew."
+    look "The Straits, ahead and to starboard, grey where the weather sits on them. Six ships in three years went in there. Five came out with nobody aboard. One didn't come out at all."
     use "I hold the compass up. The needle settles, patient as a dog at a door."
 
   hotspot wheel "the wheel"
@@ -52,7 +52,7 @@ room marrow_quarterdeck "The Marrow — Quarterdeck"
     area 1210,420 180x280
     stand 1450,780
     look "Quill, navigator, with Pell's sextant on a cord round her neck. She keeps touching it to make sure it's still there and pretending she isn't."
-    talk "She looks up from her figures as if she'd heard me coming a mile off. She probably had."
+    talk "She heard me three steps ago. She finishes her sum first, so I know where I rank."
       talk quill at nav
     give "“If it isn't a star or a bearing, cargo, I don't need it.”"
 

@@ -13,11 +13,11 @@ dialogue quill
   node marta quill "Marta. Of course. Did she mention compliments?"
     > "(Say nothing.)" -> learn
       add aff 1
-    > "She said you bite." -> bite
+    > "She did. I've been trying to think of one, to test it." -> bite
   node learn quill "Good. You learn fast, for cargo."
     > "I need to see the captain." if not quill_helped -> captain
     > "I'll leave you to the horizon." -> bye
-  node bite quill "Only cargo. Keeps the weight down."
+  node bite quill "Keep trying. From over there."
     > "I need to see the captain." if not quill_helped -> captain
     > "Noted. From a safe distance." -> bye
   node captain quill "She's aft. Past me. Crew only, and see above regarding cargo."
@@ -37,7 +37,7 @@ dialogue quill
     > "Thank you, Quill." -> thanked
       add aff 1
     > "I'll put in a good word with the captain." -> goodword
-  node thanked quill "Don't thank me. Thank the deck for not eating it. And clerk? Don't tell her I lost it."
+  node thanked quill "Thank the deck. It nearly ate it. And cargo? The captain doesn't hear about this."
   node goodword quill "Put in a good word for yourself. You'll need it more. And not a word about the spyglass."
   node ahead quill "Fog, then the Straits. Then whatever's been emptying ships out there. The insurers call it weather."
     > "And you?" -> you
@@ -46,7 +46,10 @@ dialogue quill
     > "For now?" -> ambition
     > "Good to know." -> bye
   node ambition quill "Our navigator died last winter. Somebody has to read the stars. Might as well be somebody who can see them."
+    > "Navigators get written in the log. I'd know. I've filed a thousand." -> filed
+      add aff 1
     > "Good luck." -> bye
+  node filed quill "Lookouts get written in too. Under “and others”. …Off you go."
   node bye quill "Off you go. And stop standing like that. You're making the mast nervous."
   # Pell's sextant, given with the captain's terms in hand (rooms.ts, marrow_deck).
   node sextant narrator "She takes the sextant in both hands, the way you hold something that might be taken back."
@@ -68,8 +71,8 @@ dialogue quill
     -> underline
   node underline quill "…Underline it."
     -> sight
-  node eyes quill "I know. It's nice to hear it from somebody with handwriting."
-    -> sight
+  node eyes quill "I know. It's nice to hear it from somebody with handwriting. …So use it."
+    -> write
   node sight narrator "She brings the sun down to the horizon in the mirror, reads it off twice, and lays the figures on my father's line. They agree with it."
     -> sworn
   node sworn quill "The Old Nail lines up with the gap, and your needle lines up with the Old Nail. I'll swear to it. Tell the captain she has a navigator."
@@ -88,7 +91,7 @@ dialogue quill
     > "What happens at the reef?" if not vane_convinced -> reef
     > "Carry on, navigator." -> carry
   node tonight quill "Tonight. I keep the watch from the crow's nest now. Climb the shrouds when it's dark, and bring your stomach. You'll want it back."
-    > "It's a date. …A watch. It's a watch." -> carry
+    > "I'll dress for it. …For the cold. I'll dress for the cold." -> carry
   node reef quill "If the captain says yes, I steer and you stand at the bow shouting at a compass. If she says no, we go the long way and nobody ever finds out if you were right."
     > "Then she'll have to say yes." -> carry
   node salt quill "It's the sextant. It's got salt in it. …Get to the bow, cargo. I'll be on the wheel."

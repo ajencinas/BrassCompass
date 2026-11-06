@@ -109,9 +109,9 @@ room marrow_deck "The Marrow — Main Deck"
     "I hold out Pell's sextant. Quill looks at it, and then at me, and doesn't take it straight away."
     talk quill at sextant
   use sextant on quill
-    "She turns it over and hands it back. “Pell's. What am I meant to navigate, cargo? Your feelings?”"
+    "She turns it over and hands it back. “Pell's. Navigate what? The captain's going the long way, and the long way steers itself.”"
   use manifest on quill
-    "She skims it. “Twenty-two names and a navigator who wasn't drowned. Show it to someone who's lost somebody, cargo. Not me.”"
+    "She skims it. “Twenty-two names and a navigator who wasn't drowned. Show it to someone who's lost somebody. Not me.”"
   use pell_log on quill
     "She won't open it. “That's the captain's to read. Pell would've said so, if he'd finished saying things.”"
   use licence on quill

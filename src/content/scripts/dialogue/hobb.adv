@@ -1,14 +1,14 @@
 dialogue hobb
   node root hobb "Pell's chest. Nobody opens it. …Bosun's orders. I'm the bosun."
-    > "When does anyone move round here?" -> move
+    > "Do you ever leave it?" -> move
     > "Those tattoos." if not seen:hobb.names -> names
     > "Not even the captain?" -> captain
     > "I'll leave it, then." -> bye
   node move hobb "Dinner. Dinner's when the gong goes. The gong goes when Dorrit says."
     > "And when does Dorrit say?" -> dorrit
     > "Right. Dinner." -> bye
-  node dorrit hobb "When the stew's passed. Stew's never passed. We've been eating biscuit since Vela."
-    > "I see." -> bye
+  node dorrit hobb "When the stew's passed. Stew's never passed. We've been on biscuit since Vela. …This morning. Feels longer."
+    > "Right. Biscuit." -> bye
   node names hobb "Everyone I've lost. Pell's on the back of my hand. There's room."
     > "I'm sorry." -> sorry
     > "You'll want a bigger bosun." -> bigger
@@ -30,14 +30,21 @@ dialogue hobb
     -> tam
   node tam hobb "Tam Hobb. Able seaman."
     -> sleeve
-  node sleeve narrator "He rolls up his sleeve. Under Pell, under a dozen others, in older ink: TAM."
+  node sleeve narrator "He rolls up his sleeve. Under a dozen others, in older ink: TAM."
     -> brother
   node brother hobb "My brother. Lost with the Arcadia, three years back. …South it is. I'll tell the lads."
     > "It says lost. Nobody ever found him, Hobb." -> room
       set crew_agree
       note crew_stand "Hobb found his brother on the Arcadia's manifest: Tam Hobb, able seaman, lost. The crew will sail south. The bosun rolled up his sleeve to tell me so, which I gather is the equivalent of a signature."
+    > "There's a boy in Upper Town called Tam. He counts the ships in." if seen:tam.dad -> nephew
+      set crew_agree
+      note crew_stand "Hobb found his brother on the Arcadia's manifest: Tam Hobb, able seaman, lost. The crew will sail south. The bosun rolled up his sleeve to tell me so, which I gather is the equivalent of a signature."
     > "Thank you, Hobb." -> dont
       set crew_agree
-  node room hobb "Then I'll leave the room on my arm empty. For now."
-  node dont hobb "Don't thank me. Be right."
+      note crew_stand "Hobb found his brother on the Arcadia's manifest: Tam Hobb, able seaman, lost. The crew will sail south. The bosun rolled up his sleeve to tell me so, which I gather is the equivalent of a signature."
+  node room hobb "…Then I had that one done early."
+  node nephew hobb "…He'd be about nine."
+    -> nephew2
+  node nephew2 hobb "Then it's south twice."
+  node dont hobb "Be right. That'll do for thanks."
   node fed hobb "The lads are with you. Don't make me get the needle out for you, clerk."

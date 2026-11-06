@@ -5,6 +5,11 @@ dialogue bearings
   node one narrator "The needle swings hard to the left of the bowsprit."
     > "“Port!”" -> oneOk
     > "“Starboard!”" -> oneBad
+    > "“Left!”" -> left
+  node left dorrit "He says LEFT! Is left a bearing?"
+    -> left2
+  node left2 vane "It is today! Port!"
+    -> hail
   node oneBad dorrit "He says starboard!"
     -> oneBad2
   node oneBad2 hobb "He means port!"
@@ -13,11 +18,17 @@ dialogue bearings
     -> oneScrape
   node oneScrape narrator "Something long and patient scrapes down the hull, from the bow to the stern, taking its time."
     -> oneRock
-  node oneRock quill "That was a rock, cargo."
+  node oneRock quill "That was a rock."
     -> one
   node oneOk quill "Port! Port it is!"
     -> hail
-  node hail narrator "Out of the white to port comes a voice, polite as a doorman, through a speaking-trumpet: “Ahoy, the Marrow! Quarantine inspection! Heave to!” It knows our name. Nobody aboard answers it, and it falls astern, sounding hurt."
+  node hail narrator "Out of the white to port, a voice through a speaking-trumpet, polite as a doorman: “Ahoy, the Marrow! Quarantine inspection! Heave to!”"
+    -> hail2
+  node hail2 narrator "It knows our name. Somewhere up a flight of wet steps in Port Vela, an old woman is saying: you don't answer."
+    -> nobody
+  node nobody vane "Weather. With a speaking-trumpet. Nobody answer it."
+    -> astern
+  node astern narrator "It falls astern, sounding hurt."
     -> two
   node two narrator "Dead ahead. The needle is perfectly still, and so is everyone."
     > "“Steady as she goes.”" -> twoOk
@@ -42,7 +53,7 @@ dialogue bearings
     -> three
   node natural quill "Nobody. He reads it off a compass like it's a form. Don't tell him."
     -> three
-  node three narrator "Right, gently. The needle leans a hair to the right, and the rocks are close enough to read."
+  node three narrator "The needle leans a hair off the bowsprit, to the side I'd shake hands with. The rocks are close enough to read."
     > "“Starboard, a little.”" -> threeOk
     > "“Starboard, a lot!”" -> threeBad
   node threeBad hobb "How much is a lot?"
@@ -62,9 +73,17 @@ dialogue bearings
   node flag narrator "At her masthead, somebody has run up a flag made of shirts."
     -> vane
   node vane vane "That's a wreck. And somebody's still flying her colours."
-    > "That's the Arcadia." -> END
-      act 2
+    > "That's the Arcadia." -> arcadia
     > "(Look back at Quill.)" if aff >= 4 -> look
   node look narrator "At the wheel, Quill is looking at the wreck. Then, for one second, she's looking at me."
-    > "That's the Arcadia." -> END
-      act 2
+    > "That's the Arcadia." -> arcadia
+  node arcadia fenn "…And shirts don't last three years in the weather. Somebody ran that up this week."
+    -> alive
+  node alive vane "Somebody's alive in there."
+    -> smoke
+  node smoke vane "And here's the fog, closing in behind her again. I'll not run the Marrow blind through that twice. We stand off outside the reef."
+    -> boat
+  node boat vane "Quill, take the boat in. Fenn: find out who's flying that rag, and run me up a new one I can steer by."
+    -> sorry
+  node sorry vane "If the old one's still up when the fog lifts, I'll assume you're both dead. And I'll be sorry."
+    act 2

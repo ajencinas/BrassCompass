@@ -27,7 +27,8 @@ room marrow_cabin "The Marrow — Captain's Cabin"
   hotspot bunk "the bunk"
     area 0,180 330x440
     nowalk
-    look "A bunk, made with the corners of a woman who has done it herself for a long time. Under the pillow, a romance novel, face down and well read. Its bookmark is a letter from an insurance office, which says something about both."
+    look "A bunk, made with the corners of a woman who has done it herself for a long time. Under the pillow, a romance novel, face down and well read."
+      say "Its bookmark is a letter from an insurance office, which says something about both."
 
   hotspot door_out "door to the quarterdeck"
     area 2400,200 160x560
@@ -46,7 +47,7 @@ room marrow_cabin "The Marrow — Captain's Cabin"
     give "She looks at it, then at me, and waits for me to put it away."
 
   use compass on chart if not vane_terms
-    "I set the compass on the chart. The needle swings past north as if north had insulted it, and settles on a line straight through the reef. Vane comes round the table very slowly."
+    "I set the compass on the chart. The needle swings past north and settles on a line straight through the reef. Vane comes round the table very slowly."
     talk vane at compass
   use compass on chart
     "The needle still points straight through the reef. Vane doesn't need to see it again. She needs three reasons."

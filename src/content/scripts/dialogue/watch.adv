@@ -1,9 +1,9 @@
-# The night watch (crows_nest). Optional; no puzzle, just the two of them and three stars.
+# The night watch (crows_nest: the main deck after dark; Fenn only makes two ratlines). Optional; no puzzle, just the two of them and three stars.
 dialogue watch
-  node root quill "Took you long enough. Most cargo is sick on the second ratline."
-    > "I was sick on the first. I'm efficient." -> laugh
+  node root quill "Two ratlines. Most cargo doesn't leave the deck. Sit. The sky's the same from down here, just further."
+    > "Two is a personal best. I'd like it entered." -> laugh
       add aff 1
-    > "I wanted to see what you see up here." -> stars
+    > "I wanted to see what you see." -> stars
       add aff 1
   node laugh narrator "She laughs, despite herself, and then looks annoyed with both of us."
     -> stars
@@ -11,6 +11,8 @@ dialogue watch
     > "Which one's the Liar?" -> liar
     > "What do you see, when you look out?" -> see
   node liar quill "That one. No. That one. …See? Liar."
+    -> steady
+  node steady quill "And when the bow's right, you say “steady”. Not “straight on”. A wheel likes being told what to keep, not what to do."
     > "What do you see, when you look out?" -> see
   node see quill "Everywhere I haven't been yet. …What do you see?"
     > "Ink. Every ship I ever stamped out of Vela. I used to wonder where they went." -> ink
@@ -25,6 +27,22 @@ dialogue watch
       add aff 1
     > "He owes me three years of birthdays. I intend to collect." -> collect
       add aff 1
+    > "He used to name the stars wrong on purpose, so I'd correct him." -> corrected
+      add aff 1
+    > "And yours?" if not seen:watch.yours -> yours
+  node yours quill "Pell taught me every star up here. He wasn't my father. He just did all the bits of it that were any use."
+    -> yours2
+  node yours2 quill "…Third hammock along. Nobody sleeps in it. Now answer the question, cargo."
+    -> father2
+  node father2 quill "Your father. Alive?"
+    > "He left the compass for me. You don't do that if you're planning to be dead." -> we
+      add aff 1
+    > "He owes me three years of birthdays. I intend to collect." -> collect
+      add aff 1
+    > "He used to name the stars wrong on purpose, so I'd correct him." -> corrected
+      add aff 1
+  node corrected quill "Then he's out there somewhere, getting them wrong. Somebody had better go and correct him."
+    -> we
   node collect quill "With interest. You're a clerk; you'll have worked it out to the penny."
     -> we
   node we quill "Then we'll find out. …We. Don't read into it."
@@ -35,7 +53,7 @@ dialogue watch
       add aff 1
   node written quill "Then don't write it down either. …Go to bed, cargo. The Liar will still be here. Roughly."
   node quiet narrator "We watch the Liar for a long time. It moves, as advertised. Neither of us mentions that she's stopped calling me cargo for the last hour."
-  node after quill "Still here? The stars don't need supervising, clerk. Well. Not by you."
+  node after quill "Still here? The stars don't need supervising, cargo. Well. Not by you."
     > "Show me the Hook again." -> hook
     > "Goodnight, Quill." -> night
   node hook quill "There. Like a question mark somebody forgot to finish. You'd hate it."

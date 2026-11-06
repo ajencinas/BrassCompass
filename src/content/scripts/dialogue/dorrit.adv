@@ -3,7 +3,7 @@ dialogue dorrit
     > "Then why isn't dinner served?" -> stamp
     > "You must miss it. Customs." -> miss
     > "Good day, Mr Dorrit." -> bye
-  node stamp dorrit "The stew has not been passed. I have no stamp. I left it in Port Vela with my pension."
+  node stamp dorrit "The stew has not been passed. I have no stamp. I left it in Port Vela, in my desk. I never resigned. I simply stopped coming in."
     > "Couldn't you just… serve it?" -> serve
     > "I have a harbour stamp." if has stamp -> harbour
   node serve dorrit "Unpassed? I have seen what unpassed food does to a crew, clerk. I have seen what it did to a herring."
