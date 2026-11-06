@@ -22,7 +22,10 @@ import { ACTS, ENDING, FIRST_ACT } from "../content/acts";
 import { defaultLine, noComboLine, itemAloneLine, targetOf, phrase, type Target } from "./lines";
 import { personHeightAt } from "./scale";
 import { Casebook, type CaseNote } from "./casebook";
-import { readSave, writeSave, clearSave, backupCorrupt, takeOldSave, hasAnySave, type SaveData } from "./save";
+import {
+  readSave, writeSave, clearSave, backupCorrupt, takeOldSave, hasAnySave, migrateOldSave,
+  SAVE_VERSION, type SaveData, type SaveKnown,
+} from "./save";
 import { drawDebugOverlay } from "./debug";
 import { drawTitle, titleButtons, hitTitleButton, type TitleId } from "./title";
 import { drawFigure, drawSprite, drawShadow } from "./figures";
@@ -78,6 +81,21 @@ const NARRATION_SPEED = 62;
  * A click skips the wait.
  */
 const HOLD: Partial<Record<Effect["k"], number>> = { talk: 0.5, say: 0.6, act: 2.4, win: 2.5 };
+/** Effects that hand the screen to something else; nothing after one in a list runs. */
+const TERMINAL: ReadonlySet<Effect["k"]> = new Set(["go", "talk", "act", "win"]);
+/**
+ * Effects that only change the voyage's state. They never wait for a line: a save, a pause or a
+ * quit while a line is still being read must not lose them (Act III's crowbar).
+ */
+const STATE: ReadonlySet<Effect["k"]> = new Set(["flag", "add", "give", "take", "note"]);
+
+/** What a save may name, checked against the live content. */
+const KNOWN: SaveKnown = {
+  room: (id) => id in ROOMS,
+  item: (id) => id in ITEMS,
+  act: (n) => n in ACTS,
+  firstAct: FIRST_ACT,
+};
 
 export class Game {
   private room!: Room;
@@ -135,7 +153,15 @@ export class Game {
     this.settings = new Settings({
       resume: () => this.setPaused(false),
       restart: () => { this.setPaused(false); this.title = false; this.newGame(); },
-      title: () => { this.persist(); this.setPaused(false); this.path = []; this.onArrive = null; this.dialogue = null; this.pendingRoom = null; this.fade = this.fadeTarget = 0; this.queue = null; this.explore = false; this.roomMenu = false; this.title = true; },
+      title: () => {
+        // The save keeps anything still queued, so Continue picks up exactly here.
+        this.persist();
+        this.setPaused(false);
+        this.resetTransient();
+        this.explore = false;
+        this.roomMenu = false;
+        this.title = true;
+      },
       mute: () => { this.audio.toggleMute(); },
       volume: (value) => this.audio.setVolume(value),
       audio: () => this.audio,
@@ -225,6 +251,16 @@ export class Game {
 
   // ------------------------------------------------------------ input
 
+  /**
+   * True while the screen is changing hands (a door's fade, a room still arriving, a cutscene):
+   * clicks and keys then could act on a room that is about to go, or trigger a door twice.
+   */
+  private inputLocked(): boolean {
+    if (this.title || this.won) return false;
+    // Past half-way back from black the new room is plainly there to be clicked.
+    return this.paused || this.cinematic.active || this.pendingRoom !== null || this.fade > 0.5;
+  }
+
   private onKey(k: string, event: KeyboardEvent): void {
     if (this.paused || this.cinematic.active) return;
     if (this.explore && this.exploreKey(k, event)) return;
@@ -241,6 +277,16 @@ export class Game {
       return;
     }
     if (k.toLowerCase() === "m") { this.audio.toggleMute(); return; }
+    if (this.inputLocked()) {
+      if (k === "Enter" || k === " " || k === "Tab" || k.startsWith("Arrow")) event.preventDefault();
+      return;
+    }
+    // A held key must not race through lines and choices the player hasn't read.
+    if (event.repeat && (k === "Enter" || k === " " || /^[1-9]$/.test(k)) &&
+      (this.dialogue || this.queue || this.narration)) {
+      event.preventDefault();
+      return;
+    }
     if (k.toLowerCase() === "j" && !this.title && !this.won && !this.cinematic.active) {
       event.preventDefault();
       this.casebook.show(this.notes);
@@ -463,12 +509,13 @@ export class Game {
       const inBar = (b: readonly [number, number]) => x >= b[0] && x <= b[0] + b[1];
       if (inBar(BAR.pause)) { this.setPaused(true); return; }
       if (inBar(BAR.casebook)) { this.casebook.show(this.notes); return; }
-      if (inBar(BAR.tip)) { this.showTip(); return; }
+      if (inBar(BAR.tip)) {
+        // Like H: a tip would talk over a conversation or a line still waiting its turn.
+        if (!this.dialogue && !this.queue && !this.inputLocked()) this.showTip();
+        return;
+      }
     }
-    if (!this.title && !this.won && !this.dialogue && x >= 1530 && x < 1700 && y <= 64) {
-      this.showTip();
-      return;
-    }
+    if (this.inputLocked()) return;
 
     if (this.won) {
       this.won = false;
@@ -492,12 +539,9 @@ export class Game {
       return;
     }
 
-    // Ignore clicks mid-transition so a door can't be double-triggered.
-    if (this.fade > 0.5) return;
-
     if (this.dialogue) {
       if (button === 2) {
-        this.dialogue = null;
+        this.leaveDialogue();
         return;
       }
       const node = this.currentNode();
@@ -684,10 +728,23 @@ export class Game {
     this.runHotspot(verb, hs);
   }
 
+  /**
+   * The sentence as it stands, so an action that finishes after a walk can tell whether the
+   * player has started building a new one on the way (and leave that one alone).
+   */
+  private sentenceKey(): string {
+    const { verb, a, b } = this.sentence;
+    return `${verb}|${a?.kind}:${a?.id}|${b?.kind}:${b?.id}`;
+  }
+  private clearSentenceIfUnchanged(key: string): void {
+    if (this.sentenceKey() === key) this.clearSentenceKeepingNarration();
+  }
+
   private runHotspot(verb: VerbId, hs: Hotspot): void {
     const raw = hs;
     hs = this.hotspotState(hs);
     const target = hs.stand ?? this.areaStand(hs.area);
+    const key = this.sentenceKey();
     const act = (): void => {
       this.trace?.({ kind: "verb", text: `${VERBS.find((v) => v.id === verb)?.label ?? verb} ${hs.name}`, hotspot: raw });
       if (!hs.noWalk) this.faceToward(hs);
@@ -700,7 +757,7 @@ export class Game {
         this.speak(line ?? `I take ${this.itemPhrase(hs.item)}.`);
         this.audio.pickup();
         effects && this.runEffects(effects);
-        this.clearSentenceKeepingNarration();
+        this.clearSentenceIfUnchanged(key);
         return;
       }
 
@@ -709,7 +766,7 @@ export class Game {
       else this.reject(fallback);
 
       if (effects) this.runEffects(effects);
-      this.clearSentenceKeepingNarration();
+      this.clearSentenceIfUnchanged(key);
     };
 
     if (hs.noWalk) {
@@ -726,6 +783,7 @@ export class Game {
         (c.item === target.id && c.with === itemId));
     // Room-specific combos win; then anything portable the player can do anywhere.
     const combo = this.room.combos?.find(matches) ?? GLOBAL_COMBOS.find(matches);
+    const key = this.sentenceKey();
     const act = (): void => {
       this.trace?.({ kind: "combo", text: `${VERBS.find((v) => v.id === verb)?.label ?? verb} ${ITEMS[itemId]?.name ?? itemId} ${verb === "give" ? "to" : "with"} ${target.name}`, combo });
       if (combo) {
@@ -740,7 +798,7 @@ export class Game {
         const own = verb === "give" && state && targetT.person ? state.say.give : undefined;
         this.reject(own ?? noComboLine(verb, this.itemTarget(itemId), targetT, itemId + target.id));
       }
-      this.clearSentenceKeepingNarration();
+      this.clearSentenceIfUnchanged(key);
     };
 
     if (target.kind === "item") {
@@ -800,7 +858,9 @@ export class Game {
   /**
    * Run effects in order. An effect that replaces what's on screen (a conversation, a new line,
    * the end of an act) first waits for the current line to be read: the rest of the list is
-   * parked in `queue` and resumed from `update`, or straight away on a click.
+   * parked in `queue` and resumed from `update`, or straight away on a click. State changes
+   * (flags, items, notes) in the parked part apply at once — only what the player sees and
+   * hears waits — and the queue itself is saved, so nothing is lost to a save, pause or quit.
    */
   private runEffects(list: Effect[]): void {
     for (let i = 0; i < list.length; i++) {
@@ -809,61 +869,74 @@ export class Game {
       if (hold !== undefined && this.narration && !this.dialogue) {
         const due = this.narration.text.length / NARRATION_SPEED + hold;
         if (this.narrationClock < due) {
-          this.queue = list.slice(i);
+          const parked: Effect[] = [];
+          let ended = false;
+          for (const rest of list.slice(i)) {
+            if (!ended && STATE.has(rest.k)) this.applyEffect(rest);
+            else parked.push(rest);
+            if (TERMINAL.has(rest.k)) ended = true;
+          }
+          this.queue = parked;
           this.queueDue = due;
           this.persist();
           return;
         }
       }
-      this.trace?.({ kind: "effect", effect: e });
-      switch (e.k) {
-        case "flag":
-          this.flags[e.id] = e.v;
-          break;
-        case "add": {
-          const v = this.flags[e.id];
-          this.flags[e.id] = (typeof v === "number" ? v : 0) + e.n;
-          break;
-        }
-        case "give":
-          this.giveItem(e.item);
-          break;
-        case "take":
-          this.takeItem(e.item);
-          break;
-        case "go":
-          this.goRoom(e.room);
-          return;
-        case "talk":
-          this.startDialogue(e.tree, e.node);
-          this.persist();
-          return;
-        case "act":
-          this.completeAct(e.n);
-          return;
-        case "win":
-          this.win();
-          return;
-        case "say":
-          this.speak(e.text);
-          break;
-        case "sound":
-          this.audio[e.id]();
-          break;
-        case "music":
-          this.audio.playMusic(e.track);
-          break;
-        case "note":
-          if (!this.notes.some((n) => n.id === e.id)) {
-            this.notes.push({ id: e.id, text: e.text, act: this.act });
-          }
-          break;
-      }
+      if (this.applyEffect(e)) return;
     }
     this.persist();
   }
   private queue: Effect[] | null = null;
   private queueDue = 0;
+
+  /** One effect. Returns true when it ended the list (a door, a conversation, an act's end). */
+  private applyEffect(e: Effect): boolean {
+    this.trace?.({ kind: "effect", effect: e });
+    switch (e.k) {
+      case "flag":
+        this.flags[e.id] = e.v;
+        break;
+      case "add": {
+        const v = this.flags[e.id];
+        this.flags[e.id] = (typeof v === "number" ? v : 0) + e.n;
+        break;
+      }
+      case "give":
+        this.giveItem(e.item);
+        break;
+      case "take":
+        this.takeItem(e.item);
+        break;
+      case "go":
+        this.goRoom(e.room);
+        return true;
+      case "talk":
+        this.startDialogue(e.tree, e.node);
+        this.persist();
+        return true;
+      case "act":
+        this.completeAct(e.n);
+        return true;
+      case "win":
+        this.win();
+        return true;
+      case "say":
+        this.speak(e.text);
+        break;
+      case "sound":
+        this.audio[e.id]();
+        break;
+      case "music":
+        this.audio.playMusic(e.track);
+        break;
+      case "note":
+        if (!this.notes.some((n) => n.id === e.id)) {
+          this.notes.push({ id: e.id, text: e.text, act: this.act });
+        }
+        break;
+    }
+    return false;
+  }
 
   /** Resume parked effects now, as if the line had been read. */
   private flushQueue(): void {
@@ -894,12 +967,57 @@ export class Game {
     const tree = DIALOGUES[treeId];
     if (!tree) return;
     const start = nodeId && tree.nodes[nodeId] ? nodeId : tree.start;
-    this.dialogue = { tree, nodeId: start, shown: 0 };
-    this.markSeen(tree.id, start);
     this.narration = null;
     this.keyboardFocus = null;
+    this.enterNode(tree, start);
+  }
+
+  /**
+   * Show a node. Its effects run as it is read — once, here — except one that ends the
+   * conversation (go, talk, act, win), which waits until the player leaves the node.
+   */
+  private enterNode(tree: DialogueTree, nodeId: string): void {
+    const node = tree.nodes[nodeId];
+    if (!node) {
+      this.dialogue = null;
+      return;
+    }
+    this.dialogue = { tree, nodeId, shown: 0 };
+    this.markSeen(tree.id, nodeId);
     this.hoverChoice = -1;
+    const now = node.do?.filter((e) => !TERMINAL.has(e.k));
+    if (now?.length) this.runEffects(now);
     this.announceNode();
+  }
+
+  /** Close the conversation from the node on screen, running whatever its ending holds. */
+  private endDialogue(): void {
+    const node = this.currentNode();
+    this.dialogue = null;
+    const later = node?.do?.filter((e) => TERMINAL.has(e.k));
+    if (later?.length) this.runEffects(later);
+    else this.persist();
+  }
+
+  /**
+   * The player walks away (right-click). Lines with no choice to make still count as heard, so
+   * whatever they set is set: run on through them, stopping at the first real choice.
+   */
+  private leaveDialogue(): void {
+    const visited = new Set<string>();
+    while (this.dialogue && !visited.has(this.dialogue.nodeId)) {
+      visited.add(this.dialogue.nodeId);
+      const node = this.currentNode();
+      if (!node || this.visibleChoices().length) break;
+      const tree = this.dialogue.tree;
+      if (!node.next || node.next === "END" || !tree.nodes[node.next]) {
+        this.endDialogue();
+        return;
+      }
+      this.enterNode(tree, node.next);
+    }
+    this.dialogue = null;
+    this.persist();
   }
 
   /** `seen:<tree>.<node>` lets later options appear only once the player has heard something. */
@@ -937,7 +1055,8 @@ export class Game {
   private pickChoice(displayIndex: number): void {
     const node = this.currentNode();
     if (!node?.choices || !this.dialogue) return;
-    const tree = this.dialogue.tree;
+    const current = this.dialogue;
+    const tree = current.tree;
     const vis = this.visibleChoices();
     const chosen = vis[displayIndex];
     if (!chosen) return;
@@ -946,31 +1065,31 @@ export class Game {
     this.trace?.({ kind: "choice", tree: tree.id, choice });
 
     if (choice.do) this.runEffects(choice.do);
-    if (choice.to === "END" || !choice.to) {
+    // An effect that took over (another conversation, the end of an act) has the last word.
+    if (this.dialogue !== current) return;
+    if (choice.to === "END" || !choice.to || !tree.nodes[choice.to]) {
       this.dialogue = null;
+      this.persist();
       return;
     }
-    this.dialogue = { tree, nodeId: choice.to, shown: 0 };
-    this.markSeen(tree.id, choice.to);
-    this.hoverChoice = -1;
+    this.enterNode(tree, choice.to);
   }
 
+  /** Move on from a node with nothing to choose: to its next, or out of the conversation. */
   private advanceDialogue(): void {
     const node = this.currentNode();
     if (!node || !this.dialogue) {
       this.dialogue = null;
       return;
     }
+    // Choices that are all hidden leave nothing to wait for: treat the node as an ending.
+    if (this.visibleChoices().length) return;
     const tree = this.dialogue.tree;
-    if (node.do) this.runEffects(node.do);
-    if (node.choices && node.choices.length) return; // wait for a choice
-    if (node.next) {
-      this.dialogue = { tree, nodeId: node.next, shown: 0 };
-      this.markSeen(tree.id, node.next);
-      this.hoverChoice = -1;
+    if (node.next && node.next !== "END" && tree.nodes[node.next]) {
+      this.enterNode(tree, node.next);
       return;
     }
-    this.dialogue = null;
+    this.endDialogue();
   }
 
   private check(cond: Cond): boolean {
@@ -1178,10 +1297,14 @@ export class Game {
 
   // ------------------------------------------------------------ rooms
 
-  private loadRoom(id: string, pos?: Pt): void {
+  /**
+   * Enter a room. Without `pos` the player appears at the door from the previous room, or at the
+   * room's entry when `atEntry` is set (or there's no such door).
+   */
+  private loadRoom(id: string, pos?: Pt, opts: { atEntry?: boolean } = {}): void {
     const room = ROOMS[id];
     if (!room) return;
-    const from = this.room?.id;
+    const from = opts.atEntry ? undefined : this.room?.id;
     this.room = room;
     this.trace?.({ kind: "room", room: id });
     this.mesh = new WalkMesh(room.walk, room.width ?? LOGICAL_W, SCENE_H);
@@ -1198,7 +1321,8 @@ export class Game {
     this.keyboardFocus = null;
     this.hoverHotspot = null;
     if (room.music) this.audio.playMusic(room.music);
-    if (room.ambience === "gulls") setTimeout(() => this.audio.gulls(), 900);
+    this.cancelGulls();
+    if (room.ambience === "gulls") this.gullsTimer = setTimeout(() => { this.gullsTimer = null; this.audio.gulls(); }, 900);
     this.audio.setAmbience(room.ambience && room.ambience !== "gulls" ? room.ambience : null);
     this.persist();
     if (room.onEnter) this.runEffects(room.onEnter);
@@ -1208,12 +1332,20 @@ export class Game {
   }
 
   private goRoom(id: string): void {
+    // Whatever the player was walking to belongs to the room being left.
+    this.path = [];
+    this.onArrive = null;
     this.persist();
     this.audio.door();
     this.fadeTarget = 1;
     this.pendingRoom = id;
   }
   private pendingRoom: string | null = null;
+  private gullsTimer: ReturnType<typeof setTimeout> | null = null;
+  private cancelGulls(): void {
+    if (this.gullsTimer !== null) clearTimeout(this.gullsTimer);
+    this.gullsTimer = null;
+  }
 
   // ------------------------------------------------------------ save
 
@@ -1222,6 +1354,7 @@ export class Game {
     if (this.title || this.explore) return;
     const pos = at ? (at.pos ?? ROOMS[at.room].entry) : { x: this.x, y: this.y };
     const data: SaveData = {
+      version: SAVE_VERSION,
       room: at?.room ?? this.room.id,
       x: pos.x,
       y: pos.y,
@@ -1232,6 +1365,7 @@ export class Game {
       notes: this.notes,
       actStarted: at?.actStarted ?? true,
     };
+    if (this.queue?.length && !at) data.queue = this.queue;
     if (writeSave(data)) {
       this.hasSave = true;
       this.saveBroken = false;
@@ -1248,7 +1382,7 @@ export class Game {
 
   private loadGame(): void {
     this.queue = null;
-    const { data: d, raw, corrupt } = readSave((id) => id in ROOMS);
+    const { data: d, raw, corrupt } = readSave(KNOWN);
     if (!d) {
       if (!corrupt) return this.loadOldSave();
       // Keep the unreadable save instead of overwriting it, and tell the player.
@@ -1260,38 +1394,34 @@ export class Game {
         "and started a fresh page.";
       return;
     }
-    {
-      this.inventory = d.inventory;
-      this.inventoryPage = 0;
-      this.flags = d.flags;
-      this.facing = d.facing === -1 ? -1 : 1;
-      this.act = typeof d.act === "number" && ACTS[d.act] ? d.act : FIRST_ACT;
-      this.notes = Array.isArray(d.notes) ? d.notes.filter((n) => n && typeof n.text === "string") : [];
-      this.loadRoom(d.room, { x: d.x, y: d.y });
-      // A save written at the act boundary has not run the act's opening effects yet.
-      if (d.actStarted === false) {
-        const def = ACTS[this.act];
-        if (def?.onStart) this.runEffects(def.onStart);
-        this.persist();
-      }
+    this.resetState();
+    this.inventory = d.inventory;
+    this.flags = d.flags;
+    this.facing = d.facing;
+    this.act = d.act;
+    this.notes = d.notes;
+    const pos = d.x !== undefined && d.y !== undefined ? { x: d.x, y: d.y } : ROOMS[d.room].entry;
+    this.loadRoom(d.room, pos);
+    if (d.actStarted === false) {
+      // A save written at the act boundary has not run the act's opening yet.
+      const def = ACTS[this.act];
+      if (def?.caption) this.speak(def.caption);
+      if (def?.onStart) this.runEffects(def.onStart);
+      this.persist();
+    } else if (d.queue) {
+      // Lines and transitions that were still waiting when the game was saved.
+      this.runEffects(d.queue);
     }
   }
 
   /** Content changed under older saves, so keep their progress but restart their act. */
   private loadOldSave(): void {
     const raw = takeOldSave();
-    if (raw) {
-      try {
-        const d = JSON.parse(raw) as Partial<SaveData>;
-        const act = typeof d.act === "number" && ACTS[d.act] ? d.act : FIRST_ACT;
-        if (act !== FIRST_ACT) {
-          this.resetState();
-          this.flags = d.flags && typeof d.flags === "object" ? d.flags : {};
-          return this.startAct(act);
-        }
-      } catch {
-        /* fall through to a new game */
-      }
+    const old = raw ? migrateOldSave(raw, KNOWN) : null;
+    if (old) {
+      this.resetState();
+      this.flags = old.flags;
+      return this.startAct(old.act);
     }
     this.newGame();
   }
@@ -1352,6 +1482,7 @@ export class Game {
 
   /** Drop anything in flight: conversations, parked effects, walks and fades. */
   private resetTransient(): void {
+    this.cancelGulls();
     this.queue = null;
     this.dialogue = null;
     this.narration = null;
@@ -1361,8 +1492,11 @@ export class Game {
     this.fade = this.fadeTarget = 0;
   }
 
+  /** A clean voyage: nothing carried, nothing known, and out of Explore Scenes. */
   private resetState(): void {
     this.resetTransient();
+    this.explore = false;
+    this.roomMenu = false;
     this.won = false;
     this.inventory = [];
     this.inventoryPage = 0;
@@ -1774,8 +1908,7 @@ export class Game {
     this.title = false;
     this.won = false;
     this.resetTransient();
-    this.room = undefined as unknown as Room; // arrive at the entry, not a door
-    this.loadRoom(id);
+    this.loadRoom(id, undefined, { atEntry: true });
   }
   devAct(n: number): void {
     this.title = false;
@@ -1875,9 +2008,9 @@ export class Game {
   }
 
   private startExplore(): void {
+    this.resetState();
     this.explore = true;
     this.title = false;
-    this.resetState();
     this.act = FIRST_ACT;
     this.loadRoom(ACTS[FIRST_ACT].start.room);
     this.roomMenu = true;
@@ -1888,8 +2021,7 @@ export class Game {
     if (!target) return;
     this.resetTransient();
     this.act = target.act || this.act;
-    this.room = undefined as unknown as Room; // arrive at the entry, not a door
-    this.loadRoom(target.id);
+    this.loadRoom(target.id, undefined, { atEntry: true });
     this.roomMenu = false;
   }
 
