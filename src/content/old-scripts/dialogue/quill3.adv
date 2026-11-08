@@ -1,0 +1,89 @@
+# Quill, ashore. One tree, a node per place.
+dialogue quill3
+  # The lagoon shore: the cutter.
+  node shore quill "That cutter's been watching us since we beached. Clean hull. No nets. Nobody that tidy is fishing."
+    > "Should we be worried?" -> split
+    > "What did the captain say, exactly?" -> plan
+  node split quill "I'm worried. You're busy. That's a good split."
+  # The wreck: the boat banter.
+  node boat quill "Boat's beached. I'm not waiting with it, before you ask. Somebody has to stop you filling in forms at a man with a cutlass."
+    > "You could wait with the boat. It's very safe." if not seen:quill3.safe -> safe
+    > "Thank you for rowing." if not seen:quill3.rowing -> rowing
+      add aff 1
+    > "What did the captain say, exactly?" -> plan
+    > "Shall we?" -> after
+  node safe quill "So's a drawer. You tried that for three years. How was it?"
+    > "What did the captain say, exactly?" -> plan
+    > "Point taken." -> after
+  node rowing quill "I didn't row for you. I rowed because you row like you're signing something in triplicate. …You're welcome."
+    > "What did the captain say, exactly?" -> plan
+    > "Shall we?" -> after
+  node plan quill "Find whoever's alive. Run up a new flag. She brings the Marrow in through the Needle. If the old one's up when the fog lifts, we're dead."
+    note flag_plan "Vane's orders: run up a new flag on the wreck, one she can steer by. If the old one is up when the fog lifts, she'll think we're dead."
+    > "She said “very sorry”?" -> sorry
+    > "Then we'd better not be dead." -> after
+  node sorry quill "She said “sorry”. I added the “very”. I'm navigator now. I'm allowed to round up."
+  node after quill "After you, cargo. If anything bites, I want to see what."
+  # Inside the wreck.
+  node cabin quill "Your father keeps a tidy wreck. That's his desk. You're a clerk. Go on. I can see your fingers twitching from here."
+    > "That's my mother, on the wall." if looked:arcadia_cabin.portrait and not seen:quill3.mother -> mother
+      add aff 1
+    > "It's not tidy. The whole room is at an angle." -> angle
+    > "Give me a minute." -> minute
+  node mother quill "I guessed. She has your face. She looks like she'd win arguments with it. …I'll look at the other wall for a bit."
+  node angle quill "Everything's at an angle on a ship. This one's just stopped pretending."
+  node minute quill "Take two. The wreck's been waiting three years. It can wait for a clerk to breathe."
+  node shaken quill "You all right?"
+    > "No. But I think I'm going to be." if not seen:quill3.going -> going
+      add aff 1
+    > "My father predicted me. In ink. Three years in advance." -> two
+  node going quill "Good. That's the right order to say it in."
+  node two quill "Took him one line. Took me a week. I'm not bitter."
+  # At the gate.
+  node gate quill "He's got a clipboard, cargo. This is your fight. I'll hold your coat."
+    > "Is a navigator a ship's officer?" if seen:pike.need and not bill_signed and has bill -> officer
+      set bill_signed
+    > "Is a navigator a ship's officer?" if seen:pike.need and not bill_signed and not has bill -> air
+    > "You could just climb the fence." -> fence
+    > "Wish me luck." -> luck
+  node officer quill "It says so in the Marrow's log. In your handwriting. …Give me the bill, then, before I come to my senses."
+    -> sign
+  node air quill "It says so in the Marrow's log, in your handwriting. Get the form first. I'm not signing air."
+  node fence quill "I could. Then he'd blow his whistle. Every Weather man on the key would come and be polite at me. I'd rather watch you do it properly."
+  node luck quill "You don't need luck. You need smoke, a stamp, a signature and a date. Same as a wedding, Marta says."
+  # Countersigning the bill (combos give it to her; rooms_act3.ts).
+  node sign narrator "She reads every line. Nobody ever does. She signs at the bottom in careful capitals: QUILL, NAVIGATOR. Then she looks at it a long time."
+    -> signed
+  node signed quill "First thing I've ever signed as anything. …It looks good. Don't say it looks good."
+    > "It looks good." -> looks
+      add aff 1
+    > "It looks adequate." -> adequate
+      add aff 1
+  node looks quill "I said don't. …Thank you. Take it before I underline it."
+  node adequate quill "Adequate. I'll take it. That's a whole rank above what the lookout used to get."
+  # The Weather Works.
+  node works quill "Kelp smoke. Same as the crates on the Marrow. That big brazier does most of the work. Put it out and the fog has nothing to stand on."
+    > "And then?" -> then
+    > "I'd need something wetter than paperwork." -> wetter
+  node then quill "Then we run. I'm good at running. You'll be good at it by the end."
+  node wetter quill "Everything's wetter than your paperwork. There's a whole lagoon out there. Find it a bucket."
+  # Through the bars of the store hut.
+  node hut quill "Don't look so pleased. You've finally got me in a box with a label on."
+    > "I'm getting you out. I promise." if not seen:quill3.promise -> promise
+      add aff 1
+    > "You look very official behind bars." -> official
+    > "Did he really call you cargo?" -> cargo
+  node promise quill "I know. That's the annoying part. Go and be a clerk at him."
+  node official quill "Say that again when I'm out, cargo. I dare you."
+  node cargo quill "Unaccompanied cargo. Pending inspection. …I'm never calling you that again. That's a lie. I'll feel bad, though."
+  # Free, in the salt camp, with his father watching.
+  node camp quill "Don't look at me like that. Your father's watching. …He's still watching. He's waving."
+    > "He does that." -> waves
+    > "Let him watch." if not seen:quill3.watch -> watch
+      add aff 1
+  node waves quill "He waved at me through the bars. Every few minutes. Like a lighthouse with opinions. I like him. Don't tell him."
+  node watch quill "…All right. Let him. But I'm not waving back."
+  # Back on the wreck with flag sixteen.
+  node flag quill "Go on. Run it up. You've been carrying it like it's the Crown Jewels."
+    > "It's better than the Crown Jewels. It has an L." -> baby
+  node baby quill "It's got your shirt in it. The halyard's on the mainmast. Up."

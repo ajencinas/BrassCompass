@@ -1,0 +1,93 @@
+# Ansel Fenn: comic, then not, then comic.
+dialogue ansel
+  # Chained straight on from the kiss (pike at turn); the hotspot opens at `taller`.
+  node across narrator "He crosses the salt pan before I move. He stops a yard away. He doesn't touch me."
+    -> paperwork
+  node paperwork narrator "I had three years to think what to say. All I thought of was paperwork."
+    -> taller
+  node taller ansel "You're taller. Is that regulation?"
+    > "Hello, Father." -> hello
+      add aff 1
+    > "You left the compass on the hall table." -> table
+  node hello ansel "Hello, son."
+    -> look
+  node table ansel "I did. On purpose. Cray wanted it. I thought: my son has a desk and a stamp. He can't get into trouble."
+    -> look
+  node look narrator "He looks at me properly. The salt. The stamp. The pirate beside me."
+    -> sorry
+  node sorry ansel "…Look at you. I'm sorry about the beard. And your shirts. Most of them are flags now. I'm sorry about the beard."
+    -> years
+  node years ansel "And the three years. I should have said that first."
+    > "They wrote you down as lost. I believed it." -> neat
+  node neat ansel "(gently) Well. It was very neat handwriting."
+    -> flags
+  node flags ansel "Fifteen flags. Every morning I thought: someone will look up."
+    > "I read the log. The L is for her." if log_read -> lise
+    > "What's the L for?" if not log_read -> whatl
+    > "Your sewing is terrible." -> sewing
+  node lise ansel "She always said I couldn't sew. Fifteen flags, and she's still right. I think she'd have liked that best."
+    -> you
+  node whatl ansel "Lise. Your mother. She always said I couldn't sew. Fifteen flags, and she's still right."
+    -> you
+  node sewing ansel "Your mother said that. In that exact voice. Fifteen flags, and I still haven't proved her wrong. Don't tell her. Well. You know."
+    -> you
+  node you ansel "And you are?"
+    -> nav
+  node nav quill "The navigator."
+    -> course
+  node course ansel "(delighted) Of course you are."
+    -> log
+  node log ansel "I'd say I didn't see anything. But I'm a captain. We see everything. We just log it later."
+    -> dare
+  node dare quill "Don't you dare log it."
+    -> loft
+  node loft ansel "His mother kissed me in a sail loft. I'd just been fined."
+    -> what
+  node what quill "What for?"
+    -> being
+  node being ansel "Being in a sail loft."
+    -> crews
+  node crews ansel "Pike says everyone's been inspected. A hundred and thirty sailors. The Weather took every boat. I'm not leaving without them."
+    > "A ship waits outside the Needle. It needs a flag." -> sixteen
+      give flag16
+      set ansel_met
+      sound pickup
+    > "A ship brought me. You won't have to stay." -> sixteen
+      give flag16
+      set ansel_met
+      sound pickup
+  node sixteen ansel "Then she wants sixteen. I was putting it up this morning. Here. L in the corner. She checks."
+    -> colour
+  node colour ansel "She'd have hated the colour. It's mustard. On purpose."
+    > "Why mustard?" -> why
+      add aff 1
+    > "I'll run it up." -> run
+  node why ansel "So she'd come back to complain. It hasn't worked yet. I'm a patient sewer. Sewist. Man with a needle."
+    -> run
+  node run ansel "The halyard's on the mainmast. Follow the stakes, not me. I go wrong at the third one. I'll bring the lads to the beach."
+  # Afterwards.
+  node hub ansel "Still here? The flag won't raise itself. I've asked it. Nicely, and then not."
+    > "What did the Weather do with you?" -> receipt
+    > "Rook's alive. He's in Port Vela." if met_rook and not seen:ansel.rook -> rook
+    > "I read the last page." if has ansel_log and not seen:ansel.page -> page
+    > "I still have the desk. At the customs house." if not seen:ansel.desk -> desk
+    > "Why keep raising flags?" -> why2
+    > "Where do you go, when you want to think?" if not seen:pans.root -> barrel
+    > "I'm going." -> go
+  node receipt ansel "Polite men. They gave every one of us a receipt for himself. I've still got mine. “One captain, used.” I'd argue with “used”."
+  node rook ansel "Rook! They said he was dead. (He stops.) Is he well?"
+    -> drunk
+  node drunk ansel "Don't answer that. Is he drunk?"
+    > "Very." -> well
+    > "He's been waiting for you. In a tavern." -> well
+      add aff 1
+  node well ansel "Then he's well. Good. I'll want my navigator back. He owes me a reef."
+  node page ansel "(He goes pink under the sunburn.) You weren't meant to read that. I'm glad you did. Keep it."
+  node desk ansel "A desk is a fine thing. So is a deck. Only one letter between them."
+    -> desk2
+  node desk2 ansel "I'm not saying which way to spell it. I'm your father, not your Harbourmaster."
+  node why2 ansel "Every time they tore one down, somebody had to write it down. I like to think I ruined a lot of afternoons."
+  # The far pans (far_pans.adv): optional.
+  node barrel ansel "The far pans. I've a barrel down there with a view of the old girl. Come on. I'll show you."
+    go far_pans sound none
+  node go ansel "Go on, then. Follow the stakes. Not me. Never me."

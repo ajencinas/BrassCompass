@@ -1,0 +1,67 @@
+room warehouse "Harbour Loft"
+  bg bg_warehouse_wide
+  width 2560
+  music music_office
+  grade "brightness(0.95) saturate(0.85)"
+  perspective horizon 250 ref 875 height 400
+  # The floor only shows in a strip along the bottom: the crates, the ledger desk and the back
+  # wall all meet it at y≈840, so Fenn walks in front of them.
+  walk (470,875) (515,848) (2330,838) (2380,838) (2500,875)
+  entry 2280,856
+  arrive alley 2280,856
+
+  # Atmosphere: a candle stub on the ledger desk, and dust in its light.
+  footsteps wood
+  light 1167,492 radius 160 candle
+  motes dust (1130,20) (1480,0) (1900,520) (1500,600) (1250,420) count 50
+
+  hotspot ledger "harbour ledger"
+    show if not ledger_taken
+    area 1210,470 270x130
+    stand 1430,858
+    look "The harbour ledger. The Harbourmaster's own book. Clerks keep the day-books and aren't allowed up here. Three years I've wanted one page."
+    open "The Arcadia. “Lost at sea”, in Bramwick's hand, three days before she was even late."
+      say "Beside it: “Quarantine dues, Gullet Key station. Paid, Cray & Co.” Nobody pays on a wreck. He wasn't writing my father off. He was paid to."
+      set ledger_read
+      note ledger_read "Bramwick's hand: the Arcadia, lost at sea, three days early. Beside it: “Quarantine dues, Gullet Key station. Paid, Cray & Co.”"
+      sound chime
+    use "The Arcadia. “Lost at sea”, in Bramwick's hand, three days before she was even late."
+      say "Beside it: “Quarantine dues, Gullet Key station. Paid, Cray & Co.” Nobody pays on a wreck. He wasn't writing my father off. He was paid to."
+      set ledger_read
+      note ledger_read "Bramwick's hand: the Arcadia, lost at sea, three days early. Beside it: “Quarantine dues, Gullet Key station. Paid, Cray & Co.”"
+      sound chime
+    pull "It's chained to the desk. Of course it is."
+    state if act 4
+      look "The harbour ledger, still chained to its desk. The Arcadia's entry is where I left it. Lost at sea, three days early, paid by Cray & Co."
+      open "I've read it. Reading it won't be enough. Cray's counting on that. The inquiry will want the book itself, and it's chained to the desk."
+        nothing
+      use "I've read it. Reading it won't be enough. Cray's counting on that. The inquiry will want the book itself, and it's chained to the desk."
+        nothing
+      pull "Chained. Bramwick chained it there himself, by regulation, so it could never go anywhere it might be embarrassed."
+      pickup "It's chained to the desk. Regulation thirty-one, and a very good padlock."
+    state if ledger_read = true
+      name "harbour ledger"
+      look "The entry still says lost. It will keep saying it until someone makes it say otherwise."
+
+  hotspot crates "stacked crates"
+    area 30,150 420x560
+    nowalk
+    look "More of Cray's cloud-stamped crates, stencilled for ports no ship reaches now. Somebody is paying storage on a great deal of nothing."
+
+  hotspot stairs_down "stairs to the lane"
+    area 2400,300 160x460
+    stand 2360,856
+    exit alley sound hatch
+    look "The loft stairs, back down to the lane."
+
+  hotspot chain "broken chain"
+    show if act 4 and ledger_taken
+    area 1210,470 270x130
+    stand 1430,858
+    look "A broken chain, and a clean oblong in the dust where the ledger sat for thirty years. Regulation thirty-one is suspended, like its author."
+
+  use crowbar on ledger if act 4
+    "I get the crowbar through the chain and lean. The staple comes out of thirty years of oak. The ledger is mine to carry."
+    give ledger
+    set ledger_taken
+    sound pickup

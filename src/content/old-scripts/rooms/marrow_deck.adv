@@ -1,0 +1,127 @@
+# ACT II — the voyage
+room marrow_deck "The Marrow — Main Deck"
+  bg bg_deck_wide
+  width 2560
+  music music_sea
+  ambience sea
+  perspective horizon 230 ref 875 height 330
+  # The quarterdeck stairs and their banisters fill x≈1340–1880; they are an exit, not floor.
+  walk (80,875) (110,706) (1320,706) (1320,875)
+  entry 780,805
+  arrive marrow_quarterdeck 1250,820
+  arrive below_decks 955,790
+  arrive bow_fog 820,710
+  arrive crows_nest 660,720
+
+  # Atmosphere: sun on the sea past the rail, and the ship talking to herself.
+  footsteps deck
+  motes glints (1410,385) (1650,385) (1650,500) (1415,500) count 18
+  emit creak
+
+  sprite npc_quill_body at 560,800 size 0.98 idle speaker quill for quill grade "saturate(0.85) brightness(0.92)"
+  sprite prop_spyglass at 300,838 size 0.24 for spyglass
+
+  hotspot rail "the sea"
+    area 1000,330 600x190
+    nowalk
+    look "Open water, going gold at the edge. Three years I watched from the quay. It looks the same from here. Either comfort or insult."
+    talk "I say good morning to the sea. It has heard better."
+    use "The compass says the Straits are that way. The sea says nothing at all."
+
+  hotspot forward "the foredeck"
+    area 560,320 430x230
+    stand 820,710
+    look "The foredeck and the bow. Fog sits on the water ahead like a hen on an egg. The Marrow steers politely round it."
+    open "Hobb has roped off the bow until the captain says otherwise. The rope has a knot in it that looks like an opinion."
+    walk "Hobb's rope across the foredeck says no. So, in fairness, does Hobb."
+    state if vane_convinced
+      exit bow_fog sound none
+      look "The foredeck, and past it the bow, already half gone in the fog. That's my post."
+      open "I go forward, into the fog."
+
+  hotspot shrouds "the shrouds"
+    area 470,0 200x330
+    stand 660,720
+    look "The shrouds: rope ladders up to the crow's nest. Lookout's territory. I'd get two rungs up before Quill had me down by the collar."
+    use "Not yet. Up there is for crew who know where they're looking."
+    pickup "They're attached to the mast. Firmly. That's rather the point of them."
+    state if quill_navigator
+      look "The shrouds, rung by rope rung up to the crow's nest. Quill keeps the night watch on the deck now."
+      use "I wait for dark and climb. Quill lets me reach the second ratline, then fetches me down. We keep watch at the foot of the mast."
+        go crows_nest sound none
+      open: go crows_nest sound none
+
+  hotspot crates "lashed crates"
+    area 200,340 400x300
+    stand 420,760
+    look "Crates lashed for sea. Someone stencilled QUARANTINE STN, G.K. on them, then painted a cloud over it. Badly. The mark mattered."
+    open "The lids are nailed. Somebody wanted them to stay shut. I may have a tool for that."
+    state if kelp_seen
+      look "Kelp briquettes for a quarantine station, sealed with Cray's cloud. Who ships smoke? And who needs that much of it?"
+      open "I've seen inside one. That was plenty."
+
+  hotspot hatch "hatch to below decks"
+    area 790,805 330x75
+    stand 955,790
+    exit below_decks sound hatch
+    look "The main hatch, propped open. A smell of tar and hammocks comes up, and something that wants very badly to be stew."
+    open "I go below. The ladder is steeper than it looks, and it looks steep."
+
+  hotspot quill "Quill"
+    show if not quill_navigator
+    area 500,505 110x300
+    stand 760,805
+    look "Quill, the lookout, back to the rail, eyes on me and not the horizon. She stands like someone guarding a door that isn't there."
+    talk "She's already looking. I get the feeling she's been looking for a while."
+      talk quill
+    give "She doesn't take things from cargo."
+
+  hotspot spyglass "spyglass"
+    show if not has spyglass and not quill_helped
+    area 240,780 140x80
+    stand 420,810
+    item spyglass
+    look "A brass spyglass, wedged between two crates where the sea put it. Dented twice."
+    pickup "I pocket the spyglass. Somebody on this deck is missing it badly."
+
+  hotspot stairs_up "quarterdeck steps"
+    show if quill_helped = true
+    area 1340,520 540x340
+    stand 1290,820
+    exit marrow_quarterdeck sound stairs
+    look "The steps up to the quarterdeck. Nobody's stopping me now."
+    open "I go up."
+
+  hotspot stairs_blocked "quarterdeck steps"
+    show if not quill_helped
+    area 1340,520 540x340
+    stand 1290,820
+    look "The steps up to the quarterdeck. Quill is standing where the rail meets them, which is not an accident."
+    open "Quill puts a hand on the rail. “Crew aft of the mast. You're not crew.”"
+    use "Not while she's standing there, I'm not."
+    walk "Quill shakes her head before I've taken a step."
+
+  use crowbar on crates if not kelp_seen
+    "I lever up a lid. No cargo: dried kelp, pressed into bricks, each stamped with Cray's cloud. Who ships smoke? I nail it back."
+    set kelp_seen
+    sound pickup
+  use crowbar on crates
+    "Once was enough. The kelp isn't going to explain itself a second time."
+  use spyglass on quill if not quill_helped
+    "I hold out the spyglass. Quill's hand closes on it before I've finished. Then, remembering herself, she doesn't pull."
+    talk quill at lost
+  use sextant on quill if vane_terms
+    "I hold out Pell's sextant. Quill looks at it, and then at me, and doesn't take it straight away."
+    talk quill at sextant
+  use sextant on quill
+    "She turns it over and hands it back. “Pell's. Navigate what? The captain's going the long way, and the long way steers itself.”"
+  use manifest on quill
+    "She skims it. “Twenty-two names and a navigator who wasn't drowned. Show it to someone who's lost somebody. Not me.”"
+  use pell_log on quill
+    "She won't open it. “That's the captain's to read. Pell would've said so, if he'd finished saying things.”"
+  use licence on quill
+    "She reads it without taking it. “Says you can sail. Doesn't say you can get past me. Different department.”"
+  use compass on rail
+    "The needle swings off north and settles on the horizon. It has heard its name."
+  use spyglass on rail
+    "I put the spyglass to my eye. The sea, closer. It's no less enormous. It's just enormous in more detail."

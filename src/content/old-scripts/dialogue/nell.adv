@@ -1,0 +1,29 @@
+# Upper Town (no puzzles)
+dialogue nell
+  node root nell "You're the clerk from the customs house. Buying, or loitering? I only charge for one."
+    > "What are you selling?" -> selling
+    > "Tell me about the village." -> village
+    > "Anything odd happening lately?" -> odd
+    > "Just looking. Goodnight." -> bye
+  node selling nell "Rope, lamp oil, dried fish, and gossip. The fish is fresher than the gossip. Neither is fresh."
+    > "I'll take the gossip." -> odd
+    > "Another time." -> bye
+  node village nell "Forty houses and a well. Half are empty since the ships stopped coming back. The rest are related. That's why it's quiet."
+    > "Empty why?" -> odd
+    > "It looks peaceful." -> peaceful
+  node peaceful nell "It is. That's what worries me. A harbour town should sound like a harbour."
+    > "Goodnight, Nell." -> bye
+  node odd nell "Six ships gone in three years. Five came back drifting, sails set, nobody aboard. The first one was never found."
+    > "You've seen one of them." -> wheel
+    > "You think someone took them." -> taken
+  node wheel nell "I sold rope to the men who towed them in. Wheel tied off, every one. The insurers call it weather. Weather doesn't tie off a wheel."
+    > "That isn't weather." -> taken
+  node taken nell "No. It isn't. But I sell rope, clerk, not answers. Ask the old woman on the steps. She lost people, and she says so."
+    > "I will. Goodnight." -> bye
+  node bye nell "Go on. Hear anything out there, I'm buying. News, I mean. Not rope."
+  # Act IV: the news, arriving at a run.
+  node news nell "Clerk! The Marrow came in with a hundred and thirty dead men aboard. They're buying drinks. Tell me it's true. I've sold it twice."
+    > "It's true. All of it." -> true
+    > "You were right, Nell. Weather doesn't tie off a wheel." if seen:nell.wheel -> wheel4
+  node true nell "Then I'll put my prices up. …Go on. Old Onn's been on that step three years. She's waiting for you."
+  node wheel4 nell "I said that. I said it three years ago, to anyone who'd buy a herring. Write down that I said it. I want it in a ledger somewhere."

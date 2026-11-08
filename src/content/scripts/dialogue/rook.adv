@@ -1,0 +1,69 @@
+dialogue rook
+  node root rook "Elias Fenn's boy. I'd know those eyes anywhere. Don't look pleased about it."
+    set met_rook
+    > "You knew my father." -> knew
+    > "You're the one who came back." -> came_back
+    > "I need to know about the fog." -> fog
+    > "I found your old log." if weather_works_store and not rook_story -> log
+    > "Tell me the rule again." if rook_story -> after
+    > "I'll leave you to your drink." -> bye
+  node knew rook "I navigated for him for eleven years. Best captain on the Shroud run. Worst singer."
+    > "He sailed into the fog three months ago." -> lost
+    > "You were with him when he went?" -> with_him
+  node lost rook "I heard. The Arcadia went in at dusk with a full crew. Nobody came out."
+    -> lost2
+  node lost2 rook "I wasn't aboard that night. I was here, drinking. That's the part I can't fix."
+    > "Where were you?" -> with_him
+    > "What took her?" -> fog
+  node with_him rook "I shipped on the Kestrel after your father retired me. She went into the fog. I came back."
+    -> with_him2
+  node with_him2 rook "I don't remember how. I remember the bell. That's all I'll say sober."
+    > "The bell?" -> fog
+    > "Then say it drunk." -> drunk
+  node drunk rook "No. I've tried. The drink makes it louder."
+    -> bye
+  node came_back rook "One man came back. That's me. It's not a boast. It's a warning."
+    > "What happened out there?" -> fog
+    > "Why do you stay here?" -> stay
+  node stay rook "The sea's done with me. The bar isn't. That's not the same as safe."
+    -> bye
+  node fog rook "The fog takes ships. That's public knowledge. The rest is in my log."
+    > "Where's your log?" -> book
+    > "Tell me the rest." -> rest
+    > "I'll find my own answers." -> bye
+  node rest rook "Not sober. I've been sober once since the Kestrel. It didn't last the night."
+    -> bye
+  node book rook "Up at the light. The keeper keeps the old logs. Mine's in the store with my name on it."
+    note rook_log "Rook's old log is in the keeper's store at the lighthouse. The last page is a list of names."
+    > "I'll fetch it." -> promise
+    > "Why should I trust a drunk?" -> trust
+  node promise rook "Then go. I'll be here. I'm always here."
+    -> bye
+  node trust rook "You shouldn't. But the log doesn't lie, and I can't say the same for myself."
+    -> bye
+  node log rook "You found it. Then you read the part about the bell."
+    -> log2
+  node log2 rook "It rang with no hand on the rope. The crew went to the rail to look. I didn't."
+    -> rule
+  node rule rook "The thing in the fog hunts by sound. Keep quiet, and it loses you for a while."
+    set rule_sound
+    note rule_bell "Rook: the Grey Lantern hunts by sound. Silence the bell and it loses you for a while."
+    -> chart
+  node chart rook "There's a chart folded in the back. Your father's hand. He drew the fog's edge before he went in."
+    give chart
+    set rook_story
+    note rook_chart "Rook gave me my father's chart of the fog's edge. It was folded in the back of his old log."
+    -> story
+  node story rook "He gave it to me the night before he sailed. I told him not to go. He laughed."
+    > "Thank you, Rook." -> thanks
+    > "What else do you remember?" -> more
+    > "Why didn't you go with him?" -> why_not
+  node more rook "The crew. My crew. They're still out there. I hear the bell some nights."
+    -> thanks
+  node why_not rook "I was afraid. I'm still afraid. It's the only thing I've kept up."
+    -> thanks
+  node thanks rook "Go on. Be a better navigator than me. The bar is low and I'm under it."
+    -> bye
+  node after rook "Keep the bell quiet. Keep your head down. That's all I know."
+    -> bye
+  node bye rook "Go on. And come back. I'd like to be wrong about something."

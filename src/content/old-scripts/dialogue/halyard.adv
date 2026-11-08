@@ -1,0 +1,29 @@
+# The Weather Works: the halyard.
+dialogue halyard
+  node douse narrator "I pour the lagoon on the great brazier. It dies like an opera singer: loudly, slowly, in a lot of steam."
+    -> thins
+  node thins narrator "Out on the reef the fog thins, then goes. The Needle lies open, blue, as plain as a line on a chart."
+    -> men
+  node men narrator "Behind us, two men in yellow armbands step out of the smoke. They are smiling. They have cudgels. They wipe their feet."
+    -> problem
+  node problem weather "Morning. Is there a problem with the weather?"
+    > "Yes. I've stopped it." -> stopped
+    > "Run, Quill." -> notwithout
+      add aff 1
+  node stopped weather "Oh dear. Then you'll be needing an inspection. A thorough one."
+    -> grab
+  node notwithout quill "Not without you."
+    -> grab
+  node grab narrator "Quill yanks the halyard off its cleat, hooks an arm round my waist and puts one bare foot on the rim of a brazier."
+    -> hold
+  node hold quill "Hold on to me, cargo."
+    > "I am holding on to you." -> keep
+      add aff 1
+    > "Is this an approved means of travel?" -> no
+  node no quill "No."
+    > "I am holding on to you." -> keep
+      add aff 1
+  node keep quill "Good. Keep doing that."
+    -> swing
+  node swing narrator "We swing out over the braziers, through the smoke and the heat. For one long second the whole island is under us. None of it is the point."
+    go salt_camp

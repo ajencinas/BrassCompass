@@ -1,0 +1,116 @@
+room tavern "The Salty Keel"
+  bg bg_tavern_wide
+  width 2560
+  music music_tavern
+  ambience tavern
+  grade "brightness(0.95) saturate(0.85)"
+  perspective horizon 450 ref 875 height 440
+  scale 705 268
+  scale 792 426
+  scale 880 585
+  walk (470,875) (640,790) (820,772) (850,705) (985,705) (1000,736) (1320,738) (1610,837) (1600,880)
+  entry 1060,850
+  arrive dock 600,850
+  footsteps wood
+  light 930,205 radius 120 lantern
+  light 1198,285 radius 110 lantern
+  light 905,322 radius 80 lantern
+  light 1070,350 radius 80 lantern
+  light 890,368 radius 60 candle
+  light 1190,378 radius 70 candle
+  light 2350,215 radius 160 lamp
+  occluder floor 730 (1308,568) (2560,590) (2560,880) (1800,880) (1328,716)
+
+  sprite npc_marta_body_v2 at 1960,728 size 1.12 idle speaker marta for marta grade "saturate(0.85) sepia(0.08) brightness(0.9)"
+  sprite npc_rook_body at 545,805 size 0.82 flip idle speaker rook for rook grade "saturate(0.75) sepia(0.12) brightness(0.82)"
+  sprite npc_dorrit_body at 1700,790 size 0.95 flip idle speaker dorrit for dorrit grade "saturate(0.85) sepia(0.08) brightness(0.9)"
+
+  scene if not met_rook
+    say "There's an old man at the corner table. His drink has gone flat."
+
+  hotspot marta "Marta"
+    area 1888,330 170x405
+    stand 1500,800
+    look "Marta, behind the bar. She's been wiping the same glass since I walked in."
+    talk "I catch her eye. It takes some catching."
+      talk marta
+    give "She only takes things worth trading."
+    open "Marta is not a door. She's made that point to better men than me."
+    state if seen:rook.story
+      look "Marta's watching the corner where Rook sits. She's stopped wiping the glass."
+
+  hotspot rook "old sailor"
+    area 390,430 310x380
+    stand 940,835
+    look "An old man at a corner table. His mug is full and his eyes aren't."
+    talk "He looks up before I speak. He's been waiting."
+      talk rook
+    give "He waves it away without looking at it."
+    state if met_rook
+      name "Old Rook"
+      look "Rook at his table by the door. He's put the mug down."
+
+  hotspot dorrit "Dorrit"
+    area 1570,375 260x180
+    stand 1600,850
+    look "Dorrit, in his apron, holding a spoon like a small weapon."
+    talk "I ask about the stores. He turns before I finish."
+      set met_dorrit
+      talk dorrit
+    give "He looks at my hands. 'I've no use for it. I've no use for any of it.'"
+    state if met_dorrit
+      look "Dorrit, still furious and still cooking. The spoon has not been put down."
+
+  hotspot bar "the bar"
+    area (1310,568) (2500,588) (2500,700) (1330,712)
+    stand 1420,780
+    look "The bar. It's been polished by elbows and one very determined mop."
+    use "I'd need money, and Marta's permission. I've neither."
+    open "It's a bar, not a crate."
+
+  hotspot crowd "the regulars"
+    area 1000,510 300x200
+    stand 1150,760
+    look "Four regulars at the long table. They've been drinking to the Marrow."
+    talk "I ask about the fog. The table goes quiet at once. It's a local custom."
+    give "They've no use for a compass and no manners for a gift."
+    state if seen:rook.story
+      look "The regulars have heard Rook talking. They're pretending they haven't."
+
+  # The painted harbour door fills the left third of the tavern: lit post to post, the
+  # arched head down to the boards. The stand is the near end of the boardwalk by the door.
+  hotspot door_out "the door down to the harbour"
+    area 45,15 390x860
+    stand 520,858
+    exit dock
+    look "The door down to the harbour. The wind smells of salt and something colder."
+
+  hotspot window "the window"
+    area 790,430 700x80
+    stand 1150,760
+    look "The window looks out on the harbour. There's one lamp and a lot of dark."
+    use "It doesn't open. Marta says the view is better with the glass in."
+
+  hotspot nets "the nets"
+    area 650,0 900x200
+    nowalk
+    look "Nets hung from the beams, dry and stiff with salt. Nobody has fished them in years."
+    use "I'd need a boat and a reason."
+    pull "The net is tied off. Everything in this room is tied off."
+
+  hotspot bottles "the bottle shelf"
+    area 1850,120 650x210
+    stand 1560,850
+    look "Bottles, sorted by colour and trouble."
+    use "I'd have to reach over the bar. Marta is watching."
+
+  use compass on rook
+    "He turns it over once. 'Your father's. It still points at the fog.'"
+  use compass on marta
+    "She looks at it and gives it back. 'Keep it. It's the only thing of his you have.'"
+  use compass on dorrit
+    "She squints at it. 'Your father's? Then keep it dry.'"
+  use chart on marta if has chart
+    "She reads it upside down and doesn't ask."
+  use chart on rook if has chart
+    "He knows it. He doesn't want to touch it."

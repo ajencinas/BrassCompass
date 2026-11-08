@@ -1,0 +1,66 @@
+room office "The Harbourmaster's House"
+  bg bg_office_wide
+  width 2560
+  music music_office
+  grade "brightness(0.95) saturate(0.85)"
+  perspective horizon -200 ref 875 height 560
+  walk (60,875) (150,700) (2540,700) (2540,715) (1500,715) (1500,875)
+  entry 600,790
+  footsteps wood
+  light 2222,200 radius 260 lamp
+  motes dust (990,120) (1240,0) (1760,250) (1420,630) (1080,630) count 60
+  occluder floor 668 (1585,316) (2372,316) (2372,668) (1585,668)
+
+  # Act I: Bramwick at his desk with the harbour's losses in front of him.
+  scene if act 1 and not seen:bramwick.root and not office_called
+    set office_called
+    say "Bramwick is at his desk with his coat on. He looks like a man who has stopped going home."
+
+  sprite npc_bramwick_body_v2 at 1885,650 size 1.15 idle speaker bramwick for bramwick grade "saturate(0.85) brightness(0.9)"
+
+  hotspot bramwick "Harbourmaster Bramwick"
+    area 1800,135 170x150
+    stand 2230,710
+    look "Harbourmaster Bramwick. Thirty years of harbour business, and all of it has settled in his face."
+    talk "I clear my throat. Bramwick finishes writing before he looks up."
+      talk bramwick
+    give "He takes nothing he has not signed for."
+    state if seen:bramwick.root
+      name "Bramwick"
+      look "Bramwick. He has not moved, but the papers on his desk have been squared away."
+      talk: talk bramwick at again
+
+  hotspot desk "the harbourmaster's desk"
+    area 1600,285 450x140
+    stand 1690,710
+    look "The harbourmaster's desk. A lamp, a log book, and more paper than the harbour has ships."
+    open "The desk has a drawer, and the drawer is locked."
+    use "I have nothing to put on a harbourmaster's desk that would not insult us both."
+    state if seen:bramwick.root
+      look "The desk. The log book is closed, which I have never seen before."
+
+  hotspot drawer "the locked drawer"
+    area 1845,425 250x110
+    stand 1690,710
+    look "A deep drawer with a brass keyhole. Bramwick's drawers are like his answers: locked and well made."
+    open "Locked. I am not going to crowbar a harbourmaster's desk."
+    pull "I pull. The drawer makes a small, satisfied noise."
+    use "It needs a key, and I am not a key."
+
+  hotspot window "the window"
+    area 900,0 320x300
+    nowalk
+    look "The harbour, framed. One ship, and a great deal of empty water."
+    open "Painted shut. Bramwick does not believe in fresh air or new ideas."
+    state if vex_deal
+      look "The harbour, framed. The Marrow has a new rudder on her rail."
+        say "Bramwick has not looked out of this window in a week."
+
+  # The painted door stands open onto the harbour: the whole leaf and the dark opening
+  # beside it, lintel to threshold board (the boards start at y 655).
+  hotspot door_out "the harbour door"
+    area 185,40 425x615
+    stand 380,755
+    exit dock
+    look "The door back to the docks."
+    open "I go back out to the harbour."

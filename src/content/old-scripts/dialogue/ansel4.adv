@@ -1,0 +1,21 @@
+# Ansel: on the rail, then ashore with Rook.
+dialogue ansel4
+  node root ansel "Son! I'd come down, but they say I'm contagious. I feel wonderful. That's a symptom, apparently."
+    > "Rook's in the Salty Keel." if (met_rook or seen:rook4.root) and not seen:ansel.rook and not seen:ansel4.rook -> rook
+    > "Cray will write you down as lost again." -> again
+    > "How are the crews?" if not seen:ansel4.crews -> crews
+    > "Goodnight, Father." -> night
+  node rook ansel "Rook! Tell him he owes me a reef. No, wait. Tell him I'm glad. Then tell him about the reef."
+  node again ansel "Again? He'll wear the page out. He can argue with my log. It's mostly weather. But the weather was him."
+  node crews ansel "A hundred and thirty sailors can see their front doors. Nobody sleeps. Tam Hobb tried to swim for it. His brother sat on him."
+  node night ansel "Goodnight, son. Mind the third plank on the pier. Loose for years. I keep meaning to report it. To you, now."
+  # Ashore, at Rook's table, after the quarantine's lifted.
+  node ashore ansel "Son! Rook owes me a reef, and he's paying in rum. It isn't legal tender. I'm not proud."
+    > "What will you do now?" if not seen:ansel4.shop -> shop
+    > "Should I sail with the Marrow?" if not seen:ansel4.point -> point
+    > "(Leave them to it.)" -> leave
+  node shop ansel "A shop. Compasses that point at the Old Nail. Useless anywhere else. I'll sell them to people who want to come home."
+  node point ansel "I sailed twenty years. My best navigating was leaving a compass on a hall table. Don't ask me where to point."
+    -> stake
+  node stake ansel "You've seen what I do at the third stake."
+  node leave rook "Go on, boy. Your captain and I have three years of lying to catch up on."

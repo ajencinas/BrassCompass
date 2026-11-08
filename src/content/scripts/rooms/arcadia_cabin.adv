@@ -1,0 +1,109 @@
+room arcadia_cabin "The Grey Lantern — Captain's Cabin"
+  bg bg_wreckcabin_wide
+  width 2560
+  music music_fog
+  perspective horizon 330 ref 875 height 600
+  # The plate is the sunlit wreck cabin; the Grey Lantern is eighty years under the fog. Grade the
+  # painting cold and dim — desaturate, then sepia into a blue-green cast — so the broken planks
+  # read as moonlight through the fog and Elias's lamp-lit desk as a ghost ship's cabin.
+  backdrop "grayscale(0.40) sepia(0.36) hue-rotate(160deg) saturate(1.8) brightness(0.52) contrast(1.10)"
+  walk (100,875) (160,752) (1000,752) (1000,660) (1780,660) (1780,752) (1810,800) (2330,805) (2440,875)
+  entry 2120,845
+  # Coming down the ladder you land on the boards under its foot.
+  arrive lantern_deck 1980,845
+  footsteps wood
+  motes dust (650,0) (1260,0) (1520,860) (620,860) count 60
+  emit drip at 520,860
+  emit creak
+
+  # Act IV. Mordant's cabin, still dry after eighty years. The desk is where the name is read,
+  # and the cold at the end of the cabin is where the man who kept it is waiting.
+  light 200,430 radius 240 lantern colour "#4fd98c" if name_spoken
+  light 200,430 radius 90 lantern colour "#c8ffe0" if name_spoken
+
+  scene if not arcadia_cabin_entered
+    set arcadia_cabin_entered
+    say "The cabin is dry, which is the first wrong thing. The ink on the desk is still wet."
+    say "Elias is at the desk with his chart rolled tight in one hand."
+    say "\"This is where he kept his name,\" he says. \"A captain keeps it where he sits.\""
+    say "He holds out his hand for the plate. Then he lets it fall. \"You read it. I'll say it.\""
+
+  sprite npc_ansel_body at 1880,800 size 1.0 idle speaker elias for elias grade "saturate(0.88) brightness(0.95)"
+  # The ghost captain, in the dark corner, once Elias has spoken his name.
+  sprite npc_mordant_body at 210,800 size 1.0 idle speaker mordant for mordant if name_spoken
+  # The plate itself, set on the desk. It is there while it waits to be read and after the name
+  # has been said; without it the desk shows only the clean oval in the dust.
+  sprite prop_nameplate at 1330,470 size 0.41 grade "saturate(0.85) brightness(0.95)" if has nameplate
+
+  # The desk. The plate comes in from the wreck and is set down in the clean oval in the dust;
+  # the painted plate above shows it there, and the hotspot covers the desk itself.
+  hotspot nameplate "the nameplate"
+    area 1280,360 500x340
+    stand 1450,715
+    look "Mordant's desk. A log, a dry inkpot, and the brass plate set in the clean oval in the dust."
+    use "I set the plate down. The brass catches the light from the broken planks."
+      say "GREY LANTERN. M. MORDANT, MASTER."
+      say "\"Mordant,\" Elias says. He says it like a bell, once."
+      say "\"I've said everyone else's name,\" he says. \"I never had his.\""
+      set name_spoken
+      talk mordant
+    state if name_spoken
+      name "the nameplate"
+      look "The plate lies where I set it. The name has been said, and the cabin is colder."
+      use "I put my hand on the plate. Something is waiting at the end of the cabin."
+        talk mordant
+    state if not has nameplate
+      look "Mordant's desk. A log, a dry inkpot, and a clean oval in the dust where a plate should sit."
+      use "There is nothing on the desk to read. The plate is in a coat, and not mine."
+        nothing
+
+  hotspot mordant "Mordant"
+    show if name_spoken
+    area 0,220 300x460
+    stand 430,800
+    look "A cold place at the end of the cabin. The green light comes from nowhere I can see."
+    talk "I say his name again. The cold turns toward me."
+      talk mordant
+    state if bell_cut and lantern_doused
+      name "Mordant, waiting"
+      look "Mordant is there, in the cold. He is waiting for me to finish it."
+      talk "He does not move. \"When you are ready,\" he says, \"say it again.\""
+        talk mordant
+
+  hotspot hammock "the hammock"
+    area 500,230 760x330
+    stand 700,760
+    look "A rope hammock, still hung. Nobody has slept in it for eighty years."
+    use "I put a hand on it. It swings as if someone has just got out."
+
+  hotspot pigeonholes "the pigeonholes"
+    area 1730,70 260x210
+    nowalk
+    look "Pigeonholes stuffed with paper. Every sheet is blank. A captain's name is on the ones he signed."
+    use "I pull one out. Blank. The next is blank. The ship stopped needing paper a long time ago."
+
+  hotspot portrait "the portrait"
+    area 1500,0 220x180
+    nowalk
+    look "A woman's portrait, hung crooked. She is laughing at whoever is painting her."
+    talk "I say nothing. The cabin does not need me to."
+
+  # The painted ladder leans up the right-hand wall through the broken deck opening: foot at
+  # x 1780-2060 on the boards, top at x 2020-2200. The band follows it; the stand is below.
+  hotspot ladder "the ladder to the deck"
+    area (1780,800) (2060,800) (2200,0) (2020,0)
+    stand 1950,845
+    exit lantern_deck sound stairs
+    look "A ladder up through the broken deck. The fog comes down the opening."
+    open "I go up."
+
+  hotspot elias "Elias Fenn"
+    area 1700,270 330x540
+    stand 1700,850
+    look "My father, with salt in his beard and ink on his fingers. He is waiting for me to read it."
+    talk "He says, \"Go on. I'll say the name. You just have to read it.\""
+      say "\"And then we finish it,\" he says. \"All of us.\""
+    state if name_spoken
+      look "My father, standing very still. He has said the name. He looks lighter."
+      talk "He says, \"Whatever happens next, I'm here for it.\""
+

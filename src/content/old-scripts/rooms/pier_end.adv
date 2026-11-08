@@ -1,0 +1,109 @@
+# The far end of the harbour pier: the lighthouse, and Cray's cutter, unloading kelp.
+room pier_end "The Pier End"
+  bg bg_pierend_wide
+  width 2560
+  music music_sea
+  grade "brightness(0.95) saturate(0.85)"
+  ambience sea
+  perspective horizon 455 ref 875 height 330
+  walk (545,875) (560,790) (760,770) (1010,705) (1230,672) (1350,668) (1420,648) (1660,610) (1530,700) (1480,780) (1300,875)
+  entry 640,830
+
+  # Atmosphere: the pier lamp, the lighthouse turning, the sea moving on both sides.
+  footsteps stone
+  light 1265,365 radius 150 lantern
+  beacon 2198,158 period 14
+  water (0,465) (380,465) (380,560) (0,560) ripple 1.6
+  water (2000,880) (2440,600) (2560,600) (2560,880) ripple 2.2
+  emit lapping at 2300,800
+
+  # Wilf, loading the hand cart; Bartle, by the lamp, whose turn it supposedly is.
+  sprite npc_weather_body at 900,695 size 1 idle speaker weather for wilf grade "saturate(0.6) brightness(0.72)" if not inquiry_done
+  sprite npc_weather_body at 1290,652 size 1 flip idle speaker weather2 for bartle grade "saturate(0.6) brightness(0.72)" if not inquiry_done
+  # Vane, ashore once the flag's down, by the lamp, looking at the crates she carried.
+  sprite npc_vane_body at 1330,662 size 1 flip idle speaker vane for vane grade "saturate(0.75) brightness(0.88)"
+
+  # The hand cart and the lamp barrow hide the weather men's shins (their art stops above the feet).
+  occluder floor 698 (752,624) (832,634) (996,658) (960,700) (912,760) (760,745) (752,700)
+  occluder floor 656 (1210,588) (1346,592) (1346,660) (1210,660)
+
+  hotspot town "back along the pier"
+    area 0,360 520x120
+    stand 600,840
+    exit dock sound none
+    look "Back along the pier, the lights of Port Vela, and somewhere among them the Salty Keel, singing."
+
+  hotspot cutter "Cray's cutter"
+    area (540,290) (900,300) (1010,480) (990,600) (780,640) (420,600) (400,520)
+    stand 830,770
+    look "A grey cutter with a cloud on her furled sail: the one that beat us out of the lagoon. Fast, neat, built to get home first."
+    open "There's nothing aboard but the smell of kelp and the feeling of being watched by a gangplank."
+    talk "I say something cutting to the cutter. It's the best I can do at this hour."
+
+  hotspot wilf "Weather man"
+    show if not inquiry_done
+    area 845,505 110x195
+    stand 1010,760
+    look "One of Cray's men, grey coat, yellow armband, carrying kelp to the cart. Very polite. Very large."
+    talk "He sets the crate down on the cart and touches his hat."
+      talk weather4
+    give "“Can't take anything without a docket, sir. Mr Cray's very strict.”"
+
+  hotspot bartle "Weather man"
+    show if not inquiry_done
+    area 1245,495 95x105
+    stand 1250,700
+    look "Another of Cray's men, by the lamp, holding a crate and a grudge. The grudge is about whose turn it is."
+    talk "He nods at his colleague. “Talk to Wilf, sir. Wilf's on menacing.”"
+      talk weather4
+    give "“Docket first, sir.”"
+
+  hotspot vane "Captain Vane"
+    show if quarantine_lifted
+    area 1280,440 105x225
+    stand 1180,700
+    look "Captain Vane, ashore, by the lamp, hands behind her back, inspecting Cray's crates. She looks like she's about to flog a crew."
+    talk "She doesn't turn round. “Clerk.”"
+      talk vane4
+    give "“Keep it, clerk. I've carried enough of other people's cargo.”"
+
+  hotspot crates "kelp crates"
+    area 940,530 270x150
+    stand 1180,700
+    look "Crates stencilled QUARANTINE STN, G.K., with a cloud painted over the stencil. Badly. The stencil mattered."
+    open "Nailed shut, and two large men are standing next to them, being polite in my direction."
+    state if kelp_seen
+      look "The same crates as on the Marrow's deck: QUARANTINE STN, G.K., with a cloud painted over it. I've seen what's inside."
+
+  hotspot kelp_manifest "manifest on the crate"
+    show if not has kelp_manifest and not kelp_proof
+    area 990,525 150x45
+    stand 1180,700
+    item kelp_manifest
+    look "A manifest, tacked to the top crate for whoever signs. Nobody's signing. They're too busy arguing about whose turn it is to be menacing."
+    pickup "They argue about whose turn it is. I take the manifest. I'm customs. Manifests come to me the way cats come to people who don't want cats."
+      set kelp_proof
+
+  hotspot stack "stacked crates"
+    area 170,590 370x240
+    nowalk
+    look "More of Cray's kelp, stacked for the cart, sacked and stencilled. Enough fog for another three years."
+
+  hotspot lighthouse "the lighthouse"
+    area 2110,90 170x450
+    nowalk
+    look "The Vela light, turning. Three years I watched ships leave. Tonight I came home by it. Smaller from the sea. That's the point."
+
+  hotspot sea "the harbour mouth"
+    area 1900,560 660x320
+    nowalk
+    look "The harbour mouth, black and moving, and past it the Straits. They don't look any different. I am, I think."
+
+  use crowbar on crates if kelp_seen
+    "I've already seen inside one of these, on the Marrow. Once was plenty. Kelp smells exactly like a lie on fire."
+  use crowbar on crates
+    "One of the Weather men clears his throat. He shifts a crate to his other arm, so his hand is free. I put the crowbar away."
+  use stamp on wilf
+    "“Customs, Wilf,” says one. “Told you,” says the other. Neither of them stops unloading."
+  use kelp_manifest on wilf
+    "“You keep that, sir. It's only kelp.” He thinks about it. “Don't keep it too hard.”"

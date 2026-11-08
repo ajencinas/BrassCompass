@@ -1,0 +1,158 @@
+dialogue hobb
+  node root hobb "Fenn."
+    set met_hobb
+    > "Hobb?" -> name
+    > "What's wrong with the mast?" -> mast
+    > "I need a carpenter." -> need
+    > "Later." -> END
+    > "What's in the hold?" if act 2 -> hold
+
+  node name hobb "Bosun. Carpenter. Both."
+    -> mast
+
+  node need hobb "You'll want the Marrow. Everybody wants the Marrow."
+    -> mast
+
+  node mast hobb "The iron band on the mast has seized. I've been at it since dawn."
+    > "Can you free it?" -> fix
+    > "What do you need?" -> fix
+    > "I'll leave you to it." -> END
+
+  node fix hobb "A lever, and a hand that isn't holding the mast."
+    > "I'll hold it." -> hand
+    > "There's a crowbar on the counter." -> lever
+
+  node hand hobb "Then take the crowbar and get under the band. I'll hold her."
+    -> END
+
+  node lever hobb "Aye. Use it. I'll hold her."
+    -> END
+
+  node again hobb "The band won't move. The crowbar's on the counter, if you're helping."
+    > "I'm helping." -> hand
+    > "I'll come back." -> END
+
+  node joined hobb "She'll hold. I'm coming with her."
+    set met_hobb
+    > "Your brother?" -> brother
+    > "Welcome aboard." -> END
+
+  node brother hobb "Tam. He went into the fog three months back. I want him back."
+    > "We'll find him." -> promise
+    > "I'm sorry." -> sorry
+
+  node promise hobb "Aye."
+    -> END
+
+  node sorry hobb "Don't be. Be useful."
+    -> END
+
+  node after hobb "The mast will hold. I'll be at the Marrow."
+    > "Your brother?" -> brother
+    > "Right." -> END
+
+  # ------------------------------------------------------------------ ACT II
+  # The hold. Hobb is the one who knows a name on the barrels, and talking to him sets
+  # salvage_seen too, so a player who never looks at the stack still gets the beat.
+  node hold hobb "Arcadia."
+    set salvage_seen
+    -> hold2
+
+  node hold2 hobb "Tam sailed on her. My brother. And here is her cargo, stacked like firewood."
+    > "Vex has been picking the wrecks." -> pick
+    > "Are you sure it is her?" -> sure
+    > "I'm sorry, Hobb." -> sorry2
+
+  node sure hobb "I tarred that name on her stern the winter before she sailed. I would know it anywhere."
+    -> pick
+
+  node pick hobb "Picking them clean, and selling it back to the island. At a profit."
+    -> anger
+
+  node anger hobb "He will answer for it. Not today. Today I am counting barrels."
+    -> END
+
+  node sorry2 hobb "Don't be sorry. Be angry. It lasts longer."
+    -> END
+
+  node hold_after hobb "Forty-one barrels. I will know if one goes missing."
+    > "Who do we tell?" -> tell2
+    > "Good." -> END
+
+  node tell2 hobb "The crew. All of it. He can't sell cargo we have all seen."
+    -> END
+
+  # ------------------------------------------------------------------ ACT III
+  # The wreck on the reef. Hobb hears the bell across the flats and knows the hand on it.
+  # The plate is the name; the plan is his end of the job, not the whole of it.
+  node bell hobb "You heard it. Three, then one."
+    -> bell2
+
+  node bell2 narrator "Across the flats, the bell again. Three notes, then one. It does not hurry."
+    -> bell3
+
+  node bell3 hobb "That is Tam. That is my brother's hand on the rope."
+    > "How do you know?" -> know
+    > "Tam is alive, then." -> alive
+    > "It could be the wind." -> wind
+
+  node know hobb "He rings it like he did on the Arcadia. Three to call the watch, one to send them home."
+    -> tam
+
+  node alive hobb "He is at his post. If he were not, the bell would be quiet."
+    -> tam
+
+  node wind hobb "The wind has never kept time. Tam does."
+    -> tam
+
+  node tam hobb "Tam Hobb. Able seaman. Three months in the fog, and still counting the watches."
+    > "We will bring him out." -> promise3
+    > "Who rings for the others?" -> others
+
+  node promise3 hobb "Aye. When we board her, I go to the bell first. You find your father."
+    -> plate
+
+  node others hobb "Every lost ship has a hand on a rope. Somebody is ringing for all of them."
+    -> plate
+
+  node plate narrator "Hobb works a broken bow timber out of the deck. It does not belong to this ship."
+    -> plate2
+
+  node plate2 hobb "M. Mordant. Master."
+    give nameplate
+    note mordant_name "M. MORDANT, MASTER, on a brass plate from the Grey Lantern's bow."
+    > "The Grey Lantern's bow." -> bow
+    > "Who is Mordant?" -> mordant
+    > "Then we have a name." -> name2
+
+  node bow hobb "Aye. Grey paint under the salt. The old ship has been shedding pieces for eighty years."
+    -> plan
+
+  node mordant hobb "Her master. It is the one thing the wreck held on to."
+    -> plan
+
+  node name2 hobb "We have a name. What we do with it is your business."
+    -> plan
+
+  node plan hobb "When we board her, I go to the bell. I cut it loose before the rest of you are aboard."
+    set bell_plan
+    > "And the name?" -> plan_name
+    > "Why did you come?" -> why3
+    > "We board her." -> END
+
+  node plan_name hobb "That is your business. I only know it is written on brass."
+    -> END
+
+  node plan_after hobb "The bell is mine. The rest is yours."
+    > "Why did you come?" -> why3
+    > "Wait for my word." -> END
+
+  node why3 hobb "Tam went to sea because I did. He is three years younger and always one rope ahead."
+    > "You came to bring him home." -> why4
+    > "You think he is still alive." -> why5
+
+  node why4 hobb "He would do the same for me. That is the whole of it."
+    -> END
+
+  node why5 hobb "He is ringing that bell. A dead man has no need to keep time."
+    -> END

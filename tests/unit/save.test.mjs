@@ -1,0 +1,215 @@
+// Save validation: whatever is in storage, the game gets a usable save or a clean "corrupt".
+import { test, after, beforeEach } from "node:test";
+import assert from "node:assert/strict";
+import { loader } from "../../tools/adv-lib.mjs";
+
+const vite = await loader();
+after(() => vite.close());
+const save = await vite.load("/src/game/save.ts");
+const { normalizeSave, readSave, writeSave, migrateOldSave, flagsForRestart, hasAnySave, takeOldSave, SAVE_KEY, SAVE_VERSION } = save;
+
+const known = {
+  room: (id) => id === "dock" || id === "tavern",
+  item: (id) => ["compass", "lemon", "crowbar"].includes(id),
+  act: (n) => [1, 2, 3, 4].includes(n),
+  firstAct: 1,
+};
+const good = () => ({
+  version: SAVE_VERSION, room: "dock", x: 100, y: 600, facing: -1, flags: { met_marta: true },
+  inventory: ["compass", "lemon"], act: 2, notes: [{ id: "n1", text: "A note.", act: 1 }], actStarted: true,
+});
+
+/** A Map-backed localStorage, optionally refusing everything. */
+function storage({ broken = false } = {}) {
+  const m = new Map();
+  const guard = () => { if (broken) throw new Error("SecurityError"); };
+  return {
+    getItem: (k) => (guard(), m.has(k) ? m.get(k) : null),
+    setItem: (k, v) => (guard(), void m.set(k, String(v))),
+    removeItem: (k) => (guard(), void m.delete(k)),
+    map: m,
+  };
+}
+beforeEach(() => { globalThis.localStorage = storage(); });
+
+test("a good save comes back as written", () => {
+  assert.deepEqual(normalizeSave(good(), known), good());
+});
+
+test("garbage is rejected, not half-loaded", () => {
+  for (const g of [null, 42, "save", [], {}, { room: "dock" }, { ...good(), room: "atlantis" },
+    { ...good(), flags: [] }, { ...good(), flags: null }, { ...good(), inventory: "compass" }]) {
+    assert.equal(normalizeSave(g, known), null, JSON.stringify(g));
+  }
+});
+
+test("unknown and malformed items are dropped, duplicates collapse", () => {
+  const d = normalizeSave({ ...good(), inventory: ["compass", "lemmon", 7, null, "compass", "crowbar"] }, known);
+  assert.deepEqual(d.inventory, ["compass", "crowbar"]);
+});
+
+test("an unusable position falls back to the room's entry; facing and act are sanitised", () => {
+  const d = normalizeSave({ ...good(), x: NaN, y: "600", facing: 3, act: 9 }, known);
+  assert.equal(d.x, undefined);
+  assert.equal(d.y, undefined);
+  assert.equal(d.facing, 1);
+  assert.equal(d.act, 1);
+  // JSON turns NaN into null.
+  assert.equal(normalizeSave(JSON.parse(JSON.stringify({ ...good(), x: NaN })), known).x, undefined);
+});
+
+test("notes: malformed ones dropped, a missing act takes the save's", () => {
+  const d = normalizeSave({ ...good(), notes: [{ id: "a", text: "t" }, { id: 3, text: "x" }, "n", { id: "a", text: "dup", act: 1 }, { id: "b", text: "u", act: 1 }] }, known);
+  assert.deepEqual(d.notes, [{ id: "a", text: "t", act: 2 }, { id: "b", text: "u", act: 1 }]);
+  assert.deepEqual(normalizeSave({ ...good(), notes: "nope" }, known).notes, []);
+});
+
+test("older v3 saves without version, notes or actStarted still load", () => {
+  const { version, notes, actStarted, ...old } = good();
+  const d = normalizeSave(old, known);
+  assert.equal(d.version, SAVE_VERSION);
+  assert.deepEqual(d.notes, []);
+  assert.equal(d.actStarted, true);
+  assert.equal(normalizeSave({ ...old, actStarted: false }, known).actStarted, false);
+});
+
+test("the recap's hint and timestamp are kept; a save without them loads without them", () => {
+  const at = 1_700_000_000_000;
+  const d = normalizeSave({ ...good(), tip: "Ask Marta about the drawer key.", at }, known);
+  assert.equal(d.tip, "Ask Marta about the drawer key.");
+  assert.equal(d.at, at);
+  // The fields are additive: a save from before them is not corrupt, and gains nothing.
+  const old = normalizeSave(good(), known);
+  assert.equal("tip" in old, false);
+  assert.equal("at" in old, false);
+  // Damaged ones are dropped rather than shown on the card.
+  const broken = normalizeSave({ ...good(), tip: 7, at: "yesterday" }, known);
+  assert.equal("tip" in broken, false);
+  assert.equal("at" in broken, false);
+  assert.equal("at" in normalizeSave({ ...good(), at: NaN }, known), false);
+  assert.equal("tip" in normalizeSave({ ...good(), tip: "   " }, known), false);
+  // And both survive a trip through storage.
+  assert.equal(writeSave({ ...good(), tip: "A hint.", at }), true);
+  assert.deepEqual(readSave(known).data, { ...good(), tip: "A hint.", at });
+});
+
+test("the effect queue survives, minus anything malformed", () => {
+  const queue = [{ k: "say", text: "Hello." }, { k: "give" }, { k: "sound", id: "boom" }, { k: "talk", tree: "quill4" }, { k: "nope" }, { k: "act", n: 2 }];
+  const d = normalizeSave({ ...good(), queue }, known);
+  assert.deepEqual(d.queue, [{ k: "say", text: "Hello." }, { k: "talk", tree: "quill4" }, { k: "act", n: 2 }]);
+  assert.equal("queue" in normalizeSave({ ...good(), queue: "x" }, known), false);
+});
+
+test("a saved queue can only end the act the save is in, and only the last act's can win", () => {
+  const say = { k: "say", text: "The end?" };
+  const queue = (act, ...rest) => normalizeSave({ ...good(), act, queue: [say, ...rest] }, known).queue;
+  // A damaged save's `act 9` (no such act), or another act's ending, would roll the credits or skip
+  // acts from the middle of this one.
+  assert.deepEqual(queue(1, { k: "act", n: 9 }), [say]);
+  assert.deepEqual(queue(1, { k: "act", n: 2 }), [say]);
+  assert.deepEqual(queue(3, { k: "act", n: 3 }), [say, { k: "act", n: 3 }]);
+  // The ending card belongs to the last act.
+  assert.deepEqual(queue(1, { k: "win" }), [say]);
+  assert.deepEqual(queue(3, { k: "win" }), [say]);
+  assert.deepEqual(queue(4, { k: "win" }), [say, { k: "win" }]);
+  // A save whose own act is unknown starts the first act; its queued ending goes with it.
+  assert.deepEqual(normalizeSave({ ...good(), act: 9, queue: [say, { k: "act", n: 9 }] }, known).queue, [say]);
+});
+
+test("readSave: missing, unparsable, invalid and good", () => {
+  assert.deepEqual(readSave(known), { data: null, raw: null, corrupt: false });
+  localStorage.setItem(SAVE_KEY, "{not json");
+  assert.deepEqual(readSave(known), { data: null, raw: "{not json", corrupt: true });
+  localStorage.setItem(SAVE_KEY, JSON.stringify({ room: "atlantis" }));
+  assert.equal(readSave(known).corrupt, true);
+  assert.equal(writeSave(good()), true);
+  assert.deepEqual(readSave(known).data, good());
+});
+
+test("throwing storage never throws out of the save functions", () => {
+  globalThis.localStorage = storage({ broken: true });
+  assert.deepEqual(readSave(known), { data: null, raw: null, corrupt: false });
+  assert.equal(writeSave(good()), false);
+  assert.equal(hasAnySave(), false);
+  assert.equal(takeOldSave(), null);
+  delete globalThis.localStorage;
+  assert.deepEqual(readSave(known), { data: null, raw: null, corrupt: false });
+  assert.equal(writeSave(good()), false);
+});
+
+test("v2 migration keeps the act and flags, or nothing", () => {
+  assert.deepEqual(migrateOldSave(JSON.stringify({ act: 3, flags: { a: 1 }, room: "gone" }), known), { act: 3, flags: { a: 1 } });
+  assert.deepEqual(migrateOldSave(JSON.stringify({ act: 2, flags: "bad" }), known), { act: 2, flags: {} });
+  assert.equal(migrateOldSave(JSON.stringify({ act: 1, flags: {} }), known), null, "act I just restarts");
+  assert.equal(migrateOldSave(JSON.stringify({ act: 99 }), known), null);
+  assert.equal(migrateOldSave("{oops", known), null);
+  assert.equal(migrateOldSave("null", known), null);
+  localStorage.setItem("brasscompass.save.v2", "{}");
+  assert.equal(hasAnySave(), true);
+  assert.equal(takeOldSave(), "{}");
+  assert.equal(hasAnySave(), false);
+});
+
+test("an old save restarting its act drops the flags that act (or a later one) sets, keeps earlier acts'", () => {
+  // Act 2 opens the chest and hears the cook; act 1 met Marta and raised `aff`, which act 2 raises
+  // too; act 3 alone sets `hatch_open`.
+  const sets = { 1: ["met_marta", "aff", "seen:marta.hello"], 2: ["chest_open", "dinner", "aff", "seen:hobb.mess", "looked:deck.chest"], 3: ["hatch_open"] };
+  const actFlags = (n) => (sets[n] ? new Set(sets[n]) : undefined);
+  const k = { act: (n) => n in sets, firstAct: 1, actFlags };
+  const flags = {
+    met_marta: true, aff: 5, "seen:marta.hello": true, chest_open: true, dinner: true, "seen:hobb.mess": true,
+    "looked:deck.chest": true, hatch_open: true, old_story_flag: "kept",
+  };
+  assert.deepEqual(flagsForRestart(flags, 2, k), { met_marta: true, aff: 5, "seen:marta.hello": true, old_story_flag: "kept" });
+  assert.deepEqual(migrateOldSave(JSON.stringify({ act: 2, flags }), k), {
+    act: 2, flags: { met_marta: true, aff: 5, "seen:marta.hello": true, old_story_flag: "kept" },
+  });
+  // Restarting act 3 keeps act 2's progress; only act 3's own flag goes.
+  assert.equal("hatch_open" in flagsForRestart(flags, 3, k), false);
+  assert.equal(flagsForRestart(flags, 3, k).chest_open, true);
+  // Without the content's flag sets, nothing is dropped (the old behaviour).
+  assert.deepEqual(migrateOldSave(JSON.stringify({ act: 2, flags }), { act: k.act, firstAct: 1 }).flags, flags);
+});
+
+test("renamed items: lemon and jet-caps saves come back holding rum; a known id is left alone", () => {
+  const now = { ...known, item: (id) => ["compass", "crowbar", "rum"].includes(id) };
+  for (const old of ["lemon", "mushroom"]) {
+    const d = normalizeSave({ ...good(), inventory: ["compass", "crowbar", old] }, now);
+    assert.deepEqual(d.inventory, ["compass", "crowbar", "rum"], old);
+  }
+  // A content where the old id still exists keeps it as it is.
+  assert.deepEqual(normalizeSave(good(), known).inventory, ["compass", "lemon"]);
+  // Both an old and a new id collapse to one.
+  assert.deepEqual(normalizeSave({ ...good(), inventory: ["rum", "mushroom"] }, now).inventory, ["rum"]);
+});
+
+test("a saved queue is brought up to date: renamed items and nodes mapped, vanished ones dropped", () => {
+  const trees = { tavernkeeper: ["root", "norum", "norum2"], quill: ["root"] };
+  const now = {
+    ...known,
+    item: (id) => ["compass", "rum"].includes(id),
+    talk: (tree, node) => tree in trees && (node === undefined || trees[tree].includes(node)),
+  };
+  const d = normalizeSave({
+    ...good(),
+    queue: [
+      { k: "say", text: "Under the crate…" },
+      { k: "give", item: "mushroom" },
+      { k: "take", item: "lemon" },
+      { k: "give", item: "teapot" },
+      { k: "talk", tree: "tavernkeeper", node: "nofungus" },
+      { k: "talk", tree: "quill", node: "gone" },
+      { k: "talk", tree: "nobody" },
+      { k: "go", room: "atlantis" },
+      { k: "go", room: "tavern" },
+    ],
+  }, now);
+  assert.deepEqual(d.queue, [
+    { k: "say", text: "Under the crate…" },
+    { k: "give", item: "rum" },
+    { k: "take", item: "rum" },
+    { k: "talk", tree: "tavernkeeper", node: "norum" },
+    { k: "talk", tree: "quill" },
+    { k: "go", room: "tavern" },
+  ]);
+});

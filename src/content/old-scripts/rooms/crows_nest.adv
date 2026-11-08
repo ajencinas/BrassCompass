@@ -1,0 +1,47 @@
+# The night watch: the main deck after dark, painted over with a night grade and stars.
+room crows_nest "The Marrow — Night Watch"
+  bg bg_deck_wide
+  width 2560
+  music music_fog
+  ambience wind
+  backdrop "grayscale(0.7) sepia(0.6) hue-rotate(185deg) saturate(1.6) brightness(0.36)"
+  grade "brightness(0.62) saturate(0.7)"
+  stars 420
+  perspective horizon 230 ref 875 height 330
+  walk (80,875) (110,706) (1320,706) (1320,875)
+  entry 760,790
+
+  # Atmosphere: a thin sea mist along the rail.
+  footsteps deck
+  haze 380 560 floor 600 alpha 0.08 speed 10
+  emit creak
+
+  sprite npc_quill_body at 560,760 size 0.98 idle speaker quill for quill grade "saturate(0.85) brightness(0.92)"
+
+  hotspot sky "the stars"
+    area 0,0 2560x330
+    nowalk
+    look "More stars than I knew there were. In Port Vela the lamps drown them out. Out here there's nothing to drown but us."
+    talk "I say goodnight to the Liar. It moves, to show it heard."
+
+  hotspot shrouds "the shrouds"
+    area 470,0 200x330
+    stand 660,720
+    look "The shrouds. I got two ratlines up them tonight. Quill has entered it as a fall."
+    use "I've done my climbing for the night. Quill says it's the coming down that kills you."
+
+  hotspot below "hatch to below decks"
+    area 790,805 330x75
+    stand 955,790
+    exit marrow_deck sound none
+    look "The hatch, and below it a hundred snores in a hundred keys. Bed, eventually."
+
+  hotspot quill "Quill"
+    area 470,400 190x240
+    stand 740,780
+    look "Quill, on watch, head tipped back, the whole sky in her eyes. She hasn't looked at me. She knows exactly where I am."
+    talk "She doesn't turn round. She makes room on the rail."
+      talk watch
+    give "“Not now. I'm working.”"
+    state if night_watch
+      talk: talk watch at after

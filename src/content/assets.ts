@@ -1,0 +1,152 @@
+/** Every image and sound the game loads at boot, by key. */
+
+/**
+ * A site-absolute asset path — `/assets/scenes/dock_wide.webp`, as the manifest and the `.adv`
+ * scripts write them — as a URL that works wherever the build is served from.
+ *
+ * `vite.config.ts` builds with `base: "./"`, so the game can sit at a domain root, in a
+ * subdirectory (itch.io serves a packaged game under `/html/…/index.html`) or on a filesystem.
+ * Anything fetched at runtime — images, music, the act cinematics — goes through here: a plain
+ * `/assets/…` would otherwise be resolved against the server root and 404 one directory up.
+ */
+export function assetUrl(path: string): string {
+  // Already relative, or a full URL (http:, data:, blob:): nothing to rebase.
+  if (!path.startsWith("/") || path.startsWith("//")) return path;
+  // Resolve the build's base against the page first, so `./` means "next to index.html" even
+  // when the page is loaded as /sub/index.html rather than /sub/.
+  return new URL(path.slice(1), new URL(import.meta.env.BASE_URL, document.baseURI)).href;
+}
+
+export const MANIFEST = {
+  images: {
+    bg_dock_wide: "/assets/scenes/dock_wide.webp",
+    bg_office_wide: "/assets/scenes/office_wide.webp",
+    bg_tavern_wide: "/assets/scenes/tavern_wide.webp",
+    bg_alley_wide: "/assets/scenes/alley_wide.webp",
+    bg_chandlery_wide: "/assets/scenes/chandlery_wide.webp",
+    bg_warehouse_wide: "/assets/scenes/warehouse_wide.webp",
+    bg_deck_wide: "/assets/scenes/deck_wide.webp",
+    bg_crowsnest_wide: "/assets/scenes/crowsnest_wide.webp",
+    bg_quarterdeck_wide: "/assets/scenes/quarterdeck_wide.webp",
+    bg_cabin_wide: "/assets/scenes/cabin_wide.webp",
+    bg_gallery_wide: "/assets/scenes/gallery_wide.webp",
+    bg_village_wide: "/assets/scenes/village_wide.webp",
+    bg_below_wide: "/assets/scenes/below_wide.webp",
+    bg_bow_wide: "/assets/scenes/bow_wide.webp",
+    bg_reef_wide: "/assets/scenes/reef_wide.webp",
+    bg_wreckcabin_wide: "/assets/scenes/wreckcabin_wide.webp",
+    bg_shore_wide: "/assets/scenes/shore_wide.webp",
+    bg_gate_wide: "/assets/scenes/gate_wide.webp",
+    // Act III: the Shroud's own cold, fog-bound flats and reef gate (repaints of the two
+    // daylight island plates above, which remain for the archived story and the ending card).
+    bg_fogflats_wide: "/assets/scenes/fogflats_wide.webp",
+    bg_gate_fog_wide: "/assets/scenes/gate_fog_wide.webp",
+    bg_works_wide: "/assets/scenes/works_wide.webp",
+    bg_lighthouse_wide: "/assets/scenes/lighthouse_wide.webp",
+    bg_saltcamp_wide: "/assets/scenes/saltcamp_wide.webp",
+    bg_farpans_wide: "/assets/scenes/farpans_wide.webp",
+    bg_countinghouse_wide: "/assets/scenes/countinghouse_wide.webp",
+    bg_pierend_wide: "/assets/scenes/pierend_wide.webp",
+    // The short connective quay between the harbour and the harbour mouth.
+    bg_quay_wide: "/assets/scenes/quay_wide.webp",
+    // The cold open's full-screen plate (1920x1080, not a room background).
+    bg_coldopen: "/assets/scenes/coldopen.webp",
+    char_elias: "/assets/characters/elias.png",
+    char_walk_v2: "/assets/characters/elias_walk_v2.png",
+    char_walk_vertical: "/assets/characters/elias_walk_vertical.png",
+    npc_harbourmaster: "/assets/characters/harbourmaster.png",
+    npc_tavernkeep: "/assets/characters/tavernkeep.png",
+    npc_bramwick_body_v2: "/assets/characters/bramwick_body_v2.png",
+    npc_marta_body_v2: "/assets/characters/marta_body_v2.png",
+    npc_quill: "/assets/characters/quill.png",
+    npc_vane: "/assets/characters/vane.png",
+    npc_quill_body: "/assets/characters/quill_body.png",
+    npc_vane_body: "/assets/characters/vane_body.png",
+    npc_vane_rum: "/assets/characters/vane_rum.png",
+    npc_silas: "/assets/characters/silas.png",
+    npc_rook: "/assets/characters/rook.png",
+    npc_silas_body: "/assets/characters/silas_body.png",
+    npc_rook_body: "/assets/characters/rook_body.png",
+    npc_nell: "/assets/characters/nell.png",
+    npc_nell_body: "/assets/characters/nell_body.png",
+    npc_tam: "/assets/characters/tam.png",
+    npc_tam_body: "/assets/characters/tam_body.png",
+    npc_onn: "/assets/characters/onn.png",
+    npc_onn_body: "/assets/characters/onn_body.png",
+    npc_dorrit: "/assets/characters/dorrit.png",
+    npc_dorrit_body: "/assets/characters/dorrit_body.png",
+    npc_hobb: "/assets/characters/hobb.png",
+    npc_hobb_body: "/assets/characters/hobb_body.png",
+    npc_ansel: "/assets/characters/ansel.png",
+    npc_ansel_body: "/assets/characters/ansel_body.png",
+    npc_ansel_seated: "/assets/characters/ansel_seated.png",
+    npc_pike: "/assets/characters/pike.png",
+    npc_pike_body: "/assets/characters/pike_body.png",
+    npc_tamhobb: "/assets/characters/tamhobb.png",
+    npc_tamhobb_body: "/assets/characters/tamhobb_body.png",
+    npc_nib: "/assets/characters/nib.png",
+    npc_nib_body: "/assets/characters/nib_body.png",
+    npc_bramwick_seated: "/assets/characters/bramwick_seated.png",
+    npc_weather_body: "/assets/characters/weather_body.png",
+    prop_flag16: "/assets/props/flag16.png",
+    prop_qflag: "/assets/props/qflag.png",
+    prop_crate: "/assets/props/crate.png",
+    prop_crowbar: "/assets/props/crowbar.png",
+    prop_spyglass: "/assets/props/spyglass.png",
+    prop_longboat: "/assets/props/longboat.png",
+    prop_invoices: "/assets/props/invoices.png",
+    // The painted sign at the harbour end of the quay: HARBOUR MOUTH and an arrow.
+    prop_quay_sign: "/assets/props/quay_sign.png",
+    prop_quay_sign_mouth: "/assets/props/quay_sign_mouth.png",
+    prop_quay_lamp: "/assets/props/quay_lamp.png",
+    prop_quay_steps: "/assets/props/quay_steps.png",
+    // Painted on the ghost ship: Mordant's plate on the cabin desk, and the canvas-wrapped lantern.
+    prop_nameplate: "/assets/props/nameplate.png",
+    prop_lantern_wrapped: "/assets/props/lantern_wrapped.png",
+    // The Father and the Fog: new cast and the ghost ship.
+    npc_vex: "/assets/characters/vex.png",
+    npc_vex_body: "/assets/characters/vex_body.png",
+    npc_mordant: "/assets/characters/mordant.png",
+    npc_mordant_body: "/assets/characters/mordant_body.png",
+    bg_lantern_deck_wide: "/assets/scenes/lantern_deck_wide.webp",
+    item_bell_clapper: "/assets/props/items/bell_clapper.png",
+    item_lantern: "/assets/props/items/lantern.png",
+    // Reused art for the remaining new-story items (a proper nameplate icon can come later).
+    item_chart: "/assets/props/items/ledger.png",
+    item_bottle: "/assets/props/items/rum.png",
+    item_nameplate: "/assets/props/items/claims_book.png",
+    // Inventory icons, one per item in scripts/items.adv, keyed `item_<id>`. Painted, keyed to
+    // transparency and trimmed; the longer side is 256 px (tools/generate.py, post_icon).
+    item_crowbar: "/assets/props/items/crowbar.png",
+    item_rum: "/assets/props/items/rum.png",
+    item_licence_form: "/assets/props/items/licence_form.png",
+    item_drawer_key: "/assets/props/items/drawer_key.png",
+    item_stamp: "/assets/props/items/stamp.png",
+    item_licence: "/assets/props/items/licence.png",
+    item_compass: "/assets/props/items/compass.png",
+    item_spyglass: "/assets/props/items/spyglass.png",
+    item_sextant: "/assets/props/items/sextant.png",
+    item_pell_log: "/assets/props/items/pell_log.png",
+    item_bill: "/assets/props/items/bill.png",
+    item_calendar_leaf: "/assets/props/items/calendar_leaf.png",
+    item_bucket: "/assets/props/items/bucket.png",
+    item_bucket_water: "/assets/props/items/bucket_water.png",
+    item_flag16: "/assets/props/items/flag16.png",
+    item_ansel_log: "/assets/props/items/ansel_log.png",
+    item_purse: "/assets/props/items/purse.png",
+    item_requisition: "/assets/props/items/requisition.png",
+    item_claims_book: "/assets/props/items/claims_book.png",
+    item_ledger: "/assets/props/items/ledger.png",
+    item_kelp_manifest: "/assets/props/items/kelp_manifest.png",
+    item_manifest: "/assets/props/items/manifest.png",
+  },
+  audio: {
+    music_dock: "/assets/audio/dock.mp3",
+    music_office: "/assets/audio/office.mp3",
+    music_tavern: "/assets/audio/tavern.mp3",
+    music_sea: "/assets/audio/sea.mp3",
+    music_fog: "/assets/audio/fog.mp3",
+    music_sunset: "/assets/audio/sunset.mp3",
+    music_pans: "/assets/audio/pans.mp3",
+  },
+};

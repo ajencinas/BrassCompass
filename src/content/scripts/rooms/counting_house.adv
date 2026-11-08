@@ -1,0 +1,83 @@
+room counting_house "Vex's Warehouse"
+  bg bg_countinghouse_wide
+  width 2560
+  music music_office
+  perspective horizon 300 ref 875 height 360
+  # Measured from the painted door (y 220-690, 470 px tall): an adult at its floor plane
+  # is 413 px. The old 360 px scale put the desks at Vex's collar and the safe over his head.
+  scale 690 413
+  scale 752 480
+  scale 875 610
+  walk (60,875) (110,752) (2450,752) (2520,875)
+  entry 260,800
+  arrive alley 380,805
+  footsteps wood
+  light 415,490 radius 110 lamp
+  light 663,490 radius 110 lamp
+  light 1055,490 radius 110 lamp
+  light 1328,490 radius 110 lamp
+  light 1505,490 radius 110 lamp
+  light 1858,490 radius 110 lamp
+  light 2100,490 radius 110 lamp
+
+  sprite npc_vex_body at 1600,810 size 1.03 idle speaker vex for vex
+
+  scene if act 1 and not vex_warehouse_arrived
+    set vex_warehouse_arrived
+    say "Vex's warehouse. Desks, green lamps, and one very good safe."
+
+  # The painted door: frame to frame, the brass cloud above it down to the boards.
+  hotspot door_out "the lane door"
+    area 100,260 250x560
+    stand 240,800
+    exit alley
+    look "The lane door. Oiled hinges, and no lock. Vex likes to hear who comes in."
+
+  hotspot portrait "the portrait"
+    area 1160,0 270x350
+    nowalk
+    look "The last owner in oils: top hat, sword, and a chin the painter improved. Vex bought the warehouse with the portrait still hanging."
+    talk "I ask why he keeps it. Vex says it is the only honest man in the room, and he likes to be reminded what honesty looks like."
+
+  hotspot pigeonholes "the pigeonholes"
+    area 470,345 1240x210
+    nowalk
+    look "Rolled charts in every hole, one for each ship that didn't come home."
+    use "Vex calls this his library. The sea calls it salvage."
+
+  hotspot desks "the desks"
+    area 340,550 1760x195
+    stand 1200,815
+    look "Five tall desks, pens out, no clerks. Vex does his own accounts and enjoys it."
+    open "The drawers are locked. The keys are on a ring in Vex's pocket, alphabetised."
+    use "I straighten a pen. It was already straight."
+
+  hotspot safe "the strongbox"
+    area 2125,440 305x315
+    stand 2060,810
+    look "A black safe with a brass dial. Vex says it holds tide tables."
+    open "The dial is worn smooth on one side. Vex opens it with his thumb and a look."
+    use "It is bolted through the floor. The floor seems nervous about it."
+
+  hotspot brass_cloud "the brass cloud"
+    area 100,60 250x170
+    nowalk
+    look "A brass cloud over the door. Vex says it's his family crest."
+    use "I've seen that cloud on salvage from three ships. Vex says it's a coincidence."
+
+  hotspot vex "Captain Vex"
+    area 1420,240 380x590
+    stand 1380,810
+    look "Captain Vex, in a coat worth more than the Marrow."
+    talk "I take my hat off. He likes that."
+      talk vex
+    state if vex_deal
+      look "Captain Vex, counting the tide. He is already spending the salvage."
+      talk "He is in a better mood than usual, which is worse."
+        talk vex at deal_done
+    state if rudder_back
+      talk "He has seen the rudder. He is deciding how grateful to look."
+        talk vex at rudder
+    state if met_vex
+      talk "He does not look up from the desk."
+        talk vex at no_rudder

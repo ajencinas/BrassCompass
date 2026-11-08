@@ -1,0 +1,132 @@
+room marrow_quarterdeck "The Marrow — Helm"
+  bg bg_quarterdeck_wide
+  width 2560
+  music music_sea
+  ambience sea
+  perspective horizon 250 ref 875 height 320
+  walk (100,875) (150,690) (2380,700) (2500,875)
+  entry 300,800
+  arrive marrow_deck 430,800
+  arrive marrow_cabin 660,740
+  footsteps deck
+  light 175,515 radius 130 lantern if not rule_light
+  light 1382,432 radius 90 lantern if not rule_light
+  light 2060,450 radius 140 lantern if not rule_light
+  motes glints (1640,262) (2160,262) (2160,365) (1600,380) count 24
+  emit creak
+
+  # Act II: Vex at the helm, and the crew behind Fenn once the hold is open.
+  sprite npc_vex_body at 780,770 size 1.15 idle speaker vex for vex grade "saturate(0.85) brightness(0.92)" if act 2 and not marrow_lost
+  sprite npc_quill_body at 1250,780 size 0.98 flip idle speaker quill for quill grade "saturate(0.85) brightness(0.92)" if act 2 and salvage_seen and not marrow_lost
+  sprite npc_hobb_body at 1450,800 size 1.03 flip idle speaker hobb for hobb grade "saturate(0.85) brightness(0.9)" if act 2 and salvage_seen and not marrow_lost
+  sprite npc_dorrit_body at 1650,830 size 0.95 idle speaker dorrit for dorrit grade "saturate(0.85) sepia(0.08) brightness(0.9)" if act 2 and salvage_seen and not marrow_lost
+
+  scene if act 2 and salvage_seen and not vex_exposed
+    say "Quill, Hobb and Dorrit come up behind me. Nobody says anything."
+    say "Vex is at the wheel. He does not turn around."
+
+  scene if act 2 and vex_exposed and not marrow_lost
+    say "Vex has the wheel. The Marrow is already turning into the fog."
+
+  hotspot vex "Captain Vex"
+    show if act 2 and not marrow_lost
+    area 700,460 160x315
+    stand 980,810
+    look "Captain Vex at the helm, coat buttoned, both hands where the crew can see them. He likes to be seen working."
+    talk "I get his attention. It takes some getting."
+      talk vex at helm
+    state if act 2 and fog_tried and not salvage_seen and not vex_exposed
+      look "Vex is watching the water where the bell rang. He has not blinked."
+      talk "He hears me on the stairs and turns his head."
+        talk vex at after_fog
+    state if act 2 and seen:vex.send and not fog_tried and not salvage_seen
+      look "Vex is watching the bow, not me. He is waiting for something out there."
+      talk "He does not turn from the bow."
+        talk vex at helm_done
+    state if act 2 and salvage_seen and not vex_exposed
+      look "Vex is at the wheel. He has not looked at me since the hold."
+      talk "The crew is behind me. He knows why."
+        talk vex at confront
+    state if act 2 and vex_exposed and not marrow_lost
+      look "Vex has both hands on the wheel. He is not waiting for permission."
+      talk "He does not turn around. \"Say it or hold on.\""
+        talk vex at last
+
+  hotspot wheel "the wheel"
+    area 760,100 320x360
+    stand 950,810
+    look "The wheel, lashed to the captain's heading. It is bigger than it looks from the quay."
+    use "I put a hand on it. The ship does not notice, but I do."
+    turnon "There is nothing to turn on. The ship is already doing it."
+    state if act 2 and vex_exposed and not marrow_lost
+      look "The wheel is turning under Vex's hands. He is taking her deeper."
+      use "I put my hand beside his. He does not take it off."
+        talk vex at last
+
+  hotspot binnacle "the binnacle"
+    area 1000,150 220x330
+    stand 1200,810
+    look "The binnacle. A ship's compass in brass and glass, swinging slow. My father's compass disagrees with it."
+    use "The ship's compass points north. Mine points at the fog. One of them is wrong."
+    open "Sealed. You do not open a binnacle any more than you open a doctor."
+    turnon "It is lit. It has been lit since before I came aboard."
+
+  hotspot seas "the Shroud"
+    area 1400,180 900x280
+    nowalk
+    look "The Shroud, ahead and to starboard, grey where the weather sits. It has taken every ship for eighty years."
+    use "I hold up my father's compass. The needle settles on the grey and stays there."
+
+  hotspot cabin_door "the cabin door"
+    area 430,260 200x170
+    stand 680,740
+    exit marrow_cabin
+    look "Carved doors under the helm: the captain's cabin, and the charts."
+    open "I knock, then go in. Nobody is here to stop me."
+
+  hotspot stairs_down "the steps to the deck"
+    area 260,440 400x400
+    stand 420,800
+    exit marrow_deck sound stairs
+    look "The steps back down to the main deck."
+    open "I go down."
+
+  hotspot rail_lantern "the rail lantern"
+    area 1335,380 110x170
+    stand 1250,840
+    look "The rail lantern. It burns all night, whether anyone is watching or not."
+    state if rule_light
+      name "the last lantern"
+      look "The lantern is burning. I keep looking at it, waiting for the fog to take it."
+      use "I put my hand near the glass. Warm. For now."
+
+  hotspot quill "Quill"
+    show if act 2 and salvage_seen and not marrow_lost
+    area 1205,515 90x270
+    stand 1100,820
+    look "Quill has her spyglass out. She is not looking at the horizon."
+    talk "She says, \"Those crates had ships' names on them. I could read them from the door.\""
+    give "She does not take it. \"Keep your hands where I can see them. Both of them.\""
+
+  hotspot hobb "Hobb"
+    show if act 2 and salvage_seen and not marrow_lost
+    area 1375,520 150x285
+    stand 1600,810
+    look "Hobb has his crowbar across his knees. He is holding it like a handrail."
+    talk "He says, \"I counted the crates. Then I stopped counting.\""
+    give "He looks at it for a long time. \"Not yet. Not for this.\""
+
+  hotspot dorrit "Dorrit"
+    show if act 2 and salvage_seen and not marrow_lost
+    area 1565,545 175x290
+    stand 1810,830
+    look "Dorrit has come up from the galley with his sleeves rolled. He is not holding a spoon."
+    talk "He says, \"I cooked for a man who sells the dead. I want that said somewhere.\""
+    give "He looks at my hands and puts his own behind his back."
+
+  use compass on binnacle
+    "North, says the binnacle. The fog, says my father's compass. They glare at each other."
+  use compass on seas
+    "The needle points into the grey off the bow. It has never wanted anything so much."
+  use spyglass on seas
+    "Grey, then more grey, then a wave that is only a wave."

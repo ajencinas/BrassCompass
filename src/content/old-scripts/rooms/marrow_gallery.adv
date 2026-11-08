@@ -1,0 +1,122 @@
+# ACT II, optional: the captain's stern gallery at sundown. No puzzle and nothing needed: the
+# view, a glass of rum, and Vane off duty (dialogue/gallery.adv). The cabin opens it once she
+# has named her terms and shuts it when she goes up to the wheel (marrow_cabin.adv).
+# Vane steps out with Fenn and back in with him: arriving here sets vane_out, arriving in the
+# cabin clears it, and each room shows her only on its own side of that flag.
+room marrow_gallery "The Marrow — Stern Gallery"
+  bg bg_gallery_wide
+  width 2560
+  music music_sunset
+  ambience sea
+  perspective horizon 255 ref 875 height 485
+  # Sit the figures in the sunset; the plate is already the right time of day.
+  grade "sepia(0.14) saturate(1.04) brightness(1.02)"
+  # The deck boards between the cabin doors and the captain's table. The rail is not floor,
+  # and nor is anything behind the table.
+  walk (525,878) (548,806) (1890,806) (1905,878)
+  entry 640,842
+
+  footsteps deck
+  light 2232,80 radius 110 lantern
+  light 196,211 radius 90 lamp
+  water (530,270) (2180,270) (2180,525) (1100,525) (1100,460) (940,460) (940,525) (530,525) ripple 1.8
+  motes glints (560,300) (2150,300) (2150,450) (560,450) count 45
+  emit lapping at 1500,620
+  emit creak
+
+  # At her rail, looking out along her gallery, away from the door.
+  sprite npc_vane_rum at 1700,812 size 1 flip idle speaker vane for vane grade "saturate(0.92) brightness(0.96)"
+
+  on enter
+    set vane_out
+
+  scene if not gallery_sundown
+    set gallery_sundown
+    say "Sundown. The captain takes her rum out here every evening, alone. Tonight the door's on the latch. That's an invitation."
+
+  hotspot doors "the cabin doors"
+    area 190,40 330x800
+    stand 600,842
+    exit marrow_cabin
+    look "The doors back into the cabin, lamplight through the glass. In there she's the captain. Out here she's something else."
+
+  hotspot sun "the sunset"
+    area 1110,50 320x210
+    nowalk
+    look "The sun is going down over the Straits with a lack of restraint that, in Port Vela, would need a permit."
+
+  hotspot wake "the wake"
+    area (1185,272) (1265,272) (1630,530) (640,530)
+    nowalk
+    look "Our wake, ruled straight back across the Straits to Port Vela. The neatest line I've seen since I left my desk."
+
+  hotspot straits "the Straits"
+    area (500,262) (1170,262) (630,530) (500,530)
+    nowalk
+    look "Three years I watched this sea from a customs window and took it for blue. It's every colour there is. It never told the harbour."
+
+  hotspot islands "the islands"
+    area 1495,208 370x60
+    nowalk
+    look "Islands, going blue with distance like ink drying on a page. Not one of them is on any form I've ever stamped."
+
+  hotspot gulls "gulls"
+    area 1570,0 620x135
+    nowalk
+    look "Gulls, hanging in the air off the stern without moving a feather. At the customs house we called that a promotion."
+
+  hotspot fish "flying fish"
+    area 945,462 150x80
+    nowalk
+    look "A flying fish leaves the sea, glides fifty yards on fins never meant for it, and drops back in, astonished. I know the feeling."
+
+  hotspot rail "the rail"
+    area 500,530 1480x272
+    stand 1180,812
+    look "The rail, carved with vines and polished by twenty years of a captain's elbows. There's a dent in it exactly the size of a glass."
+    push "I lean on it, like a sailor. The sea leans back, like the sea. I stop."
+    pull "It's held twenty years of the captain leaning on it. It isn't coming off for me."
+
+  hotspot table "the captain's table"
+    area 1975,590 290x290
+    nowalk
+    look "A bottle of rum, and a glass poured to the brim that nobody's touched. The captain has her own. This one isn't for me."
+    pickup "It isn't mine to take. I get the feeling it isn't hers, either."
+    state if seen:gallery.inside
+      look "Pell's glass, empty, at the rail. The sea had it at dark."
+    state if seen:gallery.owed
+      look "Pell's glass, poured to the brim. The sea gets it at dark."
+
+  hotspot lantern "the stern lantern"
+    area 2185,0 240x190
+    nowalk
+    look "A brass lantern on a bracket, lit already, in case the sun changes its mind."
+
+  hotspot carving "the carving"
+    area 2385,560 175x320
+    nowalk
+    look "Gilt carving on the gallery corner: vines, a cherub, and a mermaid with the look of someone asked to hold a pose."
+
+  # After the rail, so she wins where she stands in front of it.
+  hotspot vane "Captain Vane"
+    show if vane_out and not vane_convinced
+    area 1610,340 200x470
+    stand 1470,842
+    look "Captain Vane at her rail, with rum and the whole sunset. Out here she looks less armoured. Slightly. Like a fort with a window box."
+    talk "She doesn't turn round. She moves the bottle an inch further from me, which I take as hello."
+      talk gallery
+    give "“If it isn't rum or a reason, clerk, keep it.”"
+    state if seen:gallery.root
+      talk "She doesn't turn round. She doesn't need to."
+        talk gallery at again
+
+  use pell_log on vane
+    "She closes my hand over it without looking down. “Not out here, clerk. That's a conversation for the chart table.”"
+  use compass on vane
+    "She doesn't look at it. “I've seen where it points, clerk. Let me look at where I've been for five minutes.”"
+  use compass on wake
+    "I hold the compass over the wake. The needle swings round and points back through the cabin, at the Straits. It has no interest in where we've been."
+  use sextant on sun
+    "I put Pell's sextant to my eye and try to bring the sun down to the horizon. It gets there before me, without any help."
+  use stamp on table
+    "Stamp the captain's rum PASSED, and Dorrit will want to inspect it. Then the captain will want to inspect Dorrit."

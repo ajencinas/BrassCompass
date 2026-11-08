@@ -1,0 +1,95 @@
+# Act IV: Mordant on the Grey Lantern's deck, and the last choice of the voyage.
+#
+# The deck room opens `ending` when Mordant has appeared and his name has been spoken. The
+# player gives Vex something to hold on to, or does not, and then decides whether to lay the
+# crews to rest or take the living and run.
+#
+# Read here, set by the deck and the captain's cabin: bell_cut, lantern_doused, name_spoken,
+# tam_freed. This file sets vex_trust, curse_broken, ending_fog_lifts, escaped_fog and
+# ending_long_way, and ends the voyage with win.
+
+dialogue ending
+  # The confrontation. Mordant is courteous, ancient and territorial. He never threatens.
+  node root narrator "Mordant waits beside the desk. The cabin is quiet enough to hear the ship move."
+    -> vex_rail
+
+  node vex_rail narrator "Vex is in the cabin doorway with the longboat's rope in his hands. He is looking at the fog, not at the dead."
+    -> vex_ask
+
+  node vex_ask vex "The boat. The rope. Your word. Give me one of them, and I'll know where I stand."
+    > "Take the boat." -> vex_boat
+      set vex_trust
+    > "Take the rope." -> vex_rope
+      set vex_trust
+    > "You have my word." -> vex_word
+      set vex_trust
+    > "You'll get nothing from me." -> vex_none
+      set vex_trust = false
+
+  node vex_boat vex "The boat, then. If this goes wrong, I am not waiting for a signal."
+    -> terms
+
+  node vex_rope vex "A rope. I can hold a rope. It is the waiting I am bad at."
+    -> terms
+
+  node vex_word vex "Your word. I have been paid in worse."
+    -> terms
+
+  node vex_none vex "Then I keep the oars. Do not expect me to use them for anyone else."
+    -> terms
+
+  # The last choice. A needs all three holds; B is always there.
+  node terms mordant "You want the living. I understand. The dead are mine."
+    > "Why do you keep them?" -> keep
+    > "What happens if I free them?" -> free_q
+    > "Lay them to rest." if bell_cut and lantern_doused and name_spoken -> rest
+      set curse_broken
+      set ending_fog_lifts
+    > "Take the living and run." -> run
+      set escaped_fog
+      set ending_long_way
+
+  node keep mordant "A ship needs hands. The fog brings me hands. I have never pretended it was kind."
+    -> terms
+
+  node free_q mordant "Then the bell falls quiet and the lantern goes dark, and my name is only a name. I would go with them."
+    > "You would let them go?" -> free_q2
+    > "Then I will do it." if bell_cut and lantern_doused and name_spoken -> rest
+      set curse_broken
+      set ending_fog_lifts
+    > "Not yet." -> terms
+
+  node free_q2 mordant "I have kept this ship afloat for eighty years. I am tired, and I am not sorry."
+    -> terms
+
+  # Lay them to rest: ring the bell for the dead, speak the name, let the fog go.
+  node rest narrator "I take the clapper from Hobb and strike the bell where it hangs."
+    -> rest2
+
+  node rest2 narrator "Three notes for the watch. One for home. Out on the deck, the crew lifts its heads."
+    -> rest3
+
+  node rest3 fenn "Mordant. Your watch is over."
+    -> rest4
+
+  node rest4 narrator "The fog goes out like a tide. The Grey Lantern settles, slow and easy, and the sea takes her."
+    -> rest5
+
+  node rest5 narrator "A man in a grey coat takes off his hat. Then there is only water, and light, and the way home."
+    win
+
+  # Take the living and run: the dead stay, and so does the fog.
+  node run mordant "Take your living, then. The dead are mine, and the fog is patient."
+    -> run2
+
+  node run2 narrator "We go out through the cabin and over the rail into the longboat. Vex has the oars. He does not say why he is rowing, and nobody asks."
+    -> run3
+
+  node run3 narrator "Behind us, the Grey Lantern turns away. Her crew stays at its posts. The fog closes over them."
+    -> run4
+
+  node run4 narrator "Ahead, the harbour light. Behind, the bell, ringing for a crew that cannot leave."
+    -> run5
+
+  node run5 narrator "I count the living. I count them twice."
+    win

@@ -1,0 +1,150 @@
+# The Arcadia on the reef. Act III opens here, at dawn, the boat just beached.
+room reef_wreck "The Arcadia, on the Reef"
+  bg bg_reef_wide
+  width 2560
+  music music_fog
+  ambience sea
+  perspective horizon 440 ref 875 height 300
+  # The beach right of the boat, running out onto the coral flats under the wreck.
+  walk (1000,875) (1010,800) (1300,775) (1700,778) (2100,790) (2420,820) (2480,875)
+  entry 1180,830
+  arrive arcadia_cabin 1790,800
+  arrive lagoon_shore 1090,840
+  arrive salt_camp 2330,845
+
+  # Atmosphere: the lagoon moving round the wreck, sun on it, spray along the reef.
+  footsteps sand
+  water (0,500) (1455,500) (1455,560) (1318,580) (1300,645) (1475,655) (1490,760) (0,760) ripple 1.8
+  motes glints (0,520) (1440,520) (1440,560) (1310,585) (1290,645) (1460,660) (1460,740) (0,740) count 30
+  haze 330 480 floor 500 alpha 0.1 speed 12
+  emit lapping at 700,700
+  emit creak at 1800,500
+
+  sprite npc_quill_body at 1290,805 size 0.98 idle speaker quill for quill grade "saturate(0.88) brightness(0.95)"
+  # Number fifteen (the same patchwork, dyed blue by the grade) until sixteen goes up.
+  # Flags fly from the masthead: sized against the hull's waterline, showing only the top.
+  sprite prop_flag16 at 1850,700 size 3.4 visible 0.21 for flag grade "sepia(0.9) hue-rotate(170deg) saturate(2.4) brightness(0.85)" if not flag16_up
+  sprite prop_flag16 at 1850,700 size 3.4 visible 0.21 for flag if flag16_up
+
+  # The hull, so the masthead flags can stand on her waterline.
+  occluder floor 712 (1470,610) (1600,400) (1920,344) (2130,384) (2176,528) (2160,672) (1920,704) (1760,704) (1520,650)
+
+  hotspot fogbank "the fog on the reef"
+    area 0,300 1450x170
+    nowalk
+    look "Fog sits along the outer reef, like a wall somebody keeps repainting. Out past it is the Marrow. She can't see in. We can't see out."
+    talk "I wave at the fog. Somewhere behind it, I hope, Vane is not waving back."
+    state if fog_down
+      name "the reef"
+      look "Where the fog was: the outer reef, white water, and a gap as straight as a ruled line. The Needle. Out past it, a ship, waiting."
+
+  hotspot lagoon "the lagoon"
+    area 0,480 1300x260
+    stand 1080,800
+    look "The lagoon, flat and clear. You can count the fish. I do. There are forty-one, and one is counting me."
+    use "I trail my hand in it. Warm as a bath. It's hard to believe anyone was ever unhappy here."
+    pickup "I'd need something to carry it in. My hands have been tried."
+
+  hotspot wreck "the Arcadia"
+    area 1340,230 880x480
+    stand 1700,790
+    article none
+    look "The Arcadia, my father's ship. Heeled over on the coral, masts still up. Three years, and she's kept her dignity."
+    talk "“Hello,” I say. It comes out smaller than I meant."
+    open "The way in is the hatch on her deck. It doesn't look in a hurry."
+
+  hotspot hatch "the deck hatch"
+    area 1690,390 200x145
+    stand 1790,800
+    look "A hatch on her tilted deck, swollen shut. Three years of salt have glued it down, and salt is very stubborn glue."
+    open "It doesn't move. It doesn't intend to. It would take leverage, and possibly a stern word."
+    pull "I pull. The hatch has had three years to get comfortable and won't be rushed."
+    push "Pushing a jammed hatch is how clerks discover their shoulders."
+    state if hatch_open
+      name "open hatch"
+      exit arcadia_cabin sound hatch
+      look "The hatch, open, and below it the dark of my father's cabin."
+      open "I climb down into the Arcadia."
+
+  hotspot halyard "the halyard"
+    area 1300,170 150x210
+    stand 1500,785
+    look "A halyard, hanging loose from the yard. The rope's worn pale from use. Somebody raises flags here. Somebody else keeps lowering them."
+    use "There's nothing to run up it. Vane is watching for a new flag, not a clerk."
+    pull "The block squeals at the masthead. Fifteen shivers. I leave it be."
+    state if flag16_up
+      look "Sixteen's up. All that's left is to watch the Needle."
+        talk signal at about
+      use: talk signal at about
+      pull: talk signal at about
+
+  hotspot flag "the flag"
+    area 1720,60 300x170
+    stand 1700,785
+    look "A flag made of shirts, sewn with feeling, not skill. Fifteen in the middle. An L in red thread. I know one L. I'm not ready to know it."
+    pickup "It's at the top of a mast. I'm at the bottom of everything."
+    state if flag16_up
+      name "flag sixteen"
+      look "Sixteen, at the masthead, mustard and unrepentant."
+        talk signal at about
+    state if log_read
+      name "flag fifteen"
+      look "Number fifteen. The blue one. The L in the corner is for Lise. He's been signing them for her, every one."
+
+  hotspot boat "the boat"
+    area 280,770 690x110
+    stand 1060,845
+    exit lagoon_shore sound none
+    look "The Marrow's jolly boat, pulled up on the coral sand. Quill rowed. I sat in the stern, held the compass and tried to look like ballast."
+    open "We row across to Gullet Key. Quill lets me take an oar, which I take as a compliment until she starts correcting my stroke."
+    use "We row across to Gullet Key. Quill lets me take an oar, which I take as a compliment until she starts correcting my stroke."
+
+  hotspot flats "the reef flats"
+    show if ansel_met
+    area 2240,640 320x240
+    stand 2330,845
+    exit salt_camp sound none
+    look "The reef flats, back across to the salt camp, staked out by somebody who knows the way. Follow the stakes. Not my father."
+    open "I pick my way back across the flats, stake by stake."
+
+  hotspot quill "Quill"
+    area 1205,500 170x290
+    stand 1440,800
+    look "Quill, barefoot on the coral, with the oars over her shoulder as if she might need to hit something with them. She might."
+    talk "She leans on the oars and waits for me to say something worth the row."
+      talk quill3 at boat
+    give "“Keep it, cargo. I've got oars. My hands are spoken for.”"
+    state if flag16_up
+      talk: talk signal at about
+    state if has flag16
+      talk: talk quill3 at flag
+
+  use crowbar on hatch if not hatch_open
+    "I set the crowbar under the lip of the hatch and lean. Three years of salt let go. The hatch is open. Quill says nothing, loudly."
+    set hatch_open
+    sound door
+  use crowbar on hatch
+    "It's open. Opening it harder won't help."
+  use flag16 on halyard if fog_down
+    "I climb the tilted deck to the mainmast, with Quill a step behind me in case the deck has opinions."
+    take flag16
+    set flag16_up
+    talk signal
+  use flag16 on halyard
+    "In this fog? The Marrow wouldn't see it from the end of her own bowsprit. The fog has to come down first."
+  use flag16 on flag if fog_down
+    "I climb the tilted deck to the mainmast, with Quill a step behind me in case the deck has opinions."
+    take flag16
+    set flag16_up
+    talk signal
+  use flag16 on flag
+    "In this fog? The Marrow wouldn't see it from the end of her own bowsprit. The fog has to come down first."
+  use flag16 on wreck if fog_down
+    "I climb the tilted deck to the mainmast, with Quill a step behind me in case the deck has opinions."
+    take flag16
+    set flag16_up
+    talk signal
+  use flag16 on wreck
+    "In this fog? The Marrow wouldn't see it from the end of her own bowsprit. The fog has to come down first."
+  combos fill_bucket
+  combos quill_combos

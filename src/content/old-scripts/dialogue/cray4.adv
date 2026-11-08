@@ -1,0 +1,34 @@
+# Silas Cray, Acting Harbourmaster, in Bramwick's chair.
+dialogue cray4
+  node root silas "The clerk! Back from the dead. Or from the sea, which is worse. I'm Acting Harbourmaster. Bramwick was suspended for “conduct”. Do sit."
+    -> hub
+  node hub silas "Well? I bill by the hour. Tonight the harbour pays, so take your time."
+    > "You emptied six ships." if not seen:cray4.six -> six
+    > "You'll never get the compass." if not seen:cray4.compass -> compass
+    > "What happens at the dawn bell?" if not seen:cray4.bell -> bell
+    > "Where's Bramwick?" if not seen:cray4.where -> where
+    > "You told me to swim." if (seen:silas.swim or seen:silas.swim_offer) and not seen:cray4.swim -> swim
+    > "I've got the harbour ledger." if has ledger and not seen:cray4.ledger -> ledger
+    > "What about your offer?" if cray_offer and not seen:cray4.offer -> offer
+    > "Goodnight, Acting Harbourmaster." -> bye
+  node six silas "I insured six ships. The weather emptied them. I have the paperwork."
+    -> smile
+  node smile narrator "He smiles. It's a good smile, and I don't believe it."
+    -> always
+  node always silas "I always have the paperwork, clerk. That's the difference between us. You file it. I write it."
+    -> hub
+  node compass silas "I don't need it now. The whole Straits has seen where it points. A secret everyone knows is just a map."
+    -> hub
+  node bell silas "At the bell I close the book. The Marrow: lost, all hands, plague. Nobody questions a plague ship. They're too afraid of the answer."
+    -> hub
+  node where silas "Drinking at the Keel with an old navigator. I let him keep his hat. I'm not a monster. I'm an administrator."
+    -> hub
+  node swim silas "And you took a pirate ship instead. Less heroic, but drier. Your licence was impeccable. I checked. I check everything."
+    -> hub
+  node ledger silas "My dues, in Bramwick's hand. Bring it to the Keel at dawn. I'll be drinking to the Marrow's memory."
+    -> hub
+  node offer silas "Still open. The draught's worse in winter. The view is mostly people leaving. You'd get used to it."
+    -> offer2
+  node offer2 silas "I've kept the chair empty. It's the only thing in the building I never have to dust."
+    -> hub
+  node bye silas "Mind the bell, clerk. It rings for everyone. This morning I've asked it to ring mostly for you."

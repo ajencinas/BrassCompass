@@ -1,0 +1,188 @@
+room lantern_deck "The Grey Lantern — Deck"
+  bg bg_lantern_deck_wide
+  width 2560
+  music music_fog
+  perspective horizon 300 ref 875 height 470
+  grade "saturate(0.88) brightness(0.95)"
+  walk (120,875) (180,720) (2380,720) (2500,875)
+  entry 1400,820
+  arrive arcadia_cabin 240,800
+  footsteps deck
+  ambience sea
+
+  # The great lantern is the only light the ghost ship has left. The rail lamp is the only
+  # warm thing on the deck, and it is not for us.
+  light 505,185 radius 190 lantern colour "#79e6a4" if not lantern_doused
+  light 505,185 radius 80 lantern colour "#dcffe9" if not lantern_doused
+  light 2246,605 radius 55 candle colour "#ffb070"
+  haze 260 600 floor 690 alpha 0.14 speed 4 tint "#cfd8dc"
+  motes dust (360,60) (720,60) (730,370) (340,370) count 20
+  emit lapping at 1900,780
+  emit creak
+
+  # Act IV. The crew is aboard, the three jobs are open, and the deck is the hub between the
+  # bell, the lantern and the cabin door. The name is below, in the captain's cabin.
+  scene if not lantern_deck_boarded
+    set lantern_deck_boarded
+    say "The Grey Lantern's deck is wet. The fog stands around it like a wall with no top."
+    say "Behind us, the longboat knocks against the hull. Nobody has spoken since we climbed aboard."
+    say "Hobb is at the mast with his ear turned up. Quill is watching the great lantern."
+    say "Elias holds his chart to his chest and looks at the cabin door."
+    say "Vex has his hands in his pockets. \"Three jobs,\" he says. \"I'll watch the boat.\""
+
+  scene if bell_cut and lantern_doused and not name_spoken and not lantern_deck_ready
+    set lantern_deck_ready
+    say "The bell is quiet. The great lantern is out. The fog has stopped pressing at the rail."
+    say "There is one rule left, and it is below, in the captain's cabin."
+
+  scene if name_spoken and bell_cut and lantern_doused and not lantern_deck_final
+    set lantern_deck_final
+    say "The deck is very quiet. Somewhere below, the cabin is waiting."
+
+  # The cabin door is under the carved stern gallery, out of the frame when Act IV opens on the
+  # deck's middle (camera at 1400). One short nudge, once, while the name is still unread.
+  scene if act 4 and lantern_deck_boarded and not name_spoken and not nudge_cabin_door
+    set nudge_cabin_door
+    say "The cabin door is under the carved stern gallery, at the far end of the deck."
+    say "Elias holds his chart against his chest. \"The name is down there,\" he says. \"Go on.\""
+
+  # The crew. Vex stays by the rail and is useful in exactly one way; Quill owns the climb;
+  # Hobb owns the bell; Elias is here until the name pulls him below.
+  sprite npc_ansel_body at 480,845 size 1.0 idle speaker elias for elias grade "saturate(0.88) brightness(0.95)"
+  sprite npc_quill_body at 780,825 size 0.98 idle speaker quill for quill grade "saturate(0.85) brightness(0.95)"
+  sprite npc_hobb_body at 1120,840 size 1.02 idle speaker hobb for hobb grade "saturate(0.85) brightness(0.95)"
+  sprite npc_vex_body at 2180,815 size 1.0 idle speaker vex for vex grade "saturate(0.8) brightness(0.92)"
+  sprite npc_tamhobb_body at 1700,845 size 1.0 idle speaker tamhobb for tamhobb grade "saturate(0.8) brightness(0.95)" if tam_freed
+  # Mordant appears in his cabin (arcadia_cabin), where the name is spoken.
+  # The wrapped lantern: once Quill smothers it, this dark canvas hangs over the painted green
+  # glass, so the great lantern itself reads out, not just the dynamic light. It hangs high on the
+  # plate where a person's height is only ~25 px, hence the large size; `visible 0.99` keeps a
+  # ground contact shadow from being drawn under a lantern in mid-air.
+  sprite prop_lantern_wrapped at 530,330 size 11.83 visible 0.99 grade "saturate(0.8) brightness(0.95)" if lantern_doused
+
+  # The painted green lantern, hanging from the stern. High enough that only Quill can reach it.
+  hotspot great_lantern "the great lantern"
+    area 440,40 190x300
+    stand 560,865
+    look "The great lantern, green and swollen with light. It hangs from the stern, and the fog leans in to look at it."
+    use "The canvas is wet and heavy in my hands. Quill holds out her hand for it."
+      say "I pass it up. Quill climbs the stern without hurrying."
+      say "She drapes the canvas over the glass. The green light fights her, then gives up."
+      say "\"No air, no flame,\" she says. \"No flame, no fog. Simple.\""
+      say "The deck goes dark. Out past the rail, the fog is only fog."
+      set lantern_doused
+      take lantern
+      sound click
+    state if lantern_doused
+      name "the dark lantern"
+      look "The great lantern, wrapped in wet canvas. The green light is out, and the fog has lost interest."
+      use "The canvas is tied down and the glass is dark. There is nothing left to put out."
+        nothing
+    state if not has lantern
+      use "The lantern is high, and the canvas is not in my hands. Quill is the one with the wet cloth."
+        nothing
+
+  # The mast and rigging, painted from the deck to the top of the frame. The bell is a sound in it.
+  hotspot rigging "the mast and rigging"
+    area 860,0 640x620
+    nowalk
+    look "The mast and the shrouds, black against the fog. Somewhere up there a rope is moving."
+    talk "I call up into the rigging. It creaks and does not answer."
+    use "I put a hand on a shroud. It is wet, and warm, as if someone has just let go of it."
+
+  # The bell: heard, never seen. Three notes, then one, the way Tam rang the Arcadia's watch.
+  hotspot bell "the bell"
+    area 1060,0 260x180
+    nowalk
+    look "A bell, high in the rigging. I cannot see it. I hear it: three notes, then one, slow."
+    talk "I call up. The bell keeps its time and does not answer."
+    use "Hobb is already climbing. He does not ask what I heard."
+      say "He goes up the shrouds hand over hand, the crowbar through his belt."
+      say "At the top he stops. Then he says one word, very quietly: \"Tam.\""
+      say "There is a man in the rigging with one hand on the bell rope. He is thin, and tired, and alive."
+      say "\"I have to keep the watch,\" Tam says. \"Somebody has to keep the watch.\""
+      say "Hobb cuts the rope. The clapper comes away in his hand. The bell hangs dumb."
+      say "Tam looks at his empty hand like a man waking up."
+      set bell_cut
+      set tam_freed
+      sound chime
+    state if bell_cut
+      name "the silent bell"
+      look "The bell hangs quiet above the deck, its rope cut. Tam is by the rail with the salt rake, looking at his hands."
+      use "Hobb has cut it. There is nothing left to cut."
+        nothing
+      talk "The rigging is empty. Whatever was ringing has stopped."
+        nothing
+
+  # The low door under the carved gallery at the stern. The plate paints the gallery and the
+  # dark recess beneath it rather than a framed door (art gap); the recess is the target.
+  hotspot cabin_door "the cabin door"
+    area (0,370) (265,385) (285,440) (285,665) (0,675)
+    stand 250,790
+    exit arcadia_cabin sound door
+    look "A low door under the carved gallery. The dark behind it is not empty."
+    open "I duck under the carved beam and go in."
+    use "I duck under the carved beam and go in."
+    talk "I knock. The door is already open."
+    state if name_spoken
+      look "The cabin door, and the cold coming out of it."
+
+  # The rail, and the fog past it. There is no horizon out there at all.
+  hotspot rail "the rail"
+    area 1830,540 700x150
+    stand 2050,795
+    look "The rail, and the fog past it. The sea is flat and grey, and there is no horizon."
+    talk "I lean over the rail and say nothing. The fog keeps that too."
+    use "I put my hand on the rail. It is wet, and it is not cold."
+
+  hotspot elias "Elias Fenn"
+    area 350,400 270x450
+    stand 630,860
+    look "My father, coat buttoned wrong, chart under one arm. He is looking at the cabin door."
+    talk "He says, \"The name is in there. I've said everyone else's for three months.\""
+      say "\"I never had his,\" he says. \"I would like to finish this one.\""
+
+  hotspot quill "Quill"
+    area 650,400 260x430
+    stand 640,860
+    look "Quill, with her boots off and her sleeves up. She is measuring the climb with her eyes."
+    talk "She does not look at me. \"The lantern needs something wet, and a hand that can reach it.\""
+      say "She puts a wad of oiled canvas in my hands. It is soaked through and cold."
+      say "\"Hold that. Don't wring it out. When I'm up, pass it.\""
+      give lantern
+    state if lantern_doused
+      look "Quill is wringing the canvas out over the rail. She looks pleased with herself."
+      talk "She says, \"One light down. Hobb's still up the mast, so the bell is his.\""
+        nothing
+    state if has lantern
+      talk "She nods at the great lantern. \"Go on. I'll go up with you.\""
+        nothing
+
+  hotspot hobb "Hobb"
+    area 1000,390 250x460
+    stand 980,860
+    look "Hobb, at the foot of the mast with the crowbar through his belt. He is listening upward."
+    talk "He says, \"Three notes, then one. That is Tam's hand on the rope.\""
+      say "He does not say how he knows. He does not have to."
+    state if bell_cut
+      look "Hobb is standing very still, looking up at the cut rope. He is not a man who celebrates."
+      talk "He looks at me. \"He is alive,\" he says. \"That is all I asked.\""
+
+  hotspot vex "Captain Vex"
+    area 2060,395 260x430
+    stand 2020,820
+    look "Vex, coat buttoned to the chin, hands in his pockets. He is standing where the rail is highest."
+    talk "He does not turn round. \"I'm not going below. Ghosts and I have an understanding.\""
+      say "\"You cut the bell, I take the credit,\" Vex says. \"That's a good deal. For me.\""
+      say "\"I'll hold the boat,\" he says. \"Somebody has to keep the way out open. That's me being useful.\""
+    state if bell_cut and lantern_doused
+      look "Vex is watching the cabin door and trying not to. He has one hand on the rail."
+      talk "He says, \"Whatever is down there, it isn't salvage. I'm not carrying it.\""
+
+  hotspot tamhobb "Tam Hobb"
+    show if tam_freed
+    area 1590,400 240x450
+    stand 1560,850
+    look "Tam Hobb, with the camp's salt rake still in one hand. He has not put it down."
+    talk "He says, \"I rang it for three months. I don't know what I was counting.\""
+      say "Hobb looks over at his brother. Neither of them says anything else."

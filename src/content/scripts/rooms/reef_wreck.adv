@@ -1,0 +1,146 @@
+room reef_wreck "The Sunken Wreck"
+  bg bg_reef_wide
+  width 2560
+  music music_fog
+  ambience sea
+  # Act III is the Shroud: cool and dim the sunny reef plate, and cool the crew to match.
+  backdrop "brightness(0.66) saturate(0.55) contrast(1.05) sepia(0.04)"
+  grade "saturate(0.86) brightness(0.94)"
+  perspective horizon 440 ref 875 height 300
+  walk (1000,875) (1010,800) (1300,775) (1700,778) (2100,790) (2420,820) (2480,875)
+  entry 1180,830
+  # Arrivals sit by the thing you came through: the longboat from the flats, the east flats
+  # from the camp. (The old `arrive arcadia_cabin` stub went with the old hatch layout; the
+  # cabin is now entered from the Grey Lantern's deck, and nothing exits to the wreck from it.)
+  arrive lagoon_shore 1035,850
+  arrive salt_camp 2400,845
+  footsteps sand
+  water (0,500) (1455,500) (1455,560) (1318,580) (1300,645) (1475,655) (1490,760) (0,760) ripple 1.8
+  motes glints (0,520) (1440,520) (1440,560) (1310,585) (1290,645) (1460,660) (1460,740) (0,740) count 30
+  haze 330 480 floor 500 alpha 0.1 speed 12
+  haze 500 700 floor 810 alpha 0.08 speed 7 tint "#c5d1dc"
+  emit lapping at 700,700
+  emit creak at 1800,500
+  occluder floor 712 (1470,610) (1600,400) (1920,344) (2130,384) (2176,528) (2160,672) (1920,704) (1760,704) (1520,650)
+
+  # Act III: an old victim of the Grey Lantern, still on the reef. Hobb hears the bell across
+  # the flats on the way in; the broken bow timber with Mordant's plate is on her deck.
+  scene if act 3 and not wreck_bell
+    set wreck_bell
+    say "The wreck leans out of the water, older than anything I have sailed past."
+    say "Hobb stops at her hull and puts one hand flat on the wood."
+    say "Then, from across the flats, a bell rings."
+    say "Three notes, then one. Then the same again, slow and steady."
+    say "Hobb lifts his head. \"That's Tam,\" he says. He does not sound surprised."
+    say "Quill looks at me. Neither of us asks him how he knows."
+    note bell_tam "The bell across the flats rings three, then one. Hobb says it is his brother Tam."
+
+  # The east way to the camp sits at the frame's right edge, out of the entry frame. One nudge,
+  # once, the first time the wreck is re-entered after the bell.
+  scene if act 3 and wreck_bell and not nudge_camp_east
+    set nudge_camp_east
+    say "East of the wreck the reef flattens into shallow water, and the tracks go on out of sight."
+    say "Dorrit is looking that way already. \"If there are people out there,\" he says, \"they will have a pot.\""
+
+  sprite npc_quill_body at 1300,825 size 0.98 idle speaker quill for quill
+  sprite npc_hobb_body at 1780,815 size 1.0 idle speaker hobb for hobb
+  sprite npc_vex_body at 2060,835 size 0.98 idle speaker vex for vex
+  sprite npc_dorrit_body at 2310,850 size 0.98 idle speaker dorrit for dorrit
+
+  hotspot shallows "the shallows"
+    area (0,470) (1300,470) (1300,770) (0,770)
+    stand 1100,820
+    look "Shallow water over pale sand, all the way out to the fog."
+    talk "I say my father's name out over the water. The flats do not pass it on."
+    use "I could wade. The flats go on further than the light does."
+
+  hotspot bell "the bell"
+    area (0,470) (1300,470) (1300,560) (0,560)
+    nowalk
+    look "A ship's bell, ringing somewhere out on the flats. There is no ship out there to ring it."
+    talk "I call back across the water. The bell keeps its time and does not answer."
+    use "I would need a boat and a very good reason. I have one of each."
+    state if bell_plan
+      look "The bell, three and one. Hobb says the hand on the rope is his brother's."
+    state if wreck_bell
+      look "The bell again, three and one. It is coming from further out than the wreck."
+
+  hotspot wreck "the wreck"
+    area 1330,210 900x500
+    stand 1500,810
+    look "The old wreck, heeled over on the coral. Her name went with her crew."
+    talk "I knock on her hull. The sound goes in and does not come back."
+    use "Her deck is above the water at low tide. The way up is the broken rail."
+    pickup "I would need a bigger satchel and a smaller wreck."
+
+  hotspot nameplate "the nameplate"
+    show if act 3
+    area 1680,405 205x132
+    stand 1600,850
+    look "A brass plate on a broken bow timber, green with salt. One letter shows through: an M."
+    use "The plate is nailed fast. Hobb has the knife and the patience."
+    talk "I spell out what I can. Hobb does not need me to read it."
+    state if has nameplate
+      name "the bare timber"
+      look "The bare wood where the plate was. Hobb worked it loose and wrapped it in rag."
+
+  # The painted longboat, bow at (200,850) and stern at (960,820), oars shipped above her.
+  hotspot boat "the longboat to the flats"
+    area (190,880) (200,830) (280,800) (400,770) (560,750) (720,748) (860,775) (950,805) (975,845) (975,880)
+    stand 1035,850
+    exit lagoon_shore sound none
+    look "The longboat, pulled up on the coral. Quill rowed. I sat in the stern and tried to look like ballast."
+    open "We row back to the flats. Quill lets me take an oar until she hears me use it."
+    use "We row back to the flats. Quill lets me take an oar until she hears me use it."
+
+  # The way east is the shallow reef flat at the frame's right edge; there is no painted trail
+  # there (art gap), so the whole walkable corner is the target.
+  hotspot salt_flats "the camp path east"
+    show if act 3
+    area 2270,780 290x100
+    stand 2420,855
+    exit salt_camp sound none
+    look "The flats run east, out of sight of the wreck. Somebody has walked this way before."
+    open "I head east across the flats, away from the water."
+
+  hotspot quill "Quill"
+    show if act 3
+    area 1259,560 84x266
+    stand 1180,850
+    look "Quill has the oars over her shoulder and no intention of putting them down."
+    talk "She says, \"Say the word and I will row you back. I am not saying it twice.\""
+    give "She shifts the oars. \"My hands are full. Keep it.\""
+
+  hotspot hobb "Hobb"
+    show if act 3
+    area 1712,556 136x260
+    stand 1660,835
+    look "Hobb, one hand on the wreck. He is listening to the flats."
+    talk "He holds up a hand for quiet. Then he points out across the water."
+      talk hobb at bell
+    give "He looks at it, then at the wreck. \"Keep it. I have work.\""
+    state if bell_plan
+      look "Hobb is coiling a length of old rope. He has already chosen his end of the ship."
+      talk "He ties the coil and puts it over his shoulder. \"The bell is mine.\""
+        talk hobb at plan_after
+
+  hotspot dorrit "Dorrit"
+    show if act 3
+    area 2223,567 174x283
+    stand 2190,860
+    look "Dorrit, out ahead of us, looking east. He has found something he does not like."
+    talk "He says, \"There are tents out there. Tents mean people. People mean they eat.\""
+    give "He does not look at it. \"Unless it is food, keep it dry.\""
+
+  hotspot vex "Vex"
+    show if act 3
+    area 1985,563 150x272
+    stand 1900,855
+    look "Vex, on the rocks with his coat around him. He is in no hurry to move."
+    talk "He says, \"I have been in worse. Not often, and not with this crew.\""
+    give "He waves it away. \"I have a coat and a bad reputation. That is luggage enough.\""
+
+  use compass on wreck
+    "The needle points at the hull, then down, at whatever is left of her under the water."
+  use crowbar on nameplate
+    "Hobb takes the crowbar out of my hand. \"Brass first. Iron after.\""

@@ -1,0 +1,86 @@
+dialogue marta
+  node root marta "Elias Fenn's boy. Everyone on this island knows whose son you are."
+    -> root2
+  node root2 marta "Sit down. That's Old Rook in the corner. He came back from the fog."
+    -> root3
+  node root3 marta "Dorrit's in the kitchen. Pike's crew says he stole stores from the boat shed."
+    > "What happened to my father?" -> father
+    > "I need a ship." -> ship
+    > "Tell me about the island." -> island
+    > "Tell me about Rook." -> rook
+    > "Did Dorrit take the stores?" -> dorrit
+    > "Nothing. I'll stand." -> bye
+    > "Rook told me the fog hunts by sound." if rule_sound -> rule
+    > "I have my father's chart." if has chart -> chart
+  node father marta "He kept a room above the back door. I haven't touched it."
+    -> father2
+  node father2 marta "He was charting the fog. He said the answer was out there, not in a bottle."
+    > "Can I see his room?" -> room
+    > "What was he like?" -> like
+    > "I'll find him." -> bye
+  node room marta "When you can look at it without breaking. It's over the back door, up in Upper Town."
+    note father_room "Marta has kept my father's room above the Salty Keel's back door just as he left it."
+    -> bye
+  node like marta "He laughed at weather. He laughed at everything except a bad chart."
+    -> bye
+  node ship marta "There's one seaworthy ship in this harbour. The Marrow, and Captain Vex has her."
+    -> ship2
+  node ship2 marta "He won't sail into the fog. He'll tell you himself, at his warehouse."
+    > "Where is his warehouse?" -> vex_where
+    > "I'll make him sail." -> vex_make
+    > "Who can crew her?" -> crew
+  node vex_where marta "The counting house on Wreckers' Lane. The sign says Vex's Warehouse. He's proud of the sign."
+    -> bye
+  node vex_make marta "Then bring him something he wants more than safety. I've never met a man who couldn't be bought."
+    -> bye
+  node crew marta "A cook, a navigator, a carpenter. Most of them are in this room or hiding from it."
+    > "Who's the cook?" -> dorrit
+    > "Who's the navigator?" -> quill_crew
+    > "Who navigated for my father?" -> rook
+    > "I'll find them." -> bye
+  node island marta "Half the harbour is empty. The other half is related, and scared."
+    -> island2
+  node island2 marta "Six ships gone in three years. Five came back empty. Your father's never came back at all."
+    > "Empty how?" -> empty
+    > "What does Vex say?" -> vex
+    > "Who is Dorrit?" -> dorrit
+    > "That's enough." -> bye
+  node empty marta "Sails set, wheel tied off, not a soul aboard. That's not weather."
+    -> island2
+  node vex marta "Captain Vex. He owns the Marrow, and most of the salvage on this coast."
+    -> vex2
+  node vex2 marta "The island blames him for the missing ships. He lets them. Fear keeps his prices high."
+    > "Where do I find him?" -> vex_where
+    > "Will he sail?" -> vex_will
+    > "I'll talk to him." -> bye
+  node vex_will marta "Not into the fog. Not for money. Not for me."
+    -> bye
+  node quill_crew marta "Quill. Young, sharp, and she wants the chart table. Vex has her compass, so she can't sail."
+    -> bye
+  node rook marta "Old Rook. He navigated for your father. He came back from the fog alone."
+    -> rook2
+  node rook2 marta "He drinks in the corner. He might talk to you. He liked your father."
+    > "I'll talk to him." -> bye
+    > "Why did he come back?" -> rook_why
+  node rook_why marta "Nobody knows. He won't say. That's why people buy him drinks."
+    -> bye
+  node dorrit marta "Dorrit. He's cooked here since before I had the lease. Stores went missing from the boat shed."
+    -> dorrit2
+  node dorrit2 marta "Pike's crew says he sold them. He didn't. I know him, and I know Pike."
+    > "I'll clear his name." -> dorrit_job
+    > "What was taken?" -> stores
+    > "Not my problem." -> dorrit_cold
+  node stores marta "Salt, flour, dried fish. Six crates. Enough to feed a crew, not a town."
+    -> dorrit2
+  node dorrit_job marta "Find who took them. The boat shed's on the lane. Pike's men are always there."
+    note dorrit_blamed "Marta: stores are missing from the boat shed. Pike's crew blames Dorrit. Clear his name."
+    -> bye
+  node dorrit_cold marta "Then don't expect him to cook for you."
+    -> bye
+  node rule marta "Rook told you that? Then keep your bell quiet and your mouth shut."
+    -> rule2
+  node rule2 marta "I've buried enough people who didn't."
+    -> bye
+  node chart marta "Then you've got more than most. Don't let Vex see it. He'll want half."
+    -> bye
+  node bye marta "Go on. The door's heavier than it looks."

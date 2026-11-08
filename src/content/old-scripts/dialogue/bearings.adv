@@ -1,0 +1,90 @@
+# The fog run at the bow (rooms.ts, bow_fog). Wrong calls scrape the reef and loop back.
+dialogue bearings
+  node fog narrator "The fog closes over the bow like a lid. Quill has the wheel. Dorrit stands midway to pass the word."
+    -> one
+  node one narrator "The needle swings hard left of the bowsprit."
+    > "“Port!”" -> oneOk
+    > "“Starboard!”" -> oneBad
+    > "“Left!”" -> left
+  node left dorrit "He says LEFT! Is left a bearing?"
+    -> left2
+  node left2 vane "It is today! Port!"
+    -> hail
+  node oneBad dorrit "He says starboard!"
+    -> oneBad2
+  node oneBad2 hobb "He means port!"
+    -> oneBad3
+  node oneBad3 vane "He means whatever doesn't sink us!"
+    -> oneScrape
+  node oneScrape narrator "Something long and patient scrapes along the hull, bow to stern. It takes its time."
+    -> oneRock
+  node oneRock quill "That was a rock."
+    -> one
+  node oneOk quill "Port! Port it is!"
+    -> hail
+  node hail narrator "Out of the white to port, a polite voice through a speaking-trumpet. “Ahoy, the Marrow! Quarantine inspection! Heave to!”"
+    -> hail2
+  node hail2 narrator "It knows our name. Somewhere in Port Vela, an old woman is saying: you don't answer."
+    -> nobody
+  node nobody vane "Weather. With a speaking-trumpet. Nobody answer it."
+    -> astern
+  node astern narrator "It falls astern, sounding hurt."
+    -> two
+  node two narrator "Dead ahead. The needle is perfectly still, and so is everyone."
+    > "“Steady as she goes.”" -> twoOk
+    > "“Port again!”" -> twoBad
+    > "“Is anyone else's heart doing this?”" -> heart
+  node heart hobb "Yes."
+    -> two
+  node twoBad dorrit "Port again, he says! Is that a request or a regulation?"
+    -> twoBad2
+  node twoBad2 vane "Port is where the rocks are, Mr Dorrit! Port is all rocks!"
+    -> twoScrape
+  node twoScrape narrator "The Marrow leans away from a rock. Something in the galley breaks."
+    -> twoRock
+  node twoRock quill "Eyes on the needle, cargo! Not on the rocks. The rocks are my job."
+    -> two
+  node twoOk quill "Steady!"
+    -> who
+  node who vane "Who taught him that?"
+    > "(Listen.)" if seen:watch.steady -> me
+    > "(Listen.)" if not seen:watch.steady -> natural
+  node me quill "Me. Last night."
+    -> three
+  node natural quill "Nobody. He reads a compass like it's a form. Don't tell him."
+    -> three
+  node three narrator "The needle leans a hair off the bowsprit. The rocks are close enough to read."
+    > "“Starboard, a little.”" -> threeOk
+    > "“Starboard, a lot!”" -> threeBad
+  node threeBad hobb "How much is a lot?"
+    -> threeBad2
+  node threeBad2 vane "Less than that!"
+    -> threeScrape
+  node threeScrape narrator "The bowsprit swings past the gap and back again."
+    -> three
+  node threeOk quill "Good!"
+    -> good
+  node good quill "That was “good”, cargo. Write it down."
+    > "Already written." -> lifts
+    > "Underlined." -> lifts
+      add aff 1
+  node lifts narrator "The fog opens. We're in a gap in the reef. Past it: a flat lagoon, and a ship on the rocks. Heeled over, masts up."
+    -> flag
+  node flag narrator "At her masthead, somebody has run up a flag made of shirts."
+    -> vane
+  node vane vane "That's a wreck. And somebody's still flying her colours."
+    > "That's the Arcadia." -> arcadia
+    > "(Look back at Quill.)" if aff >= 4 -> look
+  node look narrator "At the wheel, Quill is looking at the wreck. Then, for one second, she's looking at me."
+    > "That's the Arcadia." -> arcadia
+  node arcadia fenn "…And shirts don't last three years in weather. Somebody ran that up this week."
+    -> alive
+  node alive vane "Somebody's alive in there."
+    -> smoke
+  node smoke vane "And here's the fog again. I won't take the Marrow in blind. We stand off outside the reef."
+    -> boat
+  node boat vane "Quill, take the boat in. Mr Fenn: find who flies that rag. Then run me up a new one I can steer by."
+    -> sorry
+  node sorry vane "If the old one's still up when the fog lifts, I'll assume you're both dead. And I'll be sorry."
+    note flag_plan "Vane's orders: find who flies that flag of shirts on the wreck. Run up a new one she can steer by. If the old one's up when the fog lifts, she'll take us for dead."
+    act 2

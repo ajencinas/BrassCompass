@@ -1,0 +1,157 @@
+room office "Customs House"
+  bg bg_office_wide
+  width 2560
+  music music_office
+  grade "brightness(0.95) saturate(0.85)"
+  # A close, shallow room. The desk is a tall clerk's standing desk, so it reads chest-high on
+  # a person standing at it; figures are large and shrink little across the floor.
+  perspective horizon -200 ref 875 height 560
+  # In front of the desk the floor only goes as far as the desk's own plane: standing closer to
+  # the camera than a painted desk makes a chest-high top read at eye level. Left of the desk the
+  # floor runs to the bottom of the frame.
+  walk (60,875) (150,700) (2540,700) (2540,715) (1500,715) (1500,875)
+  entry 600,790
+
+  # Atmosphere: Bramwick's lamp, and dust turning in the moonbeam from the window.
+  footsteps wood
+  light 2222,200 radius 260 lamp
+  motes dust (990,120) (1240,0) (1760,250) (1420,630) (1080,630) count 60
+
+  # Waist-up art standing behind the desk, in front of his chair; the desk hides the cut.
+  sprite npc_bramwick_body_v2 at 1885,650 size 1.15 idle speaker bramwick for bramwick grade "saturate(0.85) brightness(0.9)"
+  # In Bramwick's place behind the desk; full-figure art, so the desk (occluder) hides him below the chest.
+  sprite npc_silas_body at 1885,650 size 1.15 idle speaker silas for cray grade "saturate(0.8) brightness(0.85)"
+
+  occluder floor 668 (1585,316) (2372,316) (2372,668) (1585,668)
+
+  hotspot bramwick "Harbourmaster Bramwick"
+    show if act 1
+    area 1800,135 170x180
+    stand 2230,710
+    look "Harbourmaster Bramwick. He has never once been wrong, and keeps a ledger to prove it."
+    talk "I clear my throat. Bramwick finishes his sentence in the ledger first."
+      talk bramwick
+    give "He takes nothing he hasn't signed for."
+
+  hotspot licence "licence form"
+    show if act 1 and not has licence_form and not has licence
+    area 1700,318 300x75
+    stand 1600,705
+    item licence_form
+    look "Blank Seafarer's Licences. I've filed a thousand of them. Never one with my own name on it."
+    pickup "I take a form. It weighs almost nothing, which is the point of paperwork."
+
+  hotspot drawer "locked drawer"
+    area 1845,425 250x110
+    stand 1690,710
+    look "The Harbourmaster's drawer, where the harbour stamp lives. Locked."
+    open "Locked. The drawer is winning on points."
+    pull "I pull. The drawer makes a small, satisfied noise."
+    use "It needs a key, and I am not a key."
+    state if act 4
+      name "Bramwick's drawer"
+      look "Unlocked and empty. Cray cleared it out: the ink, the spare nibs, thirty years of a man's drawer."
+      open "Empty. Cray doesn't leave things in drawers. He leaves them in other people's."
+      pull "It slides out empty, as easily as the man who emptied it."
+      use "There's nothing in it to use."
+    state if drawer_open = true
+      name "unlocked drawer"
+      look "An open drawer: a pot of ink, an unpaid IOU to Marta, and a stamp-shaped space."
+      open "Already unlocked and open."
+      pull "The drawer is already open."
+      use "I have already taken the stamp."
+
+  # Lies in the open drawer, in front of the stamp's empty space.
+  hotspot iou "IOU to Marta"
+    show if act 1 and drawer_open
+    area 1890,440 150x70
+    stand 1690,710
+    look "An IOU to Marta: “one game of cards, unpaid”. Under it, in tiny writing: “and everything else.”"
+      set seen_iou
+    pickup "It isn't mine to take. By the look of it, it's barely Bramwick's."
+    use "Some debts are best left unpaid. Bramwick has made a career of this one."
+
+  hotspot window "window"
+    area 900,0 320x300
+    nowalk
+    look "The harbour, framed. From in here it looks almost orderly. That's what windows are for."
+    open "It's painted shut. Bramwick believes in fresh air the way he believes in rumours."
+    state if act 4
+      look "The harbour, framed. The Marrow is out there, under a yellow flag, close enough to read her name."
+
+  hotspot door_out "door to the docks"
+    area 200,120 360x520
+    stand 420,760
+    exit dock
+    look "The door back to the docks."
+
+  hotspot cray "Silas Cray"
+    show if act 4 and not inquiry_done and (not has ledger or not has purse or not has claims_book)
+    area 1800,130 170x185
+    stand 2230,710
+    look "Silas Cray, behind Bramwick's desk, using Bramwick's pen. He's brought a cushion for the chair. Of course he has."
+    talk "He looks up and smiles before I've opened my mouth. He's been expecting me since his cutter docked."
+      talk cray4
+    give "“I don't accept gifts from people I'm about to write down as lost. It confuses the paperwork.”"
+
+  hotspot card "card on the blotter"
+    show if act 4 and not inquiry_done and has ledger and has purse and has claims_book
+    area 1720,318 260x70
+    stand 1600,705
+    look "A card on the blotter: “Gone to the Keel for my dawn toast. Do join me. S. Cray, Harbourmaster (Acting).” He's underlined “Acting”."
+    pickup "I leave it. He'd only bill me for the card."
+
+  hotspot chair "the Harbourmaster's chair"
+    show if act 4 and (inquiry_done or has ledger) and (inquiry_done or has purse) and (inquiry_done or has claims_book)
+    area 1800,180 170x135
+    stand 2230,710
+    look "Bramwick's chair, empty, with Cray's cushion still on it. I put the cushion in the wastepaper basket. It looks happier there."
+    use "It isn't my chair. I've never once sat in it. I'm not starting tonight."
+
+  use ledger on cray
+    "He glances at it. “My dues, in Bramwick's hand. Bring that to the Keel at dawn, clerk, and I'll drink to it.”"
+  use purse on cray
+    "He looks at the seal, then at me. For a moment he stops smiling. Then he starts again, carefully, like a man following a pattern."
+  use claims_book on cray
+    "“My claims book. Nib gave you that? Without reading it?” He sighs. “Good help is so very hard to stop.”"
+  use ansel_log on cray
+    "“A captain's diary.” He doesn't touch it. “I never read other people's diaries, clerk. I write them.”"
+  use kelp_manifest on cray
+    "He reads the word “fog” and closes his eyes briefly, like a man hearing a wrong note."
+  use compass on cray
+    "He looks at it the way other men look at a woman they didn't marry. “Keep it, clerk. It's pointed at enough already.”"
+  use stamp on cray
+    "“The harbour stamp. Mine, technically, tonight. Keep it. I've had a new one made. It's very handsome.”"
+  use crowbar on cray
+    "I weigh the crowbar. He watches me do it and doesn't worry. “Assault on a harbourmaster, acting. That's a lovely form. I have several.”"
+  use drawer_key on drawer if drawer_open
+    "It's unlocked. Unlocking it again would only be showing it the key."
+  use drawer_key on drawer
+    "The key turns. Inside: the harbour stamp, a pot of ink, and an IOU to Marta for a game of cards, unpaid. I take the stamp."
+    give stamp
+    set drawer_open
+  use licence on bramwick if ledger_read = true and has manifest and met_rook
+    "I put the licence down with the Arcadia's manifest. Bramwick reads the manifest first. Then he puts down his pen. I've never seen that."
+    talk bramwick at confess_rook
+  use licence on bramwick if ledger_read = true and has manifest
+    "I put the licence down with the Arcadia's manifest. Bramwick reads the manifest first. Then he puts down his pen. I've never seen that."
+    talk bramwick at confess
+  use licence on bramwick
+    "Bramwick reads it and slides it back. “A fine licence. The berth is still Mr Cray's. Bring the manifest, Fenn. Read the ledger yourself.”"
+    note bramwick_proof "Bramwick will void Cray's claim on the berth for proof: the Arcadia's manifest copy, which the chandler keeps, and the harbour ledger, read with my own eyes."
+  use rum on bramwick
+    "“Seized spirits, Fenn? I'm legally absent. An absent man can't take a bribe. Return it to whichever punch bowl it came from.”"
+  use licence_form on bramwick
+    "“It wants the harbour stamp, Fenn, which I cannot apply after the bell.” He stares very hard at his own drawer."
+  use stamp on bramwick
+    "“Put that away. I am absent.”"
+  use drawer_key on bramwick
+    "“I don't want it back tonight. Tonight I'm legally elsewhere.”"
+  use crowbar on drawer if act 1 and not drawer_open
+    "I fit the crowbar to the drawer. Bramwick doesn't look up. “Harbour property, Fenn. Being absent, I can't stop you. I can disapprove.”"
+  use crowbar on drawer if act 1
+    "It's open. The crowbar is disappointed in both of us."
+  use crowbar on drawer
+    "It's empty and unlocked. There's no glory in levering it, and I'd still have to fill in the form."
+  use crowbar on bramwick
+    "Bramwick looks at the crowbar. “Menacing a harbourmaster is regulation nine. Getting caught is ten. I wrote both in a temper.”"

@@ -1,0 +1,55 @@
+room quay "The Quay"
+  bg bg_quay_wide
+  width 2560
+  music music_dock
+  ambience sea
+  grade "brightness(0.95) saturate(0.85)"
+  # One level horizon between the dock's 335 and the harbour mouth's 455, so neither cut
+  # lifts or drops the water under Fenn's feet.
+  perspective horizon 405 ref 875 height 340
+  # The painted path: stone flags at the left, wet boards at the right, clear of the crates,
+  # the two lamps and the mooring bollards. Both exits stand on this band.
+  walk (300,875) (310,805) (370,780) (600,765) (760,755) (1000,748) (1250,735) (1420,735) (1520,748) (1650,755) (1800,752) (1930,748) (2040,760) (2090,800) (2095,875)
+  entry 1250,830
+  arrive dock 1650,800
+  arrive pier_end 770,805
+  footsteps stone
+  light 645,181 radius 150 lantern
+  light 1282,291 radius 120 lantern
+  light 1830,450 radius 120 lamp
+  beacon 215,183 period 14
+  water (60,560) (340,560) (340,740) (60,740) ripple 1.8
+  water (40,800) (280,800) (280,878) (40,878) ripple 2.0
+  emit lapping at 300,800
+
+  # First sight of the water from the quay: the house behind, the mouth ahead.
+  scene if not quay_seen
+    set quay_seen
+    say "The water opens here. The harbourmaster's house behind me, the pier and the lighthouse ahead."
+
+  sprite prop_quay_sign_mouth at 690,858 size 0.62 for harbour_mouth
+  sprite prop_quay_steps at 2020,858 size 0.85 for harbour
+
+  hotspot harbour_mouth "the harbour mouth"
+    area (350,795) (700,755) (720,880) (350,880)
+    stand 470,835
+    exit pier_end sound none
+    look "The stone quay runs out along the water. Past the last lamp is the harbour mouth."
+    open "I walk out along the quay toward the harbour mouth."
+
+  hotspot harbour "the harbour"
+    area 1700,730 360x150
+    stand 1880,805
+    exit dock sound none
+    look "The boards run back past the harbourmaster's house to the harbour. The Marrow is tied up beyond it."
+    open "I follow the boards back into the harbour."
+
+  hotspot lighthouse "the lighthouse"
+    area 140,150 130x250
+    nowalk
+    look "The lighthouse on the point. It burns for the harbour mouth, and it does not reach the fog."
+
+  hotspot marrow "the Marrow's bow"
+    area 2200,250 340x520
+    nowalk
+    look "The Marrow's bow, high above the boards. Her gear is aloft, as if she were leaving."

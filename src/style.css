@@ -1,0 +1,414 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: #05070f;
+  overflow: hidden;
+  font-family: Georgia, "Times New Roman", serif;
+  color: #e8e2d0;
+}
+
+#stage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 40%, #101a2e 0%, #05070f 70%);
+}
+
+#game {
+  display: block;
+  cursor: default;
+  /* Taps and long presses are the game's own: no scrolling, zooming or callout menu. */
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  image-rendering: auto;
+  box-shadow: 0 0 80px rgba(0, 0, 0, 0.9);
+}
+
+#game:focus-visible {
+  outline: 2px solid rgba(232, 201, 138, 0.75);
+  outline-offset: 2px;
+}
+
+/* ---- boot overlay ---- */
+#boot {
+  position: fixed;
+  inset: 0;
+  background: #05070f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s ease;
+  z-index: 10;
+}
+#boot.gone { opacity: 0; pointer-events: none; }
+.reduced-motion #boot, .reduced-motion .boot-bar i { transition: none; }
+
+.boot-inner { text-align: center; }
+.boot-title {
+  font-size: clamp(22px, 3.2vw, 46px);
+  letter-spacing: 0.34em;
+  color: #d8b978;
+  margin-bottom: 14px;
+  text-indent: 0.34em;
+}
+.boot-sub {
+  font-size: clamp(12px, 1.1vw, 16px);
+  letter-spacing: 0.18em;
+  color: #6f7f99;
+  text-transform: uppercase;
+  margin-bottom: 22px;
+}
+.boot-bar {
+  width: min(360px, 60vw);
+  height: 3px;
+  background: #1a2338;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.boot-bar i {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #8a6a2f, #e8c98a);
+  transition: width 0.25s ease;
+}
+
+.settings[hidden] { display: none; }
+/* `display: block` on the controls below would otherwise beat the hidden attribute. */
+.settings [hidden] { display: none !important; }
+/*
+ * One scroller: the backdrop. The dialog grows to its content and is centred by auto margins,
+ * which fall to zero (top-aligned, scrollable) when it is taller than the window.
+ */
+.settings {
+  position: fixed; inset: 0; z-index: 30; display: grid; place-items: start center;
+  background: rgba(3, 8, 16, .88); padding: 12px; overflow: auto;
+  scrollbar-color: #6b5a3a #0d1822; scrollbar-width: thin;
+  font-size: calc(16px * var(--text-scale, 1));
+}
+.settings section {
+  width: min(940px, 100%); padding: 20px 26px 16px; background: #101d29;
+  border: 1px solid #9b7c46; box-shadow: 0 24px 80px #0009; margin: auto;
+}
+.settings-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  padding-bottom: 10px; border-bottom: 1px solid #2b3a44;
+}
+.settings-head > div { min-width: 0; }
+.settings-head .primary { width: auto; min-width: 13em; margin: 0; flex: none; }
+.settings-grid {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 34px;
+}
+.settings .group { min-width: 0; }
+.settings h2 {
+  color: #c6a365; font: .8em system-ui, sans-serif; letter-spacing: .2em; text-transform: uppercase;
+  margin: 14px 0 2px;
+}
+.settings select {
+  width: 100%; padding: 6px 8px; background: #1a3040; border: 1px solid #65726f; color: #f3e7cb;
+  font: 1em Georgia, serif;
+}
+.settings select:disabled { color: #9aa7ad; border-style: dashed; cursor: not-allowed; }
+.settings select:focus-visible, .settings input:focus-visible, .settings summary:focus-visible {
+  outline: 2px solid #dfbf7d; outline-offset: 2px;
+}
+.settings details { margin: 12px 0 2px; border-top: 1px solid #2b3a44; padding-top: 4px; }
+.settings summary { cursor: pointer; color: #f3e7cb; font: 1em Georgia, serif; padding: 6px 0; }
+.settings dl.controls {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 6px 16px;
+  margin: 8px 0 0; font: .9em/1.4 Georgia, serif;
+}
+.settings dl.controls dt { color: #f3d99e; }
+.settings dl.controls dd { color: #d5dde2; margin: 0; }
+.settings h1 { color: #f3d99e; font-size: 1.65em; margin: 2px 0 4px; }
+.settings p, .settings small { color: #c9d2d8; line-height: 1.4; margin: 0; }
+.settings .eyebrow { color: #c6a365; font: .8em system-ui, sans-serif; letter-spacing: .2em; }
+.settings button {
+  display: block; width: 100%; padding: 8px 12px; margin: 7px 0;
+  background: #1a3040; border: 1px solid #65726f; color: #f3e7cb;
+  font: 1em Georgia, serif; cursor: pointer;
+}
+.settings button:hover, .settings button:focus-visible { background: #304651; outline: 2px solid #dfbf7d; }
+.settings button.primary { background: #23404f; border-color: #b39457; }
+.settings button.danger { background: #4a1d14; border-color: #c98a6a; color: #ffe2cc; }
+.settings button.danger:hover, .settings button.danger:focus-visible { background: #6a2a1b; }
+.settings label.row {
+  display: grid; grid-template-columns: minmax(7.5em, auto) minmax(0, 1fr); align-items: center;
+  gap: 12px; margin: 8px 0; color: #e8e2d0; font-size: 1em;
+}
+.settings input { width: 100%; accent-color: #d6b46c; }
+.settings .note { font: .85em/1.35 system-ui, sans-serif; color: #b9c6cd; margin: -2px 0 4px; }
+.settings .confirm { margin: 4px 0; padding: 8px 10px 2px; border: 1px solid #8a5a44; background: #1c1414; }
+.settings .confirm p { color: #ffd9b8; }
+.settings small { display: block; margin-top: 8px; font: .85em/1.5 system-ui, sans-serif; }
+@media (max-width: 760px) {
+  .settings-grid { grid-template-columns: minmax(0, 1fr); }
+  .settings-head { flex-direction: column; align-items: stretch; }
+  .settings-head .primary { width: 100%; }
+}
+
+.cinematic[hidden] { display: none; }
+.cinematic {
+  position: fixed; inset: 0; z-index: 40; display: flex; align-items: center;
+  justify-content: center; background: #02040a; cursor: pointer;
+  opacity: 0; transition: opacity .35s ease;
+}
+/* Fades in over the game and back out to it; while fading out it lets the game have the input. */
+.cinematic.showing { opacity: 1; }
+.cinematic:not(.showing) { pointer-events: none; }
+body.reduced-motion .cinematic { transition-duration: .15s; }
+.cinematic video { width: 100%; height: 100%; object-fit: contain; }
+.cinematic-skip {
+  position: absolute; right: 24px; bottom: 24px; padding: 12px 20px;
+  border: 1px solid #c9a24a; background: rgba(5, 13, 22, .9); color: #f3d99e;
+  font: 17px Georgia, serif; cursor: pointer;
+}
+.cinematic-skip:hover, .cinematic-skip:focus-visible { outline: 2px solid #fff3cf; }
+.cinematic-hint {
+  position: absolute; left: 24px; bottom: 30px; margin: 0; color: #bdc7ce;
+  font: 14px Georgia, serif; pointer-events: none;
+}
+
+/* ---- casebook ---- */
+.casebook[hidden] { display: none; }
+.casebook {
+  position: fixed; inset: 0; z-index: 35; display: grid; place-items: center;
+  background: rgba(3, 8, 16, .9); padding: 20px; overflow: auto;
+  font-size: calc(16px * var(--text-scale, 1));
+}
+.casebook section {
+  width: min(760px, 100%); max-height: min(84vh, 900px); display: flex; flex-direction: column;
+  background: #101d29; border: 1px solid #9b7c46; box-shadow: 0 24px 80px #0009;
+}
+.casebook header { padding: 28px 32px 16px; border-bottom: 1px solid #2b3a44; position: relative; }
+.casebook h1 { color: #f3d99e; font-size: 1.75em; margin: 8px 0 6px; }
+.casebook .lede { color: #9fb0bd; font-size: .94em; margin: 0; }
+.casebook .eyebrow { color: #c6a365; font: .7em system-ui, sans-serif; letter-spacing: .24em; margin: 0; }
+.casebook-count {
+  position: absolute; right: 32px; top: 30px; margin: 0;
+  color: #7d8b95; font: .7em system-ui, sans-serif; letter-spacing: .16em; text-transform: uppercase;
+}
+.casebook-body {
+  padding: 8px 32px 24px; overflow-y: auto; flex: 1;
+  scrollbar-color: #6b5a3a #0d1822; scrollbar-width: thin;
+}
+.casebook-body h2 {
+  color: #c6a365; font: .7em system-ui, sans-serif; letter-spacing: .24em; text-transform: uppercase;
+  margin: 24px 0 10px;
+}
+.casebook-entry {
+  color: #dfe4e0; font: 1em/1.6 Georgia, serif; margin: 0 0 14px;
+  padding-left: 16px; border-left: 2px solid #2f4653;
+}
+.casebook-empty { color: #8b98a3; font: italic 1em Georgia, serif; }
+/* The NEXT block: a plan at the top of the notes, ruled in gold like the top-bar buttons. */
+.casebook-next {
+  margin: 6px 0 22px; padding: 14px 18px 16px;
+  border: 1px solid rgba(201, 162, 74, .5); border-left: 3px solid #c9a24a;
+  background: rgba(201, 162, 74, .07);
+}
+.casebook-next .eyebrow { color: #e8c98a; margin: 0 0 6px; }
+.casebook-plan { color: #f5e9cd; font: 1.02em/1.55 Georgia, serif; margin: 0; }
+.casebook-where { color: #9fb0bd; font: .8em/1.4 system-ui, sans-serif; margin: 9px 0 0; }
+.casebook footer { padding: 16px 32px 24px; border-top: 1px solid #2b3a44; }
+.casebook button {
+  width: 100%; padding: 12px; background: #1a3040; border: 1px solid #65726f;
+  color: #f3e7cb; font: 1em Georgia, serif; cursor: pointer;
+}
+.casebook button:hover, .casebook button:focus-visible { background: #304651; outline: 2px solid #dfbf7d; }
+.casebook footer small { display: block; margin-top: 12px; color: #a3b0b9; font: .82em system-ui, sans-serif; text-align: center; }
+
+/* A short window needs the casebook's rows, not its furniture: keep the NEXT block in view
+   with some of the first note under it. */
+@media (max-height: 700px) {
+  .casebook header { padding: 16px 24px 10px; }
+  .casebook h1 { font-size: 1.4em; margin: 5px 0 3px; }
+  .casebook .lede { display: none; }
+  .casebook-body { padding: 6px 24px 16px; }
+  .casebook-next { margin-bottom: 16px; padding: 10px 14px 12px; }
+  .casebook footer { padding: 10px 24px 14px; }
+  .casebook footer small { margin-top: 6px; }
+}
+
+/* ---- continue recap ---- */
+/* Shares the casebook's frame, a shade under it: the casebook can open over the card. */
+.recap[hidden] { display: none; }
+.recap {
+  position: fixed; inset: 0; z-index: 34; display: grid; place-items: center;
+  background: rgba(3, 8, 16, .9); padding: 20px; overflow: auto;
+  font-size: calc(16px * var(--text-scale, 1));
+}
+.recap section {
+  width: min(720px, 100%); max-height: min(88vh, 900px); display: flex; flex-direction: column;
+  background: #101d29; border: 1px solid #9b7c46; box-shadow: 0 24px 80px #0009;
+}
+.recap header { padding: 30px 34px 18px; border-bottom: 1px solid #2b3a44; }
+.recap h1 { color: #f3d99e; font-size: 1.7em; margin: 10px 0 8px; }
+.recap .eyebrow { color: #c6a365; font: .7em system-ui, sans-serif; letter-spacing: .24em; margin: 0; }
+.recap-when { color: #9fb0bd; font: .94em Georgia, serif; margin: 0; }
+.recap-body {
+  padding: 20px 34px 24px; overflow-y: auto; flex: 1;
+  scrollbar-color: #6b5a3a #0d1822; scrollbar-width: thin;
+}
+.recap-body p { margin: 0 0 14px; }
+.recap-body p:last-child { margin-bottom: 0; }
+.recap-where { color: #dfe4e0; font: 1.05em/1.5 Georgia, serif; }
+.recap-doing {
+  color: #f3d99e; font: 1em/1.55 Georgia, serif;
+  padding-left: 16px; border-left: 2px solid #c6a365;
+}
+.recap-doing.recap-opening { color: #c9d7de; font-style: italic; border-left-color: #65726f; }
+.recap-knows { color: #9fb0bd; font: .9em/1.5 Georgia, serif; margin-bottom: 8px; }
+.recap-notes { list-style: none; margin: 0 0 16px; }
+.recap-notes li {
+  color: #c9d7de; font: .95em/1.55 Georgia, serif;
+  margin: 0 0 8px; padding-left: 16px; border-left: 2px solid #2f4653;
+}
+.recap-carrying { color: #b8c4cc; font: .95em/1.5 Georgia, serif; }
+.recap-talking { color: #c6a365; font: italic .95em/1.5 Georgia, serif; }
+.recap-waiting { color: #e0b98a; font: 1em/1.5 Georgia, serif; }
+.recap footer { padding: 16px 34px 22px; border-top: 1px solid #2b3a44; }
+.recap-answers { display: flex; gap: 10px; flex-wrap: wrap; }
+.recap button {
+  flex: 1 1 160px; padding: 12px 14px; background: #1a3040; border: 1px solid #65726f;
+  color: #f3e7cb; font: 1em Georgia, serif; cursor: pointer;
+}
+.recap button.primary { background: #2c3a2c; border-color: #c9a24a; color: #fff3cf; }
+.recap button:hover, .recap button:focus-visible { background: #304651; outline: 2px solid #dfbf7d; }
+.recap button.primary:hover, .recap button.primary:focus-visible { background: #3c4d33; }
+.recap footer small { display: block; margin-top: 12px; color: #a3b0b9; font: .82em system-ui, sans-serif; text-align: center; }
+/* A short window is still a window: the card gives up its air so the voyage's facts fit. */
+@media (max-height: 620px) {
+  .recap { padding: 8px; }
+  .recap section { max-height: calc(100vh - 16px); }
+  .recap header { padding: 16px 24px 10px; }
+  .recap h1 { font-size: 1.4em; margin: 6px 0 4px; }
+  .recap-body { padding: 12px 24px 14px; }
+  .recap-body p { margin-bottom: 10px; }
+  .recap-notes { margin-bottom: 12px; }
+  .recap footer { padding: 10px 24px 12px; }
+  .recap button { padding: 8px 12px; }
+  .recap footer small { margin-top: 8px; }
+}
+
+
+/* ---- line history (shares the casebook's frame) ---- */
+.history-body { list-style: none; margin: 0; }
+.history-body li { margin-top: 14px; }
+.history-body strong { color: #f3d99e; font-weight: bold; }
+.history-choice { border-left-color: #c9a24a; color: #c9d7de; font-style: italic; }
+
+/* ---- deeds: the unfiled column after the ending card ---- */
+.deeds[hidden] { display: none; }
+.deeds {
+  position: fixed; inset: 0; z-index: 45; display: grid; place-items: center;
+  background: rgba(3, 8, 16, .94); padding: 20px; overflow: auto;
+  font-size: calc(16px * var(--text-scale, 1));
+}
+.deeds section {
+  width: min(1040px, 100%); max-height: min(88vh, 940px); display: flex; flex-direction: column;
+  background: #0e1a25; border: 1px solid #9b7c46; box-shadow: 0 24px 80px #0009;
+}
+.deeds header { padding: 26px 32px 14px; border-bottom: 1px solid #2b3a44; position: relative; }
+.deeds h1 { color: #f3d99e; font-size: 1.7em; margin: 7px 0 5px; }
+.deeds .lede { color: #9fb0bd; font-size: .94em; margin: 0; }
+.deeds .eyebrow { color: #c6a365; font: .7em system-ui, sans-serif; letter-spacing: .24em; margin: 0; }
+.deeds-body {
+  padding: 18px 28px 8px; overflow-y: auto; flex: 1;
+  scrollbar-color: #6b5a3a #0d1822; scrollbar-width: thin; outline: none;
+}
+.deeds-body:focus-visible { outline: 2px solid #dfbf7d; outline-offset: -2px; }
+.deeds-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 34px; }
+.deeds-column h2 {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+  color: #c6a365; font: .72em system-ui, sans-serif; letter-spacing: .24em; text-transform: uppercase;
+  margin: 0 0 12px; padding-bottom: 7px; border-bottom: 1px solid #2b3a44;
+}
+.deeds-column ol { list-style: none; margin: 0; padding: 0; }
+.deed { padding: 0 0 14px; margin: 0 0 14px; border-bottom: 1px solid rgba(43, 58, 68, .55); }
+.deed:last-child { border-bottom: 0; }
+.deed-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.deed-label { color: #eee7d6; font: 1.02em/1.35 Georgia, serif; margin: 0; }
+.deed-line { color: #b9c5cc; font: .9em/1.5 Georgia, serif; margin: 6px 0 0; }
+.deed-where { color: #93a2ad; font: .84em/1.45 system-ui, sans-serif; margin: 6px 0 0; }
+.deed.unfiled .deed-label { color: #c3ccd2; }
+.deed-stamp {
+  flex: none; padding: 2px 7px; transform: rotate(-5deg);
+  border: 1.5px solid #c9a24a; color: #e8c98a;
+  font: .6em system-ui, sans-serif; letter-spacing: .18em;
+}
+.deeds-bookend {
+  margin: 0 28px; padding: 12px 0 10px; border-top: 1px solid rgba(201, 162, 74, .45);
+  color: #e8c98a; font: 1.05em/1.5 Georgia, serif; letter-spacing: .06em; text-align: center;
+}
+.deeds footer { padding: 10px 32px 20px; border-top: 1px solid #2b3a44; }
+.deeds-tally {
+  margin: 0 0 8px; color: #e8c98a; font: .78em system-ui, sans-serif;
+  letter-spacing: .18em; text-transform: uppercase; text-align: center;
+}
+.deeds button {
+  width: 100%; padding: 11px; background: #1a3040; border: 1px solid #65726f;
+  color: #f3e7cb; font: 1em Georgia, serif; cursor: pointer;
+}
+.deeds button:hover, .deeds button:focus-visible { background: #304651; outline: 2px solid #dfbf7d; }
+.deeds footer small { display: block; margin-top: 10px; color: #a3b0b9; font: .8em system-ui, sans-serif; text-align: center; }
+@media (max-width: 760px) {
+  .deeds-columns { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .deeds header, .deeds-body, .deeds footer { padding-left: 20px; padding-right: 20px; }
+  .deeds-bookend { margin: 0 20px; }
+  .deeds h1 { font-size: 1.4em; }
+}
+/* A short window (a small laptop, the 800x600 test browser) needs the room for entries. */
+@media (max-height: 700px) {
+  .deeds header { padding: 14px 24px 10px; }
+  .deeds h1 { font-size: 1.35em; margin: 4px 0 2px; }
+  .deeds .lede { display: none; }
+  .deeds-body { padding-top: 8px; }
+  .deeds-bookend { padding: 7px 0 6px; font-size: .95em; }
+  .deeds footer { padding: 6px 24px 10px; }
+  .deeds-tally { margin-bottom: 5px; }
+  .deeds button { padding: 8px; }
+  .deeds footer small { margin-top: 5px; }
+}
+
+
+/* ---- screen-reader only, until asked for ---- */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+/* ---- screen-reader controls for the canvas chrome (built by game.ts) ---- */
+/* The top bar and the inventory pager are painted on the canvas, which a screen reader cannot
+   name or press. These real buttons mirror them, are visually hidden as usual, and keep the same
+   keys and actions. */
+.a11y-controls { position: absolute; top: 0; left: 0; }
+.a11y-controls button { font: inherit; }
+
+.cinematic-text {
+  position: absolute; right: 24px; bottom: 76px; padding: 10px 18px;
+  border: 1px solid #c9a24a; background: rgba(5, 13, 22, .9); color: #f3d99e;
+  font: 15px Georgia, serif; cursor: pointer;
+}
+.cinematic-text:hover, .cinematic-text:focus-visible { outline: 2px solid #fff3cf; }
+.cinematic-transcript {
+  position: absolute; left: 50%; bottom: 130px; transform: translateX(-50%);
+  max-width: min(900px, 80vw); padding: 20px 26px; background: rgba(3, 6, 14, .88);
+  border-left: 3px solid #c9a24a; color: #eee7d6; font: 20px/1.5 Georgia, serif;
+}
+.cinematic-transcript p {
+  position: static; margin: 0 0 8px; font: inherit; color: inherit; pointer-events: none;
+}
+.cinematic-transcript p:last-child { margin-bottom: 0; }
+
+/* ---- reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .cinematic video { transition: none; }
+  .cinematic { transition-duration: .15s; }
+}

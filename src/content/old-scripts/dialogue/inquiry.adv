@@ -1,0 +1,202 @@
+# The inquiry at the Salty Keel. Marta presiding.
+dialogue inquiry
+  node toast silas "The clerk! Join me. I'm drinking to the Marrow. It's early, I know. She won't mind. She's nearly lost."
+    > "I've come to hold an inquiry." -> inquire
+    > "Enjoy your drink." -> enjoy
+  node enjoy silas "Oh, I shall. It's on the harbour's account, and tonight I'm the harbour."
+  node inquire silas "An inquiry! Into what? Under whose authority? In a tavern?"
+    -> forty
+  node forty marta "Licensed premises, Mr Cray. Regulation forty. Bramwick, is there a regulation forty?"
+    -> isnow
+  node isnow bramwick "There is now."
+    -> cat
+  node cat narrator "Marta sets a stool behind the bar. Tallow's cat jumps up beside her and sits. It stares at Cray and does not blink."
+    -> dorrit
+  node dorrit narrator "At the back, a round man in a customs waistcoat slips in. Dorrit. He never resigned. He just stopped coming in."
+    set inquiry_started
+    -> open
+  node open marta "This inquiry is open. Mr Cray will answer the charges. Fenn will bring them. Everyone else, drink quietly and leave the cat alone."
+    -> liberty
+  node liberty silas "Allow me. I've taken the liberty of drafting the charges against me. Mine will be tidier."
+    -> readthem
+  node readthem marta "Read them, then. Fenn will answer them."
+    -> c1
+  # The log needs no "if has": Act IV starts with it and nothing takes it, and an
+  # unconditional choice keeps every charge node from ever being a dead end.
+  # Charge the first: the Arcadia, lost at sea.
+  node c1 silas "Charge the first: the Arcadia. Lost at sea three years ago. It's in the harbour ledger, and I find the ledger persuasive."
+    > "(Show Ansel's log.)" -> c1ok
+    > "(Show the harbour ledger.)" if has ledger -> c1_ledger
+    > "(Show the claims book.)" if has claims_book -> c1_claims_book
+    > "(Show Rook's purse.)" if has purse -> c1_purse
+    > "(Show the kelp manifest.)" if has kelp_manifest -> c1_kelp
+  node c1r marta "The charge is that she was lost, Fenn. Show me she wasn't."
+    > "(Show Ansel's log.)" -> c1ok
+    > "(Show the harbour ledger.)" if has ledger -> c1_ledger
+    > "(Show the claims book.)" if has claims_book -> c1_claims_book
+    > "(Show Rook's purse.)" if has purse -> c1_purse
+    > "(Show the kelp manifest.)" if has kelp_manifest -> c1_kelp
+  node c1_ledger silas "The ledger says she was lost. You're proving my point for me. It's kind of you. It's also slow."
+    -> c1r
+  node c1_claims_book silas "My insurers paid out on a lost ship. That helps my case, doesn't it? Do keep helping. I'm enjoying it."
+    -> c1r
+  node c1_purse rook "Not yet, boy. I'll know when it's my turn. I'll be the one standing up."
+    -> c1r
+  node c1_kelp marta "Put that away, Fenn. I can smell it from here, and I've a feeling it's for afters."
+    -> c1r
+  node c1ok silas "A sailor's diary. Charming. Do they still write those?"
+    -> c1wave
+  node c1wave marta "Written by a man standing on that ship out there, Mr Cray. Waving at you."
+    -> lantern
+  node lantern narrator "Everyone turns to the window. A lantern on the Marrow's rail swings. My father. He's been waving for an hour, just in case."
+    -> c2
+  # Charge the second: harbour dues.
+  node c2 silas "Very touching. Charge the second. Yes, my office paid harbour dues on the Arcadia. Dues are legal. Ask the harbour."
+    > "(Show Ansel's log.)" -> c2_ansel_log
+    > "(Show the harbour ledger.)" if has ledger -> c2ok
+    > "(Show the claims book.)" if has claims_book -> c2_claims_book
+    > "(Show Rook's purse.)" if has purse -> c2_purse
+    > "(Show the kelp manifest.)" if has kelp_manifest -> c2_kelp
+  node c2r marta "The charge is harbour dues, Fenn. Paid, he says, and legal. Show us where they were paid. And when."
+    > "(Show Ansel's log.)" -> c2_ansel_log
+    > "(Show the harbour ledger.)" if has ledger -> c2ok
+    > "(Show the claims book.)" if has claims_book -> c2_claims_book
+    > "(Show Rook's purse.)" if has purse -> c2_purse
+    > "(Show the kelp manifest.)" if has kelp_manifest -> c2_kelp
+  node c2_ansel_log silas "The same diary again? I paid the harbour, not your father. He wouldn't have written my receipts down."
+    -> c2r
+  node c2_claims_book silas "Insurance is between me and my insurers. Dues are between me and the harbour. You're mixing your ledgers, clerk."
+    -> c2r
+  node c2_purse marta "Not yet. That purse is a man, not a receipt. The charge is dues. Where are dues written down?"
+    -> c2r
+  node c2_kelp marta "That's a smell, not a receipt. The charge is dues. Keep it in your pocket, and your pocket away from my bar."
+    -> c2r
+  node c2ok fenn "Dues on a lost ship, entered three days before she was even late. Mr Cray, you're very punctual for a tragedy."
+    -> wrote
+  node wrote bramwick "I wrote that entry. He paid me three hundred crowns to write it. I'll say it to anyone. I've been practising on Rook all night."
+    -> verse
+  node verse rook "He has. It was very moving. Twice it was in verse."
+    -> c3
+  # Charge the third: the insurance.
+  node c3 silas "Charge the third. My insurers paid out on six ships, for weather. The Straits have weather. That's all they have."
+    > "(Show Ansel's log.)" -> c3_ansel_log
+    > "(Show the harbour ledger.)" if has ledger -> c3_ledger
+    > "(Show the claims book.)" if has claims_book -> c3ok
+    > "(Show Rook's purse.)" if has purse -> c3_purse
+    > "(Show the kelp manifest.)" if has kelp_manifest -> c3_kelp
+  node c3r marta "The charge is the insurance, Fenn. Six ships, paid for weather. Who wrote down what they were paid for?"
+    > "(Show Ansel's log.)" -> c3_ansel_log
+    > "(Show the harbour ledger.)" if has ledger -> c3_ledger
+    > "(Show the claims book.)" if has claims_book -> c3ok
+    > "(Show Rook's purse.)" if has purse -> c3_purse
+    > "(Show the kelp manifest.)" if has kelp_manifest -> c3_kelp
+  node c3_ansel_log silas "A captain's opinion isn't an insurance document. If it were, I'd be bankrupt and every sailor in Vela an astronomer."
+    -> c3r
+  node c3_ledger silas "The harbour ledger doesn't do insurance, clerk. It barely does arithmetic. Bramwick's sevens are a disgrace."
+    -> sevens
+  node sevens bramwick "My sevens are continental."
+    -> c3r
+  node c3_purse rook "Still not my turn, boy. When it is, you'll hear my knees."
+    -> c3r
+  node c3_kelp marta "Not yet. Whatever that paper says, I'd like it after the insurance, not instead of it."
+    -> c3r
+  node c3ok fenn "Six ships, paid in full, for weather. That same year, your office refused Vane's claim for a real storm. On a technicality."
+    -> stamped
+  node stamped dorrit "Requisitioned on a stamped form. Handed over by the company's own clerk. Stamped and passed. I'd serve soup on it."
+    -> vane
+  node vane marta "Vane's claim. I remember. She drank here a month on credit, and paid back every penny. Go on, Mr Cray."
+    -> c4
+  # Charge the fourth: who was taken off.
+  node c4 silas "Even granting that, who was aboard? Everyone who could tell you is on a plague ship. My flag keeps them there. It's catching, I'm told."
+    > "(Show Ansel's log.)" -> c4_ansel_log
+    > "(Show the harbour ledger.)" if has ledger -> c4_ledger
+    > "(Show the claims book.)" if has claims_book -> c4_claims_book
+    > "(Show Rook's purse.)" if has purse -> c4ok
+    > "(Show the kelp manifest.)" if has kelp_manifest -> c4_kelp
+  node c4r marta "The charge is that nobody ashore can say who was taken off, Fenn. Is there anybody in this room who can?"
+    > "(Show Ansel's log.)" -> c4_ansel_log
+    > "(Show the harbour ledger.)" if has ledger -> c4_ledger
+    > "(Show the claims book.)" if has claims_book -> c4_claims_book
+    > "(Show Rook's purse.)" if has purse -> c4ok
+    > "(Show the kelp manifest.)" if has kelp_manifest -> c4_kelp
+  node c4_ansel_log silas "The log says men came. It doesn't say I sent them. Sailors see a fog and blame the nearest gentleman."
+    -> c4r
+  node c4_ledger silas "The ledger records ships, clerk, not people. It's one of the things I like best about it."
+    -> c4r
+  node c4_claims_book silas "Hulls, clerk. That book is all hulls. Insurers are famously uninterested in who was aboard. It's why I went into the business."
+    -> c4r
+  node c4_kelp marta "The charge is people, Fenn, and that's kelp. Hold on to it. I can tell it wants an audience."
+    -> c4r
+  node c4ok narrator "I don't say anything. I hand the purse to Rook. He stands up, which takes him a while, and the whole room waits for him."
+    -> first
+  node first rook "I'm ashore. I was the first."
+    -> fruit
+  node fruit rook "Taken off under a yellow flag. Paid with this. Put on a fruit boat. Cray's seal, never opened. Open it, Marta. Let them see."
+    -> wax
+  node wax narrator "Marta breaks the seal. Three hundred crowns spill out. A slip in a neat hand: RECEIVED, ONE NAVIGATOR, SURPLUS TO REQUIREMENTS. S.C."
+    -> surplus
+  node surplus marta "Is that your hand, Mr Cray?"
+    -> receipts
+  node receipts silas "…It's a very good hand. I always did keep receipts. It's a weakness."
+    -> same
+  node same bramwick "(quietly) Three hundred. Same as me."
+    -> pair
+  node pair rook "Then we're a matched pair. …Surplus. I've been called worse. Mostly by me."
+    > "(Show the kelp manifest.)" if has kelp_manifest -> c5
+      set kelp_read
+      note kelp_fog "The fog is not weather. It is dried kelp, burned in iron braziers, and Vane has been shipping it out in the Marrow's own crates."
+    > "That's everything." -> stands
+  # The fifth, optional: the kelp from the pier end.
+  node c5 narrator "I lay the kelp manifest on the bar and read it out: QUARANTINE STN, G.K. Briquettes, kelp, four hundred. Purpose: for fog."
+    -> laugh
+  node laugh narrator "There's a silence. Then somebody laughs. Then everybody does. Silas Cray is laughed at in Port Vela for the first time."
+    -> clerical
+  node clerical silas "A clerical error. My men write down whatever they're told. I really must stop telling them things."
+    -> stands
+  # Cray, standing.
+  node stands narrator "Cray stands. He brushes down his coat, straightens his cravat pin, and smiles at me, and it's very nearly a real smile."
+    -> colleagues
+  node colleagues silas "We're colleagues, really. You wrote a form on a beach and an island walked out of it. I write it. You file it. Now you write it too."
+    -> true
+  node true fenn "Yes. The difference is that mine were true."
+    -> fashioned
+  node fashioned silas "Is that the difference? How very old-fashioned."
+    -> point
+  node point silas "I collect things that point. I offered your father money for that compass twice. He said no twice."
+    > "You offered me a desk once." if cray_offer and not seen:inquiry.offer -> offerpoint
+    > "You should have collected clerks. This one pointed at you." -> sodid
+      take purse
+      take claims_book
+      set inquiry_done
+      sound chime
+    > "(Point at him.)" -> pointing
+      take purse
+      take claims_book
+      set inquiry_done
+      sound chime
+  node offerpoint silas "The desk's still there. Morning light, evening draught, and a view of every man who's turned it down."
+    -> offerpoint2
+  node offerpoint2 fenn "I kept the ledger instead."
+    -> offerpoint3
+  node offerpoint3 silas "I noticed. You'd have been cheaper."
+    -> point
+  node pointing narrator "I point at him. It's very rude. Everybody in the Salty Keel points at him too, including, somehow, the cat."
+    -> sodid
+  node sodid silas "So it did. (He pulls on his gloves, finger by finger.) I should like all of this in writing."
+    -> triplicate
+  node triplicate marta "You'll have it in triplicate, Mr Cray. Sit down. This inquiry finds… Bramwick, what does it find?"
+    -> finds
+  node finds bramwick "Regulation two. A harbourmaster suspended by a party to fraud is reinstated on proof of the fraud."
+    -> proof
+  node proof marta "And is there proof?"
+    -> room
+  node room narrator "The whole Salty Keel tells her there is. The cat, startled, leaves."
+    -> detained
+  node detained bramwick "Then I'm reinstated and Mr Cray is detained, pending a great deal of paperwork. And Fenn: I'll need my stamp."
+    note stamp_back "Cray is detained and Bramwick is reinstated. The harbour stamp is still in my pocket. The yellow flag comes down when he has it back."
+    -> walked
+  node walked narrator "Two regulars walk Cray to the door, very politely, because he asks. Marta puts the purse and the claims book under the bar."
+    set cray_gone
+  # If he's still standing there (the verdict read, the walk to the door skipped).
+  node waiting silas "I'm waiting for my escort. They're finishing their drinks. I told them not to hurry. I'd hate to be rushed out of my own ruin."
+    set cray_gone

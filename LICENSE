@@ -1,0 +1,90 @@
+THE BRASS COMPASS
+Copyright (c) 2026 Alfonso Encinas. All rights reserved.
+
+This repository, and the game it builds, are proprietary. Nothing here is open source, and
+nothing is licensed for reuse except the narrow permissions below. If you want to do something
+this file does not allow, ask first: see "Licensing enquiries" at the end.
+
+1. WHAT THIS COVERS
+
+   The "Work" means all of the following, in source and in built form:
+
+   - the source code of the game engine, the .adv scripting language and its compiler, and the
+     tools in tools/ and tests/ (except the third-party software listed in section 4);
+   - the story, characters, dialogue, prose, puzzle design, room descriptions, hints and other
+     written content under src/content/, docs/ and the game's interface;
+   - the painted backgrounds, character art, portraits, props and inventory icons;
+   - the music, sound effects and cinematics;
+   - the name "The Brass Compass", its title treatment, and the look of its interface.
+
+2. WHAT YOU MAY DO
+
+   You may:
+
+   - play an official build of the game, for personal, non-commercial entertainment;
+   - link to the game and to this repository;
+   - quote up to 300 words of the game's text, and use screenshots or short capture footage of
+     the game, for review, criticism, news coverage, academic discussion or a personal
+     playthrough video — provided the game is named and credited and the use is not misleading
+     about its origin or licence;
+   - keep a local copy of the repository for the purpose of playing, reviewing or building the
+     game for your own use, and make the changes needed to run it on your own machine.
+
+3. WHAT YOU MAY NOT DO
+
+   Without prior written permission from the copyright holder, you may not:
+
+   - copy, publish, distribute, sublicense, sell, rent, lease or lend the Work or any build of
+     it, in whole or in part;
+   - publish modified versions, forks, ports, translations, demakes, remakes or other derivative
+     works, or distribute the Work as part of another product;
+   - extract, reuse or redistribute the artwork, music, sound effects, cinematics, fonts,
+     character designs, names or text as assets, stock, templates or training data;
+   - remove or alter this notice, the copyright notice, or the credits in CREDITS.md from any
+     copy of the Work;
+   - use the Work, its name, or its characters to imply endorsement of another product, or in
+     advertising, without permission.
+
+   The permissions in section 2 are the only rights granted. All other rights are reserved.
+
+4. THIRD-PARTY SOFTWARE
+
+   The Work is built with third-party software that remains under its own licence, including
+   Vite (MIT) and TypeScript (Apache-2.0); the cinematic source project additionally uses GSAP
+   and the HyperFrames toolchain. Their licences govern those components, and nothing in this
+   file restricts rights you already have under them. The full list, with links, is in
+   CREDITS.md. The game's own content and code are not covered by those licences.
+
+5. AI-GENERATED MATERIAL — PROVENANCE AND DISCLOSURE
+
+   The painted artwork (backgrounds, characters, portraits, props, inventory icons), the music
+   and the cinematic footage were produced with generative AI models from the author's prompts
+   and direction, then selected, edited, cropped, colour-graded and composed by hand. The game's
+   writing — story, characters, dialogue, puzzles, hints, documentation — and all of its code and
+   tooling are original work by the author, made with AI-assisted development tools.
+
+   No third-party copyrighted artwork, music, footage or text is knowingly included. The Work is
+   not affiliated with, endorsed by, or derived from any existing adventure game or franchise.
+   All names, places and events are original.
+
+   To the extent that any jurisdiction does not recognise copyright in machine-generated output,
+   the copyright holder claims copyright in the Work as a whole: the selection, arrangement,
+   editing, direction and the original human-authored elements. This disclosure is repeated in
+   a short, store-ready form in CREDITS.md and docs/STORE.md.
+
+6. NO WARRANTY
+
+   THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+   BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,
+   TITLE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM,
+   DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+   FROM, OUT OF OR IN CONNECTION WITH THE WORK OR THE USE OR OTHER DEALINGS IN THE WORK.
+
+7. LICENSING ENQUIRIES
+
+   For permission to redistribute, port, localise, license commercially, or use the art or music
+   outside the game, contact the copyright holder through the repository's issue tracker or the
+   contact address on the store page.
+
+   This file is a plain-language proprietary notice, not legal advice. If you need certainty for
+   a commercial use, consult a lawyer in your jurisdiction.

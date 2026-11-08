@@ -1,0 +1,67 @@
+room pier_end "The Harbour Mouth"
+  bg bg_pierend_wide
+  width 2560
+  music music_sea
+  grade "brightness(0.95) saturate(0.85)"
+  ambience sea
+  perspective horizon 455 ref 875 height 330
+  walk (545,875) (560,790) (760,770) (1010,705) (1230,672) (1350,668) (1420,648) (1660,610) (1530,700) (1480,780) (1300,875)
+  entry 640,830
+  arrive quay 830,815
+  footsteps stone
+  light 1265,365 radius 150 lantern
+  beacon 2198,158 period 14
+  water (0,465) (380,465) (380,560) (0,560) ripple 1.6
+  water (2000,880) (2440,600) (2560,600) (2560,880) ripple 2.2
+  emit lapping at 2300,800
+  occluder floor 698 (752,624) (832,634) (996,658) (960,700) (912,760) (760,745) (752,700)
+  occluder floor 656 (1210,588) (1346,592) (1346,660) (1210,660)
+
+  # Act I's last scene: with the crew and the chart aboard, Vex waits at the lamp.
+  # The Marrow's boat is the painted launch under it.
+  scene if act 1 and vex_deal and dorrit_cleared and quill_compass and seen:quill.join and rook_story and hobb_joined and not pier_ready
+    set pier_ready
+    say "Vex is at the lamp with his coat buttoned to the throat."
+    say "The harbour is quiet. Even the gulls have gone to bed."
+
+  sprite npc_vex_body at 1150,700 size 1.05 idle speaker vex for vex grade "saturate(0.85) brightness(0.9)" if act 1 and vex_deal and dorrit_cleared and quill_compass and seen:quill.join and rook_story and hobb_joined
+
+  hotspot vex "Captain Vex"
+    show if act 1 and vex_deal and dorrit_cleared and quill_compass and seen:quill.join and rook_story and hobb_joined
+    area 1090,500 130x205
+    stand 1080,715
+    look "Captain Vex, at the lamp, dressed for a portrait and a fight. He is watching the fog, not me."
+    talk "Captain. The crew is ready, and the rudder is on."
+      say "Vex turns from the fog. For once he does not look pleased with himself."
+      say "\"Then we go,\" he says. \"Before I remember why I do not.\""
+      say "He walks down to the boat without looking back at the island."
+      act 1
+    give "He looks at my hands. \"Keep it. I have been paid enough for one lifetime.\""
+
+  hotspot boat "the Marrow's boat"
+    area (400,300) (1060,300) (1060,660) (700,690) (400,660)
+    stand 1030,750
+    look "The Marrow's boat, made fast under the lamp. Her sail is furled and her oars are shipped."
+    open "I step aboard. It rocks like a boat that has been waiting."
+    use "I could row out to the Marrow myself. I would rather not arrive out of breath."
+    state if act 1 and vex_deal and dorrit_cleared and quill_compass and seen:quill.join and rook_story and hobb_joined
+      look "The boat is ready. Somebody has folded her sail and left the gangplank down."
+
+  hotspot town "back along the quay"
+    area 545,745 240x130
+    stand 660,820
+    exit quay sound none
+    look "Back along the quay, the lights of Dreadwater. Half of them are out."
+    open "I walk back toward the harbour."
+
+  hotspot lighthouse "the lighthouse"
+    area 2110,90 170x450
+    nowalk
+    look "The lighthouse. It has burned every night for eighty years, and it does not reach the fog."
+    use "I cannot climb it from here. I am not sure I would want to."
+
+  hotspot sea "the harbour mouth"
+    area 1900,560 660x320
+    nowalk
+    look "The harbour mouth. Past it the fog bank sits on the water, tall as a wall and twice as quiet."
+    talk "I tell the fog I am coming. It does not answer, which is worse than an answer."

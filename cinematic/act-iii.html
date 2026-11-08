@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #070b14; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: #070b14; }
+      .act3-scene { position: absolute; inset: 0; overflow: hidden; }
+      .act3-camera { position: absolute; inset: 0; overflow: hidden; transform-origin: 62% 55%; }
+      .act3-sea { position: absolute; left: -900px; top: 0; width: 3142px; height: 1080px; max-width: none; }
+      .act3-shade { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 50%, rgba(7, 11, 20, .62) 0%, rgba(7, 11, 20, .86) 70%, rgba(7, 11, 20, .95) 100%); }
+      .act3-title { position: absolute; left: 50%; top: 50%; width: 1400px; margin-left: -700px; margin-top: -120px; text-align: center; font-family: "EB Garamond", serif; }
+      .act3-kicker { display: block; color: #e8c98a; font-size: 34px; letter-spacing: .5em; padding-left: .5em; }
+      .act3-rule { width: 120px; height: 2px; margin: 26px auto 30px; background: #e8c98a; opacity: .7; }
+      .act3-name { color: #e6ddc8; font-size: 112px; font-weight: 400; line-height: 1.05; letter-spacing: .08em; }
+      .act3-black { position: absolute; inset: 0; background: #000; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="act3" data-start="0" data-duration="7" data-fps="30" data-width="1920" data-height="1080">
+      <section id="act3-scene" class="clip act3-scene" data-start="0" data-duration="7" data-track-index="0" data-track-kind="graphics">
+        <div class="act3-camera" data-layout-allow-overflow><img class="act3-sea" src="assets/reef.webp" /></div>
+        <div class="act3-shade"></div>
+        <div class="act3-title">
+          <span class="act3-kicker" data-var-text="kicker">ACT III</span>
+          <div class="act3-rule"></div>
+          <h1 class="act3-name" data-var-text="title">TIDY WEATHER</h1>
+        </div>
+        <div class="act3-black" data-layout-allow-overlap></div>
+      </section>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo(".act3-camera", { scale: 1 }, { scale: 1.08, duration: 7, ease: "none" }, 0);
+      tl.fromTo(".act3-black", { opacity: 1 }, { opacity: 0, duration: 1, ease: "power1.out" }, 0);
+      tl.fromTo(".act3-kicker", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 1, ease: "power2.out" }, 1.0);
+      tl.fromTo(".act3-rule", { opacity: 0, scaleX: 0 }, { opacity: .7, scaleX: 1, duration: 1, ease: "power2.out" }, 1.2);
+      tl.fromTo(".act3-name", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 1.1, ease: "power2.out" }, 1.4);
+      tl.to(".act3-black", { opacity: 1, duration: .8, ease: "power1.in" }, 6.12);
+      window.__timelines["act3"] = tl;
+    </script>
+  </body>
+</html>

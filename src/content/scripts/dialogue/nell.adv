@@ -1,0 +1,32 @@
+dialogue nell
+  node root nell "Elias Fenn's boy, back from the mainland. Buying, or loitering? I charge for both."
+    > "What's the news?" -> news
+    > "What are you selling?" -> selling
+    > "Tell me about the village." -> village
+    > "Anything strange on the water?" -> strange
+    > "Just looking. Goodnight." -> bye
+  node news nell "Half the boats are tied up. The other half are for sale. Nobody's buying."
+    > "Why not?" -> why
+    > "What's for sale?" -> sale
+    > "I'll look elsewhere." -> bye
+  node why nell "Because the fog took six ships, and nobody wants to be the seventh."
+    -> bye
+  node sale nell "Rope, nets, a dinghy with a good name. The owners have gone inland."
+    -> bye
+  node selling nell "Rope, lamp oil, dried fish, and gossip. The fish is fresher."
+    -> bye
+  node village nell "Forty houses and a well. Half are empty since the ships stopped coming back."
+    -> village2
+  node village2 nell "The rest are related. That's why it's quiet."
+    > "It looks peaceful." -> peaceful
+    > "Goodnight, Nell." -> bye
+  node peaceful nell "It is. That's what worries me. A harbour town should sound like a harbour."
+    -> bye
+  node strange nell "The fog's closer this month. On still nights the fishermen won't go past the reef."
+    -> strange2
+  node strange2 nell "Old Onn says the water goes quiet out there. I sell rope, not answers."
+    > "I'll ask her." -> bye
+    > "What do you think it is?" -> think
+  node think nell "I think a harbour town should sound like a harbour. This one doesn't."
+    -> bye
+  node bye nell "Go on. If you hear anything out there, I'm buying. News, I mean. Not rope."

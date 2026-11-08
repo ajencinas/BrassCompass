@@ -1,0 +1,95 @@
+# ACT II, optional. The stern gallery at sundown: no puzzle and nothing needed, just the view,
+# the wake, and Quill off watch. Opened from the captain's cabin (the cabin's doors are the way
+# back); Quill talks it out in dialogue/quill.adv at `gallery`.
+room marrow_gallery "The Marrow — Stern Gallery"
+  bg bg_gallery_wide
+  width 2560
+  music music_sunset
+  ambience sea
+  perspective horizon 255 ref 875 height 485
+  grade "sepia(0.14) saturate(1.04) brightness(1.02)"
+  walk (525,878) (548,806) (1890,806) (1905,878)
+  entry 640,842
+  arrive marrow_cabin 640,842
+  footsteps deck
+  light 2232,80 radius 110 lantern
+  light 196,211 radius 90 lamp
+  water (530,270) (2180,270) (2180,525) (1100,525) (1100,460) (940,460) (940,525) (530,525) ripple 1.8
+  motes glints (560,300) (2150,300) (2150,450) (560,450) count 45
+  emit lapping at 1500,620
+  emit creak
+
+  sprite npc_quill_body at 1650,830 size 1 idle speaker quill for quill grade "saturate(0.92) brightness(0.96)" if act 2
+
+  scene if act 2 and not gallery_arrived
+    set gallery_arrived
+    say "Sundown on the stern gallery. Quill is here, off watch, with the glass she does not need."
+
+  hotspot doors "the cabin doors"
+    area 150,20 340x820
+    stand 600,842
+    exit marrow_cabin
+    look "The doors back into the cabin, lamplight behind the glass. In there it is his ship. Out here it is only the sea."
+
+  hotspot sun "the sunset"
+    area 1110,50 320x210
+    nowalk
+    look "The sun is going into the sea with a lack of restraint that would embarrass a chart."
+
+  hotspot wake "the wake"
+    area (1185,272) (1265,272) (1630,530) (640,530)
+    nowalk
+    look "Our wake, ruled straight back to Dreadwater. The one line on this voyage I could draw myself."
+
+  hotspot sea "the Shroud"
+    area (500,262) (1170,262) (630,530) (500,530)
+    nowalk
+    look "The water between us and the island. Every colour there is, and none of it on my chart."
+
+  hotspot islands "the islands"
+    area 1495,208 370x60
+    nowalk
+    look "Islands going blue with distance, like ink drying. Not one of them with a name I know."
+
+  hotspot gulls "gulls"
+    area 1570,0 620x135
+    nowalk
+    look "Gulls, hanging off the stern without a wingbeat. I have drawn worse birds than that."
+
+  hotspot fish "flying fish"
+    area 945,462 150x80
+    nowalk
+    look "A flying fish leaves the sea, glides fifty yards on fins never meant for it, and drops back in, astonished. I know the feeling."
+
+  hotspot rail "the rail"
+    area 500,530 1480x272
+    stand 1180,812
+    look "The rail, turned and polished by years of a captain's elbows. There is a dent in it the size of a glass."
+    push "I lean on it, like a sailor. The sea leans back, like the sea. I stop."
+
+  hotspot table "the captain's table"
+    area 1975,590 290x290
+    nowalk
+    look "A bottle of rum and one glass. The glass is full and nobody is drinking it."
+    pickup "It isn't mine to take. I get the feeling it isn't his either."
+
+  hotspot lantern "the stern lantern"
+    area 2185,0 240x190
+    nowalk
+    look "A brass lantern on a bracket, lit already, in case the sun changes its mind."
+
+  hotspot carving "the carving"
+    area 2385,560 175x320
+    nowalk
+    look "Gilt carving on the gallery corner: vines, a cherub, and a mermaid who looks tired of holding a pose."
+
+  hotspot quill "Quill"
+    show if act 2
+    area 1560,360 200x470
+    stand 1500,842
+    look "Quill at the rail, off watch, with her spyglass and the whole sunset and no use for either."
+    talk "She doesn't turn round. She moves the spyglass an inch along the rail, which I take as hello."
+      talk quill at gallery
+    state if seen:quill.gallery
+      talk "She has the spyglass pointed at nothing in particular."
+        talk quill at gallery_after

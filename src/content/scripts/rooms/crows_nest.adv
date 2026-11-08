@@ -1,0 +1,73 @@
+# ACT II. Quill's post: the foretop, with the glass she will not be parted from. She sees the
+# fog leaning before anyone else does, and hears something under it, which is as close as the
+# ghost comes to the screen in this act. No new flags: the scene is knowledge, not a key.
+room crows_nest "The Marrow — Crow's Nest"
+  bg bg_crowsnest_wide
+  width 2560
+  music music_fog
+  ambience wind
+  grade "sepia(0.08) saturate(1.02) brightness(0.98)"
+  perspective horizon 300 ref 875 height 380
+  walk (300,878) (320,830) (700,815) (1100,808) (1400,815) (1560,840) (1580,878)
+  entry 760,850
+  arrive marrow_deck 1460,845
+  footsteps deck
+  haze 200 480 floor 560 alpha 0.10 speed 6 tint "#cfd8dc"
+  emit creak
+
+  sprite npc_quill_body at 1180,850 size 1.02 idle speaker quill for quill grade "saturate(0.85) brightness(0.92)" if act 2
+
+  scene if act 2 and not nest_arrived
+    set nest_arrived
+    say "The crow's nest is a plank platform high on the foremast, with a rail Quill does not trust. She calls it an office."
+    say "She comes down the shrouds when she hears me, and holds her hand out for the spyglass."
+
+  hotspot shroud "the Shroud"
+    area 500,190 1000x220
+    nowalk
+    stand 900,850
+    look "The Shroud, low and white on the water. It looks like weather. The island knows better."
+    state if seen:quill.nest
+      look "The fog has a lean on it now. I can see it from here, and I wish I could not."
+
+  hotspot sky "the sky"
+    area 0,0 2560x180
+    nowalk
+    look "The sky, doing the one thing it does well out here: nothing at all."
+
+  hotspot shrouds "the shrouds down to the deck"
+    area 1330,60 230x780
+    stand 1460,845
+    exit marrow_deck sound stairs
+    look "The shrouds down to the deck. Quill goes up them like a ladder. I come down like a sack of charts."
+
+  hotspot steps "the steps down"
+    area 740,650 150x150
+    nowalk
+    stand 700,850
+    look "The steps down from the nest. A short ladder, then a long way of shrouds."
+
+  hotspot crates "the crates"
+    area 100,260 380x280
+    stand 600,850
+    look "Crates lashed down in the corner of the nest with new line. Vex's cargo, going out with us."
+    use "The rope is new. The knots are Vex's. He ties them like he is counting."
+
+  hotspot rail "the rail"
+    area (0,720) (200,620) (400,540) (600,450) (780,380) (810,430) (700,500) (540,570) (370,630) (170,720) (0,800)
+    stand 560,850
+    look "The rail, cold and wet under my hand. Beyond it the sea is going about its business."
+    use "I put my ear on the rail. The wood hums. That is the ship, probably."
+    state if seen:quill.nest
+      use "I put my ear on the rail. The hum is still there, under the wood. It is not the ship."
+
+  hotspot quill "Quill"
+    show if act 2
+    area 1030,430 300x420
+    stand 1050,860
+    look "Quill, spyglass to her eye, watching the fog's edge the way I watch a page."
+    talk "She takes it without a word and puts it to her eye."
+      talk quill at nest
+    state if seen:quill.nest
+      talk "She is talking before I get to the rail."
+        talk quill at nest_after

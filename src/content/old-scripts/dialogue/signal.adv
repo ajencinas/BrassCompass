@@ -1,0 +1,24 @@
+# The signal: flag sixteen on the wreck.
+dialogue signal
+  node down narrator "I haul down number fifteen and fold it the way you'd fold a letter. Then I bend number sixteen on to the halyard."
+    -> up
+  node up narrator "It goes up in jerks, hand over hand, and breaks out at the masthead: shirts, patches, an L, and a great deal of mustard."
+    -> wait
+  node wait quill "There. Now we wait for the captain to decide we're not dead."
+    -> about
+  node about narrator "A long way out, a ship comes about. The Marrow, lining up on the Old Nail, coming in through the Needle like she's done it all her life."
+    > "She's coming in." -> boats
+    > "(Take Quill's hand.)" if aff >= 12 -> hand
+  node hand narrator "Quill's hand is already there. Neither of us mentions it. We're busy watching the ship."
+    -> boats
+  node boats narrator "On the lagoon, a hundred and thirty sailors put out for her in anything that floats. Salt rafts. Two doors. A bathtub."
+    -> stroke
+  node stroke narrator "Somewhere among them my father is shouting the stroke, wrongly."
+    -> cutter
+  node cutter narrator "Across the water, a grey cutter with a cloud on her sail slips her cable. She runs for Port Vela with every stitch she owns."
+    -> home
+  node home quill "That's Cray's. He's running home to write us all down as lost."
+    > "Let him try. I have better handwriting." -> END
+      act 3
+    > "Then we'll just have to get there first." -> END
+      act 3

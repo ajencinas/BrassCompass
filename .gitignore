@@ -1,0 +1,43 @@
+node_modules/
+dist/
+# Uploads from `npm run package:itch` (see docs/STORE.md).
+dist-itch/
+/*.mp4
+# Scratch screenshots at the repo root.
+/*.png
+# Screenshots written by the browser tests (npm test, test:editor).
+test-output/
+# Story cinematics are generated, not source: ~20 MB, rebuilt from cinematic/.
+public/assets/video/*.mp4
+cinematic/.hyperframes/
+cinematic/.media/
+cinematic/cinematic.mp4
+cinematic/renders/
+.env
+.gencache.json
+.playwright-mcp/
+__pycache__/
+*.pyc
+*.local
+.DS_Store
+.genraw/
+reference/screens/cal/
+cinematic/.thumbnails/
+cinematic/.waveform-cache/
+
+# Art is published separately (see README: "Art and audio"). The repo carries code and content;
+# the generated scenes, character art and props live in the shared asset folder.
+public/assets/scenes
+public/assets/scenes/
+public/assets/characters
+public/assets/characters/
+public/assets/props
+public/assets/props/
+public/assets/video
+public/assets/video/
+
+# Depth caches for tools/calibrate.py
+.calibration/
+
+# Untouched art and video, kept by tools/optimize_assets.py before it shrinks anything.
+.asset-originals/

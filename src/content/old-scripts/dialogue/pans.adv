@@ -1,0 +1,90 @@
+# The far pans (rooms/far_pans.adv). Optional, no puzzle: Ansel on his barrel, and the things the
+# reunion had no room for. His mother, the stars, the three years, and an apology that arrives in
+# the wrong order, as his always do. The goodbye walks them back up to the camp together.
+dialogue pans
+  node root ansel "Best seat on Gullet Key. You can see the old girl's masts from here. None of her holes. I've been keeping it for somebody."
+    > "Tell me about my mother. I have four things." if not seen:pans.lise -> lise
+    > "You named the stars wrong on purpose. I'd correct you." if not seen:pans.stars -> stars
+    > "I kept the outbound book for three years." if not seen:pans.book -> book
+    > "Quill's watching us from the camp." if not seen:pans.watching -> watching
+    > "I'd better run that flag up." -> go
+  # Down at the pans again.
+  node again ansel "Back again? Good. The barrel's been asking after you."
+    > "Tell me about my mother. I have four things." if not seen:pans.lise -> lise
+    > "You named the stars wrong on purpose. I'd correct you." if not seen:pans.stars -> stars
+    > "I kept the outbound book for three years." if not seen:pans.book -> book
+    > "Quill's watching us from the camp." if not seen:pans.watching -> watching
+    > "I'd better run that flag up." -> go
+  # Between subjects.
+  node more narrator "The fog lifts a little further off the lagoon."
+    > "Tell me about my mother. I have four things." if not seen:pans.lise -> lise
+    > "You named the stars wrong on purpose. I'd correct you." if not seen:pans.stars -> stars
+    > "I kept the outbound book for three years." if not seen:pans.book -> book
+    > "Quill's watching us from the camp." if not seen:pans.watching -> watching
+    > "I'd better run that flag up." -> go
+
+  # Lise: the L on every flag (ansel.adv, log.adv).
+  node lise ansel "Four's a good number. Go on. I'll tell you which ones are true."
+    -> four
+  node four fenn "Thread. Canvas. Her thimble on the hall table. And she sang the wrong words to everything."
+    -> three
+  node three ansel "Three out of four. She sang the right words to the wrong tunes, to annoy me. She was right about everything else. That was worse."
+    > "I don't remember her face." -> face
+    > "Sing me one. The way she did." -> sing
+  node face ansel "It's on my cabin wall, a bit crooked. You wear it, you know. Just before you're right about something. I've missed it every day."
+    -> more
+  node sing narrator "He sings two lines of a shanty to the tune of a hymn, quite badly. In the next pan, the heron turns its back on us."
+    -> better
+  node better ansel "She did it better. She did everything better. And she never let me forget it. I'd like to be reminded."
+    -> more
+
+  # The night watch: "He used to name the stars wrong on purpose, so I'd correct him." (watch.adv)
+  node stars ansel "On purpose?"
+    -> sky
+  node sky narrator "He looks up at a sky with no stars in it. As if one might turn up and vouch for him."
+    -> nope
+  node nope ansel "Son, I have never known which one's the Hook. Rook did the stars. Your mother did the stars. I did the shouting."
+    -> took
+  node took ansel "She corrected me every clear night. When she was gone, you took over. You were six, and very firm about it."
+    note named_stars "My father never knew one star from another. My mother corrected him every clear night. When she died I took over. I was six."
+    > "I thought it was a game." -> game
+    > "You could have just learned them." -> learn
+    > "Quill says someone should correct you." if seen:watch.corrected -> told
+  node game ansel "It was. It was the last one she was here for."
+    -> hook
+  node learn ansel "And lose the only navigator I had who couldn't see over the chart table? Not likely."
+    -> hook
+  node told ansel "Did she! Then I'll need the pair of you. I'm wrong about a great many stars."
+    -> hook
+  node hook ansel "…Don't tell anyone I said any of this. I've a reputation as a navigator to keep up."
+    -> more
+
+  # The three years, and the compass on the hall table (items.adv).
+  node book ansel "Did you! Every ship out of Vela, in your own hand?"
+    -> tally
+  node tally fenn "Every one. I stamped them hard, so they'd come back. They all did but yours. Five of them came back empty."
+    -> here
+  node here ansel "…They're here, son. All six crews, raking salt. You've been stamping them home for three years and didn't know it."
+    > "Two of them still owe harbour dues." -> dues
+    > "I dusted round your compass. On the hall table." -> dust
+  node dues ansel "Ha! Then we'd better get them home to pay. I'll break it gently. They've had a hard three years."
+    -> more
+  node dust ansel "Oh, son. I'm sorry."
+    -> dust2
+  node dust2 ansel "…About the dusting. It's a terrible table for dust. Your mother said so the day we bought it."
+    -> dust3
+  node dust3 ansel "And the rest of it. Sorry about the rest of it. I'll get the order right one of these days."
+    -> more
+
+  node watching ansel "I know. She's been at it since the store hut, pretending not to, very badly. What does she call you?"
+    > "Cargo." -> cargo
+    > "Cargo. Mostly." if aff >= 12 -> mostly
+  node mostly ansel "Mostly! Oh, son. Mostly is how it starts. Your mother called me “the hazard” for two years. Then one day she didn't."
+    -> more
+  node cargo ansel "Cargo! Oh, that's lovely. Cargo's the whole point of a ship, son. Everything else is just there to carry it."
+    -> more
+
+  node go ansel "Go on, then. Your mother hated a flag left in a pocket."
+    -> wrong
+  node wrong narrator "We walk back up to the camp together. He goes wrong twice on the way, on perfectly flat salt."
+    go salt_camp sound none

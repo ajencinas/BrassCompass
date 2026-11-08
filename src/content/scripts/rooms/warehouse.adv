@@ -1,0 +1,65 @@
+room warehouse "The Boat Shed"
+  bg bg_warehouse_wide
+  width 2560
+  music music_office
+  grade "brightness(0.95) saturate(0.85)"
+  perspective horizon 250 ref 875 height 400
+  # Measured from the painted desk (top y 595, floor y 840): a 0.9 m desk puts an adult
+  # at 500 px on the shed floor. The old 400 px scale left the desk at a person's chin.
+  scale 752 414
+  scale 875 516
+  walk (470,875) (515,848) (2330,838) (2380,838) (2500,875)
+  entry 2280,856
+  arrive alley 2200,856
+  footsteps wood
+  light 1167,492 radius 160 candle
+  motes dust (1130,20) (1480,0) (1900,520) (1500,600) (1250,420) count 50
+
+  scene if act 1 and not boat_shed_arrived
+    set boat_shed_arrived
+    say "The boat shed. The island's stores in the dark, and one stack turned wrong."
+
+  hotspot desk "the desk"
+    area 930,550 720x290
+    stand 1050,856
+    look "A desk in a boat shed: a candle, three books, and a week of dust."
+    open "The drawer is empty except for a fish hook and a smell of salt."
+    use "The candle is fresh. Somebody has been sitting here."
+
+  hotspot books "the books"
+    area 1080,455 440x140
+    stand 1050,856
+    look "Three books, swollen with damp. The top one is a book of sea stories."
+    use "The pages are stuck together. The story is about a ship that came back."
+
+  hotspot stores "the stores"
+    area 0,140 570x700
+    stand 560,856
+    verb talk
+    look "The boat shed's stores: crates, barrels, salt beef. One corner is stacked wrong."
+    use "I count what's left. Dorrit has already counted it twice."
+    talk "I knock on the top crate."
+      talk dorrit at thief
+    state if seen:dorrit.confess
+      look "The stores, stacked wrong at the corner. The gap behind them is empty now."
+      talk "There's nobody behind the stores. The thief has gone."
+
+  hotspot crates "the crates"
+    area 590,415 220x425
+    stand 700,856
+    look "Three crates, stacked neat. The top one has been opened and closed again."
+    use "The nails are new. Somebody has been at this stack in a hurry."
+
+  hotspot hoist "the hoist"
+    area 1130,40 210x270
+    nowalk
+    look "A block and tackle. The rope is new, and the hook is still swinging."
+    use "I give the rope a pull. Something in the loft shifts and settles."
+
+  # The door is the dark leaf left of the corner post, its fog-lit gap the bright seam at
+  # x 2095. The area covered the post itself; the stand clears the seam so it stays visible.
+  hotspot lane_door "the lane door"
+    area 2000,310 175x530
+    stand 2160,860
+    exit alley sound hatch
+    look "The lane door, open a hand's width. Fog light comes through."

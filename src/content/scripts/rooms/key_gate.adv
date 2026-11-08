@@ -1,0 +1,130 @@
+room key_gate "The Reef Gate"
+  bg bg_gate_fog_wide
+  width 2560
+  music music_office
+  # The plate is already the Shroud's cold gate: the open leaf, the longboat in the shallows
+  # and the Grey Lantern half-seen beyond. Only the figures need cooling.
+  grade "saturate(0.86) brightness(0.94)"
+  perspective horizon 400 ref 875 height 290
+  # The sandbank runs along the bottom, dropping into the shallows in front of the boat and
+  # rising again to the brazier. Everything the crew stands on is inside this band.
+  walk (60,878) (70,810) (380,802) (560,835) (660,845) (700,852) (1380,852) (1410,810) (1600,792) (2000,792) (2470,820) (2500,878)
+  entry 300,850
+  # Arriving from the flats you appear on the painted shore path at the west edge. (The old
+  # `arrive weather_works` stub is gone: the lighthouse no longer opens onto the reef gate.)
+  arrive lagoon_shore 200,850
+  footsteps sand
+  ambience sea
+  emit crackle at 1685,690
+  light 1685,650 radius 90 fire
+  # One green light on the Grey Lantern's rail, never the ship entire and never her captain.
+  light 1910,225 radius 150 lantern colour "#6fe8a8" if act 3
+  light 1910,225 radius 70 lantern colour "#c8ffe2" if act 3
+  haze 40 430 floor 700 alpha 0.18 speed 5 tint "#d7dee2"
+  haze 470 650 floor 700 alpha 0.1 speed 4 tint "#dfe6ea"
+  haze 600 880 floor 858 alpha 0.08 speed 3 tint "#cfd8dc"
+  motes embers (1620,575) (1755,575) (1755,715) (1620,715) count 18
+
+  # The brazier stands on the sand; walk round in front of it.
+  occluder floor 850 (1610,705) (1770,705) (1760,850) (1620,850)
+
+  sprite npc_vex_body at 1850,820 size 1.0 idle speaker vex for vex grade "saturate(0.78) brightness(0.88)" if act 3
+
+  # Act III ends at this gate. The three things the castaways need are Elias's rules,
+  # the name, and Hobb's plan for the bell; only then does Vex let them board.
+  scene if act 3 and elias_found and bell_plan and rule_name and not lantern_boarded and not key_gate_ready
+    set key_gate_ready
+    say "The gate stands open. The longboat is in the water, and Vex is holding the oars."
+    say "Nobody is saying anything. That is how I know it is time."
+
+  scene if act 3 and not key_gate_arrived and (not elias_found or not bell_plan or not rule_name)
+    set key_gate_arrived
+    say "The reef gate. The palisade runs down into the fog and stops at the water."
+    say "Beyond it, the Grey Lantern is at anchor. One green light, and no other lights."
+    say "Vex is by the brazier. He has not looked at the gate once."
+
+  # The two painted leaves and the dark opening between them (x 1150-1400), under the boards
+  # overhead. The stand is the sand strip at the gate's foot.
+  hotspot gate "the reef gate"
+    area (1000,560) (1005,280) (1010,115) (1540,115) (1545,560) (1400,600) (1150,600)
+    stand 1275,865
+    look "The reef gate. Ship's timber, twice my height, one leaf standing open on the fog."
+    open "I step toward the opening. Vex does not move out of the way."
+    push "I push the open leaf. It swings a little and comes back."
+    pull "I pull the leaf. The hinge grinds, and nothing else happens."
+    state if act 3 and (not elias_found or not bell_plan or not rule_name)
+      name "the held gate"
+      look "The gate stands open, but Vex has one hand on the post and the other in his pocket."
+      talk "Vex answers without turning round. \"Not yet.\""
+        talk vex at gate
+    state if act 3 and elias_found and bell_plan and rule_name and not lantern_boarded
+      name "the opened gate"
+      look "The gate stands open. The longboat waits in the water at its foot."
+      open "I walk up to the open gate. The fog comes in to meet me."
+        say "I put a hand on the open leaf. It swings wider into the cold."
+        say "At the foot of the gate, the longboat rides on water the colour of old pewter."
+        say "Hobb is in the bow with his crowbar. Quill has the spyglass. Nobody is talking."
+        say "Vex is in the stern with both oars shipped. He does not offer me a hand."
+        say "Out past him, the fog has a shape: a great dark hull, and one green light."
+        say "The bell rings once. It is not our bell."
+        sound chime
+        say "I step into the boat. The gate stands open behind me, and nobody looks back."
+        say "Vex pulls. The Grey Lantern comes out of the fog to meet us."
+        set lantern_boarded
+        act 3
+
+  # The painted longboat waits in the shallows before the open gate. The hotspot follows the
+  # painted hull; the stand is on the sand below her, clear of her footprint.
+  hotspot boat "the longboat"
+    area (690,700) (720,640) (790,600) (900,585) (1030,590) (1160,610) (1280,650) (1330,700) (1340,760) (1330,820) (1200,820) (1050,805) (900,780) (780,745) (710,720)
+    stand 800,865
+    look "The longboat, waiting in the shallow water before the gate. Her oars are shipped and her hull is the only thing here that still floats."
+    talk "I put a hand on her gunwale. She rode five of us in and did not complain."
+    use "Vex has the oars. He is not moving them yet."
+    state if act 3 and (not elias_found or not bell_plan or not rule_name)
+      look "The longboat, empty, in the gate's shadow. She is not going anywhere without a plan."
+      talk "She is still and empty. Vex is not looking at her either."
+      use "I put a hand on her gunwale. Vex says, \"Not yet.\""
+    state if act 3 and elias_found and bell_plan and rule_name and not lantern_boarded
+      look "The longboat is in the water. Vex is holding her against the gate."
+      talk "Her oars are across the thwarts. Vex is holding her ready."
+      use "The gate first. Then the boat."
+
+  # Never the whole ship: the painted hull is a shape in the fog, the lantern a green light on it.
+  hotspot dark_hull "the dark hull"
+    area 1500,0 950x340
+    nowalk
+    stand 2200,830
+    look "Out past the palisade, the fog has a shape in it. A dark hull, long and low, and one green light."
+    use "I cannot reach it from here. That is what the gate is for."
+    state if act 3 and elias_found and bell_plan and rule_name
+      look "The Grey Lantern, half-seen. Dark hull, green lantern, and a bell I can hear."
+
+  hotspot brazier "the signal brazier"
+    area 1600,560 190x190
+    stand 1650,860
+    look "A brazier of cold kelp, smoking to keep the fog down. Somebody has kept it lit all night."
+    use "I warm my hands. The smoke leans out to sea."
+    turnoff "Vex would only light it again. He likes a fire he can stand beside."
+
+  # The pale shore track at the frame's left edge, running from the gate's sand off west.
+  hotspot path "the path to the flats"
+    area (0,680) (360,710) (480,770) (480,880) (0,880)
+    stand 200,850
+    exit lagoon_shore sound none
+    look "The path back into the fog flats. The sand is the only thing out here that has not moved."
+
+  hotspot vex "Captain Vex"
+    show if act 3
+    area 1770,470 170x395
+    stand 1740,830
+    look "Vex by the brazier, coat buttoned to the chin, watching the fog as if it owes him money."
+    talk "He does not turn round. \"If you've come to blame me, form a queue.\""
+    state if act 3 and elias_found and bell_plan and rule_name
+      look "Vex has stopped watching the fog. He is watching the boat."
+      talk "He holds the oars across his knees and looks at me."
+        talk vex at board
+    state if act 3 and (not elias_found or not bell_plan or not rule_name)
+      look "Vex is counting something on his fingers. It looks like the crew."
+      talk "He says, \"We are not ready. Tell me we are ready.\""
+        talk vex at gate

@@ -1,0 +1,90 @@
+room bow_fog "The Shroud"
+  bg bg_bow_wide
+  width 2560
+  music music_fog
+  ambience sea
+  perspective horizon 555 ref 875 height 430
+  walk (250,875) (600,690) (660,665) (930,665) (1010,700) (1035,860) (1060,875)
+  entry 700,800
+  arrive marrow_deck 560,820
+  footsteps deck
+  light 1650,30 radius 120 lantern
+  haze 120 760 floor 690 alpha 0.28 speed 9
+  emit creak
+
+  # Act II, the first try: the bell rings with no hand on the rope, the bow lantern dies, and
+  # something vast passes under the hull. Silence and darkness are what save the ship. The bell
+  # rope, the bow rail and the lantern are painted; the fog is the white between the rigging
+  # and the rail. The thing under the water is heard and felt, never seen.
+  scene if act 2 and not fog_tried
+    set fog_tried
+    set rule_light
+    note rule_light "The Shroud hunts light as well as sound. It came when the bow lantern died."
+    say "They call it calling the water. You stand at the bow and speak into the fog."
+    say "Nobody has told me the words. I say my father's name, and then I wait."
+    say "The fog takes it and gives nothing back. The deck is wet, and the ship is quiet."
+    say "Then the bell rings."
+    say "One note, then another. It is a bell, close above my head."
+    say "I look up. The rope hangs still. There is no hand on it."
+    say "The bow lantern gutters. The flame leans, as if something has breathed on it."
+    say "The light goes out. The fog comes over the rail after it, slow and certain."
+    say "The hull lifts under my feet. Not a wave. Something is passing beneath us."
+    say "I hear it against the planks, a long scrape that does not hurry."
+    say "From the helm, Vex's voice, very low: \"No lights. Nobody speaks.\""
+    say "The lamps go out along the deck. I hear the crew go still, one at a time."
+    say "We drift. The fog closes over the place where the water moved."
+    say "When I can hear again, the bow is quiet. The lantern is out, and nothing follows us."
+
+  hotspot fog "the fog"
+    area (520,0) (1520,0) (1520,90) (1480,220) (1420,360) (1330,460) (1200,520) (1000,555) (800,585) (620,605) (520,600)
+    stand 700,780
+    look "The Shroud. It stands on the water like a wall and does not move."
+      say "Past it the sea goes on to nowhere I have charted."
+    talk "I say the Marrow's name into the fog, the way sailors do. Nothing answers."
+    use "I could put my hand in it. I did that once, and it was colder than water."
+    state if fog_tried
+      look "The fog is quiet today. It was quiet that night too, right up until the bell."
+        say "Past it the sea goes on to nowhere I have charted."
+
+  hotspot bow_rail "the bow rail"
+    area (800,585) (1500,515) (1620,530) (1650,690) (1100,730) (820,680)
+    stand 980,750
+    look "The bow rail. The paint is worn pale where hands have held it."
+    talk "I lean on the rail and tell it we are still here. It does not answer."
+    use "I lean on it and look down. The water under us is white and says nothing."
+    state if fog_tried
+      look "The bow rail. Wet, cold, and still here. So am I."
+      use "I look over the rail. The water is white and shallow-looking. I do not look for long."
+
+  hotspot bow_lantern "the bow lantern"
+    # The lamp and the top of the post it hangs from. The old area sat on the carved figurehead
+    # to the right; the lamp is cut off by the top of the frame and its glass would fall under
+    # the top bar, so the area carries on down the lit post where it can be clicked.
+    area (1620,0) (1708,0) (1708,60) (1700,140) (1680,200) (1636,200) (1626,120) (1620,50)
+    stand 950,760
+    look "The bow lantern on its post, big enough to read a chart by. It burns all night."
+    talk "I leave the lantern alone. It is a lamp. Lamps have enough to do."
+    use "The wick is trimmed and the glass is clean. Somebody looks after it."
+    state if rule_light
+      look "The bow lantern is lit again, turned down low. Nobody stands close to the glass."
+      use "I turn it down until the flame is a seed, then step back from it."
+
+  hotspot bell_rope "the bell rope"
+    area (1540,0) (1610,0) (1670,480) (1610,490) (1520,120)
+    stand 900,780
+    look "The bell rope, hanging out of the fog above the lantern. The bell is up there too, out of sight."
+    talk "I do not talk to the bell. I have heard it answer."
+    use "I put a hand on the rope. It is cold, and it does not move."
+    state if fog_tried
+      look "The bell rope, slack and still. Nobody has rung it for the watch since that night."
+      use "I take the rope and hold it. It stays quiet. I let it go."
+
+  hotspot aft "back along the deck"
+    area 300,760 360x120
+    stand 520,830
+    exit marrow_deck sound none
+    look "The deck runs back toward the mast and the helm. The fog sits between me and the rest of the ship."
+    open "I go back aft along the deck, keeping to the middle of it."
+
+  use spyglass on fog
+    "I put the glass up. The fog has no distance in it. It is the same white at the end of the glass."

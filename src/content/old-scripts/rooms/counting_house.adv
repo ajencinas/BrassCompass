@@ -1,0 +1,93 @@
+# Cray & Co., factors: up Chandler's Lane, lit, spotless, and minded by a clerk nobody sent home.
+room counting_house "Cray & Co., Factors"
+  bg bg_countinghouse_wide
+  width 2560
+  music music_office
+  perspective horizon 300 ref 875 height 360
+  walk (60,875) (110,752) (2450,752) (2520,875)
+  entry 260,800
+
+  # Atmosphere: Cray's lamps along the counting desks.
+  footsteps wood
+  light 415,490 radius 110 lamp
+  light 663,490 radius 110 lamp
+  light 1055,490 radius 110 lamp
+  light 1328,490 radius 110 lamp
+  light 1505,490 radius 110 lamp
+  light 1858,490 radius 110 lamp
+  light 2100,490 radius 110 lamp
+
+  sprite npc_nib_body at 1130,770 size 0.95 idle speaker nib for nib grade "saturate(0.85) brightness(0.9)"
+
+  hotspot desks "the counting desks"
+    area 350,560 1550x180
+    nowalk
+    look "Five tall desks in a row, every pen lined up. Even the ink looks like it's been told to sit up straight."
+    open "Locked, every drawer. The keys will be on a ring in Cray's pocket, alphabetised."
+
+  hotspot pigeonholes "the pigeonholes"
+    area 470,350 1230x205
+    nowalk
+    look "Hundreds of pigeonholes, numbered, each with a rolled paper. Bills of lading, salvage receipts, insurance. Other people's bad luck, filed."
+    pickup "I reach for one, and Nib clears his throat without looking up. It's the most alarming noise I've heard all night."
+
+  hotspot portrait "portrait of Silas Cray"
+    area 1160,0 330x340
+    nowalk
+    look "Silas Cray, in oils, looking down at his own office. He looks as if he's already insured it against you."
+    talk "I tell the portrait that it's going to have a very long morning. The portrait smirks. It was painted smirking."
+
+  hotspot emblem "brass cloud"
+    area 110,65 220x155
+    nowalk
+    look "The Cray & Co. cloud, in brass. The same cloud as on the kelp crates, and in wax on Rook's purse. A good mark for a man who sells fog."
+
+  hotspot safe "the safe"
+    area 2130,445 290x295
+    stand 2080,800
+    look "A black iron safe with a brass dial. What's inside is what Cray hid. What he thought harmless, he left on the shelves."
+    open "I don't know the combination, and I'm not a clerk who guesses. The interesting books are in the pigeonholes, being boring."
+    use "I don't know the combination, and I'm not the sort of clerk who guesses."
+
+  hotspot tray "requisition tray"
+    show if not has requisition and not has claims_book and not inquiry_done
+    area 770,540 160x50
+    stand 850,790
+    item requisition
+    look "An in-tray of blank requisitions on Nib's desk. CRAY & CO. REQUISITION: ITEM, QUANTITY, AUTHORITY. A little cloud at the top, smiling."
+    pickup "I take a requisition and fill it in: one claims book, insurance, all of it. Authorised: Harbour of Port Vela. Nib doesn't look up."
+
+  hotspot nib "Nib"
+    area 1075,480 120x290
+    stand 1330,800
+    look "Cray's clerk: young, in an eyeshade, ink to the elbows. He's waiting for a clock to tell him he can stop. The clock hasn't."
+    talk "He looks up from nothing in particular."
+      talk nib
+    give "“I can't take things. I can only take requisitions.”"
+    state if has claims_book
+      talk: talk nib at after
+
+  hotspot door_out "door to the lane"
+    area 95,330 210x415
+    stand 240,800
+    exit alley
+    look "The door back out to Chandler's Lane. Polished on the inside too. Nobody polishes the inside of a door."
+
+  use requisition on nib if req_stamped
+    "I hand Nib the requisition."
+    take requisition
+    give claims_book
+    sound chime
+    talk nib at handed
+  use requisition on nib
+    "He turns it over, looking for something, and hands it back. “It isn't stamped. I can't not read it if it isn't stamped.”"
+  use stamp on nib
+    "He holds out the back of his hand, considers it, and withdraws it. “No. Then I'd be authorised. I don't know what I'd do.”"
+  use compass on nib
+    "“It's pointing at the wall.” It is. Past the wall is the reef. He doesn't ask."
+  use ledger on nib
+    "“That's the harbour's. We don't keep the harbour's. We just pay it.” He hears himself, and frowns, faintly."
+  use crowbar on safe
+    "I measure the crowbar against the safe. The safe wins on every measurement, including morally."
+  use stamp on pigeonholes
+    "Stamping Cray's own filing would be very satisfying and of no use whatsoever. I'll stamp something that counts."

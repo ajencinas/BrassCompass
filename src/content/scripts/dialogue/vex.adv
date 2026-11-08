@@ -1,0 +1,362 @@
+dialogue vex
+  node root vex "That compass. I know it. Elias Fenn's, unless I'm wrong."
+    set met_vex
+    > "I need the Marrow." -> need
+    > "They say you're the only one sailing." -> only
+    > "Nothing. Good day." -> END
+
+  node need vex "The Marrow doesn't sail. She's had enough of the fog."
+    -> terms
+
+  node only vex "Sailing is a strong word. I sit in the harbour and charge for it."
+    -> terms
+
+  node terms vex "Pike's wreckers took my spare rudder. Bring it back and we'll talk."
+    > "Where would Pike keep it?" -> where
+    > "I'll get it." -> END
+    > "Find another rudder." -> another
+
+  node another vex "There isn't another. Pike has the only one that fits."
+    -> END
+
+  node where vex "His shed in Wreckers' Lane. Take someone who can run."
+    -> END
+
+  node no_rudder vex "Still no rudder. Still no voyage."
+    > "Where would Pike keep it?" -> where
+    > "I'm working on it." -> END
+
+  node rudder vex "That is my rudder. You're either very good or very lucky."
+    set met_vex
+    > "Now talk." -> deal
+    > "The rudder for a passage." -> deal
+    > "Keep it. I'll find another captain." -> bluff
+
+  node bluff vex "There isn't another captain. That's the joke."
+    -> deal
+
+  node deal vex "My ship. My rules. Half the salvage. I captain."
+    > "Agreed." -> sail
+    > "My father first." -> father
+    > "Half is robbery." -> half
+
+  node father vex "Your father is a reason, not a cargo. I'll take you to the fog."
+    -> sail
+
+  node half vex "It is robbery. You're welcome to walk."
+    > "Agreed." -> sail
+    > "I'll walk." -> END
+
+  node sail vex "Then it's a voyage. Bring a cook and a carpenter."
+    set vex_deal
+    set quill_compass
+    note vex_terms "Vex will sail: his ship, his rules, half the salvage. He returned Quill's compass."
+    -> compass
+
+  node compass vex "Take Quill's compass. Tell her the debt is paid."
+    -> END
+
+  node deal_done vex "We sail at the tide. Try not to be late."
+    > "About the fog." -> fog
+    > "About my father." -> my_father
+    > "What's in the safe?" -> salvage
+    > "Nothing." -> END
+
+  node fog vex "The fog takes ships. I take passengers. We understand each other."
+    -> END
+
+  node my_father vex "Elias Fenn sailed in with a good crew. I'm not him."
+    -> END
+
+  node salvage vex "Tide tables, mostly. And a few things the sea owed me."
+    > "Those charts have ship names on them." -> charts
+    > "Never mind." -> END
+
+  node charts vex "Salvage. The sea gives, and I keep. That's the trade."
+    -> END
+
+  # Act II — the helm. Vex sends Fenn to the bow; later the crew brings the hold
+  # back to him, and he answers it by sailing deeper.
+  node helm vex "You're on my quarterdeck, clerk. Say your piece."
+    > "What are we doing out here?" -> edge
+    > "Why the bow?" -> bow
+    > "Nothing." -> END
+
+  node edge vex "The edge of the Shroud. Close enough to see it, far enough to leave."
+    -> send
+
+  node bow vex "Because the fog has a voice, and I want to hear it before it hears us."
+    -> send
+
+  node send vex "Take the bow. Call the water. If it calls back, don't answer."
+    > "Call the water?" -> call
+    > "You're serious." -> serious
+    > "I'm going." -> END
+
+  node call vex "Old trick. A voice at the bow tells the fog we're only weather."
+    > "And if it doesn't believe us?" -> believe
+    > "I'll call it." -> END
+
+  node believe vex "Then we run. Quietly. That's the whole plan."
+    -> END
+
+  node serious vex "I am always serious. It's the coat that makes people doubt me."
+    -> END
+
+  node helm_done vex "The bow. I meant what I said about calling the water."
+    > "What if it answers?" -> answer
+    > "I'm going." -> END
+
+  node answer vex "Then we learn something. Try not to."
+    -> END
+
+  node after_fog vex "You're back. Good. I was starting to think the fog had taste."
+    > "The bell rang on its own." -> bell
+    > "It's still out there." -> out
+
+  node bell vex "Bells do that, on ships. In stories."
+    -> END
+
+  node out vex "Then we keep the light low and our mouths shut."
+    -> END
+
+  node confront vex "You've seen the hold."
+    > "Those crates have ships' names on them." -> names
+    > "How long have you been stripping wrecks?" -> howlong
+    > "The crew saw. They know what you are." -> crew
+
+  node names vex "Names are all that is left of them. I keep the names dry."
+    -> admit
+
+  node howlong vex "Since before your father sailed. The fog is a good supplier."
+    -> admit
+
+  node crew vex "Then they can hate me on the way back. It is how I am paid."
+    -> admit
+
+  node admit vex "The sea takes. I keep what it drops. I don't apologise for weather."
+    > "My father was on one of those ships." -> about_father
+    > "You're a thief." -> thief
+    > "Take us home." -> home
+
+  node about_father vex "I know. I didn't put him there."
+    -> decision
+
+  node thief vex "A thief with a ship. The only kind that sails."
+    -> decision
+
+  node home vex "Home is the one heading I can't sell."
+    -> decision
+
+  node decision vex "No. We go deeper. I'll prove it's only weather."
+    set vex_exposed
+    > "You'll get us killed." -> refuse
+    > "Then we all go." -> together
+
+  node refuse vex "Maybe. Not today. Hold the rail."
+    -> END
+
+  node together vex "That's the spirit. Hold on to something."
+    -> END
+
+  node last vex "I'm taking her deeper. You can watch, or you can swim."
+    > "The light. It hunts light, doesn't it?" if rule_light -> last_light
+    > "You'll get us killed." -> last_kill
+    > "Then I'm with you." -> last_go
+
+  node last_light vex "Then we go dark. Hold on to something."
+    -> gone
+
+  node last_kill vex "Probably. Hold on to something."
+    -> gone
+
+  node last_go vex "Good. Hold on to something."
+    -> gone
+
+  node gone narrator "Vex puts both hands on the wheel and turns her past the last pencil mark."
+    music music_fog
+    -> sun
+
+  node sun narrator "The sun goes first. Then the colour. Then the rails."
+    -> deeper_fog
+
+  node deeper_fog narrator "The fog comes up the hull like water up a stair."
+    -> bell_rings
+
+  node bell_rings narrator "Somewhere ahead, a bell rings. There is no hand on the rope."
+    sound chime
+    -> dark
+
+  node dark narrator "The lanterns gutter. The dark comes down and stays."
+    -> under
+
+  node under narrator "Something vast passes under the keel. The deck lifts, and keeps lifting."
+    -> green
+
+  node green narrator "A green light opens in the fog. A ship rises out of it, older than the island."
+    -> lantern_name
+
+  node lantern_name narrator "Her name is on the stern, grey under the salt. The Grey Lantern."
+    -> voice
+
+  node voice narrator "I don't see her captain. I hear him. He welcomes the Marrow aboard."
+    -> taken
+
+  node taken narrator "The deck goes out from under me. Cold, a rope, Hobb shouting my name."
+    -> boat
+
+  node boat narrator "Then the longboat. Then the wreck behind us, and the fog closing its door."
+    set marrow_lost
+    act 2
+
+  # Act III — the Shroud. Stranded on the flats, the wreck, the reef gate and the
+  # boarding. The admission is `saw_elias`, not `admit`: `admit` is already the Act II
+  # salvage beat and its node id has to stay.
+  node shore vex "Stranded on a fog flat with a crew that would happily leave me here. I've had worse mornings."
+    > "What do we do now?" -> shore_what
+    > "The crew wants answers." -> shore_crew
+    > "What did you see out there?" -> shore_saw
+    > "Nothing." -> END
+
+  node shore_what vex "We walk. The camp is up the flats, and your father's chart is the only map worth having."
+    > "You're coming with us." -> shore_coming
+    > "Don't fall behind." -> END
+
+  node shore_coming vex "Somebody has to carry the oars. You'd only drop them."
+    -> END
+
+  node shore_crew vex "They can want. Wanting is free. Rowing is not."
+    > "They think you left him." -> shore_saw
+    > "Give them something." -> shore_give
+    > "Nothing." -> END
+
+  node shore_give vex "I have a boat, a coat, and a good story. Two of those are useful."
+    -> END
+
+  node shore_saw vex "You want the part I didn't say on the Marrow."
+    > "Tell me." if not seen:vex.saw_elias -> saw_elias
+    > "Tell me again." if seen:vex.saw_elias -> saw_again
+    > "Not now." -> END
+
+  node saw_elias vex "I saw him. Off the reef, standing on a rock, waving a lantern. I turned the wheel and my light away."
+    > "You left him there." -> saw_left
+    > "Why?" -> saw_why
+    > "You're telling me now." -> saw_now
+
+  node saw_left vex "Yes. I left him. I'm not going to make it sound better than that."
+    -> saw_fear
+
+  node saw_why vex "The fog was between us. I was on the wrong side of it, and I stayed there."
+    -> saw_fear
+
+  node saw_now vex "Because you'd have found out. You're the sort who finds out."
+    -> saw_fear
+
+  node saw_fear vex "I've been afraid since the first ship I lost. Fear is the only crew that stays."
+    > "Then be useful." -> saw_useful
+    > "You're a coward." -> saw_coward
+    > "I've heard enough." -> END
+
+  node saw_useful vex "I know the reef water. I know how she hunts. That's worth a boat and an oar."
+    -> saw_deal
+
+  node saw_coward vex "A live coward. The best kind, and the only kind that gets old."
+    -> saw_deal
+
+  node saw_deal vex "I'm not on your side. I'm on the boat's side. The boat's on mine."
+    > "That will have to do." -> END
+    > "Don't make me regret it." -> saw_regret
+
+  node saw_regret vex "I make everyone regret something. You'll fit right in."
+    -> END
+
+  node saw_again vex "A light, off the reef. I told myself it was a lamp on a buoy. It wasn't."
+    -> END
+
+  # The wreck: the Arcadia, the nameplate, and Vex's eye for what the sea gives back.
+  node wreck vex "I know this water. I've been picking at it for years, and it never picks back."
+    > "Whose ship was she?" -> wreck_ship
+    > "What do you know about the nameplate?" -> wreck_plate
+    > "Did you see my father here?" -> shore_saw
+    > "Nothing." -> END
+
+  node wreck_ship vex "A ship the fog took. There are enough of them out here to make a reef."
+    > "Did you take anything off her?" -> wreck_took
+    > "Leave her alone." -> END
+
+  node wreck_took vex "Cargo. Names. Nothing that answered me. That is the whole trade."
+    -> END
+
+  node wreck_plate vex "A name, cut into brass. The sea keeps the rest of the ship, but not that."
+    > "Whose name?" if not rule_name -> wreck_plate_unknown
+    > "I've read it." if rule_name -> wreck_plate_known
+    > "Never mind." -> END
+
+  node wreck_plate_unknown vex "I don't know. Reading it costs more light than I like to spend."
+    -> END
+
+  node wreck_plate_known vex "Then keep it behind your teeth until we're aboard. Names carry."
+    -> END
+
+  # The gate refuses until all three holds: Elias, the name and Hobb's bell plan.
+  node gate vex "The gate stays shut until I like the plan. I don't like it yet."
+    > "What is missing?" -> gate_what
+    > "Elias is with us." if elias_found -> gate_elias
+    > "We have the third rule." if rule_name -> gate_rule
+    > "Hobb has a plan for the bell." if bell_plan -> gate_bell
+    > "Then stay here." -> END
+
+  node gate_what vex "Count them off. I'll tell you which one I don't believe."
+    > "Elias and the rules." if not elias_found -> missing_elias
+    > "The name." if not rule_name -> missing_name
+    > "Hobb's plan for the bell." if not bell_plan -> missing_bell
+    > "All three are done." if elias_found and bell_plan and rule_name -> gate_all
+    > "Later." -> END
+
+  node missing_elias vex "Your father has the rules. Until he says them, we are guessing at the fog."
+    -> END
+
+  node missing_name vex "The name is the whole trick. Without it, we are just noise in the fog."
+    -> END
+
+  node missing_bell vex "Hobb's plan. I want to hear how he means to take a bell off a dead ship."
+    -> END
+
+  node gate_all vex "Then we are ready. I hate being ready. It means something is about to happen."
+    -> END
+
+  node gate_elias vex "Your father is alive. Good. Dead men don't draw maps."
+    -> END
+
+  node gate_rule vex "The name. Say it and she cannot take us."
+    -> END
+
+  node gate_bell vex "Hobb's plan. If it involves climbing, I'm holding the rope from down here."
+    -> END
+
+  # The boarding. Vex rows; he is useful, and he is not sorry.
+  node board vex "I row you out. After that, I'm a passenger with a good coat."
+    > "Why are you coming?" -> board_why
+    > "What do I do when we're aboard?" -> board_what
+    > "What about the others?" -> board_crew
+    > "Let's go." -> board_go
+
+  node board_why vex "If you die out there, they'll say I let you. I'd rather be a witness."
+    > "That's not a reason." -> board_reason
+    > "It'll do." -> board_go
+
+  node board_reason vex "It's the only reason I have that isn't fear. Take it."
+    -> board_go
+
+  node board_what vex "Stay where I can see you. Bell first, then the light, then the name."
+    > "And you?" -> board_you
+    > "Right." -> board_go
+
+  node board_you vex "I'll be at the oars. Somebody has to be ready to leave."
+    -> board_go
+
+  node board_crew vex "They follow you. I follow the boat. It works out the same."
+    -> board_go
+
+  node board_go vex "Get in. Try not to rock her."
+    -> END

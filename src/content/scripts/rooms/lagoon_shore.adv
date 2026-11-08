@@ -1,0 +1,127 @@
+room lagoon_shore "The Fog Flats"
+  bg bg_fogflats_wide
+  width 2560
+  music music_sea
+  ambience sea
+  # The plate is the Shroud's own cold, fog-bound flats. Only the figures are graded, so the
+  # painting keeps the grey-blue palette it was made with.
+  grade "saturate(0.86) brightness(0.94)"
+  perspective horizon 470 ref 875 height 310
+  # The walk hugs the wet sand and shallow channels in front of the painted longboat (which
+  # fills the lower left) and runs east under the distant palisade.
+  walk (775,872) (785,792) (1000,760) (1400,745) (1800,755) (2150,785) (2440,810) (2520,872)
+  entry 820,810
+  # Arrivals sit on the walk by the thing you came through: the longboat from the wreck, the
+  # gate path from the reef gate.
+  arrive reef_wreck 820,810
+  arrive key_gate 1890,810
+  footsteps sand
+  water (0,452) (1250,430) (1500,444) (1500,486) (0,512) ripple 1.2
+  water (1550,690) (1850,655) (2200,700) (2470,760) (2470,878) (1700,878) ripple 1.6
+  water (0,716) (150,700) (162,752) (0,780) ripple 1.0
+  motes glints (0,456) (1250,434) (1500,448) (1500,482) (0,508) count 24
+  motes glints (1550,696) (1850,661) (2200,706) (2464,766) (2464,872) (1700,872) count 28
+  haze 300 470 floor 520 alpha 0.14 speed 6 tint "#d9e3ea"
+  haze 560 760 floor 800 alpha 0.06 speed 3 tint "#c6d2dc"
+  emit lapping at 1200,700
+
+  # Act III opens here: five alive, one ship gone, and Vex's admission on the sand. The crew
+  # stands apart on the flats; the longboat is the way out to the wreck, the gate the way east.
+  scene if act 3 and not stranded
+    set stranded
+    say "The longboat comes in on a wave and stops hard on the sand. For a moment nobody moves."
+    say "Behind us the Marrow is going down. The fog is in no hurry about it."
+    say "I count heads. Quill. Dorrit. Hobb. Vex. Me. Five. That is the whole crew."
+    say "Vex is the last one out. He stands with his coat over his face. Then he says it."
+    say "\"I saw your father. Three weeks back, out past the bar. He was standing on a rock.\""
+    say "Nobody moves. The water goes on doing its small work along the sand."
+    say "\"I could have come about. I told myself the fog was too thick.\""
+    say "Quill turns on him. \"You knew,\" she says. \"You knew, and you let us come.\""
+    say "Dorrit does not say anything. That is how I know he is angry."
+    say "Vex pulls the coat down. He looks older than he did this morning."
+    say "\"The fog was thinner than I told myself. He waved. I turned the wheel.\""
+    say "\"You can hate me on the walk. There is a long walk.\""
+    say "Hobb has not said a word. He is looking out at the wreck on the reef."
+    note vex_saw_elias "Vex saw my father on the rock three weeks back. He turned the wheel."
+
+  # The way east to the reef gate is out of the entry frame, so one short nudge once you have
+  # the crew ashore: the gate is a pale gap in the palisade at the far end of the flats.
+  scene if act 3 and stranded and not nudge_reef_gate
+    set nudge_reef_gate
+    say "East along the wet sand, the palisade stands where the flats end. One pale gap in it, and that is the gate."
+    say "Vex does not turn round. \"When the plan is real,\" he says. \"Not before.\""
+
+  sprite npc_vex_body at 980,815 size 1.0 idle speaker vex for vex
+  sprite npc_quill_body at 1200,815 size 0.98 flip idle speaker quill for quill
+  sprite npc_dorrit_body at 1420,840 size 0.98 idle speaker dorrit for dorrit
+  sprite npc_hobb_body at 1640,805 size 1.0 idle speaker hobb for hobb
+
+  hotspot lagoon "the lagoon"
+    area (0,486) (1500,486) (1500,700) (0,700)
+    stand 1150,850
+    look "The lagoon, flat and cold. The water lies in grey channels between the sandbars."
+    talk "I say my father's name out over the water. The water has heard it before."
+    use "I could drink it. I have had worse from the tavern."
+    pickup "I would need something to carry it in. My hands have been tried."
+
+  hotspot wreck_far "the wreck in the fog"
+    area 90,230 250x180
+    nowalk
+    look "A wreck far out in the fog, only her broken masts showing. The longboat is the only way out to her."
+    talk "I call across the flats. The fog takes it and gives nothing back."
+    use "She is further out than she looks. Wrecks usually are."
+
+  # The gate is the pale gap in the palisade at (1885,390), with its painted track running down
+  # the dune to the shore. The whole opening and track are the target; the stand is the walk below.
+  hotspot reef_gate "the reef gate"
+    area (1700,620) (1745,540) (1800,480) (1840,430) (1848,340) (1948,340) (1952,430) (1918,480) (1905,540) (1925,620) (1750,650)
+    stand 1890,800
+    exit key_gate sound none
+    look "A palisade on a far dune, sharpened posts against the fog. Whatever it keeps out, it has kept out for years."
+    open "I start across the wet flats toward the palisade."
+
+  hotspot boat "the longboat to the wreck"
+    area (270,780) (285,735) (330,705) (400,695) (500,705) (600,725) (690,760) (750,810) (762,860) (752,878) (620,878) (500,860) (390,835) (310,810)
+    stand 830,820
+    exit reef_wreck sound none
+    look "The longboat, drawn up on the wet sand. She carried five of us in and did not complain."
+    talk "I put my hand on her gunwale. She is the only thing we own that still floats."
+    open "We row out to the wreck. Quill takes one oar and gives me the other, which she regrets."
+    use "We row out to the wreck. Quill takes one oar and gives me the other, which she regrets."
+
+  hotspot vex "Vex"
+    show if act 3
+    area 905,545 170x275
+    stand 870,850
+    look "Vex, on the flats, with his coat half off. He has stopped being the captain of anything."
+    talk "He does not look up. \"The tide is wrong. We have until it turns.\""
+    give "He looks at my hands, then at the water. \"Keep it. I travel light these days.\""
+
+  hotspot quill "Quill"
+    show if act 3
+    area 1119,545 82x270
+    stand 1090,850
+    look "Quill, her back to the boat. She is watching the wreck as if it owes her money."
+    talk "She says, \"I can row us out there. I want it noted that I said us.\""
+    give "She does not turn around. \"Put it away. I have oars to carry.\""
+
+  hotspot dorrit "Dorrit"
+    show if act 3
+    area 1335,561 172x280
+    stand 1330,860
+    look "Dorrit, counting what came ashore, and not liking the total."
+    talk "He holds up a spoon. \"One pot. Four spoons. A captain with no ship. That is the whole of it.\""
+    give "He weighs it in one hand and gives it back. \"Not unless it is a spoon.\""
+
+  hotspot hobb "Hobb"
+    show if act 3
+    area 1574,552 132x258
+    stand 1550,850
+    look "Hobb, standing apart with his hands behind his back. He is looking at the wreck in the fog."
+    talk "He does not turn. \"That wreck is older than the island. Somebody should have taken her apart years ago.\""
+    give "He shakes his head. \"Keep your hands free. We will need them.\""
+
+  use compass on wreck_far
+    "The needle swings to the wreck, then past her, out into the fog. It stays there."
+  use compass on reef_gate
+    "The needle points at the gate, then at the wreck. It cannot choose, so I put it away."

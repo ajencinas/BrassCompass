@@ -1,0 +1,64 @@
+room lagoon_shore "Gullet Key — the Lagoon Shore"
+  bg bg_shore_wide
+  width 2560
+  music music_sea
+  ambience sea
+  perspective horizon 470 ref 875 height 310
+  walk (60,875) (140,770) (900,762) (1350,690) (2000,650) (2450,690) (2520,875)
+  entry 950,800
+  arrive reef_wreck 900,800
+  arrive key_gate 2200,720
+
+  # Atmosphere: the lagoon at the boat, sun on the water.
+  footsteps sand
+  water (840,520) (1000,520) (1000,568) (1240,568) (1390,515) (1300,620) (1100,670) (840,700) ripple 1.6
+  water (335,548) (640,546) (660,522) (800,522) (806,545) (805,575) (360,632) (338,600) ripple 1.4
+  motes glints (840,520) (1000,520) (1000,568) (1240,568) (1390,515) (1300,620) (1100,670) (840,700) count 20
+  emit lapping at 900,640
+
+  sprite npc_quill_body at 640,800 size 0.98 idle speaker quill for quill grade "saturate(0.88) brightness(0.95)"
+
+  hotspot lagoon "the lagoon"
+    area 0,500 1400x200
+    stand 1000,790
+    look "Turquoise, shallow, warm. The kind of lagoon sailors describe in letters home, to make somebody jealous."
+    use "I'd need something to carry it in."
+    pickup "I'd need something to carry it in."
+
+  hotspot cutter "the grey cutter"
+    area 980,0 300x570
+    nowalk
+    look "A grey cutter at anchor across the lagoon. Fast, narrow, very clean. A cloud on her stern. Cray's cloud. She isn't fishing."
+    talk "Nobody waves back. Somebody aboard her is watching us through a glass, politely."
+
+  hotspot palms "the palms"
+    area 0,0 900x480
+    nowalk
+    look "Palms leaning out over the water like customers at a bar. Gullet Key is beautiful. Nobody told me prisons could be beautiful."
+
+  hotspot boat "the boat"
+    area 320,540 520x215
+    stand 880,800
+    exit reef_wreck sound none
+    look "The jolly boat, pulled up on the sand, ready for the row back out to the wreck."
+    open "We row back out to the wreck. I'm improving. Quill says I've gone from terrible to merely upsetting."
+    use "We row back out to the wreck. I'm improving. Quill says I've gone from terrible to merely upsetting."
+
+  hotspot path "the path to the palisade"
+    area 1760,60 800x520
+    stand 2200,720
+    exit key_gate sound none
+    look "A sandy path up between the dunes to a palisade of sharpened logs and a yellow flag. Yellow means sickness. These days it means Cray."
+    open "Up the path, toward the yellow flag."
+
+  hotspot quill "Quill"
+    area 555,480 170x310
+    stand 820,800
+    look "Quill shades her eyes at the grey cutter. She doesn't like it. She doesn't like most things, but she's specific about this one."
+    talk "She answers without taking her eyes off the cutter."
+      talk quill3 at shore
+    give "“Hold on to it. If that cutter comes across, I want both hands free.”"
+    states none
+
+  combos fill_bucket
+  combos quill_combos

@@ -1,0 +1,184 @@
+# Inventory item catalogue.
+
+item crowbar "crowbar"
+  look "A crowbar with ambitions well beyond leaning on bollards."
+
+item rum "inspected rum"
+  look "One bottle of Marta's rum, removed for inspection. I have inspected the label, the cork and the colour. The rest is between Marta and her punch bowl."
+
+item licence_form "licence form"
+  look "A blank Seafarer's Licence. Name, rank, and a box marked “previous piracy, if any”. Worthless until it carries the harbour stamp."
+
+item drawer_key "drawer key"
+  look "Bramwick's drawer key. Lost at cards, traded for a bottle of inspected rum. A distinguished career, for a key."
+
+item stamp "harbour stamp"
+  look "The harbour stamp. Brass, heavy, and far more powerful than it looks."
+
+item licence "stamped licence"
+  look "My Seafarer's Licence, stamped by a clerk of the customs house in the Harbourmaster's legal absence. The ink is still wet."
+
+item compass "brass compass"
+  look "My father's compass. My grandfather made it, my father sailed by it, and he left it on the hall table the morning he sailed. I assumed he'd be back for it. I'm still assuming."
+  state if act 1 and has licence and has manifest and ledger_read
+    look "The needle points at the customs house like a dog that's found something. Bramwick, then. With everything."
+  state if act 1 and has licence and not ledger_read
+    look "The needle leans toward the lane. The harbour ledger is up in the loft over the chandler's."
+  state if act 1 and has licence and not has manifest
+    look "Bramwick wants the Arcadia's manifest copy. The chandler keeps one, if somebody settles his invoices."
+  state if act 1 and has stamp and not has licence
+    look "A harbour stamp and a clerk who knows where the licence forms are. Even the needle can see where this is going."
+  state if act 1 and has drawer_key
+    look "Bramwick's drawer key. The needle points at the customs house, or at least doesn't object to it."
+  state if act 1 and has rum
+    look "One bottle of evidence, and a tavern with a dry punch bowl. The needle swings toward the Salty Keel, and waits."
+  state if act 1 and knows_key
+    look "Marta has the drawer key and wants her rum, which customs has been holding on the pier since Thursday. I am customs."
+  state if act 1
+    look "My father's compass. It points wherever it likes, and tonight it likes the customs house: Bramwick will know how a clerk gets a licence."
+  state if act 2 and vane_convinced
+    look "The needle has stopped pretending to be a compass. It points over the bow, into the fog, at a reef nobody sails. Forward, then."
+  state if act 2 and quill_navigator and crew_agree
+    look "A navigator, a crew, and Pell's last sentence in my pocket. The needle points aft, at the captain's cabin, and waits."
+  state if act 2 and has sextant and vane_terms
+    look "Pell's sextant. The needle swings toward the one person on board who wants to be a navigator more than she wants breakfast."
+  state if act 2 and vane_terms and dinner and not chest_open
+    look "Hobb has gone to his dinner. The needle points below decks, at a sea-chest nobody opens."
+  state if act 2 and vane_terms and dinner and not crew_agree
+    look "Hobb won't sail south for money, only for blood. I'm carrying a list of twenty-two names. The needle has opinions about that."
+  state if act 2 and vane_terms and not dinner
+    look "Three terms, and a bosun sitting on Pell's chest until dinner. The needle points below decks, toward a cook without a stamp."
+  state if act 2 and quill_helped
+    look "The needle wants the captain's cabin, through the carved doors under the wheel. It has views about her chart."
+  state if act 2 and has spyglass
+    look "Quill's spyglass. She wants it back, and I want to get past her. Commerce."
+  state if act 2
+    look "The needle points aft, past the lookout. Quill won't let a clerk by unless he's useful."
+  state if act 3 and has flag16
+    look "The needle points back across the flats at the wreck and her halyard, like a dog that wants to be let out. Sixteen, then. Up."
+  state if act 3 and quill_free
+    look "My father, in a salt pan, with a flag under his arm. For once the needle has nothing to add. Talk to him."
+  state if act 3 and form9
+    look "Form 9, written out clean and stamped. The needle points at Pike, who is going to love it. Then hate it. Then love it."
+  state if act 3 and knows_form9
+    look "There isn't a Form 9 on all of Gullet Key. There is a clerk, though, and a clerk can write one on anything."
+  state if act 3 and fog_down
+    look "Quill is locked in the store hut, pending inspection. The needle points at Pike. Somebody here knows what form lets a person out."
+  state if act 3 and gate_open and has bucket_water
+    look "A bucket of lagoon, and a brazier making all the fog. The needle points at the Weather Works with a certain relish."
+  state if act 3 and gate_open and has bucket
+    look "The great brazier at the Weather Works is making the fog. My bucket is empty. The lagoon isn't."
+  state if act 3 and gate_open
+    look "The great brazier is making the fog, and fire hates water. There's a whole lagoon of it. I just need something to carry it in."
+  state if act 3 and has bill and bill_smoked and bill_stamped and bill_signed and bill_dated
+    look "Fumigated, stamped, countersigned and dated. The needle swings toward Pike, practically wagging."
+  state if act 3 and has calendar_leaf
+    look "A day, torn off Pike's calendar. The needle points at the Bill of Health, where days belong."
+  state if act 3 and has bill and not bill_smoked
+    look "The bill smells of cupboard. Pike's fumigation brazier smoulders right beside his gate."
+  state if act 3 and has bill and not bill_stamped
+    look "A Bill of Health without a harbour stamp. I happen to have a harbour stamp. The needle is embarrassed for me."
+  state if act 3 and has bill and not bill_signed
+    look "It wants a ship's officer's countersignature. The needle swings toward the only navigator on the island."
+  state if act 3 and has bill and not bill_dated
+    look "Undated. Pike's calendar is in his hut, and Pike never takes his eyes off it. Well. Almost never."
+  state if act 3 and log_read
+    look "Quarantine, the log says, and forms. Every captain carries blank Bills of Health, and my father never threw away a piece of paper in his life."
+  state if act 3 and hatch_open
+    look "The needle points down the hatch, at my father's desk. It's been waiting three years. So have I."
+  state if act 3
+    look "The needle points at the Arcadia's deck hatch, which is jammed. I packed a crowbar. Of course I did."
+  state if act 4 and ledger_written
+    look "The needle points down the pier, at a bollard with a navigator sitting on it. For once I don't need telling."
+  state if act 4 and quarantine_lifted and not iou_paid
+    look "A stamp, a ledger, and a page that's been wrong for three years. The needle points at the Keel, and at Bramwick, who keeps patting his coat pocket as if it might bolt."
+  state if act 4 and quarantine_lifted
+    look "A stamp, a ledger, and a page that's been wrong for three years. The needle points at the bar of the Salty Keel."
+  state if act 4 and inquiry_done
+    look "Bramwick is reinstated in everything but his stamp, which is in my pocket. The needle points at him, a little reproachfully."
+  state if act 4 and has ledger and has purse and has claims_book and not kelp_proof
+    look "Everything Bramwick asked for. The needle points at the Keel, where Cray is raising a glass. Then it twitches once toward the pier end, as if it's heard something about kelp."
+  state if act 4 and has ledger and has purse and has claims_book
+    look "The ledger, the purse, the claims book, my father's log and a manifest that smells of fog. The needle points at the Salty Keel, and Cray."
+  state if act 4 and has requisition and req_stamped
+    look "A stamped requisition. The needle points at Nib, who is going to enjoy not reading it."
+  state if act 4 and has requisition
+    look "A requisition without a stamp. The needle looks at the pocket where the stamp is, and then at me."
+  state if act 4 and seen:nib.claims2 and not has claims_book
+    look "Nib only answers to stamped requisitions, and I happen to be a clerk with a stamp."
+  state if act 4 and seen:bramwick4.paper and not purse_given
+    look "“A man who was there when it happened.” The needle swings toward the corner of the Keel, where Rook is pretending not to listen."
+  state if act 4 and seen:bramwick4.paper and not ledger_taken
+    look "The harbour ledger, chained to its desk in the loft. I have a crowbar. The needle has an opinion."
+  state if act 4 and seen:bramwick4.paper and not has claims_book
+    look "Cray's insurance books live at Cray & Co., up Chandler's Lane. The needle points that way with distaste."
+  state if act 4 and farewell
+    look "Cray has the chair, the ink and the dawn bell. The needle points at the Salty Keel, where a suspended harbourmaster is drinking."
+  state if act 4
+    look "The needle points out at the Marrow, at anchor past the boom. Quill is on the rail."
+
+item spyglass "spyglass"
+  look "A brass spyglass, dented twice and polished a thousand times. Somebody on this ship is squinting a lot this morning."
+
+item sextant "Pell's sextant"
+  look "Pell's sextant, polished to a mirror by forty years of thumbs. It measures the angle between a star and the sea, which is the kind of paperwork I can respect."
+
+item pell_log "Pell's log"
+  look "Pell's last entry: “If Ansel's boy ever comes aboard with the old man's compass, tell the captain she should”. Then nothing. Ansel's boy. That's me. I read it twice."
+  state if seen:vane.pell
+    look "Pell's last entry: “If Ansel's boy ever comes aboard with the old man's compass, tell the captain she should”. Then nothing. He died mid-sentence. Vane said so."
+
+item bill "Bill of Health"
+  look "A Bill of Health."
+  state if form9
+    look "Front: a Bill of Health, passed. Back: FORM 9, RELEASE OF DETAINED PERSONS, in my best hand. Both sides stamped. It's the best thing I've ever written."
+  state if gate_open
+    look "The Arcadia's Bill of Health: fumigated, stamped, countersigned, dated and inspected. Pike made me promise to keep it on my person. The back is still blank."
+  state if bill_smoked and bill_stamped and bill_signed and bill_dated
+    look "Fumigated, stamped, countersigned and dated. It's perfect. Pike is going to cry, and I may join him."
+  state if not bill_smoked
+    look "A Bill of Health for the Arcadia. It needs fumigating, a harbour stamp, a ship's officer's countersignature and a date. Right now it smells of cupboard."
+  state if not bill_stamped
+    look "A Bill of Health, smelling of kelp smoke. Still wants a harbour stamp, and whatever else it wants."
+  state if not bill_signed
+    look "Fumigated and stamped. The line marked SHIP'S OFFICER is empty, and so, possibly, is the date."
+  state if not bill_dated
+    look "Fumigated, stamped, and countersigned “QUILL, NAVIGATOR”. All it lacks is a date, which is what everybody forgets."
+
+item calendar_leaf "calendar leaf"
+  look "Today, torn off Pike's calendar. GULLET KEY QUARANTINE STATION. Underneath, in pencil, somebody has written: “Nothing happened.” Not today, it hasn't."
+
+item bucket "bucket"
+  look "A bailing bucket off the Arcadia. Empty. It's spent nine years keeping the sea out; it might enjoy carrying some in."
+
+item bucket_water "bucket of lagoon"
+  look "A bucket of lagoon, heavier than it looks, and it looks heavy. A small fish has come along for the ride. I'll put him back after."
+
+item flag16 "flag sixteen"
+  look "Flag number sixteen, made of shirts. One of the patches is a shirt I outgrew when I was twelve. In the corner, in red thread, an L."
+
+item ansel_log "Ansel's log"
+  look "My father's log. Six ships, fifteen flags, and one page that isn't to anyone on the sea at all. It's to my mother."
+
+# Act IV
+item purse "Rook's purse"
+  look "A small leather purse sealed with a wax cloud. Rook's pay for leaving the Arcadia quietly. The seal has never been broken, which is the most honest thing about it."
+
+item requisition "requisition"
+  look "A blank Cray & Co. requisition. I've filled it in: one claims book, insurance, all of it. It wants a stamp. Without one it's just handwriting with ambitions."
+  state if req_stamped
+    look "REQUISITION: one claims book, insurance, all of it. Authorised: Harbour of Port Vela. Stamped. Nib won't read a word of it, which is the beauty of the thing."
+
+item claims_book "claims book"
+  look "Cray & Co.'s claims. Six ships paid in full, for weather. On the facing page, the same year: Captain Vane's storm, refused on a technicality. Somebody underlined it. Smugly."
+
+item ledger "harbour ledger"
+  look "The harbour ledger, with a length of broken chain still hanging off it. ARCADIA: lost at sea, three days before she was late. Paid, Cray & Co. The page is waiting for a correction."
+  state if ledger_written
+    look "ARCADIA: returned. All hands. In my hand, under Bramwick's, stamped. The best entry in the book."
+
+item kelp_manifest "kelp manifest"
+  look "QUARANTINE STN, G.K. Briquettes, kelp, four hundred. Purpose, in a careful clerk's hand: for fog. Someone at Cray & Co. writes down exactly what he's told."
+
+item manifest "manifest copy"
+  look "The Arcadia's manifest. Twenty-two names, every one marked lost, except one: “R. Rook, navigator. Discharged at sea.” Discharged by whom, in the middle of the sea?"

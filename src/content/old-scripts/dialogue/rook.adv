@@ -1,0 +1,44 @@
+# Act I
+dialogue rook
+  node root rook "You're the clerk. You've got your father's eyes. Don't look pleased. They never helped him find the bar."
+    > "You knew my father." -> knew
+    > "Who are you?" -> who
+    > "Sorry. I'm in a hurry." -> bye
+  node who rook "Rook. Navigator. Retired, the way a ship is retired when it's on the bottom. I took the Arcadia out of this harbour on her last run."
+    set met_rook
+    > "You sailed with my father?" -> knew
+  node knew rook "I steered for him for eleven years. Best captain on the Straits run. Worst singer on the ship."
+    set met_rook
+    -> knew2
+  node knew2 rook "I was aboard the Arcadia when she went missing. She didn't sink while I was watching."
+    > "Then how are you here?" -> fog
+    > "The ledger says she was lost." -> ledger
+  node fog rook "Fog came down out of a clear sky. Men rowed out under a yellow flag. “Quarantine,” they said. Ever so polite."
+    -> fog2
+  node fog2 rook "They took me off first. Paid me. Put me on a fruit boat. I've been drunk ever since. It's still the strangest thing I've seen."
+    > "Paid you?" -> purse
+    > "And the ledger?" -> ledger
+  node purse rook "A purse with a little wax cloud on it. I never opened it. It was the one decent thing left to do. I've been careful not to do another."
+    note rook_paid "Rook was taken off the Arcadia under a yellow flag, “for quarantine”, and paid off with a purse stamped with a little wax cloud. He never opened it. Quarantine where? Nobody said."
+    > "And the ledger?" -> ledger
+  node ledger rook "When I got home she was already written in as lost. Three days before she was late. Ink does what the pen is paid to do."
+    -> ledger2
+  node ledger2 rook "It's all in the harbour ledger, up in the loft over the chandler's."
+    note rook_ledger "Rook says the truth about the Arcadia is in the harbour ledger, up in the loft over the chandler's."
+    > "The loft's shutter is bolted." if looked:alley.warehouse_stairs -> locked
+    > "Who paid?" -> cray
+    > "What do I do with it?" -> advice
+  node locked rook "Bolted from the lane side. That's the trusting side. A crowbar will talk it round. Crowbars are very persuasive. So I'm told. By crowbars."
+    > "Who paid?" -> cray
+    > "Thank you. I'll pass that on to the crowbar." -> thanks
+  node cray rook "Silas Cray. He buys and sells for other men. He'll be in the lane, being expensive at someone."
+    note rook_cray "Who paid for the Arcadia's entry? Rook says Silas Cray, factor, who keeps to Chandler's Lane, being expensive at people."
+    -> cray2
+  node cray2 rook "If he offers to buy that compass, ask why. He owns everything. He wants the one thing in Vela that points the wrong way."
+    > "What do I do with the ledger?" -> advice
+    > "Thank you. I'll keep a hand on my pocket." -> thanks
+  node advice rook "Read it. Then say it to Bramwick's face, at his own desk. Shame works on men like him. On me it only works on Tuesdays."
+    > "Who paid for the entry?" -> cray
+    > "Thank you. I'll put you down as a witness." -> thanks
+  node thanks rook "Go on. Be a better navigator than me. The bar is low and I'm under it. And boy. Don't let them write you down as lost."
+  node bye rook "A hurry. I remember those. I went everywhere in one, once."

@@ -1,0 +1,60 @@
+dialogue silas
+  node root silas "The clerk. Silas Cray, of Cray & Co. I ship things. I insure them. I collect them. You want the Marrow's last berth. I've bought it."
+    > "The berth isn't yours to sell." -> keep
+    > "What do you want for it?" -> compass
+    > "What would Cray & Co. want with a clerk?" if not seen:silas.offer -> offer
+    > "Excuse me." -> bye
+  # Talking to him again in the lane.
+  node again silas "Back already. I told you you'd come round."
+    > "I still haven't come round." -> refuse
+    > "The berth isn't yours to sell." -> keep
+    > "What do you want for it?" -> compass
+    > "What would Cray & Co. want with a clerk?" if not seen:silas.offer -> offer
+    > "Excuse me." -> bye
+  node back silas "The clerk, back again. The berth's still mine. I like it more every time you look at it."
+    > "The berth isn't yours to sell." -> keep
+    > "What do you want for it?" -> compass
+    > "What would Cray & Co. want with a clerk?" if not seen:silas.offer -> offer
+    > "Excuse me." -> bye
+  # What Cray & Co. does all day, and what it would cost to join them.
+  node offer silas "Want? A clerk. Sixty people. Six ships. A hundred and thirty men on a key."
+    set cray_offer
+    note cray_desk "Cray offered me a desk by his door: sixty people, six ships, a hundred and thirty men on a key, and a clerk on twenty crowns a year. He made it sound reasonable. It was."
+    -> offer2
+  node offer2 silas "The best hand in Port Vela is a clerk on twenty crowns a year. There's a desk by the door."
+    > "You're offering me a job." -> offer_job
+    > "I already have one." -> offer_have
+    > "Why me?" -> offer_why
+  node offer_job silas "It's a desk. The job is whatever you make of it. Most men make a chair."
+    -> offer_done
+  node offer_have silas "You have a stool and a superior. I'm offering a stool and a window. I've costed it. It's an improvement."
+    -> offer_done
+  node offer_why silas "Because you read the back of a page. Any fool can read the front. The back is where the money is."
+    -> offer_done
+  node offer_done silas "Think about it. I'd pay you to."
+    -> bye
+  node keep silas "Not to sell. To keep. I have a receipt. Bramwick has a ledger. Between them, it's mine. Men who want to sail always come round."
+    > "Then I'll swim." if seen:silas.compass -> swim_offer
+    > "Then I'll swim." if not seen:silas.compass -> swim
+    > "What would it take to come round?" -> compass
+    > "We'll see." -> bye
+  node compass silas "That compass. I offered your father money for it twice. He left it at home instead. Give it to me and the berth is yours."
+    set silas_offer
+    > "Why do you want it?" -> why
+    > "No." -> refuse
+  node why silas "Because it points somewhere. I collect things that point. Other men collect beetles. My hobby pays better."
+    > "You'd take it anyway." -> hard
+    > "No." -> refuse
+  node hard silas "Take? Taking leaves a record. I'm fond of the ledger as it is. No. I'll wait. Men who want to sail always come round."
+    > "Then I'll swim." -> swim_offer
+    > "We'll see." -> bye
+  node swim silas "Swim, then. The Straits are lovely this time of year. I offered your father money twice. Ask your father."
+    set silas_refused
+    note cray_berth "Silas Cray has bought the last berth on the Marrow, and means to keep it. I told him I'd swim. He found that very funny."
+  node swim_offer silas "Swim, then. The Straits are lovely this time of year. Ask your father."
+    set silas_refused
+    note cray_offer "Cray offered me the last berth for my father's compass. He knows it points somewhere useful, and he would rather buy it than take it. I said no."
+  node refuse silas "No. Your father said that too, when I offered him money. Goodnight, clerk."
+    set silas_refused
+    note cray_offer "Cray offered me the last berth for my father's compass. He knows it points somewhere useful, and he would rather buy it than take it. I said no."
+  node bye silas "Run along. The Marrow won't wait, and neither will I. Well. I will. I'm very patient."

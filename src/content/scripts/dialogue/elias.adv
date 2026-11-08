@@ -1,0 +1,203 @@
+# Elias Fenn, alive on the fog rock. The reunion is the plainest writing in the game: short
+# sentences, beats, silence. He is cheerful about catastrophe, and he apologises for the wrong
+# things. He gives rule three (the name) and the plan for the Grey Lantern.
+#
+# The camp scene (rooms/salt_camp.adv) opens `found`; afterwards the Elias hotspot opens `hub`.
+# The player can leave the first conversation early, so the rules and the plan can be asked for
+# again from the hub.
+dialogue elias
+  node found narrator "He turns round. He is thin, and sunburnt, and he does not let go of the chart."
+    set elias_found
+    -> name
+
+  node name elias "Fenn."
+    -> beat
+
+  node beat narrator "He says my name. Then he waits."
+    -> taller
+
+  node taller elias "You're taller."
+    > "Hello, Father." -> hello
+    > "You're alive." -> alive
+    > "It's been three months." -> months
+    > "I don't know what to say." -> nothing
+
+  node hello elias "Hello, son."
+    -> look
+
+  node alive elias "Mostly. The rest of me is still out there, I think."
+    -> look
+
+  node months elias "Three months and four days. I stopped counting the days. I kept counting the ships."
+    -> look
+
+  node nothing elias "That's all right. I had three months to think of something. I've got nothing."
+    -> look
+
+  node look narrator "He looks at me. I look at him. Neither of us moves."
+    -> coat
+
+  node coat elias "I'm sorry about your coat. I borrowed it. It's in the tent."
+    > "I don't care about the coat." -> care
+    > "You've been wearing my coat?" -> wearing
+
+  node wearing elias "For two months. It's the warmest thing on the rock. I'm sorry."
+    -> care
+
+  node care narrator "He is apologising for a coat. I don't stop him."
+    -> then
+
+  node then elias "And I'm sorry about the beard. I look like a broom."
+    -> birthday
+
+  node birthday elias "I missed your birthday, didn't I?"
+    > "It was three months ago." -> birthday2
+    > "It doesn't matter." -> birthday3
+
+  node birthday2 elias "I know. I had a whole speech. It was mostly about the coat."
+    -> sits
+
+  node birthday3 elias "It does. I'm sorry anyway."
+    -> sits
+
+  node sits narrator "He sits down on the salt, suddenly, as if his legs have been waiting for permission."
+    -> sorry
+
+  node sorry elias "I'm sorry I wasn't there. That's the one I meant."
+    -> silence
+
+  node silence narrator "Neither of us says anything. Behind us, the washing moves."
+    -> ask
+
+  node ask elias "Tell me who's with you. I heard the ship go down."
+    > "Quill. Dorrit. Hobb." -> crew
+    > "Vex brought us." -> vex
+
+  node crew elias "Good. Quill will keep you straight. Dorrit will keep you fed. Hobb will keep the ship together."
+    -> lost
+
+  node vex elias "Vex. He's still afloat, then. That man could float on an apology."
+    -> lost
+
+  node lost narrator "He looks past me at the water. The smile stays where it is."
+    -> arcadia
+
+  node arcadia elias "The Arcadia went down out past the reef. I don't remember it. I remember the cold."
+    > "The others?" -> others
+    > "You don't have to talk about it." -> no_talk
+
+  node others elias "I woke up alone. I've been looking for them ever since. From here, you can see a long way."
+    -> no_talk
+
+  node no_talk elias "I'm all right. I've had the salt and the gulls. The gulls are not good company."
+    -> chart
+
+  node chart elias "I've been charting the Lantern. It keeps a road, like anything else."
+    > "Show me." -> show
+    > "How do you chart a ghost?" -> ghost
+
+  node ghost elias "The same way you chart a reef. You watch it until it stops surprising you."
+    -> show
+
+  node show narrator "He kneels and unrolls the chart on the salt. Four stones hold the corners."
+    -> show2
+
+  node show2 elias "West, then north, then back into the fog. Every time. It does not hurry."
+    > "Then we can find it." -> find
+    > "It's a long way from anywhere." -> far
+
+  node find elias "We can find it. Getting off again is the part I'm working on."
+    -> rules
+
+  node far elias "Everything is a long way from here. That's what makes it quiet."
+    -> rules
+
+  node rules elias "Three things. I've had three months to be sure of them."
+    -> one
+
+  node one elias "One. The bell calls a ship in. Cut it loose and the fog loses its voice."
+    -> two
+
+  node two elias "Two. The great lantern shows it where the ship is. Put it out and the fog goes blind."
+    -> three
+
+  node three elias "Three. The Grey Lantern cannot take a ship whose crew speaks her captain's name."
+    set rule_name
+    note rule_name "Elias: the Grey Lantern cannot take a ship whose captain speaks its name. Cut the bell, douse the lantern, say the name."
+    > "Its name?" -> its
+    > "Whose name?" -> its
+
+  node its elias "The name of the man who captains her. Not the painted one on her stern."
+    -> plate
+
+  node plate elias "It's on a plate in her cabin. That's where a captain keeps his name."
+    -> plan
+
+  node plan elias "So. We go aboard. Hobb cuts the bell. Quill puts out the great lantern. One of us says the name."
+    > "That's three impossible things." -> imposs
+    > "What about the crews?" -> crews
+
+  node imposs elias "Four. We all come back. I'm less sure of that one."
+    -> crews
+
+  node crews elias "They're still aboard. Still at their posts. Eighty years of standing watch."
+    > "Can they be freed?" -> free
+    > "And Tam?" -> tam
+
+  node free elias "I think so. I've watched her long enough to think so."
+    -> tam
+
+  node tam elias "There's a bell on her. It rings every night. Hobb will know who's pulling it."
+    -> bell
+
+  node bell narrator "Out in the fog, a bell rings once. Hobb lifts his head."
+    -> hobb
+
+  node hobb narrator "He doesn't say anything. He doesn't have to."
+    -> end
+
+  node end elias "Go on. Before I get comfortable."
+    -> END
+
+  # Afterwards. The rules and the plan are offered again in case the player left the first
+  # conversation early; the hub is the quiet scene with the chart and the father.
+  node hub elias "Still here? The plan won't wait. Neither will Hobb."
+    > "Tell me about the chart." -> chart_hub
+    > "What happened to the Arcadia?" -> arcadia_hub
+    > "Did you see the Marrow?" if not seen:elias.marrow -> marrow
+    > "What are the three rules?" if not rule_name -> rules_again
+    > "What's the plan?" if rule_name -> plan_again
+    > "Whose camp is this?" -> camp_hub
+    > "Are you all right?" -> allright
+    > "I'll be back." -> END
+
+  node chart_hub elias "The chart is the only thing I've made out here. I'd like it to be worth something."
+    -> hub
+
+  node arcadia_hub elias "She was a good ship. I was lucky. I keep thinking about the ones who weren't."
+    -> hub
+
+  node marrow elias "Once. From the reef. I waved. I don't think he saw me."
+    -> hub
+
+  node rules_again elias "Bell, lantern, name. I'll say them slower."
+    -> one
+
+  node plan_again elias "Hobb takes the bell. Quill takes the lantern. You and I take the name."
+    -> plan_details
+
+  node plan_details elias "We do it together, or we don't do it at all."
+    -> hub
+
+  node camp_hub elias "It was here when I came. The pots were still warm. I've tried not to move anything."
+    > "You think someone was here?" -> camp_hub2
+    > "That's not an answer." -> camp_hub3
+
+  node camp_hub2 elias "I think someone left in a hurry. I don't think they're coming back."
+    -> hub
+
+  node camp_hub3 elias "No. It isn't. I've had three months to make one up, and I can't."
+    -> hub
+
+  node allright elias "I'm alive. I'm drawing. I'm not hungry. That's three more than I expected."
+    -> hub

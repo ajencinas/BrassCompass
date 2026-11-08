@@ -1,0 +1,30 @@
+dialogue tam
+  node root tam "You're Elias Fenn's boy. Everyone on the wall says you're going into the fog."
+    > "How does everyone know?" -> know
+    > "What are you doing up here?" -> count
+    > "Have you seen anything strange?" -> strange
+    > "Maybe. Goodnight." -> bye
+  node know tam "I count the ships from the corner. People talk in front of me. I'm short."
+    -> count
+  node count tam "Nine or ten a week, before. Now it's three, and two of those are the Marrow."
+    > "Which boat is the Marrow?" -> which
+    > "That's a good tally." -> bye
+  node which tam "Uncle Hobb mends boats at the shipwright's. He's got Dad on his arm, in ink."
+    > "Where's your dad?" -> strange
+    > "Goodnight, Tam." -> bye
+  node strange tam "The Arcadia came round the headland faster than anything. I timed her. Then she stopped."
+    > "She was my father's ship." -> captain
+    > "I'm sorry." -> dad
+    > "Ships stop." -> stop
+  node captain tam "You're the captain's? Then you're not a stranger. You're on the tally."
+    -> dad
+  node stop tam "She was never late. Not once."
+    -> dad
+  node dad tam "Dad went with her. Tam Hobb, able seaman. I'm Tam too. Mum only has to shout once."
+    -> dad2
+  node dad2 tam "Mum says not to talk about it. So I tell strangers."
+    > "I'll look for them. All of them." -> promise
+    > "Goodnight, Tam." -> bye
+  node promise tam "If you find Dad, tell him the tally's still running. Tell him I kept counting."
+    -> bye
+  node bye tam "Goodnight. That's you counted."

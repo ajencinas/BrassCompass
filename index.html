@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="The Brass Compass — a tale of Dreadwater Isle. A family-friendly pirate point-and-click adventure about a cartographer's apprentice, a missing father, and the fog that keeps every ship it takes." />
+    <title>The Brass Compass — a tale of Dreadwater Isle</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body>
+    <div id="stage">
+      <canvas id="game" tabindex="0" aria-label="The Brass Compass, a tale of Dreadwater Isle. Tab moves between the scene, the verbs and the inventory, arrow keys move within them, Enter does the suggested action, Q lists what you can interact with, J opens the chart, L opens the line history, and Escape pauses."></canvas>
+    </div>
+    <div id="sr" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+    <div id="boot">
+      <div class="boot-inner">
+        <div class="boot-title">THE BRASS COMPASS</div>
+        <div class="boot-sub">loading Dreadwater…</div>
+        <div class="boot-bar"><i id="bootbar"></i></div>
+      </div>
+    </div>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

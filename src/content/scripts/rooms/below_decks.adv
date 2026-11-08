@@ -1,0 +1,113 @@
+# ACT II. The crew deck, with Vex's salvage stacked where the crew eats: barrels and a
+# sea-chest from ships that never came home. Looking at the barrels (or Hobb, below) is what
+# sets salvage_seen; nobody else in Act II sets it. The names are the island's own stories:
+# the Arcadia took Fenn's father and Hobb's brother; the Cormorant is one of Marta's.
+room below_decks "The Marrow — Crew Deck"
+  bg bg_below_wide
+  width 2560
+  music music_office
+  perspective horizon 470 ref 875 height 560
+  walk (60,875) (120,845) (700,845) (760,808) (1180,808) (1200,815) (1440,815) (1480,770) (1580,770) (1600,850) (2060,865) (2100,875)
+  entry 1800,868
+  arrive marrow_deck 1980,868
+  footsteps deck
+  light 980,255 radius 120 lantern
+  light 1112,375 radius 90 lantern
+  motes dust (1040,0) (1500,0) (1520,860) (1080,860) count 50
+  motes steam (1740,455) (1850,455) (1850,468) (1740,468) count 8
+  emit creak
+  occluder floor 832 (300,575) (670,575) (670,835) (300,835)
+  occluder floor 805 (850,580) (1345,580) (1410,640) (1410,810) (850,810)
+
+  sprite npc_hobb_body at 730,850 size 1.04 idle speaker hobb for hobb grade "saturate(0.85) brightness(0.86)" if act 2
+  sprite npc_dorrit_body at 1520,850 size 0.95 flip idle speaker dorrit for dorrit grade "saturate(0.85) brightness(0.9)" if act 2
+
+  scene if act 2 and not below_arrived
+    set below_arrived
+    say "The crew deck smells of other ships. Tar, salt, and wood that has been in the water."
+    say "The hold is full. What would not fit is stacked here, where the crew eats."
+    say "Dorrit has stopped stirring. Down the deck, Hobb has his hand flat on a barrel head."
+
+  hotspot salvage "the salvage"
+    area 2340,420 220x460
+    nowalk
+    look "Barrels in the corner, every head burnt with a name. CORMORANT. KESTREL. ARCADIA. All lost."
+      set salvage_seen
+      note salvage_hold "Vex's hold is full of salvage from the ships the fog took: the Cormorant, the Kestrel, the Arcadia."
+      say "Hobb takes his hand off the Arcadia barrel. He puts it behind his back."
+      say "Dorrit sets the ladle down. The stew goes on bubbling at nobody."
+    state if salvage_seen
+      look "The salvage. I keep reading the names, hoping one of them is a mistake."
+
+  hotspot chest "the sea-chest"
+    area 300,570 370x265
+    stand 720,850
+    look "A sea-chest with iron bands. CORMORANT burnt into the lid. The barrels in the corner carry more."
+    open "The lid is warped with salt. Whatever was inside, Vex has had it out."
+    state if salvage_seen
+      look "The Cormorant's chest. Marta tells that story on the cold nights. She never says how it ends."
+
+  hotspot hammocks "the hammocks"
+    area 0,90 1040x430
+    nowalk
+    look "Hammocks slung in rows, swaying with the ship. Nobody is asleep in any of them."
+    use "I'd get in and never get out again."
+
+  hotspot grating "the grating"
+    area 1260,365 240x200
+    nowalk
+    look "Daylight through a grating, in neat squares, laid out like a chart I did not draw."
+
+  hotspot table "the mess table"
+    area 845,575 570x245
+    stand 1250,845
+    look "The mess table, scrubbed pale, with benches for more of us than there are."
+    use "I straighten a bench. It has been straightened."
+
+  hotspot stove "the galley stove"
+    area 1610,595 410x250
+    stand 1750,862
+    look "The galley stove, hot and complaining. Dorrit has been at it since the anchor came up."
+    turnoff "Dorrit would have my fingers off. He has had a hard week."
+
+  hotspot stew "the stew pot"
+    area 1685,450 210x160
+    stand 1740,860
+    look "A stew pot the size of a font. It smells of salt beef and decisions."
+    pickup "Dorrit's ladle arrives before my hand does."
+
+  hotspot bell "the ship's bell"
+    area 1780,0 230x270
+    stand 1880,868
+    look "A brass bell, polished till it shows me my own face. Dorrit rings it for meals."
+    use "I reach for the rope. Dorrit's ladle and I have already had this conversation."
+    state if salvage_seen
+      look "The brass bell, polished. Dorrit rings it twice a day and lets nobody else near the rope."
+
+  hotspot hobb "Hobb"
+    show if act 2
+    area 600,300 285x555
+    stand 760,850
+    look "Hobb, by the chest, reading the barrel head like it's a letter."
+    talk "He doesn't turn round. He says, 'Come and look at this.'"
+      talk hobb at hold
+    state if seen:hobb.hold
+      talk "He has not moved from the barrel."
+        talk hobb at hold_after
+
+  hotspot dorrit "Dorrit"
+    show if act 2
+    area 1370,340 340x520
+    stand 1520,850
+    look "Dorrit at the stove, stirring a pot he has stopped believing in."
+    talk "He keeps stirring. 'You've seen the barrels, then.'"
+      talk dorrit at galley
+    state if not salvage_seen
+      talk "He is watching the pot. He is not watching me."
+        talk dorrit at galley
+
+  hotspot ladder "the ladder up to the deck"
+    area 1880,270 220x600
+    stand 1980,868
+    exit marrow_deck sound hatch
+    look "The ladder up to the deck. Daylight, and the smell of open sea coming down it."

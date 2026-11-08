@@ -1,0 +1,140 @@
+room marrow_deck "The Marrow — Deck"
+  bg bg_deck_wide
+  width 2560
+  music music_sea
+  ambience sea
+  perspective horizon 230 ref 875 height 330
+  walk (80,875) (110,706) (1320,706) (1320,875)
+  entry 780,805
+  arrive marrow_quarterdeck 1290,820
+  arrive below_decks 950,750
+  arrive bow_fog 820,710
+  arrive crows_nest 660,720
+  footsteps deck
+  motes glints (1410,385) (1650,385) (1650,500) (1415,500) count 18
+  emit creak
+
+  # Act II: the crew on deck, and Vex up at the helm. The Marrow was built for a
+  # bigger crew than this; the empty deck is part of the mood.
+  sprite npc_quill_body at 560,790 size 0.98 flip idle speaker quill for quill grade "saturate(0.85) brightness(0.92)" if act 2 and not salvage_seen
+  sprite npc_dorrit_body at 330,835 size 0.96 idle speaker dorrit for dorrit grade "saturate(0.85) sepia(0.08) brightness(0.9)" if act 2 and not salvage_seen
+  sprite npc_hobb_body at 1060,760 size 1.02 flip idle speaker hobb for hobb grade "saturate(0.85) brightness(0.9)" if act 2 and not salvage_seen
+
+  scene if act 2 and fog_tried and not hatch_hinted
+    set hatch_hinted
+    say "The hatch cover comes up clean now. Below: the ladder, the crew deck, and the smell of other ships."
+
+  scene if act 2 and not fog_tried and not seen:vex.send
+    say "A deck built for thirty, and hardly anybody on it."
+    say "Vex is at the helm, hat down against the sun. He has not looked back at the island."
+
+  scene if act 2 and seen:vex.send and not fog_tried and not shrouds_hinted
+    set shrouds_hinted
+    say "Quill's office is up the rigging by the foremast. The rope ladder would take me, if my hands agreed."
+
+  scene if act 2 and fog_tried and not salvage_seen
+    say "The crew is on deck. The hatch is unbarred, and nobody wants to be first below."
+
+  scene if act 2 and salvage_seen and not vex_exposed
+    say "The deck is empty. They have all gone up to the helm."
+    say "The captain is waiting."
+
+  scene if act 2 and vex_exposed and not marrow_lost
+    say "Above us, the helm is turning. Vex is not waiting for me."
+
+  hotspot rail "the sea"
+    area 1000,330 600x190
+    stand 980,820
+    look "The sea, going gold at the edge. It looked bigger from the quay. Or I was smaller."
+    talk "I say hello to the sea. It has heard better."
+    use "The sea has nothing to say to a clerk with a compass."
+
+  hotspot forward "the bow deck"
+    area 560,300 430x170
+    stand 820,710
+    look "The bow, and the fog past it. The deck narrows there, and the fog does not."
+    open "Vex wants us aft until he has said his piece. The bow can wait."
+    state if act 2 and fog_tried
+      exit bow_fog sound none
+      look "The bow, and the fog past it. I have heard it answer."
+      open "I go forward again. My hands remember the rail."
+    state if act 2 and seen:vex.send
+      exit bow_fog sound none
+      look "The bow. Vex says the fog has a voice, and I am to call the water."
+      open "I go forward. The deck narrows, and the fog comes to meet me."
+
+  hotspot shrouds "the ladder to the crow's nest"
+    area (585,0) (690,0) (505,360) (400,360)
+    stand 660,720
+    exit crows_nest
+    look "The rope ladders up to the crow's nest. Quill's country."
+    use "I would get two rungs up before Quill had me down by the collar."
+    pickup "They are attached to the mast. That is the point of them."
+
+  hotspot crates "the stores"
+    area 180,290 360x300
+    stand 420,760
+    look "Crates lashed by the rail. Salt beef, hard bread, and one crate Dorrit has marked HANDS OFF in chalk."
+    open "Nailed shut. Dorrit counts the nails."
+    use "Dorrit is watching me. I put my hands where he can see them."
+
+  hotspot hatch "the hatch to the crew deck"
+    area 690,780 350x100
+    stand 950,750
+    look "The main hatch. A smell of tar and old rope comes up. Under it, something else: wet wood and old cargo."
+    open "The cover is on and barred. Vex says the hold is cargo."
+    state if act 2 and salvage_seen
+      exit below_decks sound hatch
+      look "The cover is loose. I have seen what is down there."
+      open "I lift the cover again. The dark has a shape now."
+    state if act 2 and fog_tried
+      exit below_decks sound hatch
+      look "The cover is loose. Below, crates are stacked where the hammocks should be."
+      open "I lift the cover and go below. The ladder is steep, and the dark smells of old cargo."
+
+  hotspot stairs_up "the steps to the helm"
+    area 1400,520 440x360
+    stand 1305,820
+    exit marrow_quarterdeck sound stairs
+    look "The steps up to the quarterdeck. Vex is at the top, not looking down."
+    open "I go up."
+
+  hotspot quill "Quill"
+    show if act 2 and not salvage_seen
+    area 505,495 110x300
+    stand 730,805
+    look "Quill, at the rail with her spyglass. She has not used it once since we left."
+    talk "She does not turn around. \"I came for the chart. And because Vex owes me a horizon.\""
+    give "She looks at my hands. \"I have a compass. I need a horizon.\""
+    state if fog_tried
+      look "Quill has put the spyglass away. She is watching the water, not the horizon."
+      talk "She says, \"That was not weather. Weather does not ring a bell.\""
+
+  hotspot hobb "Hobb"
+    show if act 2 and not salvage_seen
+    area 995,490 135x275
+    stand 980,770
+    look "Hobb, one hand on the mast, the other on his crowbar."
+    talk "He answers before I ask. \"My brother is in the fog. That is all of it.\""
+    give "He looks at it and shakes his head. \"Give it to someone who needs opening.\""
+    state if fog_tried
+      look "Hobb has his ear against the mast. He does not like what it is saying."
+      talk "He says, \"Something passed under us. Big as the ship.\""
+
+  hotspot dorrit "Dorrit"
+    show if act 2 and not salvage_seen
+    area 240,530 180x310
+    stand 520,835
+    look "Dorrit, in his apron, negotiating with a potato."
+    talk "He does not look up. \"If you are going to stand there, hold this.\""
+    give "He hands me a knife and points at the potatoes. That is not a gift."
+    state if fog_tried
+      look "Dorrit has stopped cooking. The pot is still on the stove."
+      talk "He says, \"The bell rang. There is no bell on this deck.\""
+
+  use compass on rail
+    "The needle swings past north and settles on the fog ahead."
+  use spyglass on rail
+    "Grey water, then more grey, then a shape I decide is a wave."
+  use crowbar on crates
+    "Dorrit's crates. I put the crowbar away before he sees it."

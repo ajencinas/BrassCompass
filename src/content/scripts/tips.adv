@@ -1,0 +1,164 @@
+# Tips: what to do next. The first entry whose conditions hold is the current tip, so Act I
+# runs from its last step back to its first. Shown by H or the Tip button.
+#
+# Two rungs: the nudge points at the person, place or idea; asking again gives the plain line,
+# which says exactly what to do. The compass's look (items.adv) nudges in character.
+#
+# The Act I flags below are set by the conversations and rooms that earn them (the harbour,
+# the tavern, the town and the cast branches); this file only reads them.
+#
+# Act II reads the ship flags its rooms and scenes set: fog_tried and rule_light in bow_fog,
+# salvage_seen below decks, vex_exposed and marrow_lost at the helm. Act III reads the fog
+# flags its first scene and rooms set: stranded on the flats, bell_plan at the wreck,
+# elias_found and rule_name at the camp, lantern_boarded at the reef gate. Act IV reads the
+# three holds the deck and the captain's cabin set (bell_cut, lantern_doused, name_spoken);
+# its last rungs are the ending dialogue's own flags, curse_broken and escaped_fog.
+
+# Act I — the last step: a crew, a chart and a ship.
+tip if act 1 and vex_deal and dorrit_cleared and quill_compass and rook_story and hobb_joined
+  nudge "The crew is aboard, the chart is drawn, and the ship is waiting on one captain."
+  "Go to the harbour mouth at the end of the pier and talk to Vex."
+
+# Hobb: the mast still wants a carpenter.
+tip if act 1 and vex_deal and dorrit_cleared and quill_compass and rook_story and not hobb_joined
+  nudge "The Marrow has a captain, a navigator and a cook. She has no carpenter."
+  "Talk to Hobb at the shipwright's, off Wreckers' Lane."
+
+# Rook: the log is at the lighthouse.
+tip if act 1 and vex_deal and dorrit_cleared and quill_compass and not rook_story
+  nudge "Rook came back from the fog when nobody else did. His old log is still at the lighthouse."
+  "Fetch Rook's log from the lighthouse and bring it to him at the Salty Keel."
+
+# Dorrit: cleared, but not yet told.
+tip if act 1 and rudder_back and not dorrit_cleared
+  nudge "Pike's story has cleared Dorrit. Nobody has told him yet."
+  "Tell Dorrit he's cleared. He's in the Salty Keel."
+
+# Vex: the rudder is back, so he has no more excuses.
+tip if act 1 and rudder_back and dorrit_cleared and not vex_deal
+  nudge "Vex named a price, and you have met it."
+  "Take the rudder back to Vex at his warehouse."
+
+# Quill: her compass is back from Vex.
+tip if act 1 and vex_deal and not seen:quill.join
+  nudge "Vex has given up the compass. Quill still hasn't agreed to sail."
+  "Take Quill's compass to her at the shipwright's, off Wreckers' Lane."
+
+# The rudder: Vex's price, and Pike has it.
+tip if act 1 and met_vex and not rudder_back
+  nudge "Vex wants his rudder. Marta wants Dorrit cleared. One shed in Wreckers' Lane answers both."
+  "Search the boat shed for the real thief, then take his word to Pike."
+
+# Act I — the first step.
+tip if act 1
+  nudge "The harbourmaster knows the harbour. The tavern keeper knows the island. The last captain has the only ship."
+  "Talk to Bramwick, then Marta, then Vex at his warehouse."
+
+# Act II — the ship, the first fog, the hold and the captain's last lie. The ladder runs from
+# the last step back to the first, so the most advanced flag state wins.
+
+# The Marrow is lost: the longboat is the only deck left.
+tip if act 2 and marrow_lost
+  nudge "The Marrow is going down and the fog is full of timbers."
+  "Get into the longboat."
+
+# Vex has stopped lying and started sailing deeper.
+tip if act 2 and vex_exposed and not marrow_lost
+  nudge "Vex has stopped explaining. He has the helm and he is not turning back."
+  "Get back on deck and hold on."
+
+# The hold: the crew has seen the salvage, and Vex is at the helm.
+tip if act 2 and salvage_seen and not vex_exposed
+  nudge "Every crate below has a ship's name on it. Vex is at the helm, steering around the question."
+  "Confront Vex at the helm about the salvage."
+
+# The fog has answered. Get off the foredeck first.
+tip if act 2 and fog_tried and rule_light and room bow_fog
+  nudge "The bow is quiet. The bell is quiet. That is not the same as safe."
+  "Go aft to the main deck."
+
+# The fog hunts light and sound now, and the hold is the next answer.
+tip if act 2 and fog_tried and rule_light and not salvage_seen
+  nudge "The fog hunts light and sound now, and Vex is carrying something he did not declare."
+  "Go below decks and look in the hold."
+
+# The bell rang itself. Vex has to hear it from us.
+tip if act 2 and fog_tried and not rule_light
+  nudge "The bell rang itself and the lanterns died. Vex needs to hear it from us."
+  "Go aft and tell Vex what happened at the bow."
+
+# Act II — the first step. Vex has the helm and a heading.
+tip if act 2
+  nudge "The crew is finding their places, and Vex has the helm. He wants to run her to the edge of the Shroud."
+  "Talk to Vex on the quarterdeck."
+
+# Act III — the fog flats, the wreck, the castaway camp and the reef gate. The ladder works
+# whichever way round the player finds Hobb and Elias: a missing piece always has a next step.
+
+# The boarding has begun; the act is about to turn.
+tip if act 3 and lantern_boarded
+  nudge "The boarding party is over the rail, and the fog is closing behind us."
+  "Follow the others onto the deck of the Grey Lantern."
+
+# The plan and the name are both in hand.
+tip if act 3 and bell_plan and rule_name and not lantern_boarded
+  nudge "A bell to cut, a light to douse, a name to say. The tide is with us."
+  "Go to the reef gate and board the Grey Lantern."
+
+# The name without the bell.
+tip if act 3 and rule_name and not bell_plan
+  nudge "Elias has given us the name. Hobb has not heard his brother yet."
+  "Go back to the wreck and tell Hobb what Elias said."
+
+# Elias is alive; the rules are still in his head.
+tip if act 3 and elias_found and not rule_name
+  nudge "My father is alive and counting something on his fingers."
+  "Talk to Elias again at the castaway camp."
+
+# Hobb has heard the bell; Elias has not been found.
+tip if act 3 and bell_plan and not elias_found
+  nudge "Hobb has heard his brother's bell. Nobody has told my father."
+  "Go through the wreck to the castaway camp and find Elias."
+
+# Stranded on the flats: the wreck is the first stop.
+tip if act 3 and stranded and not bell_plan and not elias_found
+  nudge "The crew is ashore, and the wreck is lying open on the reef."
+  "Go to the sunken wreck and find Hobb."
+
+# Act III — the first step.
+tip if act 3
+  nudge "The fog flats, the wreck, and a camp I cannot see yet."
+  "Go to the sunken wreck and find the crew."
+
+# Act IV — the Grey Lantern. The ladder runs from the choice back to the first hold, so the
+# most advanced state wins. Every state has a next step, nudge first.
+
+# The choice is made; the closing card is next.
+tip if act 4 and (curse_broken or escaped_fog)
+  nudge "The fog is behind us, one way or another."
+  "Let the ending play."
+
+# The name is spoken; Mordant is waiting for an answer.
+tip if act 4 and name_spoken
+  nudge "Mordant is in his cabin, and he has not raised his voice once."
+  "Talk to Mordant on the deck of the Grey Lantern."
+
+# The bell is cut and the lantern is out; the name is the last hold.
+tip if act 4 and bell_cut and lantern_doused and not name_spoken
+  nudge "The bell is quiet and the great lantern is out. One thing is left."
+  "Find Mordant's name in the captain's cabin."
+
+# The bell is cut; the great lantern still burns at the stern.
+tip if act 4 and bell_cut and not lantern_doused and not name_spoken
+  nudge "The bell is cut, but the great lantern is still burning at the stern."
+  "Help Quill douse the great lantern."
+
+# The bell first: Hobb and Tam are at the rope.
+tip if act 4 and not bell_cut
+  nudge "Hobb has gone for the bell. Tam is the hand on the rope."
+  "Climb to the bell and help Hobb cut it loose."
+
+# Act IV — the first step.
+tip if act 4
+  nudge "The Grey Lantern is full of quiet crew, and one of them is Hobb's brother."
+  "Find Hobb at the bell."

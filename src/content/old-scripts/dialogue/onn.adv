@@ -1,0 +1,38 @@
+dialogue onn
+  node root onn "Mind the step. It's wet, and I've swept it twice."
+    > "You knew the Arcadia's crew?" -> crew
+    > "What's wrong with the Straits?" -> straits
+    > "Do you need help with anything?" -> help
+    > "I'll leave you to it." -> bye
+  node crew onn "My husband's cousin. The boy from the end house. The two brothers who kept the chandlery before the chandler."
+    -> crew2
+  node crew2 onn "Ten off this street. Twelve from down the hill. I counted them out. I counted them back. Only the first part worked."
+    > "What happened to them?" -> straits
+  node straits onn "There's a place past the reef where the water goes quiet. Not calm. Quiet. The fishermen won't say its name. They call it the Lull."
+    > "You believe that?" -> believe
+    > "The Lull." -> lull
+  node lull onn "Don't say it twice. Don't say it while you're out there. If something in the Lull calls your name, don't answer. You understand me?"
+    > "I understand." -> promise
+  node believe onn "I believe twenty-two went out and one came back. He's been drunk ever since. The men who own the ships would rather call it weather."
+    -> believe2
+  node believe2 onn "Belief is what's left when the paperwork runs out."
+    > "That's fair." -> promise
+  node help onn "No, child. I have the broom, the step, and a lot of time. What I want is one person to come back and tell me what's out there."
+    > "I'll try." -> promise
+  node promise onn "Then try. And clerk. When the paperwork's done, come and tell me. Not the harbourmaster. Me."
+    > "I will." -> bye
+  node bye onn "Step. Wet. Mind it."
+  # Act IV: the Marrow home, and the clerk come to tell her.
+  node home onn "The clerk. You've the face of somebody at the end of something. Go on, then."
+    > "You asked me to come and tell you." if seen:onn.promise -> salt
+    > "They're home, Onn. All hands." if not seen:onn.promise -> salt
+  node salt fenn "All hands. They were on Gullet Key, raking salt for Silas Cray. Three years."
+    -> swept
+  node swept onn "Salt. Three years I swept this step for drowned men, and they were raking salt."
+    > "A trumpet called the Marrow's name in the fog." if seen:onn.lull -> trumpet
+    > "Not a drop of it was weather." -> count
+  node trumpet onn "A trumpet. (She laughs, once.) Three years the fishermen have been afraid of a man with a trumpet and a form."
+    -> count
+  node count onn "Ten off this street. I'll count them back. I said I would."
+    -> swept_again
+  node swept_again onn "(She leans the broom against the door.) Mind the step, clerk. It's wet. I'm not sweeping it again tonight."

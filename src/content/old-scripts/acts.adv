@@ -1,0 +1,111 @@
+# Act structure. An act is a self-contained run of rooms with its own opening and closing
+# cinematic; finishing one carries the inventory and flags forward and drops you into the next.
+
+act 1 "A Licence to Sail"
+  start dock
+  intro "/assets/video/intro.mp4"
+  outro "/assets/video/act-i-outro.mp4"
+  inventory compass
+  caption "Three years stamping other people's voyages. At dawn the Marrow sails for the Straits, where my father vanished. Licensed hands only."
+
+act 2 "The Vela Straits"
+  start marrow_deck
+  intro "/assets/video/act-ii-intro.mp4"
+  outro "/assets/video/act-ii-outro.mp4"
+  inventory compass stamp manifest crowbar licence
+  caption "Dawn, and the Marrow is mine to stand on. The crew know what I am: a clerk with a licence and no sea legs. My compass still points wrong."
+
+act 3 "Tidy Weather"
+  start reef_wreck
+  intro "/assets/video/act-iii-intro.mp4"
+  outro "/assets/video/act-iii-outro.mp4"
+  inventory compass stamp
+  caption "Quill rows. I hold the compass. The flag on the wreck gets bigger, and we both pretend to watch the water."
+  on start
+    say "Quill fishes my crowbar out of the bilge. “You packed a crowbar.” A pause. “Of course you did.” She drops it in my lap."
+    give crowbar
+
+act 4 "All Hands Returned"
+  start dock at 880,830
+  intro "/assets/video/act-iv-intro.mp4"
+  outro "/assets/video/act-iv-outro.mp4"
+  inventory compass stamp crowbar ansel_log
+  caption "Port Vela, that same night. Cray's cutter got home first. At the dawn bell he means to write us down as lost. This time he holds the pen."
+  on start
+    talk quill4
+
+ending "ALL HANDS RETURNED"
+  title if ending_pirate
+    "THE PURSER OF THE MARROW"
+  title if ending_desk
+    "THE HONEST LEDGER"
+  # The painting the card rises over: dawn at sea, or the customs-house window by moonlight.
+  painting bg_deck_wide focus 1250,300 music music_sea if ending_pirate
+  painting bg_office_wide focus 1130,60 music music_dock if ending_desk
+  # the pirate ending: dawn from the crow's nest
+  line if ending_pirate
+    "Dawn, from the crow's nest. Quill has logged the climb. She points. “That's the Liar. It moves.” “I'll write it down.” “You do that.”"
+  line if ending_pirate and aff >= 14
+    "Her hand is in mine before the Liar has even set. Neither of us writes that down."
+  line if ending_pirate and not (aff >= 14)
+    "She kissed me once, on a salt pan, and has since filed it under heatstroke. She stands close enough to amend the record."
+  line if ending_pirate
+    "My father's compass sits in the binnacle. Quill steers by it and pretends she doesn't. It points at the Old Nail. So do we, most days."
+  line if ending_pirate
+    "I brought Bramwick his stamp. He gave me one from his drawer: PURSER, THE MARROW. He'd had it cut that morning, before I'd decided."
+  line if ending_pirate
+    "Flag sixteen flies at the masthead. It's mustard. My mother would have hated it."
+  # the desk ending: the customs-house window, a year on
+  line if ending_desk
+    "A year later, at the customs-house window: a sail, a patchwork flag. I stamp her ARRIVED before she rounds the light."
+  line if ending_desk and aff >= 14
+    "She comes up the quay at a run, as she does every season, with a new star for me. I've written down four. One of them moves."
+  line if ending_desk and aff >= 14
+    "Every one of them is underlined."
+  line if ending_desk and aff >= 14
+    "On the quay she calls me cargo. On the steps, where nobody's counting, she doesn't."
+  line if ending_desk and not (aff >= 14)
+    "She still calls me cargo. She said my name once, across a harbour, and rations it. Each season she brings a star I may write down."
+  line if ending_desk
+    "I gave Quill the compass. It points at the Old Nail, which lines up the Needle. That leads here. She has never been late."
+  line if ending_desk and not cray_offer
+    "Bramwick moved my desk six inches nearer the window. He says it's regulation. He wrote it that morning."
+  line if ending_desk and cray_offer
+    "Cray's desk was by the door. I have never sat at it."
+  # the epilogue, for both
+  line
+    "Quill was named navigator of the Marrow. She had it written into the articles, then read out, then read out again."
+  line
+    "Captain Vane's storm claim was paid at last, with three years' interest. She uses the letter as a bookmark."
+  line
+    "My father opened a shop. Every compass in it points at the Old Nail and nowhere else. He says that's not a fault. It's how you get home."
+  line
+    "Rook went back to sea on the Marrow, as the navigator's navigator. Quill corrects him daily, and he takes it sober. Mostly."
+  line if wager and iou_paid
+    "Bramwick and Marta were married in the spring, paid for by a betting slate and a clerk who backed the right ship."
+  line if wager and not iou_paid
+    "My betting winnings went into a jar behind the Salty Keel's bar: WEDDING, IF HE EVER PAYS UP. It fills nicely. So does his courage."
+  line if iou_paid and not wager
+    "Bramwick and Marta are still playing for it, one hand a night. He loses on purpose. She lets him think she can't tell."
+  line if not iou_paid and not wager
+    "Bramwick and Marta still play for it. The IOU is in his breast pocket, unpaid, and she has stopped pretending she doesn't know which pocket."
+  line
+    "Marta tells the whole story every night at nine, every word, and charges for the ending. Nobody has ever been allowed to skip to it."
+  line
+    "Old Onn never swept that step again. Tam ran out of wall and started on the lighthouse. He counts the Marrow in every season, twice."
+  line
+    "Hobb's other arm is filling up nicely. He's put me on it, spelled wrong, which I'm told is an honour."
+  line
+    "Pike is junior clerk now. He dates everything, including the cat. In thirty years the ledger has never known the day so well."
+  line if kelp_read
+    "The last of Cray's kelp went on the Salty Keel's fire. For a week the whole harbour smelled of fog, and laughed."
+  line if kelp_proof and not kelp_read
+    "I kept the kelp manifest. FOR FOG. Nobody else ever read it out, and on very clear days I read it to myself."
+  line if ending_desk
+    "Silas Cray appealed from his cell, in triplicate. They crossed my desk. I stamped all three RECEIVED: SURPLUS TO REQUIREMENTS."
+  line if ending_pirate
+    "Silas Cray appealed from his cell, in triplicate. Nib filed all three in pigeonhole one, unread. It's where things go to be safe."
+  line if silas_refused
+    "He asked for the compass once more, through the bars, very politely. I said no. It runs in the family."
+  line
+    "ARCADIA: returned. All hands."

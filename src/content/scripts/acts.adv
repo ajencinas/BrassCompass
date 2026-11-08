@@ -1,0 +1,96 @@
+# The Father and the Fog — four acts. Act I is the return, Act II the crew and the first fog.
+# Act III runs from the fog flats to the reef gate; Act IV is the Grey Lantern's deck, its
+# captain's cabin, and the last choice. No opening film: the old Port Vela cinematics are the
+# old story. The closing card is at the bottom of this file and follows that choice.
+
+act 1 "The Return"
+  start dock
+  inventory compass
+  caption "Dreadwater Isle. Three months since my father sailed into the fog. Half the harbour is empty, and the other half won't meet my eye."
+
+act 2 "The Crew"
+  start marrow_deck
+  inventory compass spyglass crowbar
+  caption "The Marrow is ours, for what that's worth. Vex at the helm, Quill aloft, Dorrit below, Hobb at the mast. The fog is waiting."
+
+act 3 "The Shroud"
+  start lagoon_shore
+  inventory compass crowbar chart
+  caption "The wreck of the Marrow behind us, the rock ahead. The fog is not empty. It has been waiting."
+
+act 4 "The Grey Lantern"
+  start lantern_deck
+  inventory compass crowbar nameplate
+  caption "Eighty years of stolen ships, and one captain who refused to sink. Time to give them their names back."
+
+# The closing card. The fog-lifts ending is the mercy; the long-way ending is the survival.
+# Every line is conditional, so only the chosen ending's card is read.
+
+ending "THE FATHER AND THE FOG"
+  title if ending_fog_lifts
+    "THE FOG LIFTS"
+  title if ending_long_way
+    "THE LONG WAY HOME"
+  painting bg_shore_wide focus 1280,420 music music_sea if ending_fog_lifts
+  painting bg_deck_wide focus 1250,300 music music_fog if ending_long_way
+  painting bg_dock_wide focus 1280,420 music music_dock
+
+  # THE FOG LIFTS — the crews go free, and the island sails again.
+  line if ending_fog_lifts
+    "My father comes home with the chart under his arm and salt in his beard. He apologises to the harbour for being late."
+  line if ending_fog_lifts and vex_trust
+    "Vex stays. He calls it rebuilding the harbour. The island calls it the first honest thing he has done."
+  line if ending_fog_lifts and not vex_trust
+    "Vex tells the island he lifted the fog. Nobody believes him. He tells it anyway, with a new coat."
+  line if ending_fog_lifts
+    "Quill charts the Shroud for the first time in eighty years. The first clear channel is Quill's Run, and she pretends not to care."
+  line if ending_fog_lifts
+    "Hobb and Tam come home together. Tam rings the harbour bell at noon, and Hobb lets him."
+  line if ending_fog_lifts
+    "Dorrit feeds every crew that comes in. He says it is to keep them out of his kitchen, and keeps the pot on."
+  line if ending_fog_lifts
+    "The harbour fills again. Bramwick meets every boat at the pier, and enjoys it."
+  line if ending_fog_lifts
+    "The Shroud thins to a mist, and then to weather. The fishing boats go past the reef and come back."
+  line if ending_fog_lifts
+    "The Grey Lantern settles into the sea like a tired sail. The crews go free before she goes."
+  line if ending_fog_lifts
+    "I say the name once more, quietly. Mordant. It sounds like a man now, not a curse."
+  line if ending_fog_lifts
+    "Marta hangs a new story over the Salty Keel's fire. For once, it has an ending."
+  line if ending_fog_lifts
+    "My father and I draw the new coast together. The chart is honest now."
+  line if ending_fog_lifts
+    "The bell hangs in the harbour. On the first clear morning of the year, it rings for the dead."
+  line if ending_fog_lifts and tam_freed
+    "Tam Hobb rings it at noon. I tell him his brother kept counting. Tam says he knows, and rings it again."
+  line if ending_fog_lifts
+    "Old Onn comes down to the quay to hear the story. I tell her the truth. She says it will do, and goes back to her step."
+
+  # THE LONG WAY HOME — the living get out; the dead and the fog remain.
+  line if ending_long_way and vex_trust
+    "Vex takes the salvage and leaves Dreadwater. He leaves the longboat at the reef for my father, and calls it a debt worth collecting."
+  line if ending_long_way and vex_trust
+    "My father comes home a month later, in that boat, with the rest of the chart."
+  line if ending_long_way and not vex_trust
+    "Vex takes the salvage and the credit. He tells the island he saved us. The ones we left are not in his story."
+  line if ending_long_way and not vex_trust
+    "My father stays on the fog rock to finish the chart. He sends a note once a month, and it is always a map."
+  line if ending_long_way
+    "Quill brings us out with a heading she made up on the spot. It works. She never says how close it was."
+  line if ending_long_way and tam_freed
+    "Hobb comes home with Tam. He does not speak for a day, and then he does not stop."
+  line if ending_long_way and not tam_freed
+    "Hobb comes home alone. He keeps Tam's tally in his coat and adds to it every morning."
+  line if ending_long_way
+    "Dorrit keeps the galley going all the way home. Nobody goes hungry, not even Vex."
+  line if ending_long_way
+    "The island takes us back. The fog is still out there, and the fishing boats still do not go past the reef."
+  line if ending_long_way
+    "The Shroud keeps its crews. On quiet nights the bell rings across the water, and the island has learned to call it weather."
+  line if ending_long_way
+    "The blank half of the chart hangs in the Salty Keel. Marta says that is the honest part."
+  line if ending_long_way
+    "I go back to Dreadwater with a boat, a crew, and no father. Some mornings the fog looks like a road."
+  line if ending_long_way
+    "The Grey Lantern is still out there. Some nights I hear the bell, and I answer it. That is not the same as going back."
