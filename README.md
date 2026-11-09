@@ -54,6 +54,7 @@ npm test           # script lint, editor test, then the browser playthrough in C
 npm run test:scripts   # just the .adv scripts: compile, round trip (a second)
 npm run test:unit  # the unit tests (save, recap, reach, prefs, tips, compile, fuzz helpers, scale)
 npm run test:scale # every character's size, screen height and reachable stand, all 25 rooms
+npm run test:all   # scale + exit audit + npm test + fuzz + unit + build, the full battery
 npm run test:fuzz  # the state-machine fuzzer's regression suite in Chromium (about a minute)
 ```
 

@@ -6,9 +6,9 @@ room lantern_deck "The Grey Lantern — Deck"
   music music_fog
   perspective horizon 300 ref 875 height 470
   grade "saturate(0.7) brightness(0.88)"
-  walk (40,875) (60,700) (2500,700) (2530,875)
+  walk (40,875) (60,820) (2500,820) (2530,875)
   entry 1500,820
-  arrive arcadia_cabin 2160,800
+  arrive arcadia_cabin 2160,825
   footsteps deck
   ambience sea
 
@@ -118,7 +118,7 @@ room lantern_deck "The Grey Lantern — Deck"
   # The low door under the carved gallery at the stern, just left of the great lantern.
   hotspot cabin_door "the cabin door"
     area 2050,430 230x240
-    stand 2100,790
+    stand 2100,835
     exit arcadia_cabin sound door
     look "A low door under the carved gallery. The dark behind it is not empty."
     open "I duck under the carved beam and go in."
@@ -160,7 +160,7 @@ room lantern_deck "The Grey Lantern — Deck"
 
   hotspot hobb "Hobb"
     area 1620,410 180x420
-    stand 1710,810
+    stand 1710,835
     look "Hobb, at the foot of the mast with the crowbar through his belt. He is listening upward."
     talk "He says, \"Three notes, then one. That is Tam's hand on the rope.\""
       say "He does not say how he knows. He does not have to."
@@ -170,7 +170,7 @@ room lantern_deck "The Grey Lantern — Deck"
 
   hotspot vex "Captain Vex"
     area 2300,410 180x420
-    stand 2380,795
+    stand 2380,835
     look "Vex, coat buttoned to the chin, hands in his pockets. He is standing where the rail is highest."
     talk "He does not turn round. \"I'm not going below. Ghosts and I have an understanding.\""
       say "\"You cut the bell, I take the credit,\" Vex says. \"That's a good deal. For me.\""

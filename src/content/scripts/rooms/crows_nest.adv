@@ -22,7 +22,7 @@ room crows_nest "The Marrow — Crow's Nest"
   emit creak
 
   # Quill at the rail, a row back from where Fenn joins her.
-  sprite npc_quill_body at 720,660 size 1 idle speaker quill for quill grade "saturate(0.85) brightness(0.92)" if act 2
+  sprite npc_quill_body at 720,665 size 1 idle speaker quill for quill grade "saturate(0.85) brightness(0.92)" if act 2
 
   scene if act 2 and not nest_arrived
     set nest_arrived

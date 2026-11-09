@@ -8,7 +8,7 @@ room salt_camp "The Castaway Camp"
   backdrop "grayscale(0.70) sepia(0.50) hue-rotate(172deg) saturate(1.4) brightness(0.60) contrast(1.05)"
   grade "saturate(0.52) brightness(0.76) contrast(0.97)"
   perspective horizon 312 ref 875 height 380
-  walk (60,878) (120,760) (1100,740) (1500,690) (1940,700) (1950,815) (2470,815) (2500,878)
+  walk (60,878) (120,780) (1100,760) (1500,740) (1650,780) (1800,815) (2470,815) (2500,878)
   entry 1500,800
   # The two ways off the camp are both west and both out of the entry frame: the shore to the
   # wreck (near) and the pan bank to the far flats (further out). Arrivals sit by each.
@@ -28,7 +28,7 @@ room salt_camp "The Castaway Camp"
   sprite npc_dorrit_body at 700,856 size 1 idle speaker dorrit for dorrit if act 3
   sprite npc_ansel_body at 1330,740 size 1 idle speaker elias for elias if act 3
   sprite npc_hobb_body at 1660,828 size 1 idle speaker hobb for hobb if act 3
-  sprite npc_quill_body at 1850,780 size 1 idle speaker quill for quill if act 3
+  sprite npc_quill_body at 1850,820 size 1 idle speaker quill for quill if act 3
   sprite npc_vex_body at 2290,870 size 1 idle speaker vex for vex if act 3
 
   scene if act 3 and not elias_found
