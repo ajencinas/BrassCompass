@@ -1451,6 +1451,89 @@ MANIFEST = [
                 "composition, no text, no UI, no watermark, no logos",
       "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/lighthouse_wide.webp"),
 
+    # ---------------- the area views anchor the rooms: Upper Town and the Shroud ----------------
+    # The three rooms below are close-ups of the macro views above (area_town, area_shroud), not
+    # independent establishing shots: same dark timber-and-stone town, same fog and palette, same
+    # lighthouse tower, same longboat/wreck/palisade. Painted 21:9 and cover-cropped to 2560x880,
+    # so the central vertical band carries the essential scenery.
+    ("bg_town_lane_wide", "image", BG_MODEL,
+     {"prompt": "Ultra-wide side-scrolling adventure game background plate, a close-up room view "
+                "of Upper Town at night, seen flat side-on at eye level from a few paces out in "
+                "the steep cobbled lane, the nearest stonework large in frame. From left to "
+                "right: a low wet stone retaining wall with a black iron lantern and a short "
+                "flight of worn steps running down out of frame towards the harbour; a tall "
+                "jettied timber-framed cottage, its plaster dark with age, leaded windows lit "
+                "warm amber, a plank back door with a lamp over it and an unlit shuttered window "
+                "above; a squat grey stone cottage with a carved stone shrine niche set in its "
+                "wall, a little painted saint inside, a shelf of candle stubs and a warm votive "
+                "glow; a low round stone well with a timber windlass, rope and a hanging bucket "
+                "standing on the wet cobbles; then the lane climbs steeply between two leaning "
+                "dark cottages as a broad flight of worn stone steps with an iron handrail, and "
+                "above the steps, right of centre and high over the rooftops in the blue fog, "
+                "the lighthouse stands on its black rock, the whole tower from base to lantern "
+                "room and its domed glass roof entirely inside the top of the frame and not "
+                "cropped, a stout round pale stone tower with a gallery rail, its great lamp "
+                "burning warm gold with a soft beam raking right through the mist; at the right "
+                "a tall dark stone-and-timber house with one warm lit "
+                "window, a line of white laundry strung across the lane, and a small shuttered "
+                "market stall with a dark canvas awning, a trestle table, rope coils, lamp oil "
+                "crates and dried fish. Wet cobblestones reflect the lanterns, and a continuous "
+                "clear empty lane runs along the lower third from the left edge to the right "
+                "edge with nothing standing on it. Deep blue-teal night, warm amber windows, cold "
+                "low fog drifting between the houses, wet stone. No people, no figures, no text, "
+                "no signage, no UI, no watermark. Hand-painted digital illustration, cinematic "
+                "point-and-click adventure game art, visible oil-painted brushwork, "
+                "near-photoreal detail, rich atmospheric volumetric lighting, strong colour "
+                "grading, ultra-wide panoramic composition, essential scenery kept in the "
+                "central vertical band for the 2560x880 crop.",
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/town_lane_wide.webp"),
+
+    ("bg_town_head_wide", "image", BG_MODEL,
+     {"prompt": "Ultra-wide side-scrolling adventure game background plate, a close-up room view "
+                "of the lighthouse headland above Upper Town at night, seen flat side-on at eye "
+                "level, the same dark stone-and-timber world as the town lane below. From left "
+                "to right: a low stone keeper's store with a slate roof, a plank door, a small "
+                "shuttered window and a warm iron brazier burning at its door on the wet "
+                "flagstones, orange firelight and a thin curl of smoke; wet black rocks, shallow "
+                "tidal pools and a low stone kerb along the headland; a broad wet flagstone path "
+                "crossing the whole lower third from the left edge to the right edge, completely "
+                "empty and unobstructed, shining with cold sky and warm firelight; at the right "
+                "the lighthouse tower stands tall and close on its rock plinth, the same stout "
+                "round whitewashed stone tower with a domed glass lantern room, a gallery rail "
+                "and a great warm amber lamp, a long soft beam raking out to the right through "
+                "the fog; beyond the tower the cliff edge falls away to a pale fog sea with a "
+                "faint cold moon behind the mist. Cold blue-grey fog at night, wet stone, warm "
+                "amber lamp and brazier the only warm notes. No people, no figures, no text, no "
+                "signage, no UI, no watermark. Hand-painted digital illustration, cinematic "
+                "point-and-click adventure game art, visible oil-painted brushwork, "
+                "near-photoreal detail, rich atmospheric volumetric lighting, strong colour "
+                "grading, ultra-wide panoramic composition, essential scenery kept in the "
+                "central vertical band for the 2560x880 crop.",
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/town_head_wide.webp"),
+
+    ("bg_shroud_flats_wide", "image", BG_MODEL,
+     {"prompt": "Ultra-wide side-scrolling adventure game background plate, a close-up room view "
+                "of the Shroud's Fog Flats at low tide, seen flat side-on at eye level. In the "
+                "left foreground the ship's longboat is drawn up and canted on a ribbed wet "
+                "sandbar, dark tarred planks, her oars shipped across the thwarts, a coil of rope "
+                "at the bow, close enough to fill the lower left; beyond her the flats open into "
+                "ribbed grey-blue wet sand and shallow pewter channels winding away into the "
+                "middle distance; half-lost in cold fog, the broken hull and leaning masts of a "
+                "large wrecked sailing ship, distant and muted with her ribs showing; at the "
+                "right a low dune with a weathered palisade of salt-grey sharpened posts, two "
+                "patched canvas tents behind it and a pale gap where a sandy track leads down "
+                "towards the shore; beyond, dense white-grey ground fog hides the horizon, with "
+                "faint dark cliffs far off in the mist. The lower third is a clear, continuous "
+                "band of wet sand and shallow water from the left edge to the right edge, with "
+                "nothing standing on it. Cold grey-blue and pewter palette, diffuse overcast "
+                "light, no sun, no green, no tropical water, no ships afloat. No people, no "
+                "figures, no text, no signage, no UI, no watermark. Hand-painted digital "
+                "illustration, cinematic point-and-click adventure game art, visible oil-painted "
+                "brushwork, near-photoreal detail, rich atmospheric fog, strong colour grading, "
+                "ultra-wide panoramic composition, essential scenery kept in the central "
+                "vertical band for the 2560x880 crop.",
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/shroud_flats_wide.webp"),
+
     ("bg_saltcamp_wide", "image", BG_MODEL,
      {"prompt": f"Ultra-wide side-scrolling adventure game background, viewed side-on at eye "
                 f"level: a prison salt camp on a tropical island under a white glaring morning "
