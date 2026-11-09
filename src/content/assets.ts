@@ -34,6 +34,13 @@ export const MANIFEST = {
     bg_dock_v2_wide: "/assets/scenes/dock_quay_wide.webp",
     bg_tavern_close_wide: "/assets/scenes/tavern_close_wide.webp",
     bg_office_close_wide: "/assets/scenes/office_close_wide.webp",
+    // The harbour's back lane and outbuildings, repainted to the same close-up standard as the
+    // three hero rooms: the same fog-bound timber quay, iron lanterns, warm windows, green
+    // counting-house lamp and empty lower-third walking band. The old `_wide` plates below stay
+    // for the archived act paintings and the prologue.
+    bg_alley_close_wide: "/assets/scenes/alley_close_wide.webp",
+    bg_chandlery_close_wide: "/assets/scenes/chandlery_close_wide.webp",
+    bg_countinghouse_close_wide: "/assets/scenes/countinghouse_close_wide.webp",
     bg_alley_wide: "/assets/scenes/alley_wide.webp",
     bg_chandlery_wide: "/assets/scenes/chandlery_wide.webp",
     bg_warehouse_wide: "/assets/scenes/warehouse_wide.webp",

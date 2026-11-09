@@ -1,21 +1,31 @@
 room chandlery "The Shipwright's"
-  bg bg_chandlery_wide
+  bg bg_chandlery_close_wide
   width 2560
   music music_office
   grade "brightness(0.95) saturate(0.85)"
+  # The shipwright's shop as a close-up of the harbour: the lane door open on cold blue fog at
+  # the left, the long counter with its brass scale, lit lantern and crowbar, rope and canvas
+  # shelves behind, and the Marrow's bare mast leaning at the right.
   perspective horizon 200 ref 875 height 430
-  scale 740 442
+  scale 720 442
   scale 810 470
   scale 875 490
-  walk (120,875) (170,834) (900,834) (900,800) (1800,800) (1800,834) (2380,834) (2500,875)
-  entry 1500,856
-  arrive alley 320,850
+  walk (70,872) (110,848) (220,838) (500,832) (850,828) (1200,826) (1550,826) (1900,828) (2200,832) (2440,838) (2520,848) (2520,872)
+  entry 170,852
+  arrive alley 170,852
   footsteps wood
-  light 1232,468 radius 380 lantern
+  # The painted counter lantern, with the hanging lamp over the shelves and the cold fog through
+  # the lane door. The crowbar and the scale are lit by the counter lamp, not by their own light.
+  light 1165,430 radius 380 lantern
+  light 1380,55 radius 90 lantern
+  light 170,300 radius 160 moon
 
-  sprite prop_crowbar at 1950,600 size 0.42 for crowbar
-  sprite npc_quill_body at 1800,858 size 0.95 idle speaker quill for quill
-  sprite npc_hobb_body at 2100,856 size 1.05 idle speaker hobb for hobb
+  # The crowbar leans against the counter front until it is picked up; then only the boards remain.
+  sprite prop_crowbar at 1350,780 size 0.42 for crowbar
+  # Quill at the near end of the counter and Hobb further back by the mast: different depths,
+  # sizes and facings, so they do not read as a chorus line.
+  sprite npc_quill_body at 1520,832 size 0.96 flip idle speaker quill for quill
+  sprite npc_hobb_body at 2180,820 size 0.95 idle speaker hobb for hobb
 
   scene if act 1 and not chandlery_arrived
     set chandlery_arrived
@@ -25,47 +35,51 @@ room chandlery "The Shipwright's"
     say "Quill is at the counter, holding out her empty hand."
 
   hotspot counter "the counter"
-    area 0,570 2360x215
-    stand 1500,820
+    area 430,540 1940x120
+    stand 1300,830
     look "A long counter: a brass scale, a lantern, and a hundred small things ships need."
     open "The counter is a counter. The shipwright keeps his money in his boot."
     use "I could price a whole ship off this counter. I'd rather not."
 
-  hotspot scale "the brass scale"
-    area 550,285 290x255
-    stand 800,845
-    look "A brass scale, polished. The shipwright weighs everything twice and charges once."
-    use "I put a finger on the pan. The scale thinks about it and says nothing."
-
+  # The shelves are listed before the scale and the lantern: later hotspots win where they
+  # overlap, and those two are painted in front of the shelves.
   hotspot shelves "the shelves"
-    area 290,105 440x365
+    area 560,0 1100x510
     nowalk
     look "Coils of rope, bolts of canvas, a dozen lanterns. Everything a ship needs to come back."
     use "Good rope. Good canvas. None of it does you much good in the fog."
 
+  hotspot scale "the brass scale"
+    area 720,330 230x200
+    stand 860,830
+    look "A brass scale, polished. The shipwright weighs everything twice and charges once."
+    use "I put a finger on the pan. The scale thinks about it and says nothing."
+
   hotspot sailcloth "the sailcloth"
-    area 2110,215 300x130
+    area 1960,340 360x280
     nowalk
     look "Bolts of sailcloth, still in their wrapping. The shipwright charges by the yard."
     use "The canvas is good. It would make a fine sail for a ship with a mast."
 
   hotspot lantern "the ship's lantern"
-    area 1000,415 95x120
-    stand 1100,836
+    area 1120,350 100x210
+    stand 1220,830
     look "A ship's lantern, lit. The glass is clean and the wick is new."
     use "I could carry it. The shipwright would notice before I reached the door."
 
+  # The crowbar leaning against the counter, a pickup sprite rather than paint, so it leaves
+  # with the item.
   hotspot crowbar "the crowbar"
     show if not has crowbar
     item crowbar
-    area 1895,425 105x190
-    stand 1950,856
-    look "Hobb's crowbar, red with old rust. It has opened more ships than it has closed."
-    pickup "I take the crowbar off the counter. Nobody stops me."
+    area 1300,560 110x230
+    stand 1350,838
+    look "Hobb's crowbar, red with old rust, leaning against the counter. It has opened more ships than it has closed."
+    pickup "I take the crowbar from against the counter. Nobody stops me."
 
   hotspot quill "Quill"
-    area 1730,390 150x475
-    stand 1650,856
+    area 1440,400 200x430
+    stand 1520,832
     look "Quill: sharp, quick, and standing where she can see the door."
     talk "She looks me over the way she'd look over a chart."
       talk quill
@@ -80,8 +94,8 @@ room chandlery "The Shipwright's"
         talk quill at again
 
   hotspot hobb "Hobb"
-    area 2000,335 260x525
-    stand 1950,856
+    area 2080,350 280x480
+    stand 2000,832
     look "Hobb: a big man with folded arms and no interest in small talk."
     talk "He looks at me. He waits."
       talk hobb
@@ -96,8 +110,8 @@ room chandlery "The Shipwright's"
         talk hobb at again
 
   hotspot mast "the Marrow's mast"
-    area 2350,0 130x600
-    stand 2280,856
+    area 1650,0 280x570
+    stand 1800,830
     verb use
     look "The Marrow's mast, standing against the back wall. The iron band at the counter is seized."
     use "The band at the counter won't move. It needs a lever."
@@ -108,11 +122,10 @@ room chandlery "The Shipwright's"
       look "The iron band at the counter is seized. The crowbar will shift it."
       use "I need to put the crowbar to it."
 
-  # The dark bay at the left end, framed by the lit post and the shelf post, is the only
-  # painted way out of the shop: the counter cuts across its foot, so the area stops on it.
+  # The door at the left end, opening on cold blue fog and the quay: the only painted way out.
   hotspot door_out "the lane door"
-    area 55,215 145x350
-    stand 240,856
+    area 30,50 240x580
+    stand 160,852
     exit alley
     look "The lane door. The shipwright keeps it open for the smell of the sea."
 
