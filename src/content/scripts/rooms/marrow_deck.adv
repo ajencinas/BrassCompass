@@ -1,25 +1,27 @@
 room marrow_deck "The Marrow — Deck"
-  bg bg_deck_wide
+  # A side-on close-up of the Marrow's own area plate: same masts, rigging, rail and hatch,
+  # wet planks, cold fog sea and the one warm stern lamp. The lower third is the clear deck.
+  bg bg_marrow_deck_wide
   width 2560
   music music_sea
   grade "saturate(0.85) brightness(0.9)"
   ambience sea
   perspective horizon 230 ref 875 height 330
-  walk (80,875) (110,706) (1320,706) (1320,875)
-  entry 780,805
-  arrive marrow_quarterdeck 1290,820
-  arrive below_decks 950,750
-  arrive bow_fog 820,710
-  arrive crows_nest 660,720
+  walk (40,875) (70,710) (2480,710) (2540,875)
+  entry 900,810
+  arrive marrow_quarterdeck 2190,800
+  arrive below_decks 1080,780
+  arrive bow_fog 470,800
+  arrive crows_nest 560,800
   footsteps deck
   motes glints (1410,385) (1650,385) (1650,500) (1415,500) count 18
   emit creak
 
   # Act II: the crew on deck, and Vex up at the helm. The Marrow was built for a
   # bigger crew than this; the empty deck is part of the mood.
-  sprite npc_quill_body at 560,790 size 0.98 flip idle speaker quill for quill grade "saturate(0.85) brightness(0.92)" if act 2 and not salvage_seen
-  sprite npc_dorrit_body at 330,835 size 0.96 idle speaker dorrit for dorrit grade "saturate(0.85) sepia(0.08) brightness(0.9)" if act 2 and not salvage_seen
-  sprite npc_hobb_body at 1060,760 size 1.02 flip idle speaker hobb for hobb grade "saturate(0.85) brightness(0.9)" if act 2 and not salvage_seen
+  sprite npc_quill_body at 780,800 size 0.98 flip idle speaker quill for quill grade "saturate(0.85) brightness(0.92)" if act 2 and not salvage_seen
+  sprite npc_dorrit_body at 420,840 size 0.96 idle speaker dorrit for dorrit grade "saturate(0.85) sepia(0.08) brightness(0.9)" if act 2 and not salvage_seen
+  sprite npc_hobb_body at 1350,820 size 1.02 flip idle speaker hobb for hobb grade "saturate(0.85) brightness(0.9)" if act 2 and not salvage_seen
 
   scene if act 2 and fog_tried and not hatch_hinted
     set hatch_hinted
@@ -44,15 +46,23 @@ room marrow_deck "The Marrow — Deck"
     say "Above us, the helm is turning. Vex is not waiting for me."
 
   hotspot rail "the sea"
-    area 1000,330 600x190
-    stand 980,820
+    area 560,300 600x160
+    stand 900,800
     look "The sea, going gold at the edge. It looked bigger from the quay. Or I was smaller."
     talk "I say hello to the sea. It has heard better."
     use "The sea has nothing to say to a clerk with a compass."
 
+  hotspot shrouds "the ladder to the crow's nest"
+    area (210,0) (430,0) (430,410) (290,410)
+    stand 500,800
+    exit crows_nest
+    look "The rope ladders up to the crow's nest. Quill's country."
+    use "I would get two rungs up before Quill had me down by the collar."
+    pickup "They are attached to the mast. That is the point of them."
+
   hotspot forward "the bow deck"
-    area 560,300 430x170
-    stand 820,710
+    area 120,260 400x240
+    stand 450,800
     look "The bow, and the fog past it. The deck narrows there, and the fog does not."
     open "Vex wants us aft until he has said his piece. The bow can wait."
     state if act 2 and fog_tried
@@ -64,24 +74,16 @@ room marrow_deck "The Marrow — Deck"
       look "The bow. Vex says the fog has a voice, and I am to call the water."
       open "I go forward. The deck narrows, and the fog comes to meet me."
 
-  hotspot shrouds "the ladder to the crow's nest"
-    area (585,0) (690,0) (505,360) (400,360)
-    stand 660,720
-    exit crows_nest
-    look "The rope ladders up to the crow's nest. Quill's country."
-    use "I would get two rungs up before Quill had me down by the collar."
-    pickup "They are attached to the mast. That is the point of them."
-
   hotspot crates "the stores"
-    area 180,290 360x300
-    stand 420,760
+    area 830,500 430x110
+    stand 900,780
     look "Crates lashed by the rail. Salt beef, hard bread, and one crate Dorrit has marked HANDS OFF in chalk."
     open "Nailed shut. Dorrit counts the nails."
     use "Dorrit is watching me. I put my hands where he can see them."
 
   hotspot hatch "the hatch to the crew deck"
-    area 690,780 350x100
-    stand 950,750
+    area 940,600 320x110
+    stand 1080,780
     look "The main hatch. A smell of tar and old rope comes up. Under it, something else: wet wood and old cargo."
     open "The cover is on and barred. Vex says the hold is cargo."
     state if act 2 and salvage_seen
@@ -94,16 +96,16 @@ room marrow_deck "The Marrow — Deck"
       open "I lift the cover and go below. The ladder is steep, and the dark smells of old cargo."
 
   hotspot stairs_up "the steps to the helm"
-    area 1400,520 440x360
-    stand 1305,820
+    area 1900,420 530x300
+    stand 2050,800
     exit marrow_quarterdeck sound stairs
     look "The steps up to the quarterdeck. Vex is at the top, not looking down."
     open "I go up."
 
   hotspot quill "Quill"
     show if act 2 and not salvage_seen
-    area 505,495 110x300
-    stand 730,805
+    area 700,490 170x310
+    stand 760,800
     look "Quill, at the rail with her spyglass. She has not used it once since we left."
     talk "She does not turn around. \"I came for the chart. And because Vex owes me a horizon.\""
     give "She looks at my hands. \"I have a compass. I need a horizon.\""
@@ -113,8 +115,8 @@ room marrow_deck "The Marrow — Deck"
 
   hotspot hobb "Hobb"
     show if act 2 and not salvage_seen
-    area 995,490 135x275
-    stand 980,770
+    area 1270,490 180x330
+    stand 1320,820
     look "Hobb, one hand on the mast, the other on his crowbar."
     talk "He answers before I ask. \"My brother is in the fog. That is all of it.\""
     give "He looks at it and shakes his head. \"Give it to someone who needs opening.\""
@@ -124,8 +126,8 @@ room marrow_deck "The Marrow — Deck"
 
   hotspot dorrit "Dorrit"
     show if act 2 and not salvage_seen
-    area 240,530 180x310
-    stand 520,835
+    area 330,550 190x290
+    stand 420,840
     look "Dorrit, in his apron, negotiating with a potato."
     talk "He does not look up. \"If you are going to stand there, hold this.\""
     give "He hands me a knife and points at the potatoes. That is not a gift."

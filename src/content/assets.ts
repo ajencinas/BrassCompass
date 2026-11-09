@@ -48,6 +48,10 @@ export const MANIFEST = {
     bg_town_lane_wide: "/assets/scenes/town_lane_wide.webp",
     bg_town_head_wide: "/assets/scenes/town_head_wide.webp",
     bg_shroud_flats_wide: "/assets/scenes/shroud_flats_wide.webp",
+    // The ships' rooms, painted as side-on close-ups of the area views above.
+    bg_marrow_deck_wide: "/assets/scenes/marrow_deck_wide.webp",
+    bg_grey_lantern_deck_wide: "/assets/scenes/grey_lantern_deck_wide.webp",
+    bg_arcadia_cabin_wide: "/assets/scenes/arcadia_cabin_wide.webp",
     bg_boatshed_wide: "/assets/scenes/boatshed_wide.webp",
     bg_ghostcabin_wide: "/assets/scenes/ghostcabin_wide.webp",
     bg_ghostwreck_wide: "/assets/scenes/ghostwreck_wide.webp",
