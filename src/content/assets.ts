@@ -37,6 +37,11 @@ export const MANIFEST = {
     bg_area_marrow: "/assets/scenes/area_marrow.webp",
     bg_area_shroud: "/assets/scenes/area_shroud.webp",
     bg_area_lantern: "/assets/scenes/area_lantern.webp",
+    // Rooms cut from the macro views: Upper Town's lane and lighthouse headland from area_town,
+    // the Fog Flats from area_shroud. The wider plates above stay for the chart and ending art.
+    bg_town_lane_wide: "/assets/scenes/town_lane_wide.webp",
+    bg_town_head_wide: "/assets/scenes/town_head_wide.webp",
+    bg_shroud_flats_wide: "/assets/scenes/shroud_flats_wide.webp",
     bg_boatshed_wide: "/assets/scenes/boatshed_wide.webp",
     bg_ghostcabin_wide: "/assets/scenes/ghostcabin_wide.webp",
     bg_ghostwreck_wide: "/assets/scenes/ghostwreck_wide.webp",
