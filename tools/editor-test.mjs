@@ -133,10 +133,9 @@ try {
   assert.equal((await fetch(base + "/__adv/files")).ok, true);
 
   // ---- Alt+click a hotspot opens its script line
-  await evaluate("window.__game.devGoRoom('tavern'); window.__game.cameraX = 640");
+  await evaluate("window.__game.devGoRoom('tavern'); window.__game.cameraX = 640; window.__game.focusCameraX = null");
   await ff(2);
-  await evaluate("window.__game.cameraX = 640; window.__game.focusCameraX = 640 + 960");
-  const marta = await client(2080, 460);
+  const marta = await client(2240, 440);
   await mouse("mousePressed", marta.x, marta.y, 1);
   await mouse("mouseReleased", marta.x, marta.y, 1);
   await pause(100);

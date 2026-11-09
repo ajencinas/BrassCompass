@@ -64,7 +64,7 @@ room tavern "The Salty Keel"
       look "Dorrit, still furious and still cooking. The spoon has not been put down."
 
   hotspot bar "the bar"
-    area 1730,550 830x90
+    area 1730,560 830x80
     stand 1580,800
     look "The bar. It's been polished by elbows and one very determined mop."
     use "I'd need money, and Marta's permission. I've neither."
@@ -92,7 +92,7 @@ room tavern "The Salty Keel"
     pull "The net is tied off. Everything in this room is tied off."
 
   hotspot bottles "the bottle shelf"
-    area 2130,80 430x460
+    area 2130,80 430x250
     stand 1580,850
     look "Bottles, sorted by colour and trouble."
     use "I'd have to reach over the bar. Marta is watching."
