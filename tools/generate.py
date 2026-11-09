@@ -368,6 +368,10 @@ CHAR_KEYS = {
     "npc_ansel_body", "npc_pike_body", "npc_tamhobb_body",
     "npc_nib_body", "npc_bramwick_seated", "npc_weather_body",
     "npc_vane_rum", "npc_ansel_seated", "npc_vex_body", "npc_mordant_body",
+    # The painted cast (this wave): full-length oil studies that sit inside the plates.
+    "npc_bramwick_body_painted", "npc_pike_body_painted", "npc_nell_body_painted",
+    "npc_onn_body_painted", "npc_tam_body_painted", "npc_tamhobb_body_painted",
+    "npc_ansel_body_painted", "npc_mordant_body_painted", "npc_bramwick_seated_painted",
 }
 
 # One description per character, shared by their portrait and body sprite so the two always
@@ -458,6 +462,110 @@ def painted_portrait(desc):
     return {"prompt": f"Painted character portrait, head and shoulders, of {desc}. "
                       f"{PAINTED_PORTRAIT}",
             "resolution": "1728x2304 (3:4)", "output_format": "png"}
+
+
+# Standing bodies that must read as figures *inside* the painted plates, not cut-out stickers
+# laid over them. The old bodies were clean-edged, evenly lit and anime-proportioned; these are
+# painted as oil studies in the plates' own hand, lit by their warm amber key and cold blue rim.
+PAINTED_BODY = (
+    "Painted as a full-length oil study for a cinematic adventure game, in the same hand as its "
+    "background plates: visible, loaded brushstrokes across the face, hair, hands and cloth; broad "
+    "simplified planes of light and shadow instead of smooth airbrushed gradients; slightly "
+    "stylised but semi-realistic proportions with a real body's weight, stance and drapery; a warm "
+    "amber key light from one side and a cold blue rim light along the opposite edges; rich but "
+    "muted earthy colours, weathered by salt, sun and work; soft lost-and-found silhouette edges "
+    "that settle into a painted world. Not a photograph, not photorealistic, not a 3D render, no "
+    "plastic or airbrushed skin, not anime, not manga, no cel shading, no black line art or comic "
+    "outlines, no glossy highlights, no text")
+
+
+def painted_body(desc, pose, extra=""):
+    return {"prompt": f"Full body figure of {desc}, {pose}. The whole figure is inside the frame, "
+                      f"from the top of the head to the soles of both feet, with a little empty "
+                      f"background above the head and below the feet; the figure fills most of the "
+                      f"height of the picture. {PAINTED_BODY}. The background is flat solid magenta "
+                      f"(#FF00FF) everywhere around the figure, including between the legs and "
+                      f"under the feet; no shadow, no ground, no floor, no plinth, no extra props, "
+                      f"no border, no frame, no text"
+                      + (f". {extra}" if extra else ""),
+            "resolution": "1728x2304 (3:4)", "output_format": "png"}
+
+
+# The painted bodies: one description per cast member, keyed `npc_<id>_body_painted`, generated
+# full length on magenta and then chroma-keyed and trimmed like every other sprite. The old bodies
+# stay on disk and on their manifest entries; only the live asset keys are repointed at these.
+PAINTED_BODIES = {
+    # Bramwick: the harbourmaster from the portrait — old, heavy, grey-bearded, dark green.
+    "bramwick": (
+        "Bramwick, an old weathered harbourmaster in his sixties: heavy-set and stooped, a thick "
+        "grey beard, a battered black tricorn hat pulled low, a long dark green wool coat with "
+        "brass buttons and salt-stained skirts, a brass compass on a chain at his breast, worn "
+        "knee boots",
+        "standing with his hands clasped behind his back, turned in side three-quarter view to "
+        "the left, a stern appraising look"),
+    # Pike: nineteen, gangly, uniform too big, clipboard, quarantine-yellow armband.
+    "pike": (
+        "Pike, an earnest young man of nineteen, clearly a young adult and not a boy: tall, thin "
+        "and gangly, long arms and legs, narrow shoulders, a long bony adult face with a sharp "
+        "chin and a thin neck, freckles, anxious pale eyes, sandy hair under a peaked cap a size "
+        "too large, an ill-fitting grey uniform coat with the sleeves too long, an oversized "
+        "bright yellow quarantine armband on one sleeve, a wooden clipboard thick with forms "
+        "clutched to his chest, a pencil behind one ear, black trousers and scuffed boots; adult "
+        "male proportions and real anatomy, not a child, not a big-eyed cartoon",
+        "standing stiffly to attention, side three-quarter view to the left"),
+    # Nell: fifties, headscarf, hoop earrings, apron, hands on hips.
+    "nell": (
+        "Nell, a village market seller in her fifties: a broad, strong, weather-beaten woman, a "
+        "tan headscarf knotted tight over greying brown hair, large gold hoop earrings, a faded "
+        "scarf at her neck, a coarse brown work apron over a blue linen shirt with the sleeves "
+        "rolled to the elbow, a heavy dark skirt, stout boots",
+        "standing with her hands planted on her hips, side three-quarter view to the left, a "
+        "shrewd half-smile"),
+    # Onn: seventies, shawl, cross, broom.
+    "onn": (
+        "Old Onn, a village woman in her seventies: small, bent and wiry, a deep-lined weathered "
+        "face, wisps of grey hair under a dark shawl drawn over her head, a small iron cross on a "
+        "thin chain at her throat, a brown shawl over a long dark skirt and a coarse apron, "
+        "buckled shoes",
+        "standing leaning on a besom broom of tied twigs, side three-quarter view to the left, a "
+        "wary narrowed look"),
+    # Tam: a real ten-year-old, not a small adult.
+    "tam": (
+        "Tam, a village boy about ten years old: short and sturdy with a real child's proportions, "
+        "a child's large head and small hands, a freckled round face, a wide gap-toothed grin with "
+        "one front tooth missing, tousled light brown hair under an oversized brown flat cap "
+        "pushed back, an oversized brown coat with the collar turned up over patched knee "
+        "breeches, bare dirty feet; clearly a child, not a small adult",
+        "standing with his hands pushed into his pockets, side three-quarter view to the left, "
+        "looking up"),
+    # Tamhobb: adult brother of the bosun, salt raker, rake in hand.
+    "tamhobb": (
+        "Tam Hobb, a salt-raker in his thirties: a big, broad-shouldered, thick-armed man, shaved "
+        "head, a short black beard, deeply sunburnt skin, a ragged sleeveless shirt crusted white "
+        "with salt, a plain anchor tattoo on one forearm, rolled canvas trousers, bare feet; "
+        "clearly an adult man, the younger brother of a ship's bosun",
+        "standing leaning on a long wooden salt rake, side three-quarter view to the left, tired "
+        "and watchful"),
+    # Ansel/Elias: the captain from the portrait, patched coat, L on the cuff, bare feet.
+    "ansel": (
+        "Ansel Fenn, a cheerful sunburnt sea captain in his fifties: wild grey-blond hair and a "
+        "bushy salt-streaked grey-blond beard, crinkled laughing blue eyes, a faded much-patched "
+        "navy captain's coat with tarnished brass buttons and mismatched patches, a large red "
+        "embroidered letter L on one cuff, a sewing needle and thread stuck through the lapel, a "
+        "salt-stained open-necked linen shirt, rolled canvas trousers, bare sandy feet",
+        "standing with his arms flung wide in delighted welcome, a folded patchwork flag under "
+        "one arm, facing the viewer in three-quarter view"),
+    # Mordant: ancient, courteous, waterlogged, green ghost-light.
+    "mordant": (
+        "Captain Mordant, an ancient ghost pirate captain: tall, gaunt and waterlogged, pale "
+        "grey-green skin, a long braided grey beard, hollow but calm and sad eyes, an antique "
+        "navy coat with tarnished brass buttons and salt-stained cuffs, a cutlass at his hip, "
+        "worn seaboots; calm and courteous rather than monstrous, not a rotting corpse, no gore",
+        "standing full-length in three-quarter view with one hand open in a courteous gesture, a "
+        "faint green ghost-light falling along one side of his coat and face; his skin has a "
+        "sea-green cast; he is fully opaque and solid, with no translucent aura, no mist and no "
+        "glow floating in the air around him"),
+}
 
 
 # Inventory icons: one object each, painted like the props and keyed the same way, then shrunk by
@@ -1531,6 +1639,28 @@ MANIFEST = [
               "spacious and gentle, no percussion, instrumental, loopable",
       "lyrics": "[instrumental]", "duration": 50, "seed": 53}, "audio/pans.mp3"),
 ]
+
+# ---------------- the painted cast: standing bodies that sit inside the plates ----------------
+# One full-length oil study per cast member, keyed `npc_<id>_body_painted`. These are add-ons: the
+# original body entries above stay in the manifest (and on disk), and src/content/assets.ts points
+# the live keys at these files. The seated harbourmaster gets the same treatment because that is
+# the sprite the office actually shows him in.
+MANIFEST += [
+    (f"npc_{cid}_body_painted", "image", BG_MODEL, painted_body(desc, pose),
+     f"characters/{cid}_body_painted.png")
+    for cid, (desc, pose) in PAINTED_BODIES.items()
+]
+MANIFEST.append(
+    ("npc_bramwick_seated_painted", "image", BG_MODEL,
+     painted_body(
+         PAINTED_BODIES["bramwick"][0],
+         "sitting slumped on a low wooden tavern stool with his knees apart, holding a pewter mug "
+         "rested on one knee with both hands, facing right in side view, the stool and both boots "
+         "visible, weary and closed off",
+         "The background is a perfect flat chroma-key magenta from edge to edge, with no painted "
+         "backdrop, no dark red wall, no vignette, no texture, no gradient and no floor beneath "
+         "the stool"),
+     "characters/bramwick_seated_painted.png"))
 
 
 def load_cache():
