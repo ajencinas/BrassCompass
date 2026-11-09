@@ -22,6 +22,12 @@ export interface FigureOptions {
   lean?: number;
   /** Height multiplier about the feet, width compensating (1 = none): the lift of a word. */
   squash?: number;
+  /**
+   * A soft halo cast from the figure's own silhouette, drawn behind it: tint and blur come from
+   * the room's light (see paint.ts). The alpha silhouette is baked and blurred once per pose,
+   * size and tint, then blitted — no per-frame shadow or filter.
+   */
+  wrap?: { colour: string; blur: number };
 }
 
 /** Draw one cell of `key`, `height` pixels tall, with its feet at (x, y). */
@@ -48,6 +54,7 @@ export function drawFigure(
   const t = ctx.getTransform();
   const deviceH = dh * Math.hypot(t.c, t.d);
   const baked = deviceH > 0 ? bake(img, key, opts.frames ?? 1, frame, b, opts.grade ?? "none", deviceH) : null;
+  const glow = opts.wrap ? glowFor(img, key, opts.frames ?? 1, frame, b, dw, dh, opts.wrap) : null;
 
   ctx.save();
   // Feet are the pivot: leaning and squashing never lift them off the floor.
@@ -56,6 +63,19 @@ export function drawFigure(
   const squash = opts.squash ?? 1;
   if (squash !== 1) ctx.scale(1 / Math.sqrt(squash), squash);
   if (opts.flip) ctx.scale(-1, 1);
+  if (glow) {
+    // The halo is baked at the same user-space size as the silhouette, so a size bucket within
+    // ~9% only needs a scale. Lifted off the boots: light comes from above the figure.
+    const q = dw / glow.dw;
+    const offsetY = -opts.wrap!.blur * 0.55;
+    const box = q / GLOW_SCALE;
+    // The halo is already blurred; bilinear is plenty, and high-quality upscaling of a big
+    // translucent image is a real per-frame cost.
+    ctx.save();
+    ctx.imageSmoothingQuality = "low";
+    ctx.drawImage(glow.canvas, (b.left - anchor) * k - glow.pad * q, -height - glow.pad * q + offsetY, glow.canvas.width * box, glow.canvas.height * box);
+    ctx.restore();
+  }
   if (baked) {
     ctx.drawImage(baked, (b.left - anchor) * k, -height, dw, dh);
   } else {
@@ -121,6 +141,87 @@ function bake(
     oc.width = oc.height = 0;   // hand the memory back now (Safari is slow to)
   }
   return c;
+}
+
+// ------------------------------------------------------------ baked halos
+
+interface GlowBake {
+  canvas: HTMLCanvasElement;
+  /** Transparent border around the silhouette, in user pixels. */
+  pad: number;
+  /** The silhouette size this bake was made for, so a nearby bucket can be scaled onto it. */
+  dw: number;
+  dh: number;
+}
+
+/**
+ * A tinted, blurred silhouette for a figure, baked once per pose/size/tint. It is drawn behind
+ * the figure as a plain image every frame, which is far cheaper than a per-frame canvas shadow
+ * or filter (the shadow alone cost ~117 ms a frame for a tavern cast in the headless reference).
+ */
+const glows = new Map<string, GlowBake>();
+let glowPixels = 0;
+/** ~12 MB of RGBA: a room's cast at a couple of depths, plus the player's walk cycle. */
+const GLOW_BUDGET = 3_000_000;
+/** The halo is a blur: half resolution is invisible after upscaling and quarters its cost. */
+const GLOW_SCALE = 0.5;
+
+function glowFor(
+  img: HTMLImageElement,
+  key: string,
+  frames: number,
+  frame: number,
+  b: Bounds,
+  dw: number,
+  dh: number,
+  wrap: { colour: string; blur: number }
+): GlowBake | null {
+  if (!filterSupported() || dw <= 0 || dh <= 0) return null;
+  // A size bucket keeps a breathing or walking figure on one bake per pose, not one per frame.
+  const step = Math.ceil(Math.log2(Math.max(1, dh)) * BUCKETS_PER_DOUBLING);
+  const id = `${key}|${frames}|${frame}|${step}|${wrap.blur}|${wrap.colour}`;
+  const hit = glows.get(id);
+  if (hit) {
+    glows.delete(id);
+    glows.set(id, hit);
+    return hit;
+  }
+
+  // Enough room for the blur plus the upward lift, on every side.
+  const pad = Math.ceil(wrap.blur * 2.6 + 4);
+  const w = Math.max(1, Math.ceil((dw + pad * 2) * GLOW_SCALE));
+  const h = Math.max(1, Math.ceil((dh + pad * 2) * GLOW_SCALE));
+  const shape = document.createElement("canvas");
+  shape.width = w;
+  shape.height = h;
+  const sx = shape.getContext("2d");
+  if (!sx) return null;
+  sx.imageSmoothingEnabled = true;
+  sx.imageSmoothingQuality = "high";
+  sx.drawImage(img, b.left, b.top, b.right - b.left, b.bottom - b.top, pad * GLOW_SCALE, pad * GLOW_SCALE, dw * GLOW_SCALE, dh * GLOW_SCALE);
+  sx.globalCompositeOperation = "source-in";
+  sx.fillStyle = wrap.colour;
+  sx.fillRect(0, 0, w, h);
+
+  const c = document.createElement("canvas");
+  c.width = w;
+  c.height = h;
+  const cx = c.getContext("2d");
+  if (!cx) return null;
+  cx.filter = `blur(${wrap.blur * GLOW_SCALE}px)`;
+  cx.drawImage(shape, 0, 0);
+  cx.filter = "none";
+
+  const entry: GlowBake = { canvas: c, pad, dw, dh };
+  glows.set(id, entry);
+  glowPixels += w * h;
+  for (const [old, oc] of glows) {
+    if (glowPixels <= GLOW_BUDGET || old === id) break;
+    glows.delete(old);
+    glowPixels -= oc.canvas.width * oc.canvas.height;
+    oc.canvas.width = oc.canvas.height = 0;   // hand the memory back now (Safari is slow to)
+  }
+  return entry;
 }
 
 let filterOk: boolean | undefined;
@@ -262,7 +363,7 @@ export function drawSprite(
   x: number,
   y: number,
   height: number,
-  opts: { visible?: number; figure?: boolean; flip?: boolean; grade?: string; lean?: number; squash?: number } = {}
+  opts: { visible?: number; figure?: boolean; flip?: boolean; grade?: string; lean?: number; squash?: number; wrap?: { colour: string; blur: number } } = {}
 ): void {
   const b = assets.frameBounds(key)?.[0];
   if (!b) return;
@@ -279,5 +380,6 @@ export function drawSprite(
     anchor: opts.figure ? "torso" : "box",
     lean: opts.lean,
     squash: opts.squash,
+    wrap: opts.wrap,
   });
 }

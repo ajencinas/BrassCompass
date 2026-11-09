@@ -47,6 +47,7 @@ import { EndingScreen, type EndingCard } from "./ending";
 // next-level: coldopen
 import { Prologue } from "./prologue";
 import { Ambient, type AmbientView } from "./ambient";
+import { PAINT_PASS, Paint, figureWrap, type FigureWrap } from "./paint";
 import { ITEMS } from "../content/items";
 import { DIALOGUES } from "../content/dialogue";
 import { GLOBAL_COMBOS } from "../content/combos";
@@ -3153,6 +3154,8 @@ export class Game {
   private ambient = new Ambient({ image: (key) => this.assets.img(key), check: (c) => this.check(c) });
   /** The camera and clock the ambient layers draw at: one object, refreshed each frame. */
   private readonly ambientView: AmbientView = { cameraX: 0, time: 0, reduced: false };
+  /** The shared finish over the scene (see paint.ts): one constant turns it all off. */
+  private paint = new Paint();
 
   private renderScene(ctx: CanvasRenderingContext2D): void {
     // The plate comes already graded by the room's backdrop, baked once: a filter here would
@@ -3177,7 +3180,11 @@ export class Game {
       if (s.showIf && !s.showIf.every((c) => this.check(c))) continue;
       const breath = s.idle && !this.reduced ? Math.sin(this.time * 1.8 + s.x) * 0.0025 : 0;
       const speech = this.speech(s.speaker, s.x);
-      drawables.push({ y: s.y, draw: () => this.drawSprite(ctx, s.key, s.x, s.y, s.size * (1 + breath), s.visible ?? 1, Boolean(s.speaker), s.flip, this.figureGrade(s.grade), speech) });
+      // The halo follows the figure's own silhouette; tint comes from the lamp or fog at its feet.
+      // Props don't get one: a lamp or a sign with a light wrap looks lit from nowhere.
+      const height = s.size * (1 + breath) * this.personHeight(s.y);
+      const wrap = s.speaker ? this.wrapAt(s.x, s.y, height) : undefined;
+      drawables.push({ y: s.y, draw: () => this.drawSprite(ctx, s.key, s.x, s.y, s.size * (1 + breath), s.visible ?? 1, Boolean(s.speaker), s.flip, this.figureGrade(s.grade), speech, wrap) });
     }
     drawables.push({ y: this.y, draw: () => this.drawPlayer(ctx) });
     // Occluders sort by where they meet the floor: they cover what stands behind them only.
@@ -3195,8 +3202,14 @@ export class Game {
     }
     ctx.restore();
 
-    ctx.fillStyle = this.vignette(ctx);
-    ctx.fillRect(0, 0, LOGICAL_W, SCENE_H);
+    // One shared finish over the plate and the figures: grain, a filmic grade and a gentler
+    // vignette. It sits under the exit cues and chrome, and never over the title or a panel.
+    if (PAINT_PASS) {
+      this.paint.draw(ctx);
+    } else {
+      ctx.fillStyle = this.vignette(ctx);
+      ctx.fillRect(0, 0, LOGICAL_W, SCENE_H);
+    }
 
     ctx.save();
     ctx.translate(-this.cameraX, 0);
@@ -3557,6 +3570,12 @@ export class Game {
     return personHeightAt(this.room, y);
   }
 
+  /** The halo tint for a figure at (x, y), if the pass is on and the light is actually lit. */
+  private wrapAt(x: number, y: number, height: number): FigureWrap | undefined {
+    if (!PAINT_PASS) return undefined;
+    return figureWrap(this.room, x, y, height, (l) => !l.showIf || l.showIf.every((c) => this.check(c)));
+  }
+
   /**
    * Draws one cell of an image standing on (x, y). The cell's own opaque rows are scaled to the
    * figure's full `height` with the feet on the floor, and the torso (or, for props, the middle)
@@ -3573,9 +3592,10 @@ export class Game {
     figure: boolean,
     flip = false,
     grade = "none",
-    speech: { lean: number; squash: number } | null = null
+    speech: { lean: number; squash: number } | null = null,
+    wrap?: { colour: string; blur: number }
   ): void {
-    drawSprite(ctx, this.assets, key, x, y, size * this.personHeight(y), { visible, figure, flip, grade, ...speech });
+    drawSprite(ctx, this.assets, key, x, y, size * this.personHeight(y), { visible, figure, flip, grade, ...speech, wrap });
   }
 
   private drawPlayer(ctx: CanvasRenderingContext2D): void {
@@ -3585,21 +3605,22 @@ export class Game {
     const vertical = this.moveDirection === "up" || this.moveDirection === "down";
     const cycle = this.walkPhase / STRIDE;
     const grade = this.figureGrade("saturate(0.85) brightness(0.9)");
+    const wrap = this.wrapAt(this.x, this.y, height);
 
     drawShadow(ctx, this.x, this.y, height * 0.26, 0.38);
 
     // Every sheet faces right; facing left mirrors about the torso.
     if (walking && vertical && this.assets.img("char_walk_vertical")) {
       const frame = (this.moveDirection === "up" ? 0 : 3) + (Math.floor(cycle * 3) % 3);
-      drawFigure(ctx, this.assets, "char_walk_vertical", this.x, this.y, height, { frames: 6, frame, grade });
+      drawFigure(ctx, this.assets, "char_walk_vertical", this.x, this.y, height, { frames: 6, frame, grade, wrap });
     } else if (walking && this.assets.img(sheet)) {
       const frame = Math.floor(cycle * 6) % 6;
-      drawFigure(ctx, this.assets, sheet, this.x, this.y, height, { frames: 6, frame, grade, flip: this.facing < 0 });
+      drawFigure(ctx, this.assets, sheet, this.x, this.y, height, { frames: 6, frame, grade, flip: this.facing < 0, wrap });
     } else if (this.assets.img("char_elias")) {
       // A slow breath rather than a bob keeps the feet planted. Reduced motion: still.
       const breath = this.reduced ? 1 : 1 + Math.sin(this.time * 2.2) * 0.004;
       const speech = this.speech("fenn", this.x);
-      drawFigure(ctx, this.assets, "char_elias", this.x, this.y, height * breath, { grade, flip: this.facing < 0, ...speech });
+      drawFigure(ctx, this.assets, "char_elias", this.x, this.y, height * breath, { grade, flip: this.facing < 0, ...speech, wrap });
     }
   }
 
