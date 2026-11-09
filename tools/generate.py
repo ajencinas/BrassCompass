@@ -729,6 +729,88 @@ PAINTED_BODIES = {
 }
 
 
+# The three figures a blind review still read as outliers in the painted cast: Pike as anime
+# line-art, Tam as smooth Pixar/3D, Mordant as CG-real. Same people, same costumes and framing as
+# their portraits; this is the PAINTED_BODY hand with the failure each one has to lose spelled
+# out. Each was studied at least twice and the better study kept; the alternates stay in `.genraw`
+# and on disk but not in the manifest.
+PAINTED_BODY_V2 = (
+    "Painted as a full-length oil study on primed canvas for a cinematic adventure game, in "
+    "exactly the same hand as its background plates: loaded, visibly brushed strokes across face, "
+    "hair, hands and cloth; scumbled half-tones and broken colour; occasional palette-knife "
+    "smears; paint dragged thin enough to feel the canvas; planes of light and shadow simplified "
+    "into a few broad strokes; lost-and-found silhouette edges. Warm amber key light from one "
+    "side, cold blue-grey rim light along the opposite edge, rich muted earthy colour weathered "
+    "by salt and sun. Real human anatomy with weight, stance and drapery. Not a photograph, not "
+    "photorealistic, not a 3D render, not CGI, no plastic or airbrushed skin, no subsurface "
+    "scattering, no smooth airbrushed gradients, not anime, not manga, no cel shading, no black "
+    "ink outlines or comic line art, no glossy highlights, no text."
+)
+
+PAINTED_BODIES_V2 = {
+    # Pike: nineteen, bony and anxious; a real gangly adult face, not a bishounen.
+    "pike": (
+        "Pike, an anxious young sailor and quarantine sentry of nineteen: tall and bony, narrow "
+        "shoulders, long arms and legs, a thin neck, sharp cheekbones and hollow cheeks, a long "
+        "bony nose, a thin anxious mouth, wary deep-set eyes of ordinary adult size, freckles, "
+        "sandy hair cropped under a peaked cap a size too large, an ill-fitting grey uniform "
+        "greatcoat with shoulders too wide and sleeves too long, an oversized bright yellow "
+        "quarantine armband on one sleeve, a wooden clipboard thick with forms held against his "
+        "chest, a pencil behind one ear, black trousers and scuffed boots",
+        "standing stiffly to attention in side three-quarter view to the left, shoulders hunched "
+        "a little, looking warily off to the side",
+        "His face is a real young man's face with adult proportions and ordinary eyes — not an "
+        "anime or manga face, not a wide-eyed bishounen, no oversized irises, no eyelashes drawn "
+        "as lines, no smooth cel-shaded skin; the brush must be seen on the cheekbones and the "
+        "fabric."),
+    # Tam: a real nine-year-old, painted like a loose study from life, not a 3D child.
+    "tam": (
+        "Tam, a small island boy of about nine: short and sturdy with a real child's proportions, "
+        "his head about one sixth of his height, short legs, small hands and narrow shoulders, a "
+        "round freckled face, a gap-toothed grin with one front tooth missing, small plain dark "
+        "child's eyes, tousled light brown hair under an oversized brown flat cap pushed back, an "
+        "oversized brown coat with the collar turned up over patched knee breeches, bare dirty "
+        "feet, clearly a child and not a small adult",
+        "standing with his hands pushed into his pockets, side three-quarter view to the left, "
+        "looking up",
+        "Painted like a loose oil study from life: broad wet brushstrokes and scumbled colour, "
+        "the paint handling of a portrait sketch, edges broken and soft. Not a 3D animated film, "
+        "not Pixar, not Disney, not smooth CGI, no plastic or clay skin, no perfect rounded head, "
+        "no giant glossy eyes; his eyes are small and ordinary and his face is painted with "
+        "visible strokes."),
+    # Mordant: an opaque, solid old captain in broad paint; no ghost aura, no CG skin.
+    "mordant": (
+        "Captain Mordant, an ancient spectral sea-captain: tall, gaunt and waterlogged, hollow "
+        "cheeks, pale grey-green weathered skin, long loose grey hair falling to his shoulders, "
+        "a long braided grey beard, deep-set sad eyes, an antique navy captain's coat with "
+        "tarnished brass buttons and salt-stained cuffs, a brown leather belt, dark trousers, "
+        "heavy solid opaque black seaboots",
+        "standing full-length in three-quarter view with one hand open in a courteous gesture",
+        "He is painted with broad, blocky brushwork: dry brush and scumbled impasto on the coat, "
+        "the beard and the boots, matte painted skin with visible strokes, no CG subsurface "
+        "scattering, no photoreal pores or specular sheen, no airbrushed gradients. He is solid "
+        "and opaque — no translucent aura, no green glow bleeding around his edges, no mist, no "
+        "vapour. He is bare-headed: long grey hair, no hat, no cap, no tricorne, no headgear of "
+        "any kind. His boots are solid opaque leather with dark soles, not fading into the "
+        "background, and no magenta halo or band gathers at his feet or along the silhouette."),
+}
+
+PAINTED_BODY_KEYS |= {f"npc_{cid}_body_painted_v2" for cid in PAINTED_BODIES_V2}
+
+
+def painted_body_v2(desc, pose, extra):
+    """A second-wave oil study: the painted_body framing, with the failures of the old painted
+    bodies named and forbidden."""
+    return {"prompt": f"Full body figure of {desc}, {pose}. The whole figure is inside the frame, "
+                      f"from the top of the head to the soles of both feet, with a little empty "
+                      f"background above the head and below the feet; the figure fills most of the "
+                      f"height of the picture. {PAINTED_BODY_V2} {extra} The background is flat "
+                      f"solid magenta (#FF00FF) everywhere around the figure, including between "
+                      f"the legs and under the feet; no shadow, no ground, no floor, no plinth, "
+                      f"no props, no border, no frame, no text.",
+            "resolution": "1728x2304 (3:4)", "output_format": "png"}
+
+
 # Inventory icons: one object each, painted like the props and keyed the same way, then shrunk by
 # post_icon. Every icon shares this framing, light and finish so a full inventory reads as a set.
 ICON_STYLE = ("a hand-painted adventure game inventory icon: one single object, centred, with a "
@@ -2114,6 +2196,13 @@ MANIFEST.append(
          "backdrop, no dark red wall, no vignette, no texture, no gradient and no floor beneath "
          "the stool"),
      "characters/bramwick_seated_painted.png"))
+
+# The second-wave studies. Each figure is generated once here; the kept studies are the ones
+# repointed at in src/content/assets.ts.
+for _cid, (_desc, _pose, _extra) in PAINTED_BODIES_V2.items():
+    MANIFEST.append((f"npc_{_cid}_body_painted_v2", "image", BG_MODEL,
+                     painted_body_v2(_desc, _pose, _extra),
+                     f"characters/{_cid}_body_painted_v2.png"))
 
 
 def load_cache():
