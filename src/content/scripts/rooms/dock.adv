@@ -12,9 +12,9 @@ room dock "Dreadwater Harbour"
   # One continuous painted path across the lower third: stone flags at the left, wet boards and
   # cobbles under the house, the worn steps at the right. Every stand and arrival sits on it;
   # the crates and barrels stay against the walls, above it.
-  walk (700,878) (700,840) (760,812) (840,792) (950,772) (1080,752) (1200,735) (1350,720) (1500,707) (1650,700) (1800,697) (1950,696) (2050,702) (2150,712) (2250,728) (2350,748) (2450,780) (2500,820) (2500,878)
+  walk (860,878) (860,834) (900,810) (960,792) (1020,776) (1100,758) (1200,735) (1350,720) (1500,707) (1650,700) (1800,697) (1950,696) (2050,702) (2150,712) (2250,728) (2350,748) (2450,780) (2500,820) (2500,878)
   entry 1180,800
-  arrive tavern 865,805
+  arrive tavern 900,805
   arrive office 1280,790
   arrive alley 1470,790
   arrive village 2380,830
@@ -69,7 +69,7 @@ room dock "Dreadwater Harbour"
   # Salty Keel, its little window lit over the stacked crates.
   hotspot tavern_door "the Salty Keel"
     area 820,400 200x250
-    stand 865,805
+    stand 900,805
     exit tavern
     look "The Salty Keel. Warm light, and the sound of people carefully not saying something."
     open "I push the door. The room goes quiet in the way a room does when it knows me."
