@@ -8,20 +8,22 @@ room below_decks "The Marrow — Crew Deck"
   music music_office
   grade "saturate(0.8) brightness(0.86)"
   perspective horizon 470 ref 875 height 560
-  walk (60,875) (120,845) (700,845) (760,808) (1180,808) (1200,815) (1440,815) (1480,770) (1580,770) (1600,850) (2060,865) (2100,875)
-  entry 1800,868
-  arrive marrow_deck 1980,868
+  walk (60,875) (120,845) (620,845) (700,805) (780,808) (1180,808) (1200,815) (1440,815) (1480,770) (1580,770) (1600,850) (2060,865) (2100,875)
+  entry 1950,868
+  arrive marrow_deck 1950,868
   footsteps deck
-  light 980,255 radius 120 lantern
-  light 1112,375 radius 90 lantern
+  light 748,250 radius 120 lantern
+  light 955,385 radius 90 lantern
   motes dust (1040,0) (1500,0) (1520,860) (1080,860) count 50
-  motes steam (1740,455) (1850,455) (1850,468) (1740,468) count 8
+  motes steam (1470,430) (1580,430) (1580,445) (1470,445) count 8
   emit creak
   occluder floor 832 (300,575) (670,575) (670,835) (300,835)
   occluder floor 805 (850,580) (1345,580) (1410,640) (1410,810) (850,810)
 
-  sprite npc_hobb_body at 730,850 size 1.04 idle speaker hobb for hobb grade "saturate(0.85) brightness(0.86)" if act 2
-  sprite npc_dorrit_body at 1520,850 size 0.95 flip idle speaker dorrit for dorrit grade "saturate(0.85) brightness(0.9)" if act 2
+  # Hobb works the chest at the back of the deck (0.98), Dorrit stands over the stove in
+  # the near row (1.0): two depths and two sizes, not a line.
+  sprite npc_hobb_body at 710,820 size 0.98 idle speaker hobb for hobb grade "saturate(0.85) brightness(0.86)" if act 2
+  sprite npc_dorrit_body at 1640,870 size 1.0 flip idle speaker dorrit for dorrit grade "saturate(0.85) brightness(0.9)" if act 2
 
   scene if act 2 and not below_arrived
     set below_arrived
@@ -41,45 +43,45 @@ room below_decks "The Marrow — Crew Deck"
       look "The salvage. I keep reading the names, hoping one of them is a mistake."
 
   hotspot chest "the sea-chest"
-    area 300,570 370x265
-    stand 720,850
+    area 240,520 360x310
+    stand 560,870
     look "A sea-chest with iron bands. CORMORANT burnt into the lid. The barrels in the corner carry more."
     open "The lid is warped with salt. Whatever was inside, Vex has had it out."
     state if salvage_seen
       look "The Cormorant's chest. Marta tells that story on the cold nights. She never says how it ends."
 
   hotspot hammocks "the hammocks"
-    area 0,90 1040x430
+    area 0,80 900x440
     nowalk
     look "Hammocks slung in rows, swaying with the ship. Nobody is asleep in any of them."
     use "I'd get in and never get out again."
 
   hotspot grating "the grating"
-    area 1260,365 240x200
+    area 1080,355 170x180
     nowalk
     look "Daylight through a grating, in neat squares, laid out like a chart I did not draw."
 
   hotspot table "the mess table"
-    area 845,575 570x245
-    stand 1250,845
+    area 660,570 560x260
+    stand 1250,858
     look "The mess table, scrubbed pale, with benches for more of us than there are."
     use "I straighten a bench. It has been straightened."
 
   hotspot stove "the galley stove"
-    area 1610,595 410x250
-    stand 1750,862
+    area 1360,590 340x260
+    stand 1420,872
     look "The galley stove, hot and complaining. Dorrit has been at it since the anchor came up."
     turnoff "Dorrit would have my fingers off. He has had a hard week."
 
   hotspot stew "the stew pot"
-    area 1685,450 210x160
-    stand 1740,860
+    area 1445,450 165x155
+    stand 1470,872
     look "A stew pot the size of a font. It smells of salt beef and decisions."
     pickup "Dorrit's ladle arrives before my hand does."
 
   hotspot bell "the ship's bell"
-    area 1780,0 230x270
-    stand 1880,868
+    area 1555,0 215x245
+    stand 1750,870
     look "A brass bell, polished till it shows me my own face. Dorrit rings it for meals."
     use "I reach for the rope. Dorrit's ladle and I have already had this conversation."
     state if salvage_seen
@@ -87,8 +89,8 @@ room below_decks "The Marrow — Crew Deck"
 
   hotspot hobb "Hobb"
     show if act 2
-    area 600,300 285x555
-    stand 760,850
+    area 610,320 250x515
+    stand 790,860
     look "Hobb, by the chest, reading the barrel head like it's a letter."
     talk "He doesn't turn round. He says, 'Come and look at this.'"
       talk hobb at hold
@@ -98,8 +100,8 @@ room below_decks "The Marrow — Crew Deck"
 
   hotspot dorrit "Dorrit"
     show if act 2
-    area 1370,340 340x520
-    stand 1520,850
+    area 1585,315 260x560
+    stand 1500,870
     look "Dorrit at the stove, stirring a pot he has stopped believing in."
     talk "He keeps stirring. 'You've seen the barrels, then.'"
       talk dorrit at galley
@@ -108,7 +110,7 @@ room below_decks "The Marrow — Crew Deck"
         talk dorrit at galley
 
   hotspot ladder "the ladder up to the deck"
-    area 1880,270 220x600
-    stand 1980,868
+    area 1810,240 250x640
+    stand 1950,868
     exit marrow_deck sound hatch
     look "The ladder up to the deck. Daylight, and the smell of open sea coming down it."

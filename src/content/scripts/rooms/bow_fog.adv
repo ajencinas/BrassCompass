@@ -5,11 +5,11 @@ room bow_fog "The Shroud"
   grade "saturate(0.6) brightness(0.85)"
   ambience sea
   perspective horizon 555 ref 875 height 430
-  walk (250,875) (600,690) (660,665) (930,665) (1010,700) (1035,860) (1060,875)
+  walk (250,875) (250,745) (600,735) (640,745) (800,745) (840,760) (900,770) (950,790) (1050,840) (1150,845) (1230,800) (1280,765) (1420,750) (1500,780) (1500,875)
   entry 700,800
   arrive marrow_deck 560,820
   footsteps deck
-  light 1650,30 radius 120 lantern
+  light 1447,48 radius 130 lantern
   haze 120 760 floor 690 alpha 0.28 speed 9
   emit creak
 
@@ -48,8 +48,8 @@ room bow_fog "The Shroud"
         say "Past it the sea goes on to nowhere I have charted."
 
   hotspot bow_rail "the bow rail"
-    area (800,585) (1500,515) (1620,530) (1650,690) (1100,730) (820,680)
-    stand 980,750
+    area (820,610) (1150,560) (1500,510) (1620,530) (1640,680) (1100,730) (840,690)
+    stand 1350,795
     look "The bow rail. The paint is worn pale where hands have held it."
     talk "I lean on the rail and tell it we are still here. It does not answer."
     use "I lean on it and look down. The water under us is white and says nothing."
@@ -58,11 +58,10 @@ room bow_fog "The Shroud"
       use "I look over the rail. The water is white and shallow-looking. I do not look for long."
 
   hotspot bow_lantern "the bow lantern"
-    # The lamp and the top of the post it hangs from. The old area sat on the carved figurehead
-    # to the right; the lamp is cut off by the top of the frame and its glass would fall under
-    # the top bar, so the area carries on down the lit post where it can be clicked.
-    area (1620,0) (1708,0) (1708,60) (1700,140) (1680,200) (1636,200) (1626,120) (1620,50)
-    stand 950,760
+    # The lamp itself and the lit post it stands on. The glass is cut by the top of the frame,
+    # so the area carries down the post where it can be clicked without hunting the top bar.
+    area (1390,0) (1510,0) (1560,80) (1560,470) (1510,520) (1450,470) (1450,80)
+    stand 1440,800
     look "The bow lantern on its post, big enough to read a chart by. It burns all night."
     talk "I leave the lantern alone. It is a lamp. Lamps have enough to do."
     use "The wick is trimmed and the glass is clean. Somebody looks after it."
@@ -71,8 +70,8 @@ room bow_fog "The Shroud"
       use "I turn it down until the flame is a seed, then step back from it."
 
   hotspot bell_rope "the bell rope"
-    area (1540,0) (1610,0) (1670,480) (1610,490) (1520,120)
-    stand 900,780
+    area (1548,0) (1626,0) (1650,440) (1600,480) (1550,440)
+    stand 1430,805
     look "The bell rope, hanging out of the fog above the lantern. The bell is up there too, out of sight."
     talk "I do not talk to the bell. I have heard it answer."
     use "I put a hand on the rope. It is cold, and it does not move."
@@ -81,7 +80,8 @@ room bow_fog "The Shroud"
       use "I take the rope and hold it. It stays quiet. I let it go."
 
   hotspot aft "back along the deck"
-    area 300,760 360x120
+    # The painted bench and rail along the port side, and the deck at its foot.
+    area (0,560) (220,540) (430,575) (440,700) (300,760) (120,830) (0,860)
     stand 520,830
     exit marrow_deck sound none
     look "The deck runs back toward the mast and the helm. The fog sits between me and the rest of the ship."

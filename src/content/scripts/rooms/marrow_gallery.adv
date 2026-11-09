@@ -19,7 +19,9 @@ room marrow_gallery "The Marrow — Stern Gallery"
   emit lapping at 1500,620
   emit creak
 
-  sprite npc_quill_body at 1650,830 size 1 idle speaker quill for quill grade "saturate(0.92) brightness(0.96)" if act 2
+  # Quill at the rail by the captain's table, half a row back and turned out to the sunset:
+  # two depths and two facings, not a matched pair shoulder to shoulder.
+  sprite npc_quill_body at 1900,800 size 1 flip idle speaker quill for quill grade "saturate(0.92) brightness(0.96)" if act 2
 
   scene if act 2 and not gallery_arrived
     set gallery_arrived
@@ -47,7 +49,7 @@ room marrow_gallery "The Marrow — Stern Gallery"
     look "The water between us and the island. Every colour there is, and none of it on my chart."
 
   hotspot islands "the islands"
-    area 1495,208 370x60
+    area 1290,198 250x65
     nowalk
     look "Islands going blue with distance, like ink drying. Not one of them with a name I know."
 
@@ -85,8 +87,8 @@ room marrow_gallery "The Marrow — Stern Gallery"
 
   hotspot quill "Quill"
     show if act 2
-    area 1560,360 200x470
-    stand 1500,842
+    area 1830,355 180x450
+    stand 1660,850
     look "Quill at the rail, off watch, with her spyglass and the whole sunset and no use for either."
     talk "She doesn't turn round. She moves the spyglass an inch along the rail, which I take as hello."
       talk quill at gallery
