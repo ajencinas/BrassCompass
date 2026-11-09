@@ -4,9 +4,9 @@ room far_pans "The Far Flats"
   music music_pans
   ambience wind
   # The far pans are still in the Shroud: the sunset plate is graded cold and dim, and two fog
-  # banks lie along the water. Quill stays readable against the pale flats.
-  backdrop "grayscale(0.70) sepia(0.50) hue-rotate(172deg) saturate(1.4) brightness(0.47) contrast(1.08)"
-  grade "saturate(0.66) brightness(0.86)"
+  # banks lie along the water. Quill takes the same cold, flattened grade as the flats.
+  backdrop "grayscale(0.70) sepia(0.50) hue-rotate(172deg) saturate(1.4) brightness(0.60) contrast(1.05)"
+  grade "saturate(0.55) brightness(0.80) contrast(0.98)"
   perspective horizon 270 ref 875 height 340
   walk (40,878) (62,810) (2498,810) (2528,878)
   entry 2380,846
@@ -20,11 +20,14 @@ room far_pans "The Far Flats"
   motes glints (1990,605) (2240,605) (2240,680) (1990,680) count 15
   haze 245 380 floor 400 alpha 0.26 speed 6 tint "#bcc9d3"
   haze 360 540 floor 780 alpha 0.22 speed 7 tint "#aebdca"
+  # A thin bank in front of the near bank, so the walker and Quill sit in the haze.
+  haze 520 760 floor 872 alpha 0.09 speed 4 tint "#bcc9d6"
   emit lapping at 900,700
 
   # Act III, optional: the quiet scene away from the camp. Quill walks out to the end of the
   # boardwalk to look at the Shroud, and says the things she will not say in front of Vex.
-  sprite npc_quill_body at 740,846 size 1 idle speaker quill for quill grade "saturate(0.88) brightness(0.95)" if act 3
+  # One figure, far out on the bank below the boardwalk's foot: the wide empty vista is the point.
+  sprite npc_quill_body at 540,820 size 1 idle speaker quill for quill if act 3
 
   scene if act 3 and not pans_seen
     set pans_seen
@@ -88,8 +91,8 @@ room far_pans "The Far Flats"
     open "I walk back along the shore to the camp."
 
   hotspot quill "Quill"
-    area 665,505 165x345
-    stand 920,850
+    area 470,508 150x314
+    stand 700,860
     look "Quill, with her glass up and the wind in her coat. She is looking at the fog."
     talk "She lowers the glass when she hears me."
       talk quill at pans

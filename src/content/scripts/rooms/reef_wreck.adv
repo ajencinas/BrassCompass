@@ -3,9 +3,10 @@ room reef_wreck "The Sunken Wreck"
   width 2560
   music music_fog
   ambience sea
-  # Act III is the Shroud: cool and dim the sunny reef plate, and cool the crew to match.
-  backdrop "brightness(0.66) saturate(0.55) contrast(1.05) sepia(0.04)"
-  grade "saturate(0.66) brightness(0.86)"
+  # Act III is the Shroud: the ghost plate already carries the fog and the green rigging glow.
+  # Lift it a little out of the murk and take the crew down to the same cold, flat key.
+  backdrop "brightness(0.82) saturate(0.62) contrast(1.03) sepia(0.04)"
+  grade "saturate(0.58) brightness(0.82) contrast(0.98)"
   perspective horizon 440 ref 875 height 300
   walk (1000,875) (1010,800) (1300,775) (1700,778) (2100,790) (2420,820) (2480,875)
   entry 1180,830
@@ -13,12 +14,15 @@ room reef_wreck "The Sunken Wreck"
   # from the camp. (The old `arrive arcadia_cabin` stub went with the old hatch layout; the
   # cabin is now entered from the Grey Lantern's deck, and nothing exits to the wreck from it.)
   arrive lagoon_shore 1035,850
-  arrive salt_camp 2400,845
+  arrive salt_camp 2430,852
   footsteps sand
   water (0,500) (1455,500) (1455,560) (1318,580) (1300,645) (1475,655) (1490,760) (0,760) ripple 1.8
   motes glints (0,520) (1440,520) (1440,560) (1310,585) (1290,645) (1460,660) (1460,740) (0,740) count 30
   haze 330 480 floor 500 alpha 0.1 speed 12
   haze 500 700 floor 810 alpha 0.08 speed 7 tint "#c5d1dc"
+  # A thin bank in front of the crew as well as behind them, so the figures sit in the fog
+  # rather than on top of it.
+  haze 520 760 floor 872 alpha 0.1 speed 4 tint "#bcc9d6"
   emit lapping at 700,700
   emit creak at 1800,500
   occluder floor 712 (1470,610) (1600,400) (1920,344) (2130,384) (2176,528) (2160,672) (1920,704) (1760,704) (1520,650)
@@ -42,10 +46,12 @@ room reef_wreck "The Sunken Wreck"
     say "East of the wreck the reef flattens into shallow water, and the tracks go on out of sight."
     say "Dorrit is looking that way already. \"If there are people out there,\" he says, \"they will have a pot.\""
 
-  sprite npc_quill_body at 1300,825 size 0.98 idle speaker quill for quill
-  sprite npc_hobb_body at 1780,815 size 1.0 idle speaker hobb for hobb
-  sprite npc_vex_body at 2060,835 size 0.98 idle speaker vex for vex
-  sprite npc_dorrit_body at 2310,850 size 0.98 idle speaker dorrit for dorrit
+  # Staggered off one line: Quill near the longboat in the foreground, Hobb back at the hull
+  # under the nameplate, Vex out on the rocks, Dorrit away east on the flats. Sizes follow depth.
+  sprite npc_quill_body at 1350,862 size 0.98 idle speaker quill for quill
+  sprite npc_hobb_body at 1660,800 size 0.96 idle speaker hobb for hobb
+  sprite npc_vex_body at 2000,838 size 1.0 idle speaker vex for vex
+  sprite npc_dorrit_body at 2300,870 size 1.02 flip idle speaker dorrit for dorrit
 
   hotspot shallows "the shallows"
     area (0,470) (1300,470) (1300,770) (0,770)
@@ -97,24 +103,24 @@ room reef_wreck "The Sunken Wreck"
   # there (art gap), so the whole walkable corner is the target.
   hotspot salt_flats "the camp path east"
     show if act 3
-    area 2270,780 290x100
-    stand 2420,855
+    area 2290,790 270x88
+    stand 2440,860
     exit salt_camp sound none
     look "The flats run east, out of sight of the wreck. Somebody has walked this way before."
     open "I head east across the flats, away from the water."
 
   hotspot quill "Quill"
     show if act 3
-    area 1259,560 84x266
-    stand 1180,850
+    area 1306,572 88x292
+    stand 1250,862
     look "Quill has the oars over her shoulder and no intention of putting them down."
     talk "She says, \"Say the word and I will row you back. I am not saying it twice.\""
     give "She shifts the oars. \"My hands are full. Keep it.\""
 
   hotspot hobb "Hobb"
     show if act 3
-    area 1712,556 136x260
-    stand 1660,835
+    area 1616,558 88x244
+    stand 1550,845
     look "Hobb, one hand on the wreck. He is listening to the flats."
     talk "He holds up a hand for quiet. Then he points out across the water."
       talk hobb at bell
@@ -126,16 +132,16 @@ room reef_wreck "The Sunken Wreck"
 
   hotspot dorrit "Dorrit"
     show if act 3
-    area 2223,567 174x283
-    stand 2190,860
+    area 2234,564 132x308
+    stand 2200,862
     look "Dorrit, out ahead of us, looking east. He has found something he does not like."
     talk "He says, \"There are tents out there. Tents mean people. People mean they eat.\""
     give "He does not look at it. \"Unless it is food, keep it dry.\""
 
   hotspot vex "Vex"
     show if act 3
-    area 1985,563 150x272
-    stand 1900,855
+    area 1948,560 104x280
+    stand 1890,858
     look "Vex, on the rocks with his coat around him. He is in no hurry to move."
     talk "He says, \"I have been in worse. Not often, and not with this crew.\""
     give "He waves it away. \"I have a coat and a bad reputation. That is luggage enough.\""
