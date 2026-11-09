@@ -139,6 +139,7 @@ To regenerate any asset from its prompt, see `tools/generate.py` (requires `RUNC
 | Cancel a sentence or leave a conversation | Right-click anywhere that isn't an object |
 | Reveal everything interactive | Hold `Q`, or toggle the Reveal button in the top bar |
 | Keyboard navigation | `Tab` / `Shift+Tab` move between the scene, the verbs and the inventory (the scene first); arrows move within one; `Enter` activates (with no verb chosen, the lit-up one). Hints switch to key names while you play by keyboard |
+| Map — the island chart, the area views and travel | `A`, or the Map button |
 | Chart — everything you've learned | `J`, or the Chart button |
 | History — the last 30 lines | `L`, or the History button |
 | Pause / settings | `Escape` or the Pause button |
@@ -406,6 +407,8 @@ cards, but no gore and no innuendo.
 - 12-verb interface with a sentence line; **verb suggestions** (the natural verb lights up on
   hover, and a plain click does it; right-click looks); hold Q to reveal every hotspot; full
   keyboard navigation, touch controls and screen-reader announcements
+- **The atlas** (`A`) — the island chart, then the area the room belongs to, then the room; the
+  area is always named above the room name, and visited places can be travelled to.
 - **The Chart** (`J`) and **the Ship's log** — what Fenn has learned, the next step at the top,
   and the optional layer shown after the ending
 - **Tips** in two steps: the Tip button or H first gives a nudge (the person, place or idea),

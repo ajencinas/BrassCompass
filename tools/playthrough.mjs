@@ -228,9 +228,11 @@ try {
     return room(roomId);
   }
   async function room(id) {
-    // Fades and walks settle a few frames after the click, so poll before asserting.
-    for (let i = 0; i < 20; i++) {
-      if ((await evaluate("window.__game.room.id")) === id) break;
+    // Fades and walks settle a few frames after the click, so poll before asserting. An area
+    // card (the establishing view of a new act) clears before the room is played.
+    for (let i = 0; i < 60; i++) {
+      if ((await evaluate("window.__game.room.id")) === id && !(await evaluate("Boolean(document.querySelector('.area-card'))"))) break;
+      if (await evaluate("Boolean(document.querySelector('.area-card'))")) await pause(120);
       await evaluate("window.__ff(60)");
     }
     const actual = await evaluate("window.__game.room.id");
@@ -458,6 +460,16 @@ try {
   assert.equal(await evaluate("window.__game.act"), 1);
   assert.equal(await evaluate("window.__game.prologue?.active === true"), false);
   await readScene("the dock arrival");
+  // The atlas: island chart -> harbour -> back into the room. This is the map/macro/close-up
+  // hierarchy the whole visual structure hangs from.
+  await key("a");
+  await until(() => evaluate("Boolean(document.querySelector('.atlas') && !document.querySelector('.atlas').hidden)"), "the atlas");
+  assert.equal(await evaluate("document.querySelector('.atlas-head h1').textContent"), "Dreadwater Isle");
+  await evaluate("[...document.querySelectorAll('.atlas-row')].find((b) => b.textContent.includes('The Harbour')).click()");
+  await until(() => evaluate("document.querySelector('.atlas-head h1').textContent === 'The Harbour'"), "the harbour area");
+  await evaluate("[...document.querySelectorAll('.atlas-row')].find((b) => b.textContent.includes('Dreadwater Harbour')).click()");
+  await until(() => evaluate("document.querySelector('.atlas').hidden"), "the atlas closed");
+  assert.equal(await evaluate("window.__game.room.id"), "dock");
   await shot("reboot-act1-dock.png");
 
   // Keyboard basics: arrows land in the scene, Tab moves to the verbs, and Enter acts.

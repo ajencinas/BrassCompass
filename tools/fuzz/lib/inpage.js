@@ -151,6 +151,7 @@
     narrationClock: Math.round(g.narrationClock * 100) / 100,
     dialogue: g.dialogue ? g.dialogue.tree.id + "." + g.dialogue.nodeId : null, cinematic: g.cinematic.active,
     paused: g.paused, title: g.title, won: g.won, sentence: g.sentence, inventory: [...g.inventory],
+    atlas: g.atlas?.open ?? null, card: g.areaCardBusy, curtain: Boolean(g.curtain), roomMenu: Boolean(g.roomMenu),
   });
 
   /** The moment as plain data: room, position, act, flags, inventory, conversation, line, queue... */
@@ -168,6 +169,9 @@
     try { g.settings.panel.hidden = true; } catch { /* fine */ }
     try { g.casebook.overlay.hidden = true; } catch { /* fine */ }
     try { g.history.overlay.hidden = true; } catch { /* fine */ }
+    try { if (g.atlas?.open) g.atlas.hide(); } catch { /* fine */ }
+    try { g.clearAreaCard?.(); } catch { /* fine */ }
+    document.querySelectorAll(".area-card").forEach((e) => e.remove());
   };
 
   /** Put the game exactly into a snapshot (idle or mid-conversation), then save it as the game would. */
@@ -1022,6 +1026,7 @@
       g.settings.actions.restart(); return "settings: restart";
     }
     if (g.casebook.open || g.history.open) { g.onKey("Escape", ev()); return "Escape (close overlay)"; }
+    if (g.atlas?.open) { g.onKey("Escape", ev()); return "Escape (close atlas)"; }
     if (g.title) {
       if (g.hasSave && roll < 0.85) { g.onKey("c", ev()); return "title: C"; }
       g.onKey("Enter", ev()); return "title: Enter";

@@ -13,6 +13,7 @@ import {
 } from "./ui";
 import { Settings } from "./settings";
 import { History } from "./history";
+import { Atlas, ATLAS, areaOfRoom, atlasImageUrl, escapeHtml } from "./atlas";
 import {
   loadPrefs, savePrefs, hasCompleted, markCompleted, reducedMotion, onOsReducedMotion,
   effectiveTextSpeed, effectiveTextScale, autoTextScale,
@@ -57,12 +58,12 @@ import { TipLadder } from "./tips";
 /** Top-bar buttons: base widths at 100%, right-aligned. Their plates grow with the text scale. */
 const BAR = {
   y: 18, h: 44,
-  reveal: [1126, 150], log: [1286, 120], tip: [1416, 120], casebook: [1546, 170], pause: [1726, 170],
+  reveal: [1016, 150], log: [1176, 120], tip: [1306, 120], casebook: [1436, 170], map: [1616, 110], pause: [1726, 170],
 } as const;
-type BarId = "reveal" | "log" | "tip" | "casebook" | "pause";
-const BAR_IDS: BarId[] = ["reveal", "log", "tip", "casebook", "pause"];
+type BarId = "reveal" | "log" | "tip" | "casebook" | "map" | "pause";
+const BAR_IDS: BarId[] = ["reveal", "log", "tip", "casebook", "map", "pause"];
 const BAR_LABELS: Record<BarId, string> = {
-  reveal: "Reveal (Q)", log: "History (L)", tip: "Tip (H)", casebook: "Chart (J)", pause: "Pause (Esc)",
+  reveal: "Reveal (Q)", log: "History (L)", tip: "Tip (H)", casebook: "Chart (J)", map: "Map (A)", pause: "Pause (Esc)",
 };
 /** The plates' right edge and the gap between them; the room plate at the other end. */
 const BAR_RIGHT = 1896;
@@ -351,6 +352,12 @@ export class Game {
   // next-level: recap
   private recap: Recap;
   private history: History;
+  private atlas: Atlas;
+  private areaCard: HTMLDivElement | null = null;
+  private areaCardBusy = false;
+  private areaCardLeft = 0;
+  private areaCardFading = false;
+  private areaCardThen: (() => void) | null = null;
   // next-level: casebook
   /** The deeds page after the ending card: the voyage's entered and unfiled optional layer. */
   private deeds: DeedsPage;
@@ -418,10 +425,12 @@ export class Game {
       back: () => { this.audio.page(); this.announce("Back at the title. Set sail when you're ready."); },
     });
     this.history = new History(() => this.audio.page());
+    this.atlas = new Atlas({ onTravel: (room) => this.travelTo(room), onDismiss: () => this.audio.page() });
     // next-level: casebook — after the closing card: the voyage's deeds, then home.
     this.deeds = new DeedsPage(() => this.leaveDeeds());
     // The harbour under the title: the dock's lanterns and moving water, inside the drift.
-    this.titleDecor = (ctx) => this.ambient.title(ctx, this.titleClock, this.reduced);
+    // The title is the island chart now; the old harbour-water decoration belongs to the dock plate.
+    this.titleDecor = null;
   }
   /** Tip mode keeps the current tip on screen. Remembered per browser, separate from saves. */
   private tipMode = false;
@@ -499,6 +508,7 @@ export class Game {
     tip.setAttribute("aria-pressed", "false");
     make("Line history", () => this.barAction("log"), "L");
     make("Chart", () => this.barAction("casebook"), "J");
+    make("Map", () => this.barAction("map"), "A");
     make("Pause", () => this.barAction("pause"), "Escape");
     const previous = make("Previous inventory page", () => this.turnPage(-1), "PageUp");
     const next = make("Next inventory page", () => this.turnPage(1), "PageDown");
@@ -687,6 +697,8 @@ export class Game {
     if (this.curtain) return true;
     // next-level: casebook
     if (this.deeds.open) return true;
+    if (this.atlas?.open) return true;
+    if (this.areaCardBusy) return true;
     if (this.title || this.won) return false;
     // Past half-way back from black the new room is plainly there to be clicked.
     return this.paused || this.cinematic.active || this.pendingRoom !== null || this.fade > 0.5;
@@ -715,12 +727,18 @@ export class Game {
       this.prologue.key(k, event);
       return;
     }
+    if (this.areaCardBusy) { this.clearAreaCard(); return; }
     if (this.paused) {
       // Focus can leave the pause dialog (a click on its backdrop); its keys still work from here.
       this.pausedKey(k, event);
       return;
     }
     if (this.cinematic.active) return;
+    if (this.atlas?.open) {
+      event.preventDefault();
+      if (k === "Escape" || k.toLowerCase() === "a") this.atlas.hide();
+      return;
+    }
     if (nav || k === "Enter" || k === " ") this.lastInput = "keyboard";
     if (this.explore && this.exploreKey(k, event)) return;
     // next-level: casebook — the deeds page too
@@ -765,6 +783,11 @@ export class Game {
     if (k.toLowerCase() === "m") { this.audio.toggleMute(); return; }
     if (this.inputLocked()) {
       if (k === "Enter" || k === " " || k === "Tab" || k.startsWith("Arrow")) event.preventDefault();
+      return;
+    }
+    if (k.toLowerCase() === "a" && !this.title && !this.won && !this.cinematic.active) {
+      event.preventDefault();
+      this.showAtlas();
       return;
     }
     if (k.toLowerCase() === "j" && !this.title && !this.won && !this.cinematic.active) {
@@ -1172,6 +1195,77 @@ export class Game {
    * next-level: a11y — what a top-bar button does, whether the pointer pressed its plate or a
    * screen reader pressed the matching DOM button. (The plates are canvas; the DOM is the labels.)
    */
+  /** A short establishing card of the area, before its rooms. Title -> macro -> room. */
+  private showAreaCard(areaId: string, then: () => void): void {
+    const area = ATLAS.find((a) => a.id === areaId);
+    if (!area) { then(); return; }
+    this.assets.prioritize([area.image]);
+    this.clearAreaCard();
+    const card = document.createElement("div");
+    card.className = "area-card";
+    card.innerHTML = `
+      <img src="${atlasImageUrl(area.image)}" alt="" />
+      <div class="area-card-text">
+        <p>ACT ${area.act} · DREADWATER ISLE</p>
+        <h1>${escapeHtml(area.name)}</h1>
+        <p class="area-card-blurb">${escapeHtml(area.blurb)}</p>
+      </div>`;
+    document.body.append(card);
+    this.areaCard = card;
+    this.areaCardBusy = true;
+    this.areaCardLeft = 2.55;
+    this.areaCardFading = false;
+    this.areaCardThen = then;
+    requestAnimationFrame(() => card.classList.add("in"));
+  }
+
+  /** The establishing card runs on game time, so a paused or scripted tick never strands it. */
+  private tickAreaCard(dt: number): void {
+    if (!this.areaCardBusy) return;
+    this.areaCardLeft -= dt;
+    if (!this.areaCardFading && this.areaCardLeft <= 0.45) {
+      this.areaCardFading = true;
+      this.areaCard?.classList.remove("in");
+    }
+    if (this.areaCardLeft <= 0) {
+      const then = this.areaCardThen;
+      this.areaCardThen = null;
+      this.clearAreaCard();
+      then?.();
+    }
+  }
+
+  private clearAreaCard(): void {
+    this.areaCardLeft = 0;
+    this.areaCardFading = false;
+    this.areaCardThen = null;
+    this.areaCard?.remove();
+    this.areaCard = null;
+    this.areaCardBusy = false;
+  }
+
+  /** The atlas: chart of the island, then the area, then the rooms. */
+  private showAtlas(): void {
+    if (this.title || this.won || this.paused || this.cinematic.active || this.dialogue || this.queue || this.atlas.open) return;
+    this.audio.page();
+    this.atlas.show({
+      act: this.act,
+      room: this.room?.id ?? null,
+      visited: (id) => Boolean(this.flags[`visited:${id}`]),
+    });
+  }
+
+  private travelTo(roomId: string): void {
+    const area = areaOfRoom(roomId);
+    if (!area || area.act !== this.act || roomId === this.room?.id) return;
+    this.path = [];
+    this.onArrive = null;
+    this.walkGoal = null;
+    this.running = false;
+    this.clearSentence();
+    this.goRoom(roomId, "stairs");
+  }
+
   private barAction(id: BarId): void {
     if (this.cinematic.active) return;
     if (id === "pause") {
@@ -1179,6 +1273,7 @@ export class Game {
       return;
     }
     if (this.title || this.won) return;
+    if (id === "map") { this.showAtlas(); return; }
     if (id === "casebook") { this.audio.page(); this.showCasebook(); return; }
     if (id === "log") { this.audio.page(); this.history.show(); return; }
     if (id === "reveal") {
@@ -1244,6 +1339,7 @@ export class Game {
       this.deeds.hide();
       return;
     }
+    if (this.areaCardBusy) { this.clearAreaCard(); return; }
     if (this.paused || this.cinematic.active || this.casebook.open || this.history.open) return;
     // next-level: coldopen
     if (this.prologue?.active) { this.audio.unlock(); this.prologue.click(x, y, button); return; }
@@ -2137,6 +2233,9 @@ export class Game {
 
   private update(dt: number): void {
     this.tick++;
+    this.tickAreaCard(dt);
+    // The establishing card holds the scene under it, so no opening line plays unseen.
+    if (this.areaCardBusy) return;
     if (this.paused || this.cinematic.active) return;
     // next-level: coldopen — while the desk is on screen, nothing else in the game ticks.
     if (this.prologue?.active) { this.prologue.update(dt); return; }
@@ -2321,6 +2420,7 @@ export class Game {
     if (!room) return;
     const from = opts.atEntry ? undefined : this.room?.id;
     this.room = room;
+    if (!this.title) this.flags[`visited:${id}`] = true;
     this.ambient.setRoom(room);
     this.trace?.({ kind: "room", room: id });
     this.mesh = new WalkMesh(room.walk, room.width ?? LOGICAL_W, SCENE_H);
@@ -2557,9 +2657,11 @@ export class Game {
   }
 
   private beginNewVoyage(): void {
-    // The new story starts at Dreadwater harbour. The acts have no opening films, so this is
-    // just the clean new voyage; a chart-table cold open can go here if one is written.
+    // The title is the island chart; the harbour's establishing card plays over the started
+    // room (its opening scene waits under the card), then the first line.
     this.playIntro();
+    const first = areaOfRoom(ACTS[1]?.start.room ?? "");
+    if (first) this.showAreaCard(first.id, () => {});
   }
 
   /** next-level: coldopen — the cold open needs the plate at boot and nothing of the voyage. */
@@ -2610,9 +2712,14 @@ export class Game {
     if (next.inventory) this.inventory = [...next.inventory];
     this.persist({ room: next.start.room, pos: next.start.pos, actStarted: false });
 
+    const nextArea = areaOfRoom(next.start.room);
+    const begin = (): void => {
+      this.startAct(n + 1);
+      if (nextArea) this.showAreaCard(nextArea.id, () => {});
+    };
     const enter = (): void => {
-      if (next.intro) this.cinematic.play(next.intro, () => this.startAct(n + 1));
-      else this.startAct(n + 1);
+      if (next.intro) this.cinematic.play(next.intro, begin);
+      else begin();
     };
     const outro = ACTS[n]?.outro;
     if (outro) this.cinematic.play(outro, enter);
@@ -2640,6 +2747,7 @@ export class Game {
 
   /** Drop anything in flight: conversations, parked effects, walks and fades. */
   private resetTransient(): void {
+    this.clearAreaCard();
     this.queue = null;
     this.dialogue = null;
     this.narration = null;
@@ -3109,10 +3217,23 @@ export class Game {
     const scale = this.textScale;
     ctx.fillStyle = "rgba(5,13,22,0.8)";
     ctx.fillRect(ROOM_PLATE.x, BAR.y, ROOM_PLATE.w, BAR.h);
-    const room = fitText(ctx, this.room.name, ROOM_PLATE.w - 32, Math.round(22 * scale), 15);
-    drawText(ctx, room.text, ROOM_PLATE.x + 16, BAR.y + Math.round((BAR.h - room.size) / 2), {
-      size: room.size, color: "#e8c98a", shadow: false,
-    });
+    // The atlas hierarchy, always visible: the area above the room.
+    const area = areaOfRoom(this.room.id);
+    if (area) {
+      const where = fitText(ctx, area.name.toUpperCase(), ROOM_PLATE.w - 32, Math.round(10 * scale), 8);
+      drawText(ctx, where.text, ROOM_PLATE.x + 16, BAR.y + Math.round(13 * scale), {
+        size: where.size, color: "#93a4af", shadow: false,
+      });
+      const room = fitText(ctx, this.room.name, ROOM_PLATE.w - 32, Math.round(19 * scale), 13);
+      drawText(ctx, room.text, ROOM_PLATE.x + 16, BAR.y + Math.round(26 * scale), {
+        size: room.size, color: "#e8c98a", shadow: false,
+      });
+    } else {
+      const room = fitText(ctx, this.room.name, ROOM_PLATE.w - 32, Math.round(22 * scale), 15);
+      drawText(ctx, room.text, ROOM_PLATE.x + 16, BAR.y + Math.round((BAR.h - room.size) / 2), {
+        size: room.size, color: "#e8c98a", shadow: false,
+      });
+    }
     const hover = this.barHit(this.input.x, this.input.y);
     const boxes = barLayout(scale);
     for (const id of BAR_IDS) {
@@ -3809,7 +3930,7 @@ export class Game {
   }
   private renderTitle(ctx: CanvasRenderingContext2D): void {
     drawTitle(ctx, {
-      bg: this.assets.img("bg_dock_wide"),
+      bg: this.assets.img("bg_island_map"),
       buttons: this.titleButtons(),
       focus: this.titleFocus,
       dev: import.meta.env.DEV,

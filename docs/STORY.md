@@ -323,6 +323,8 @@ Facts:
 - The game is **The Brass Compass**; this story is **The Father and the Fog**; the tagline is
   **a tale of Dreadwater Isle**.
 - Four acts, four titles: **The Return**, **The Crew**, **The Shroud**, **The Grey Lantern**.
+- The game is navigated as Fenn's chart: the island, then the area (the harbour, upper town, the
+  Marrow, the Shroud, the Grey Lantern), then the room. Each act opens on its area card.
 - 25 rooms. The *Quay* links the harbour to the harbour mouth; the *Marrow* is Vex's ship; the Grey Lantern is Mordant's.
 - Elias has been gone three months and four days. The *Arcadia* went down out past the reef.
 - The Grey Lantern is eighty years old. Its crew are the vanished sailors, still at their posts.

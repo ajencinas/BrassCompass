@@ -477,6 +477,75 @@ def icon(subject, text="no text, no lettering"):
 
 
 MANIFEST = [
+    # ---------------- the atlas: the island chart and the macro views above the rooms ----------------
+    ("bg_island_map", "image", BG_MODEL,
+     {"prompt": f"A hand-painted antique chart of a fog-bound northern island at night, seen from "
+                f"above: Dreadwater Isle, a dark green-grey island in a cold pewter sea. A small "
+                f"harbour town with a stone quay and a lighthouse on the south coast; a steep "
+                f"upper town climbing to the lighthouse headland; a great bank of pale fog covering "
+                f"the eastern half of the island and the sea beyond it; a reef gate and a broken "
+                f"wreck in the fog; a lone ship at anchor in the western bay; a faint spectral "
+                f"green lantern-glow deep in the eastern fog. Painted on dark blue chart paper with "
+                f"faded gold ink: a compass rose, depth soundings, rhumb lines, a sea serpent in "
+                f"the empty water, torn edges and a little salt staining. Hand-painted adventure "
+                f"game map art, rich brushwork, moody and mysterious, no text, no labels, no "
+                f"lettering anywhere. {STYLE}",
+      "resolution": "2848x1600 (16:9)", "output_format": "png"}, "scenes/island_map.webp"),
+
+    ("bg_area_harbour", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide side-scrolling adventure game background: a wide establishing view of "
+                f"a night harbour waterfront on a fog-bound northern island. The moored Marrow at "
+                f"the left, a warm-lit tavern with a hanging sign, a tall timber harbourmaster's "
+                f"house, a narrow lane between two warehouses, a boat shed with its door ajar, a "
+                f"counting house with green lamps, and a shipwright's chandlery, all along a wet "
+                f"stone-and-timber quay. Indigo water, warm lantern reflections, cold blue fog "
+                f"behind. One continuous empty quay band across the lower third; no people, no "
+                f"crates or barrels in that band. Clear side view, essential scenery in the central "
+                f"vertical band for an ultra-wide crop. {STYLE}",
+      "resolution": BG_RES, "output_format": "png"}, "scenes/area_harbour.webp"),
+
+    ("bg_area_town", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide side-scrolling adventure game background: a steep cobbled lane "
+                f"climbing through a fog-bound northern harbour town at night. Dark timber-and-stone "
+                f"cottages, a stone well, warm lit windows, laundry lines, a shrine niche, and at "
+                f"the top of the lane the lighthouse on its headland with its great lamp burning "
+                f"gold through the fog. Cold blue-grey fog, wet cobbles, warm lamps. One continuous "
+                f"empty lane band across the lower third; no people, no stalls in that band. Clear "
+                f"side view, essential scenery in the central vertical band. {STYLE}",
+      "resolution": BG_RES, "output_format": "png"}, "scenes/area_town.webp"),
+
+    ("bg_area_marrow", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide side-scrolling adventure game background: a wide side view of a "
+                f"two-masted sailing ship, the Marrow, at sea in cold fog at dusk. Her deck and "
+                f"rail run across the lower third, the helm and binnacle at the right, the cabin "
+                f"stern windows at the far right, a hatch and companionway amidships, the bow and "
+                f"figurehead at the left, and the crow's nest high on the foremast. Tattered grey "
+                f"sails, wet decks, warm stern lantern, cold fog sea and grey horizon. No people, "
+                f"one empty deck band across the lower third. Clear side view, essential scenery "
+                f"in the central vertical band. {STYLE}",
+      "resolution": BG_RES, "output_format": "png"}, "scenes/area_marrow.webp"),
+
+    ("bg_area_shroud", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide side-scrolling adventure game background: a vast grey tidal flat "
+                f"under thick cold fog, the Shroud. A beached longboat on the left, a broken "
+                f"ghost-ship wreck with tattered sails and a faint green glow in the rigging in "
+                f"the centre, a castaway camp of grey tents and a palisade on the right, the pale "
+                f"track to a reef gate in the far right fog, and a distant spectral ship at "
+                f"anchor. Ribbed wet sand, pewter channels, low fog, no sun, no tropical colour. "
+                f"One empty wet-sand band across the lower third; no people. Clear side view, "
+                f"essential scenery in the central vertical band. {STYLE}",
+      "resolution": BG_RES, "output_format": "png"}, "scenes/area_shroud.webp"),
+
+    ("bg_area_lantern", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide side-scrolling adventure game background: the Grey Lantern, an "
+                f"ancient ghost ship, at anchor in thick cold fog at night. A wide side view: her "
+                f"dark rotted hull and tattered sails, a great green lantern burning at the stern, "
+                f"the deck rail and a cabin door across the lower third, spectral green light in "
+                f"the rigging, pale fog and black water. No people, one empty deck band across the "
+                f"lower third. Clear side view, essential scenery in the central vertical band. "
+                f"{STYLE}",
+      "resolution": BG_RES, "output_format": "png"}, "scenes/area_lantern.webp"),
+
     # ---------------- backgrounds (scene art, no characters) ----------------
     ("bg_dock", "image", BG_MODEL,
      {"prompt": f"Night harbour of a Caribbean trading island seen from a wooden pier. A tall "
@@ -1487,7 +1556,7 @@ def save_cache(c):
 RETIRED = {"bg_dock", "bg_office", "bg_tavern", "char_walk", "npc_bramwick_body", "npc_marta_body"}
 
 # Scenes that are not room backgrounds but the whole 1920x1080 screen: the cold open's plate.
-FULL_PLATES = {"bg_coldopen"}
+FULL_PLATES = {"bg_coldopen", "bg_island_map"}
 
 
 def output_url(kind, res):

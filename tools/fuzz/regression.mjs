@@ -92,7 +92,7 @@ try {
   console.log("monkey");
   await check("60 random-input runs: no exceptions or invariant breaks", async () => {
     const runs = await ev(`Array.from({ length: 60 }, (_, i) => window.__fz.monkey(9000 + i, { steps: 250 }))`);
-    const bad = runs.flatMap((r) => [...r.anomalies.map((a) => `seed ${r.seed}: ${a.kind}`), ...r.errors.map((e) => `seed ${r.seed}: ${e.where}: ${e.message}`)]);
+    const bad = runs.flatMap((r) => [...r.anomalies.map((a) => `seed ${r.seed}: ${a.kind} ${JSON.stringify(a.detail).slice(0, 1200)}`), ...r.errors.map((e) => `seed ${r.seed}: ${e.where}: ${e.message}`)]);
     assert.deepEqual(bad.slice(0, 5), [], `${bad.length} problems`);
   });
 
