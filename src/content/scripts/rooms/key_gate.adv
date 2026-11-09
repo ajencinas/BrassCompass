@@ -4,7 +4,7 @@ room key_gate "The Reef Gate"
   music music_office
   # The plate is already the Shroud's cold gate: the open leaf, the longboat in the shallows
   # and the Grey Lantern half-seen beyond. Only the figures need cooling.
-  grade "saturate(0.66) brightness(0.86)"
+  grade "saturate(0.58) brightness(0.80) contrast(0.98)"
   perspective horizon 400 ref 875 height 290
   # The sandbank runs along the bottom, dropping into the shallows in front of the boat and
   # rising again to the brazier. Everything the crew stands on is inside this band.
@@ -28,7 +28,8 @@ room key_gate "The Reef Gate"
   # The brazier stands on the sand; walk round in front of it.
   occluder floor 850 (1610,705) (1770,705) (1760,850) (1620,850)
 
-  sprite npc_vex_body at 1850,820 size 1.0 idle speaker vex for vex grade "saturate(0.78) brightness(0.88)" if act 3
+  # By the brazier, a step back from the boat's track so the gate's opening stays clear.
+  sprite npc_vex_body at 1880,838 size 1.0 idle speaker vex for vex grade "saturate(0.72) brightness(0.86)" if act 3
 
   # Act III ends at this gate. The three things the castaways need are Elias's rules,
   # the name, and Hobb's plan for the bell; only then does Vex let them board.
@@ -107,17 +108,18 @@ room key_gate "The Reef Gate"
     use "I warm my hands. The smoke leans out to sea."
     turnoff "Vex would only light it again. He likes a fire he can stand beside."
 
-  # The pale shore track at the frame's left edge, running from the gate's sand off west.
+  # The pale shore track at the frame's left edge, running from the gate's sand off west: the
+  # target is the painted sandbar and wet channel, not the fog above it.
   hotspot path "the path to the flats"
-    area (0,680) (360,710) (480,770) (480,880) (0,880)
-    stand 200,850
+    area (0,770) (360,790) (470,840) (470,880) (0,880)
+    stand 240,858
     exit lagoon_shore sound none
     look "The path back into the fog flats. The sand is the only thing out here that has not moved."
 
   hotspot vex "Captain Vex"
     show if act 3
-    area 1770,470 170x395
-    stand 1740,830
+    area 1806,568 148x272
+    stand 1760,860
     look "Vex by the brazier, coat buttoned to the chin, watching the fog as if it owes him money."
     talk "He does not turn round. \"If you've come to blame me, form a queue.\""
     state if act 3 and elias_found and bell_plan and rule_name
