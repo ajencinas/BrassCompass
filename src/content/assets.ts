@@ -83,7 +83,9 @@ export const MANIFEST = {
     // The cold open's full-screen plate (1920x1080, not a room background).
     bg_coldopen: "/assets/scenes/coldopen.webp",
     // Fenn repainted to the plates' painterly finish: the same clerk, no anime cel shading.
-    char_elias: "/assets/characters/elias_painted.png",
+    // The v2 idle keeps the walk cells' solid, fully painted boot soles; the first idle study
+    // let the leather dissolve into the key colour and read as hovering.
+    char_elias: "/assets/characters/elias_painted_v2.png",
     char_walk_v2: "/assets/characters/elias_walk_v2_painted.png",
     char_walk_vertical: "/assets/characters/elias_walk_vertical_painted.png",
     npc_harbourmaster: "/assets/characters/harbourmaster.png",
