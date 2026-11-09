@@ -7,18 +7,18 @@ room quay "The Quay"
   # One level horizon between the dock's 335 and the harbour mouth's 455, so neither cut
   # lifts or drops the water under Fenn's feet.
   perspective horizon 405 ref 875 height 340
-  # The painted path: stone flags at the left, wet boards at the right, clear of the crates,
+  # The painted path: wet stone flags at the left, boards at the right, clear of the crates,
   # the two lamps and the mooring bollards. Both exits stand on this band.
-  walk (300,875) (310,805) (370,780) (600,765) (760,755) (1000,748) (1250,735) (1420,735) (1520,748) (1650,755) (1800,752) (1930,748) (2040,760) (2090,800) (2095,875)
+  walk (800,875) (820,760) (900,725) (1100,710) (1400,700) (1700,705) (1745,750) (2350,750) (2440,790) (2450,875)
   entry 1250,830
-  arrive dock 1650,800
-  arrive pier_end 770,805
+  arrive dock 1900,820
+  arrive pier_end 900,800
   footsteps stone
-  light 645,181 radius 150 lantern
-  light 1282,291 radius 120 lantern
-  light 1830,450 radius 120 lamp
-  beacon 215,183 period 14
-  water (60,560) (340,560) (340,740) (60,740) ripple 1.8
+  light 635,120 radius 150 lantern
+  light 1625,125 radius 120 lantern
+  light 1988,332 radius 110 lantern
+  beacon 875,385 period 14
+  water (60,560) (260,560) (260,740) (60,740) ripple 1.8
   water (40,800) (280,800) (280,878) (40,878) ripple 2.0
   emit lapping at 300,800
 
@@ -27,29 +27,30 @@ room quay "The Quay"
     set quay_seen
     say "The water opens here. The harbourmaster's house behind me, the pier and the lighthouse ahead."
 
-  sprite prop_quay_sign_mouth at 690,858 size 0.62 for harbour_mouth
-  sprite prop_quay_steps at 2020,858 size 0.85 for harbour
+  # The sign stands at the left end of the flags, clear of the walk, pointing to the mouth;
+  # the boards themselves are the way back to the harbour.
+  sprite prop_quay_sign_mouth at 780,858 size 0.58 for harbour_mouth
 
   hotspot harbour_mouth "the harbour mouth"
-    area (350,795) (700,755) (720,880) (350,880)
-    stand 470,835
+    area 620,640 340x240
+    stand 920,830
     exit pier_end sound none
     look "The stone quay runs out along the water. Past the last lamp is the harbour mouth."
     open "I walk out along the quay toward the harbour mouth."
 
   hotspot harbour "the harbour"
-    area 1700,730 360x150
-    stand 1880,805
+    area 1750,740 700x140
+    stand 1950,820
     exit dock sound none
     look "The boards run back past the harbourmaster's house to the harbour. The Marrow is tied up beyond it."
     open "I follow the boards back into the harbour."
 
   hotspot lighthouse "the lighthouse"
-    area 140,150 130x250
+    area 840,340 120x180
     nowalk
     look "The lighthouse on the point. It burns for the harbour mouth, and it does not reach the fog."
 
   hotspot marrow "the Marrow's bow"
-    area 2200,250 340x520
+    area 1100,300 540x400
     nowalk
     look "The Marrow's bow, high above the boards. Her gear is aloft, as if she were leaving."
