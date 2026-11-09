@@ -4,7 +4,9 @@ room marrow_quarterdeck "The Marrow — Helm"
   music music_sea
   ambience sea
   perspective horizon 250 ref 875 height 320
-  walk (100,875) (150,690) (2380,700) (2500,875)
+  # The painted helm platform is a solid knee-high box from x 245 to x 1305; the walk steps
+  # out around its front face so nobody stands inside it, and runs to the rail on both sides.
+  walk (100,875) (130,700) (230,695) (245,730) (1300,730) (1320,700) (2440,700) (2470,875)
   entry 300,800
   arrive marrow_deck 430,800
   arrive marrow_cabin 660,740
@@ -15,12 +17,13 @@ room marrow_quarterdeck "The Marrow — Helm"
   motes glints (1640,262) (2160,262) (2160,365) (1600,380) count 24
   emit creak
 
-  # Act II: Vex stands on the raised helm platform, immediately to the left of the wheel.
-  # The painted wheel is oversized, so his larger scale is deliberate; the binnacle stays clear.
-  sprite npc_vex_body at 650,505 size 1.12 idle speaker vex for vex grade "saturate(0.85) brightness(0.92)" if act 2 and not marrow_lost
-  sprite npc_quill_body at 1250,780 size 0.98 flip idle speaker quill for quill grade "saturate(0.85) brightness(0.92)" if act 2 and salvage_seen and not marrow_lost
-  sprite npc_hobb_body at 1450,800 size 1.03 flip idle speaker hobb for hobb grade "saturate(0.85) brightness(0.9)" if act 2 and salvage_seen and not marrow_lost
-  sprite npc_dorrit_body at 1650,830 size 0.95 idle speaker dorrit for dorrit grade "saturate(0.85) sepia(0.08) brightness(0.9)" if act 2 and salvage_seen and not marrow_lost
+  # Act II: Vex at the foot of the helm, inboard of the binnacle and clear of the frame edge
+  # at every camera position. The wheel and binnacle keep their painted ground; the crew
+  # behind him is staggered in depth and size, not lined up abreast.
+  sprite npc_vex_body at 1240,800 size 1.05 idle speaker vex for vex grade "saturate(0.85) brightness(0.92)" if act 2 and not marrow_lost
+  sprite npc_quill_body at 1450,790 size 0.93 flip idle speaker quill for quill grade "saturate(0.85) brightness(0.92)" if act 2 and salvage_seen and not marrow_lost
+  sprite npc_hobb_body at 1650,842 size 1.02 flip idle speaker hobb for hobb grade "saturate(0.85) brightness(0.9)" if act 2 and salvage_seen and not marrow_lost
+  sprite npc_dorrit_body at 1860,808 size 0.95 idle speaker dorrit for dorrit grade "saturate(0.85) sepia(0.08) brightness(0.9)" if act 2 and salvage_seen and not marrow_lost
 
   scene if act 2 and salvage_seen and not vex_exposed
     say "Quill, Hobb and Dorrit come up behind me. Nobody says anything."
@@ -31,8 +34,8 @@ room marrow_quarterdeck "The Marrow — Helm"
 
   hotspot vex "Captain Vex"
     show if act 2 and not marrow_lost
-    area 500,225 300x285
-    stand 950,810
+    area 1160,485 170x335
+    stand 1040,805
     look "Captain Vex at the helm, coat buttoned, both hands where the crew can see them. He likes to be seen working."
     talk "I get his attention. It takes some getting."
       talk vex at helm
@@ -66,7 +69,7 @@ room marrow_quarterdeck "The Marrow — Helm"
 
   hotspot binnacle "the binnacle"
     area 1000,150 220x330
-    stand 1200,810
+    stand 1080,810
     look "The binnacle. A ship's compass in brass and glass, swinging slow. My father's compass disagrees with it."
     use "The ship's compass points north. Mine points at the fog. One of them is wrong."
     open "Sealed. You do not open a binnacle any more than you open a doctor."
@@ -93,7 +96,7 @@ room marrow_quarterdeck "The Marrow — Helm"
     open "I go down."
 
   hotspot rail_lantern "the rail lantern"
-    area 1335,380 110x170
+    area 1335,380 70x170
     stand 1250,840
     look "The rail lantern. It burns all night, whether anyone is watching or not."
     state if rule_light
@@ -103,24 +106,24 @@ room marrow_quarterdeck "The Marrow — Helm"
 
   hotspot quill "Quill"
     show if act 2 and salvage_seen and not marrow_lost
-    area 1205,515 90x270
-    stand 1100,820
+    area 1405,520 105x280
+    stand 1360,810
     look "Quill has her spyglass out. She is not looking at the horizon."
     talk "She says, \"Those crates had ships' names on them. I could read them from the door.\""
     give "She does not take it. \"Keep your hands where I can see them. Both of them.\""
 
   hotspot hobb "Hobb"
     show if act 2 and salvage_seen and not marrow_lost
-    area 1375,520 150x285
-    stand 1600,810
+    area 1580,515 150x335
+    stand 1520,830
     look "Hobb has his crowbar across his knees. He is holding it like a handrail."
     talk "He says, \"I counted the crates. Then I stopped counting.\""
     give "He looks at it for a long time. \"Not yet. Not for this.\""
 
   hotspot dorrit "Dorrit"
     show if act 2 and salvage_seen and not marrow_lost
-    area 1565,545 175x290
-    stand 1810,830
+    area 1795,525 140x295
+    stand 1750,815
     look "Dorrit has come up from the galley with his sleeves rolled. He is not holding a spoon."
     talk "He says, \"I cooked for a man who sells the dead. I want that said somewhere.\""
     give "He looks at my hands and puts his own behind his back."

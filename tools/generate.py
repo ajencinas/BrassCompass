@@ -1874,23 +1874,29 @@ MANIFEST = [
     # right edge, the stone flags of the pier end at the left, so the room reads as one
     # continuous quay rather than a cut between two places.
     ("bg_quay_wide", "image", BG_MODEL,
-     {"prompt": f"Ultra-wide side-scrolling adventure game background of a short stone-and-timber "
-                f"quay on a night harbour in Port Vela, viewed side-on at eye level: the stretch "
-                f"of waterfront between the inner harbour and the harbour mouth. One broad flat "
-                f"quay path runs in from the left edge as wet stone flags and changes to wet "
-                f"wooden boards at the right edge, a continuous completely unobstructed walking "
-                f"band across the whole lower third, shining with long lantern reflections. At "
-                f"the far right the corner and chimney of the harbourmaster's tall stone-and-"
-                f"timber house with one warm-lit window, and the dark bow and furled rigging of "
-                f"the moored ship just beyond it. At the left the harbour mouth opens to the "
-                f"open sea, a small white stone lighthouse on a distant point with its lamp "
-                f"burning gold, the low warm lights of the town far off on the water. Stacked "
-                f"wooden crates, black iron mooring bollards with coiled rope along the water's "
-                f"edge, two tall iron lamp posts with warm lanterns lighting the path. Indigo "
-                f"water, a deep blue moonlit night sky with drifting clouds, the far waterline "
-                f"just above the middle of the frame, wet stone and boards reflecting the lamps, "
-                f"warm amber against deep blue shadow, the same hand-painted night harbour look "
-                f"as the dock and the pier end. No people, no text, no signage. {STYLE}",
+     {"prompt": f"Ultra-wide strict side-on side-scrolling adventure game background at eye "
+                f"level: the short quay between the inner harbour and the harbour mouth on a "
+                f"fog-bound northern island at night, a close-up of the same fog-bound timber "
+                f"waterfront as the wide night harbour establishing view. One broad flat quay "
+                f"path runs clear across the whole width of the frame in the lower third, wet "
+                f"grey stone flags at the left changing to wet dark wooden boards at the right, "
+                f"a continuous completely unobstructed walking band from the left edge to the "
+                f"right edge, shining with long warm lantern reflections. At the left the harbour "
+                f"mouth opens onto indigo open water and cold blue fog, a low stone breakwater "
+                f"running out with a small white stone lighthouse on a distant point, its lamp "
+                f"burning gold; a black iron bollard and coiled rope on the quay edge. At the "
+                f"right the inner harbour behind the boards: the dark bow, furled rigging and "
+                f"tall masts of the moored two-masted ship the Marrow tied along the quay, and "
+                f"behind her the corner, chimney and steep slate gable of a tall jettied timber "
+                f"harbourmaster's house with one small warm-lit mullioned window and an iron wall "
+                f"lantern. Two tall black cast-iron lamp posts with warm amber lanterns light the "
+                f"path; a few crates and barrels stacked against the far wall, none of them in "
+                f"the path. Indigo water, cold blue night sky with drifting fog and cloud, warm "
+                f"amber against deep blue shadow, painterly night-harbour brushwork. The empty "
+                f"walkable band across the lower third is the clearest, brightest part of the "
+                f"painting. Keep the essential scenery in the central horizontal band for an "
+                f"ultra-wide crop. No people, no figures, no text, no lettering, no signage, no "
+                f"UI. {STYLE}",
       "resolution": BG_RES, "output_format": "png"}, "scenes/quay_wide.webp"),
 
     # A small standing sign at the dock's open right-hand boardwalk, so the way on to the quay

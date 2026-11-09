@@ -10,7 +10,7 @@ room pier_end "The Harbour Mouth"
   arrive quay 830,815
   footsteps stone
   light 1265,365 radius 150 lantern
-  beacon 2198,158 period 14
+  beacon 2135,140 period 14
   water (0,465) (380,465) (380,560) (0,560) ripple 1.6
   water (2000,880) (2440,600) (2560,600) (2560,880) ripple 2.2
   emit lapping at 2300,800
@@ -24,12 +24,12 @@ room pier_end "The Harbour Mouth"
     say "Vex is at the lamp with his coat buttoned to the throat."
     say "The harbour is quiet. Even the gulls have gone to bed."
 
-  sprite npc_vex_body at 1150,700 size 1.05 idle speaker vex for vex grade "saturate(0.85) brightness(0.9)" if act 1 and vex_deal and dorrit_cleared and quill_compass and seen:quill.join and rook_story and hobb_joined
+  sprite npc_vex_body at 1160,700 size 1.06 idle speaker vex for vex grade "saturate(0.85) brightness(0.9)" if act 1 and vex_deal and dorrit_cleared and quill_compass and seen:quill.join and rook_story and hobb_joined
 
   hotspot vex "Captain Vex"
     show if act 1 and vex_deal and dorrit_cleared and quill_compass and seen:quill.join and rook_story and hobb_joined
-    area 1090,500 130x205
-    stand 1080,715
+    area 1095,485 135x225
+    stand 990,770
     look "Captain Vex, at the lamp, dressed for a portrait and a fight. He is watching the fog, not me."
     talk "Captain. The crew is ready, and the rudder is on."
       say "Vex turns from the fog. For once he does not look pleased with himself."
@@ -48,14 +48,14 @@ room pier_end "The Harbour Mouth"
       look "The boat is ready. Somebody has folded her sail and left the gangplank down."
 
   hotspot town "back along the quay"
-    area 545,745 240x130
-    stand 660,820
+    area 520,775 280x105
+    stand 575,850
     exit quay sound none
     look "Back along the quay, the lights of Dreadwater. Half of them are out."
     open "I walk back toward the harbour."
 
   hotspot lighthouse "the lighthouse"
-    area 2110,90 170x450
+    area 2080,90 140x420
     nowalk
     look "The lighthouse. It has burned every night for eighty years, and it does not reach the fog."
     use "I cannot climb it from here. I am not sure I would want to."
