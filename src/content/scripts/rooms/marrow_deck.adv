@@ -19,9 +19,11 @@ room marrow_deck "The Marrow — Deck"
 
   # Act II: the crew on deck, and Vex up at the helm. The Marrow was built for a
   # bigger crew than this; the empty deck is part of the mood.
-  sprite npc_quill_body at 780,800 size 0.98 flip idle speaker quill for quill grade "saturate(0.85) brightness(0.92)" if act 2 and not salvage_seen
-  sprite npc_dorrit_body at 420,840 size 0.96 idle speaker dorrit for dorrit grade "saturate(0.85) sepia(0.08) brightness(0.9)" if act 2 and not salvage_seen
-  sprite npc_hobb_body at 1350,820 size 1.02 flip idle speaker hobb for hobb grade "saturate(0.85) brightness(0.9)" if act 2 and not salvage_seen
+  # Spread bow to stern: Quill forward by the crates, Hobb amidships at the hatch, Dorrit aft
+  # at the foot of the helm steps. The three floor rows keep them from reading abreast.
+  sprite npc_quill_body at 700,790 size 0.94 flip idle speaker quill for quill grade "saturate(0.85) brightness(0.92)" if act 2 and not salvage_seen
+  sprite npc_dorrit_body at 1800,835 size 1.0 idle speaker dorrit for dorrit grade "saturate(0.85) sepia(0.08) brightness(0.9)" if act 2 and not salvage_seen
+  sprite npc_hobb_body at 1330,808 size 0.98 flip idle speaker hobb for hobb grade "saturate(0.85) brightness(0.9)" if act 2 and not salvage_seen
 
   scene if act 2 and fog_tried and not hatch_hinted
     set hatch_hinted
@@ -104,8 +106,8 @@ room marrow_deck "The Marrow — Deck"
 
   hotspot quill "Quill"
     show if act 2 and not salvage_seen
-    area 700,490 170x310
-    stand 760,800
+    area 650,490 150x310
+    stand 700,795
     look "Quill, at the rail with her spyglass. She has not used it once since we left."
     talk "She does not turn around. \"I came for the chart. And because Vex owes me a horizon.\""
     give "She looks at my hands. \"I have a compass. I need a horizon.\""
@@ -126,8 +128,8 @@ room marrow_deck "The Marrow — Deck"
 
   hotspot dorrit "Dorrit"
     show if act 2 and not salvage_seen
-    area 330,550 190x290
-    stand 420,840
+    area 1720,510 180x330
+    stand 1800,840
     look "Dorrit, in his apron, negotiating with a potato."
     talk "He does not look up. \"If you are going to stand there, hold this.\""
     give "He hands me a knife and points at the potatoes. That is not a gift."

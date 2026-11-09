@@ -15,19 +15,23 @@ room office "The Harbourmaster's House"
   light 890,405 radius 65 lantern colour "#79e6a4"
   motes dust (720,80) (950,80) (1250,620) (1080,700) count 50
   # Repaint the desk top and its front over Bramwick's lap: he sits in the painted chair,
-  # behind the desk, rather than standing on its near side.
-  occluder floor 880 (1900,490) (2560,490) (2560,880) (1900,880)
+  # behind the desk, rather than standing on its near side. The floor line sits between his
+  # seat (y 650) and the walk band (y 788+), so it hides him without ever covering Fenn, and
+  # the left edge reaches his coat so no stool or knee hangs past the desk.
+  occluder floor 720 (1800,490) (2560,490) (2560,880) (1800,880)
 
   # Act I: Bramwick at his desk with the harbour's losses in front of him.
   scene if act 1 and not seen:bramwick.root and not office_called
     set office_called
     say "Bramwick is at his desk with his coat on. He looks like a man who has stopped going home."
 
-  sprite npc_bramwick_seated at 2020,650 size 0.9 visible 0.9 idle speaker bramwick for bramwick grade "saturate(0.72) brightness(0.78)"
+  # Seated at the desk, in frame with the lamp whenever the desk is: full figure height and no
+  # `visible` crop, so his head and shoulders clear the desktop instead of hiding under it.
+  sprite npc_bramwick_seated at 1950,650 size 1.0 visible 1.0 idle speaker bramwick for bramwick grade "saturate(0.72) brightness(0.78)"
 
   hotspot bramwick "Harbourmaster Bramwick"
     area 1930,160 260x330
-    stand 1800,820
+    stand 1700,820
     look "Harbourmaster Bramwick. Thirty years of harbour business, and all of it has settled in his face."
     talk "I clear my throat. Bramwick finishes writing before he looks up."
       talk bramwick
@@ -39,7 +43,7 @@ room office "The Harbourmaster's House"
 
   hotspot desk "the harbourmaster's desk"
     area 1940,505 600x125
-    stand 1800,820
+    stand 1700,820
     look "The harbourmaster's desk. A lamp, a log book, and more paper than the harbour has ships."
     open "The desk has a drawer, and the drawer is locked."
     use "I have nothing to put on a harbourmaster's desk that would not insult us both."
@@ -48,7 +52,7 @@ room office "The Harbourmaster's House"
 
   hotspot drawer "the locked drawer"
     area 2170,645 245x140
-    stand 1800,820
+    stand 1700,820
     look "A deep drawer with a brass keyhole. Bramwick's drawers are like his answers: locked and well made."
     open "Locked. I am not going to crowbar a harbourmaster's desk."
     pull "I pull. The drawer makes a small, satisfied noise."

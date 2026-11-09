@@ -19,9 +19,11 @@ room village "Upper Town"
   light 2160,520 radius 95 lantern
   light 2440,610 radius 85 lantern
 
-  sprite npc_nell_body at 1960,844 size 1 idle speaker nell for nell grade "saturate(0.85) brightness(0.9)"
-  sprite npc_tam_body at 1300,846 size 0.72 idle speaker tam for tam grade "saturate(0.85) brightness(0.9)"
-  sprite npc_onn_body at 820,842 size 0.95 idle speaker onn for onn grade "saturate(0.8) brightness(0.86)"
+  # Three depths on the lane, not a chorus line: Nell back by the market stall, Tam at the
+  # stair foot, Onn forward at the well. Each stays over its own hotspot.
+  sprite npc_nell_body at 1985,806 size 0.88 idle speaker nell for nell grade "saturate(0.85) brightness(0.9)"
+  sprite npc_tam_body at 1322,816 size 0.72 idle speaker tam for tam grade "saturate(0.85) brightness(0.9)"
+  sprite npc_onn_body at 838,850 size 0.96 idle speaker onn for onn grade "saturate(0.8) brightness(0.86)"
 
   scene if seen:marta.father and not village_father_room
     set village_father_room
@@ -41,15 +43,6 @@ room village "Upper Town"
       talk nell
     give "She takes goods, not charity."
     open "Nell is not a stall, though she has been mistaken for one."
-
-  hotspot tam "Tam"
-    area 1260,700 80x150
-    stand 1400,850
-    look "A boy in a cap two sizes too big, counting something under his breath. He's always counting."
-    talk "He's already turned round. He was waiting for someone to talk to."
-      talk tam
-    give "He looks at my hands and decides they're empty."
-    open "He is not a cupboard. He'd probably fit in one."
 
   hotspot onn "Old Onn"
     area 775,650 90x195
@@ -119,6 +112,17 @@ room village "Upper Town"
     stand 1380,840
     exit weather_works sound none
     look "A broad stone stair between the houses, climbing towards the lighthouse."
+
+  # Tam stands at the stair foot, inside the light-path area's lower corner. Defined after the
+  # exit so the boy wins that overlap; the stair itself stays clickable above and to his right.
+  hotspot tam "Tam"
+    area 1260,700 80x150
+    stand 1400,850
+    look "A boy in a cap two sizes too big, counting something under his breath. He's always counting."
+    talk "He's already turned round. He was waiting for someone to talk to."
+      talk tam
+    give "He looks at my hands and decides they're empty."
+    open "He is not a cupboard. He'd probably fit in one."
 
   use compass on tam
     "He holds it to his ear like a shell. 'It doesn't point north.'"
