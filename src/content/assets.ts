@@ -37,6 +37,12 @@ export const MANIFEST = {
     bg_area_marrow: "/assets/scenes/area_marrow.webp",
     bg_area_shroud: "/assets/scenes/area_shroud.webp",
     bg_area_lantern: "/assets/scenes/area_lantern.webp",
+    // The ships' rooms, painted as side-on close-ups of the area views above: the Marrow's own
+    // deck, the Grey Lantern's own deck, and the stern cabin beneath the great lantern. The older
+    // wide plates stay for the ending paintings and the archived scripts.
+    bg_marrow_deck_wide: "/assets/scenes/marrow_deck_wide.webp",
+    bg_grey_lantern_deck_wide: "/assets/scenes/grey_lantern_deck_wide.webp",
+    bg_arcadia_cabin_wide: "/assets/scenes/arcadia_cabin_wide.webp",
     bg_boatshed_wide: "/assets/scenes/boatshed_wide.webp",
     bg_ghostcabin_wide: "/assets/scenes/ghostcabin_wide.webp",
     bg_ghostwreck_wide: "/assets/scenes/ghostwreck_wide.webp",

@@ -546,6 +546,85 @@ MANIFEST = [
                 f"{STYLE}",
       "resolution": BG_RES, "output_format": "png"}, "scenes/area_lantern.webp"),
 
+    # ---------------- the ships' rooms as close-ups of the area views ----------------
+    # The area plates above are the anchor; these paint the rooms the player walks in as
+    # side-on close-ups of the same ships, keeping hull, rigging, lanterns, palette and brushwork
+    # identical, so the cut from the establishing card into the room reads as one camera move.
+    # Each leaves the lower third as a clear walkable band. 21:9 renders, cropped to 2560x880.
+    ("bg_marrow_deck_wide", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide side-on close-up of the main deck of the Marrow, the two-masted "
+                f"sailing ship from her establishing view, painted from the deck itself at cold "
+                f"fog dusk. A low camera at deck level looks broadside across the ship toward the "
+                f"sea. The same dark tarred hull and turned-baluster rail run across the middle "
+                f"distance; beyond them a cold pewter fog sea under a pale gold dusk sky, the low "
+                f"sun breaking through grey cloud at the left horizon. Left: the foremast with "
+                f"tarred ratlines, a storm-torn cream-grey sail hanging in strips, the bow rail "
+                f"and a glimpse of the carved figurehead. Centre: the mainmast with more tattered "
+                f"sails and tangled rigging, the hatch cover and companionway with its glass "
+                f"skylight; lashed crates and coiled ropes along the rail above the walk band. "
+                f"Right: a short flight of wooden steps with a rope handrail climbing from the "
+                f"main deck to the raised quarterdeck, then the ship's wheel and brass binnacle "
+                f"on that platform, the dark timber stern cabin with "
+                f"warm amber lit windows and a single glowing warm lantern hanging at its corner, "
+                f"and the stern rail. One continuous, completely empty and unobstructed walkable "
+                f"deck band of wet dark planks spans the entire lower third from the left edge to "
+                f"the right edge; no figures, crates, barrels, coiled ropes, fallen spars, posts "
+                f"or debris anywhere in that lane. Deep indigo-teal shadows, desaturated slate and "
+                f"pewter, one warm amber stern lamp, wet planks catching cold light, thin drifting "
+                f"fog. Hand-painted digital illustration, cinematic point-and-click adventure game "
+                f"art, visible oil-painted brushwork, rich atmospheric volumetric lighting, strong "
+                f"colour grading, ultra-wide panoramic composition, no text, no UI, no watermark, "
+                f"no logos",
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/marrow_deck_wide.webp"),
+
+    ("bg_grey_lantern_deck_wide", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide side-on close-up of the deck of the Grey Lantern, the ancient ghost "
+                f"ship from her establishing view, painted from her own deck in thick cold fog at "
+                f"night. A low camera at deck level looks broadside along the rotted deck toward "
+                f"the stern at the right. The same dark, nearly black hull, splintered rail and "
+                f"carved woodwork run across the middle distance; beyond them pale teal fog and "
+                f"flat black water. Left: the bow and foremast, torn grey canvas sails hanging in "
+                f"long ragged strips from leaning yards, frayed shrouds and tangled rigging. "
+                f"Centre: the broken mainmast with spectral green light threading through the "
+                f"rigging. Right: the high carved stern gallery, a low dark cabin door beneath it, "
+                f"and the great iron lantern on its stern post, a swollen green flame inside "
+                f"cloudy glass with a sickly emerald halo, spectral green light washing the wet "
+                f"deck. One continuous, completely empty and unobstructed walkable deck band of "
+                f"wet silver-grey planks spans the entire lower third from the left edge to the "
+                f"right edge; no figures, crates, barrels, coiled ropes, fallen spars, posts or "
+                f"debris anywhere in that lane. Cold moonlit silver-blue-green palette, deep "
+                f"black-green shadows, sickly emerald glow, pale grey fog, a single faint warm "
+                f"ember far aft. Eerie and lonely but not gory. Hand-painted digital illustration, "
+                f"cinematic point-and-click adventure game art, visible oil-painted brushwork, rich "
+                f"atmospheric volumetric lighting, strong colour grading, ultra-wide panoramic "
+                f"composition, no text, no UI, no watermark, no logos",
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/grey_lantern_deck_wide.webp"),
+
+    ("bg_arcadia_cabin_wide", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide side-on close-up of the stern cabin of the Grey Lantern, the ancient "
+                f"ghost ship: Captain Mordant's cabin, still dry after eighty years, lit by cold "
+                f"blue-green fog light. A low camera inside the cabin looks along it toward the "
+                f"stern, the timber bulkheads painted a faded blue-green and gone silver with "
+                f"salt, a low deck beam overhead. Left: a built-in bunk with a pale pillow and a "
+                f"dark folded blanket, a small sea chest beneath, a shelf of salt-stained books. "
+                f"Centre-left: beneath a square opening in the deck beams, a steep wooden "
+                f"companionway ladder climbs from the floor, its foot resting on the planks, the "
+                f"way up to the deck. Centre: the captain's desk, its top crowded with unrolled sea "
+                f"charts, a brass divider, a dry inkpot and quill and a leather log book, a small "
+                f"blank brass nameplate lying on the desk, a wooden chair pushed aside. Right: "
+                f"three stern windows with torn "
+                f"grey curtains, the carved stern gallery, and a green ship's lantern hanging from "
+                f"the beam, its green glass glowing faintly. Clear, empty plank floor across the "
+                f"lower third from the left edge to the right edge, unobstructed except for the "
+                f"foot of the ladder; no figures, no furniture, no debris in that lane. Cold "
+                f"blue-green palette, desaturated teal "
+                f"shadows, pale fog light through the windows, a faint green lantern glow, worn "
+                f"dark timber. Hand-painted digital illustration, cinematic point-and-click "
+                f"adventure game art, visible oil-painted brushwork, rich atmospheric volumetric "
+                f"lighting, strong colour grading, ultra-wide panoramic composition, no text, no "
+                f"UI, no watermark, no logos",
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/arcadia_cabin_wide.webp"),
+
     # ---------------- backgrounds (scene art, no characters) ----------------
     ("bg_dock", "image", BG_MODEL,
      {"prompt": f"Night harbour of a Caribbean trading island seen from a wooden pier. A tall "
