@@ -359,6 +359,16 @@ CHAR_STYLE = ("rendered in the same painterly style as a cinematic adventure gam
               "oil-painted digital illustration, visible brushwork, soft warm rim lighting, "
               "muted natural colour palette, semi-realistic proportions, detailed fabric folds, "
               "no cartoon outlines, no cel shading, integrated filmic colour grade")
+# The standing figures are drawn small and composited straight onto a painted plate, so they get a
+# far firmer direction than CHAR_STYLE: the same lighting, brushwork and materials as the scene
+# behind them, with none of the flat fills and clean edges that read as a sticker on a painting.
+PAINTED_BODY = ("Full body figure standing, head to feet, hand-painted in the manner of a traditional "
+                "oil painting: visible broad brushstrokes on face, hair and fabric, simplified "
+                "painterly planes of light and shadow, semi-realistic proportions, soft warm amber "
+                "key light from one side and cold blue-grey rim light from the other, muted natural "
+                "palette, carrying the light and palette of a cinematic night scene. Not anime, not "
+                "cel shaded, no clean line art, no cartoon outlines, not a 3D render, not a "
+                "photograph, no text.")
 CHAR_KEYS = {
     "char_elias", "char_walk", "npc_bramwick_body", "npc_marta_body",
     "char_walk_v2", "char_walk_vertical", "npc_bramwick_body_v2", "npc_marta_body_v2",
@@ -368,6 +378,13 @@ CHAR_KEYS = {
     "npc_ansel_body", "npc_pike_body", "npc_tamhobb_body",
     "npc_nib_body", "npc_bramwick_seated", "npc_weather_body",
     "npc_vane_rum", "npc_ansel_seated", "npc_vex_body", "npc_mordant_body",
+}
+
+# Repaints of standing figures that carry PAINTED_BODY instead of CHAR_STYLE. They are cut out of
+# the plate (post_sprite), not kept as full-bleed portraits, so they must not fall through to the
+# portrait branch of postprocess().
+PAINTED_BODY_KEYS = {
+    f"npc_{cid}_body_painted" for cid in ("vex", "quill", "hobb", "dorrit", "marta")
 }
 
 # One description per character, shared by their portrait and body sprite so the two always
@@ -440,6 +457,18 @@ def body(cid, pose):
     return {"prompt": f"Full body figure of {CAST[cid]}, {pose}, painted adventure game "
                       f"character, flat solid magenta background (#FF00FF), no shadow, no "
                       f"ground, no text",
+            "resolution": "1728x2304 (3:4)", "output_format": "png"}
+
+
+def painted_body(cid, pose):
+    """A standing figure for the painted plates. The figure is isolated on magenta so the keyer
+    can cut it out, and framed head-to-toe so the compositor's feet anchor lands on the floor."""
+    return {"prompt": f"Full body figure of {CAST[cid]}, {pose}. {PAINTED_BODY} "
+                      f"The complete figure from the top of the head to the soles of the feet is "
+                      f"inside the frame, both feet fully visible with room below them, no weapons "
+                      f"and nothing held in the hands. The entire background is flat solid magenta "
+                      f"(#FF00FF) behind and all around the figure; no shadow, no ground, no "
+                      f"furniture, no props, no text, no border",
             "resolution": "1728x2304 (3:4)", "output_format": "png"}
 
 
@@ -1423,6 +1452,43 @@ MANIFEST = [
                      "rather than monstrous, not gory, not a rotting corpse, a faint green "
                      "ghost-light glowing on one side"), "characters/mordant_body.png"),
 
+    # ---------------- painted cast: standing figures repainted to sit in the plates ----------------
+    # The anime-leaning bodies (Vex, Quill, Hobb, Dorrit, Marta) read as stickers pasted over the
+    # painted backgrounds: flat fills, clean edges, key light from nowhere. These are the same five
+    # people, in the same clothes, painted with the brushwork and the warm-key/cold-rim light of the
+    # night scenes behind them. Magenta-keyed to sprites and pointed at by the old asset keys, so
+    # every room picks them up; the old files stay on disk for the record.
+    ("npc_vex_body_painted", "image", BG_MODEL,
+     painted_body("vex", "standing naturally at rest in three-quarter view, weight on one hip, "
+                         "both arms hanging relaxed at his sides, long navy coat falling open over "
+                         "tall black leather boots, no hat, no sword, no cutlass"),
+     "characters/vex_body_painted.png"),
+
+    ("npc_quill_body_painted", "image", BG_MODEL,
+     painted_body("quill", "standing naturally at rest in three-quarter view, arms relaxed at her "
+                           "sides, rolled trousers and bare feet planted on the ground, no "
+                           "spyglass in her hands. Her face is a real young woman's face painted "
+                           "from life: small natural eyes, no heavy eyeliner, no glossy cartoon "
+                           "eyes, a defined jaw and ordinary cheekbones, sun-browned skin built "
+                           "from loose brushstrokes; an oil study from a life class, not a "
+                           "character illustration or a character design"),
+     "characters/quill_body_painted.png"),
+
+    ("npc_hobb_body_painted", "image", BG_MODEL,
+     painted_body("hobb", "standing naturally at rest, arms relaxed at his sides, booted feet "
+                          "planted apart, jerkin and shirt hanging loose"),
+     "characters/hobb_body_painted.png"),
+
+    ("npc_dorrit_body_painted", "image", BG_MODEL,
+     painted_body("dorrit", "standing naturally at rest in three-quarter view, arms relaxed at his "
+                            "sides, stout legs in dark trousers and worn black shoes, no ladle"),
+     "characters/dorrit_body_painted.png"),
+
+    ("npc_marta_body_painted", "image", BG_MODEL,
+     painted_body("marta", "standing naturally at rest in three-quarter view, arms relaxed at her "
+                           "sides, olive apron falling to her boots"),
+     "characters/marta_body_painted.png"),
+
     # ---------------- reboot: the Grey Lantern (Act IV) ----------------
     # The ghost ship's deck plate and the two new Act IV item icons. The deck asks for the widest
     # 21:9 render the model takes so the 2560x880 crop keeps nearly the whole vertical composition.
@@ -1583,7 +1649,8 @@ def postprocess(name, kind, rel, payload, raw, out_path):
             post_sprite(raw, out_path)
         elif "walk" in rel:
             post_walk_sheet(raw, out_path)
-        elif rel.startswith("characters/") and name.startswith("npc_") and name not in CHAR_KEYS:
+        elif (rel.startswith("characters/") and name.startswith("npc_")
+              and name not in CHAR_KEYS and name not in PAINTED_BODY_KEYS):
             # Dialogue portraits are full paintings on a dark backdrop. Chroma-keying them
             # divides the backdrop colour back out and leaves banding and red halos.
             post_portrait(raw, out_path)
