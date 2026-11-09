@@ -26,6 +26,12 @@ export const MANIFEST = {
     // timber quay, iron lanterns, warm windows and green counting-house lamp. The three `_wide`
     // plates above remain for the archived act paintings and the prologue.
     bg_dock_close_wide: "/assets/scenes/dock_close_wide.webp",
+    // The dock's readable close-up: strict side-on, the Marrow's bow at the left, the
+    // harbourmaster's lit door at the centre, and the quay running on past the green
+    // counting-house lamp to the signpost and steps at the far right. bg_dock_close_wide
+    // (three-quarter, too dark, way out off-frame) and bg_dock_wide (the wide plate, still
+    // the ending card's painting) both stay in the manifest.
+    bg_dock_v2_wide: "/assets/scenes/dock_quay_wide.webp",
     bg_tavern_close_wide: "/assets/scenes/tavern_close_wide.webp",
     bg_office_close_wide: "/assets/scenes/office_close_wide.webp",
     bg_alley_wide: "/assets/scenes/alley_wide.webp",

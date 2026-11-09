@@ -1047,6 +1047,23 @@ MANIFEST = [
                 f"for an ultra-wide crop. {STYLE}",
       "resolution": BG_RES, "output_format": "png"}, "scenes/dock_close_wide.webp"),
 
+    # The dock's readable close-up: dock_close_wide's three-quarter camera put the way out
+    # off-frame and its shadows buried the path, so that plate is replaced rather than
+    # re-graded. This one is strict side-on, lit like a starting room, and carries the whole
+    # walk from the Marrow's bow at the left to the signpost and steps at the far right.
+    ("bg_dock_v2_wide", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide strict side-on side-scrolling view of the harbour quay; the Marrow's "
+                f"dark bow and rigging at the left; the tall jettied timber harbourmaster's house "
+                f"with warm mullioned windows and a lit plank door at the centre; the counting "
+                f"house with a green lamp at the right; a clear continuous wet-board-and-stone "
+                f"path across the lower third from the left edge to the right edge, continuing "
+                f"past the counting house to a painted signpost and a short flight of stone steps "
+                f"at the far right leading up toward the harbour mouth; a warm lamp post beside "
+                f"the signpost; crates/barrels against the walls, not in the path; cold blue fog, "
+                f"warm amber reflections; bright enough to read as a starting room; no people, no "
+                f"text, no lettering, no UI. {STYLE}",
+      "resolution": BG_RES, "output_format": "png"}, "scenes/dock_quay_wide.webp"),
+
     ("bg_tavern_close_wide", "image", BG_MODEL,
      {"prompt": f"Ultra-wide side-scrolling adventure game background: an interior close-up of the "
                 f"Salty Keel, the dockside tavern on the same fog-bound harbour quay. Dark oak "
