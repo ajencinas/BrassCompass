@@ -1231,6 +1231,74 @@ MANIFEST = [
                 f"central horizontal band for an ultra-wide crop. {STYLE}",
       "resolution": BG_RES, "output_format": "png"}, "scenes/office_close_wide.webp"),
 
+    # The harbour's back lanes and outbuildings, brought up to the same close-up standard as
+    # dock_close_wide / tavern_close_wide / office_close_wide. Same fog-bound timber quay, same
+    # palette (indigo, cold blue fog, warm amber windows, green counting-house lamp), same
+    # painterly hand and the same empty lower-third walking band as the three hero plates.
+    ("bg_alley_close_wide", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide strict side-on side-scrolling adventure game background: Wreckers' "
+                f"Lane, the narrow shadowed cobbled slot between the harbourmaster's timber house "
+                f"and the counting house on the fog-bound northern harbour quay, painted as a "
+                f"close-up of the harbour establishing view. At the far left the lane opens back "
+                f"onto the quay: the corner of a dark jettied timber house, a glimpse of indigo "
+                f"harbour water and cold blue fog, and a warm iron wall lantern. Along the "
+                f"left-centre the boat shed's tall black plank doors, one leaf standing ajar on a "
+                f"thin blade of cold fog light, a stack of crates and barrels against the wall. At "
+                f"the centre the counting house frontage of dark tarred boards, a solid plank door "
+                f"under a small glowing green glass lamp in an iron bracket, green light spilling "
+                f"onto the wet cobbles. At the right the shipwright's chandlery frontage, a broad "
+                f"small-paned shop window burning warm amber, coils of rope, oars and lanterns "
+                f"silhouetted inside, a painted plank door with a brass handle. Iron lanterns strung "
+                f"above the lane cast warm pools. Wet cobbles with amber and green reflections, "
+                f"cold blue fog gathering at both ends, deep indigo shadow overhead. No people, no "
+                f"text, no lettering. One continuous, completely empty wet-cobble walk band across "
+                f"the lower third from the left edge to the right edge, with no crates, barrels, "
+                f"posts or puddles standing in it. Essential architecture kept in the central "
+                f"horizontal band for an ultra-wide crop. {STYLE}",
+      "resolution": BG_RES, "output_format": "png"}, "scenes/alley_close_wide.webp"),
+
+    ("bg_chandlery_close_wide", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide strict side-on side-scrolling adventure game background: the interior "
+                f"of the shipwright's chandlery on the fog-bound harbour quay at night, painted as "
+                f"a close-up of the harbour establishing view, in the same dark timber architecture "
+                f"and the same warm-lamp and cold-blue key as the harbour's other interiors. At the "
+                f"far left a plank lane door stands open onto cold blue fog and the wet quay, a "
+                f"small window beside it. Along the back wall tall shelves crowded with coils of "
+                f"tarred rope, blocks and tackle, oars, bolts of canvas, iron lanterns, barrels of "
+                f"pitch, jars and ship's fittings. Across the centre a long worn wooden counter "
+                f"holds a brass scale, a lit ship's lantern, small brass weights and a hundred "
+                f"small things ships need. At the right the Marrow's bare "
+                f"mast leans against the back wall with an iron band, beside wrapped bolts of "
+                f"sailcloth. A warm oil lamp burns over the counter; cold blue night shows through "
+                f"the door and the small window. Broad worn plank floor with sawdust and rope ends. "
+                f"Deep indigo shadow and dark timber against warm amber lamplight. No people, no "
+                f"text, no lettering. One continuous, completely empty plank floor walking lane "
+                f"across the lower third, with no barrels, crates, rope coils or furniture in it. "
+                f"Essential scenery kept in the central horizontal band for an ultra-wide crop. {STYLE}",
+      "resolution": BG_RES, "output_format": "png"}, "scenes/chandlery_close_wide.webp"),
+
+    ("bg_countinghouse_close_wide", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide strict side-on side-scrolling adventure game background: the interior "
+                f"of Vex's counting house on the fog-bound harbour quay at night, painted as a "
+                f"close-up of the harbour establishing view, in the same dark wood and cold-blue "
+                f"and warm-amber key. A panelled wall of dark polished mahogany. At the far left a "
+                f"tall plank door stands open on a thin seam of cold blue night; directly above the "
+                f"door, mounted high on the panelled wall where it is clearly visible, a large "
+                f"ornate polished brass cloud emblem in raised relief catches the lamplight. In the "
+                f"centre the back wall is a great grid "
+                f"of plain wooden pigeonholes packed with rolled charts and ledgers, and below it a "
+                f"row of tall clerks' standing desks with brass scales, inkwells and neat stacks of "
+                f"ledgers. At the right a squat black iron safe with a brass dial. On the back wall "
+                f"a large gilt-framed oil portrait of a smug gentleman in a tall black hat and a "
+                f"thin moustache. Three green-glass shaded brass desk lamps burn with warm pools "
+                f"over the desks, their green shades and green glow matching the green "
+                f"counting-house lamp outside; cold blue moonlight falls through tall shuttered "
+                f"windows. Dark wood, green pools, deep indigo shadow. No people, no text, no "
+                f"lettering anywhere. One continuous, completely empty polished parquet floor walk "
+                f"band across the lower third, with no desks, stools or rugs in it. Essential "
+                f"scenery kept in the central horizontal band for an ultra-wide crop. {STYLE}",
+      "resolution": BG_RES, "output_format": "png"}, "scenes/countinghouse_close_wide.webp"),
+
     ("char_walk_v2", "image", BG_MODEL,
      {"prompt": "Sprite sheet of a walking animation, exactly six frames in one horizontal row, evenly "
                 "spaced and identical in size, strict side view facing right. A young harbour clerk with "
