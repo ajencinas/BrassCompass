@@ -326,6 +326,118 @@ def post_walk_sheet(raw_bytes, out_path, frames=6):
     return Image.open(out_path).size
 
 
+def _satchel_side(cell):
+    """How far the warm-brown leather satchel sits from the body's centre (+ right, - left)."""
+    import numpy as np
+
+    a = np.asarray(cell.convert("RGBA"))
+    solid = a[:, :, 3] > 128
+    ys, xs = np.where(solid)
+    if len(ys) < 100:
+        return 0.0
+    top, bottom, left, right = ys.min(), ys.max(), xs.min(), xs.max()
+    h, w = bottom - top, right - left
+    if h < 20 or w < 20:
+        return 0.0
+    r, g, b = (a[:, :, i].astype(np.int16) for i in range(3))
+    # The only warm mid-brown mass at hip height is the satchel: the boots sit lower and the
+    # warm rim light is a thin edge, so this isolates the bag.
+    brown = (r > 70) & (r - g > 18) & (r - b > 25) & (g < 110) & (b < 100) & (g > 15)
+    band = np.zeros_like(brown)
+    band[top + int(h * 0.30) : top + int(h * 0.72), left : right + 1] = True
+    ys, xs = np.where(brown & band)
+    if len(xs) < 200:
+        return 0.0
+    return (xs.mean() - (left + right) / 2) / max(1, w)
+
+
+def _straighten_rear_frames(sheet, frames, rear):
+    """A 3-behind strip sometimes comes back with one rear frame mirrored, which makes the
+    satchel and the warm rim jump sides as the cycle turns. Flip the odd one out."""
+    from PIL import Image
+
+    cw = sheet.width // frames
+    votes = []
+    for f in range(rear):
+        side = _satchel_side(sheet.crop((f * cw, 0, (f + 1) * cw, sheet.height)))
+        votes.append(1 if side > 0.02 else -1 if side < -0.02 else 0)
+    majority = 1 if votes.count(1) > votes.count(-1) else -1
+    if votes.count(majority) < 2 or votes.count(-majority) != 1:
+        return
+    f = votes.index(-majority)
+    cell = sheet.crop((f * cw, 0, (f + 1) * cw, sheet.height)).transpose(Image.FLIP_LEFT_RIGHT)
+    sheet.paste(cell, (f * cw, 0))
+    print(f"       rear frame {f + 1} was mirrored; flipped to keep the satchel on one side")
+
+
+def post_painted_walk_sheet(raw_bytes, out_path, frames=6, rear_frames=0):
+    """Key a painted sprite strip and re-pack it into `frames` even, baseline-aligned cells.
+
+    Same contract as post_walk_sheet, with one difference: painted figures leave a faint
+    painterly shadow or reflected light on the backdrop between two strides, a pixel or two of
+    alpha in the gap. The shared normaliser counts any opaque pixel as figure, so such a gap
+    bridges two figures into one. Here only columns carrying a few real figure pixels count, so
+    the narrow gap still splits, and the per-frame boxes are re-aligned on one baseline.
+    `rear_frames` (the 3-behind/3-front vertical sheet) also straightens a mirrored rear frame.
+    """
+    import numpy as np
+    from PIL import Image
+
+    im = key_out(Image.open(BytesIO(raw_bytes)))
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    alpha = np.asarray(im)[:, :, 3] > 16
+    counts = alpha.sum(axis=0)
+
+    runs, start = [], None
+    for x, n in enumerate(counts):
+        solid = n >= 4
+        if solid and start is None:
+            start = x
+        elif not solid and start is not None:
+            if x - start >= 40:
+                runs.append((start, x - 1))
+            start = None
+    if start is not None and len(counts) - start >= 40:
+        runs.append((start, len(counts) - 1))
+
+    if len(runs) != frames:
+        print(f"       {len(runs)} figure(s) found, expected {frames}; using the shared normaliser")
+        im.save(out_path)
+        from normalize_sheet import main as normalize
+
+        normalize(out_path, out_path)
+        return Image.open(out_path).size
+
+    boxes = []
+    for x0, x1 in runs:
+        sub = alpha[:, x0 : x1 + 1]
+        ys = np.where(sub.any(axis=1))[0]
+        xs = np.where(sub.any(axis=0))[0]
+        if not len(ys) or not len(xs):
+            continue
+        boxes.append((x0 + xs.min(), ys.min(), x0 + xs.max(), ys.max()))
+    if len(boxes) != frames:
+        raise RuntimeError(f"only {len(boxes)} of {frames} painted figures could be cropped")
+
+    max_w = max(b[2] - b[0] for b in boxes)
+    baseline = max(b[3] for b in boxes)
+    cell_w = max_w + 36
+    cell_h = baseline + 1 + 8
+
+    sheet = Image.new("RGBA", (cell_w * len(boxes), cell_h), (0, 0, 0, 0))
+    for i, (x0, y0, x1, y1) in enumerate(boxes):
+        fig = im.crop((x0, y0, x1 + 1, y1 + 1))
+        # centre horizontally, sit the feet on the shared baseline
+        px = i * cell_w + (cell_w - fig.width) // 2
+        py = baseline - fig.height + 1
+        sheet.alpha_composite(fig, (px, py))
+    if rear_frames:
+        _straighten_rear_frames(sheet, len(boxes), rear_frames)
+    sheet.save(out_path)
+    print(f"       {out_path}: {len(boxes)} frames, cell {cell_w}x{cell_h}, total {sheet.width}x{sheet.height}")
+    return sheet.size
+
+
 def post_audio(raw_bytes, out_path, max_seconds=None):
     """Normalise to OGG mono-friendly mp3 and trim to a loop length."""
     import subprocess, tempfile
@@ -390,6 +502,26 @@ CHAR_KEYS = {
 PAINTED_BODY_KEYS = {
     f"npc_{cid}_body_painted" for cid in ("vex", "quill", "hobb", "dorrit", "marta")
 }
+
+# Fenn's repaint: he is the one figure always on screen in front of the painterly plates, so his
+# sprite is painted to the plates' finish rather than drawn as flat anime. The same person, the
+# same costume, lit by the plate's warm amber key and cold blue rim; no outline and no cel shading.
+PAINTED_FIGURE = ("painted in the same hand as the game's background plates: oil-painted digital "
+                  "illustration, visible confident brushwork across face, hair and cloth, "
+                  "semi-realistic proportions and anatomy, simplified painterly planes of light "
+                  "and shadow, warm amber key light from the left and a cold blue rim light along "
+                  "the right-hand edges, rich muted colours, soft lost-and-found edges, integrated "
+                  "filmic colour grade, no outlines, no cel shading, not anime, not a 3D render, "
+                  "not a photograph, no text")
+
+PAINTED_CHAR_KEYS = {
+    "char_elias_painted", "char_walk_v2_painted", "char_walk_vertical_painted",
+}
+PAINTED_WALK_KEYS = {"char_walk_v2_painted", "char_walk_vertical_painted"}
+
+FENN = ("Fenn, a young cartographer's apprentice in his early twenties: short dark curly hair, a "
+        "navy blue long coat with brass buttons, a white shirt, brown leather boots, a worn leather "
+        "satchel slung across his body")
 
 # One description per character, shared by their portrait and body sprite so the two always
 # show the same person. Keep these in step with docs/STORY.md.
@@ -828,6 +960,41 @@ MANIFEST = [
                 "brown boots and leather satchel. Full body visible, consistent proportions and costume. "
                 "Flat solid magenta background (#FF00FF), no shadows, no ground, no labels, no text",
       "resolution": BG_RES, "output_format": "png"}, "characters/elias_walk_vertical.png"),
+
+    # ---------------- Fenn's painted repaint (the player figure, always in front of the plates) --
+    ("char_elias_painted", "image", BG_MODEL,
+     {"prompt": f"Full body standing figure of {FENN}. Relaxed idle stance, arms hanging "
+                f"naturally, weight on one leg, side three-quarter view facing right, the whole "
+                f"figure from hair to boots inside the frame with a little room above the hair "
+                f"and below the boots, painted adventure game character sprite. Flat solid "
+                f"magenta background (#FF00FF) filling the entire canvas including under and "
+                f"around him, no shadow, no ground, no text",
+      "resolution": "1728x2304 (3:4)", "output_format": "png"}, "characters/elias_painted.png"),
+
+    ("char_walk_v2_painted", "image", BG_MODEL,
+     {"prompt": f"Sprite sheet of one walking animation, exactly six frames in a single "
+                f"horizontal row, evenly spaced with a clear gap of magenta between the frames, "
+                f"all six frames identical in size and standing on one shared floor line. Strict "
+                f"side view, the character facing right. Every frame is the same person: {FENN}. "
+                f"A complete six-pose walk cycle from left-foot contact through the passing pose "
+                f"to right-foot contact and back, arms swinging naturally with the stride. Full "
+                f"body visible in every frame from hair to boots, both feet inside the frame. "
+                f"Flat solid magenta background (#FF00FF) filling the entire canvas, no shadows, "
+                f"no ground, no labels, no text, no borders, no frames",
+      "resolution": BG_RES, "output_format": "png"}, "characters/elias_walk_v2_painted.png"),
+
+    ("char_walk_vertical_painted", "image", BG_MODEL,
+     {"prompt": f"Sprite sheet of one walking animation, exactly six frames in a single "
+                f"horizontal row, evenly spaced with a clear gap of magenta between the frames, "
+                f"all six frames identical in size and standing on one shared floor line. The "
+                f"first three frames show the same character from directly behind walking away "
+                f"from the viewer; the last three frames show him from directly in front walking "
+                f"toward the viewer. Every frame is the same person: {FENN}, with the satchel "
+                f"strap crossing his back in the rear views and his chest in the front views. "
+                f"Full body visible in every frame from hair to boots, both feet inside the "
+                f"frame. Flat solid magenta background (#FF00FF) filling the entire canvas, no "
+                f"shadows, no ground, no labels, no text, no borders, no frames",
+      "resolution": BG_RES, "output_format": "png"}, "characters/elias_walk_vertical_painted.png"),
 
     ("npc_bramwick_body_v2", "image", BG_MODEL,
      {"prompt": "Full body figure of an old weathered harbourmaster, sixties, thick grey beard, battered "
@@ -1777,6 +1944,8 @@ def postprocess(name, kind, rel, payload, raw, out_path):
             post_icon(raw, out_path)
         elif rel.startswith("props/"):
             post_sprite(raw, out_path)
+        elif name in PAINTED_WALK_KEYS:
+            post_painted_walk_sheet(raw, out_path, rear_frames=3 if name == "char_walk_vertical_painted" else 0)
         elif "walk" in rel:
             post_walk_sheet(raw, out_path)
         elif (rel.startswith("characters/") and name.startswith("npc_")
@@ -1813,6 +1982,9 @@ def main(only=None):
         if name in CHAR_KEYS:
             payload = dict(payload)
             payload["prompt"] = payload["prompt"] + ", " + CHAR_STYLE
+        elif name in PAINTED_CHAR_KEYS:
+            payload = dict(payload)
+            payload["prompt"] = payload["prompt"] + ", " + PAINTED_FIGURE
         sig = hashlib.sha256(
             json.dumps([model, payload], sort_keys=True).encode()
         ).hexdigest()[:16]
