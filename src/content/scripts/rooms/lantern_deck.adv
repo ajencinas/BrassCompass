@@ -48,13 +48,13 @@ room lantern_deck "The Grey Lantern — Deck"
     say "The cabin door is under the carved stern gallery, at the far end of the deck."
     say "Elias holds his chart against his chest. \"The name is down there,\" he says. \"Go on.\""
 
-  # The crew. Vex stays by the rail and is useful in exactly one way; Quill owns the climb;
-  # Hobb owns the bell; Elias is here until the name pulls him below.
-  sprite npc_ansel_body at 480,835 size 1.0 idle speaker elias for elias grade "saturate(0.88) brightness(0.95)"
-  sprite npc_quill_body at 700,825 size 0.98 idle speaker quill for quill grade "saturate(0.85) brightness(0.95)"
-  sprite npc_hobb_body at 900,840 size 1.02 idle speaker hobb for hobb grade "saturate(0.85) brightness(0.95)"
-  sprite npc_vex_body at 1900,815 size 1.0 idle speaker vex for vex grade "saturate(0.8) brightness(0.92)"
-  sprite npc_tamhobb_body at 1700,845 size 1.0 idle speaker tamhobb for tamhobb grade "saturate(0.8) brightness(0.95)" if tam_freed
+  # The crew. Vex holds the stern by the lantern; Quill is forward at the mast; Hobb inboard;
+  # Elias centre; Tam comes out of the rigging to the cabin door. Five floor rows, not a rail line.
+  sprite npc_ansel_body at 1400,852 size 1.0 idle speaker elias for elias grade "saturate(0.88) brightness(0.95)"
+  sprite npc_quill_body at 1120,812 size 0.96 idle speaker quill for quill grade "saturate(0.85) brightness(0.95)"
+  sprite npc_hobb_body at 1710,788 size 0.98 idle speaker hobb for hobb grade "saturate(0.85) brightness(0.95)"
+  sprite npc_vex_body at 2380,800 size 0.98 idle speaker vex for vex grade "saturate(0.8) brightness(0.92)"
+  sprite npc_tamhobb_body at 2050,832 size 0.94 idle speaker tamhobb for tamhobb grade "saturate(0.8) brightness(0.95)" if tam_freed
   # Mordant appears in his cabin (arcadia_cabin), where the name is spoken.
   # The wrapped lantern: once Quill smothers it, this dark canvas hangs over the painted green
   # glass, so the great lantern itself reads out, not just the dynamic light. The stern lantern
@@ -136,15 +136,15 @@ room lantern_deck "The Grey Lantern — Deck"
     use "I put my hand on the rail. It is wet, and it is not cold."
 
   hotspot elias "Elias Fenn"
-    area 350,410 270x420
-    stand 620,850
+    area 1280,410 250x420
+    stand 1400,850
     look "My father, coat buttoned wrong, chart under one arm. He is looking at the cabin door."
     talk "He says, \"The name is in there. I've said everyone else's for three months.\""
       say "\"I never had his,\" he says. \"I would like to finish this one.\""
 
   hotspot quill "Quill"
-    area 620,410 230x430
-    stand 760,850
+    area 1030,410 180x420
+    stand 1120,850
     look "Quill, with her boots off and her sleeves up. She is measuring the climb with her eyes."
     talk "She does not look at me. \"The lantern needs something wet, and a hand that can reach it.\""
       say "She puts a wad of oiled canvas in my hands. It is soaked through and cold."
@@ -159,8 +159,8 @@ room lantern_deck "The Grey Lantern — Deck"
         nothing
 
   hotspot hobb "Hobb"
-    area 840,410 220x430
-    stand 1060,850
+    area 1620,410 180x420
+    stand 1710,810
     look "Hobb, at the foot of the mast with the crowbar through his belt. He is listening upward."
     talk "He says, \"Three notes, then one. That is Tam's hand on the rope.\""
       say "He does not say how he knows. He does not have to."
@@ -169,8 +169,8 @@ room lantern_deck "The Grey Lantern — Deck"
       talk "He looks at me. \"He is alive,\" he says. \"That is all I asked.\""
 
   hotspot vex "Captain Vex"
-    area 1800,410 240x400
-    stand 1880,810
+    area 2300,410 180x420
+    stand 2380,795
     look "Vex, coat buttoned to the chin, hands in his pockets. He is standing where the rail is highest."
     talk "He does not turn round. \"I'm not going below. Ghosts and I have an understanding.\""
       say "\"You cut the bell, I take the credit,\" Vex says. \"That's a good deal. For me.\""
@@ -181,8 +181,8 @@ room lantern_deck "The Grey Lantern — Deck"
 
   hotspot tamhobb "Tam Hobb"
     show if tam_freed
-    area 1600,410 240x420
-    stand 1650,850
+    area 1950,410 130x420
+    stand 2050,840
     look "Tam Hobb, with the camp's salt rake still in one hand. He has not put it down."
     talk "He says, \"I rang it for three months. I don't know what I was counting.\""
       say "Hobb looks over at his brother. Neither of them says anything else."
