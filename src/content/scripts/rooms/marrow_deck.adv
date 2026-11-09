@@ -21,9 +21,9 @@ room marrow_deck "The Marrow — Deck"
   # bigger crew than this; the empty deck is part of the mood.
   # Spread bow to stern: Quill forward by the crates, Hobb amidships at the hatch, Dorrit aft
   # at the foot of the helm steps. The three floor rows keep them from reading abreast.
-  sprite npc_quill_body at 700,790 size 0.94 flip idle speaker quill for quill grade "saturate(0.85) brightness(0.92)" if act 2 and not salvage_seen
-  sprite npc_dorrit_body at 1800,835 size 1.0 idle speaker dorrit for dorrit grade "saturate(0.85) sepia(0.08) brightness(0.9)" if act 2 and not salvage_seen
-  sprite npc_hobb_body at 1330,808 size 0.98 flip idle speaker hobb for hobb grade "saturate(0.85) brightness(0.9)" if act 2 and not salvage_seen
+  sprite npc_quill_body at 700,790 size 1 flip idle speaker quill for quill grade "saturate(0.85) brightness(0.92)" if act 2 and not salvage_seen
+  sprite npc_dorrit_body at 1800,835 size 1 idle speaker dorrit for dorrit grade "saturate(0.85) sepia(0.08) brightness(0.9)" if act 2 and not salvage_seen
+  sprite npc_hobb_body at 1330,808 size 1 flip idle speaker hobb for hobb grade "saturate(0.85) brightness(0.9)" if act 2 and not salvage_seen
 
   scene if act 2 and fog_tried and not hatch_hinted
     set hatch_hinted

@@ -49,10 +49,10 @@ room lagoon_shore "The Fog Flats"
     say "East along the wet sand, the palisade stands where the flats end. One pale gap in it, and that is the gate."
     say "Vex does not turn round. \"When the plan is real,\" he says. \"Not before.\""
 
-  sprite npc_vex_body at 1040,815 size 1.0 idle speaker vex for vex
-  sprite npc_quill_body at 1260,815 size 0.98 flip idle speaker quill for quill
-  sprite npc_dorrit_body at 1480,840 size 0.98 idle speaker dorrit for dorrit
-  sprite npc_hobb_body at 1700,805 size 1.0 idle speaker hobb for hobb
+  sprite npc_vex_body at 1040,815 size 1 idle speaker vex for vex
+  sprite npc_quill_body at 1260,815 size 1 flip idle speaker quill for quill
+  sprite npc_dorrit_body at 1480,840 size 1 idle speaker dorrit for dorrit
+  sprite npc_hobb_body at 1700,805 size 1 idle speaker hobb for hobb
 
   hotspot lagoon "the lagoon"
     area (600,470) (1500,470) (1500,660) (1150,660) (600,620)

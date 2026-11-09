@@ -27,7 +27,7 @@ room office "The Harbourmaster's House"
 
   # Seated at the desk, in frame with the lamp whenever the desk is: full figure height and no
   # `visible` crop, so his head and shoulders clear the desktop instead of hiding under it.
-  sprite npc_bramwick_seated at 1950,650 size 1.0 visible 1.0 idle speaker bramwick for bramwick grade "saturate(0.72) brightness(0.78)"
+  sprite npc_bramwick_seated at 1950,650 size 1 visible 1.0 idle speaker bramwick for bramwick grade "saturate(0.72) brightness(0.78)"
 
   hotspot bramwick "Harbourmaster Bramwick"
     area 1930,160 260x330

@@ -48,10 +48,10 @@ room reef_wreck "The Sunken Wreck"
 
   # Staggered off one line: Quill near the longboat in the foreground, Hobb back at the hull
   # under the nameplate, Vex out on the rocks, Dorrit away east on the flats. Sizes follow depth.
-  sprite npc_quill_body at 1350,862 size 0.98 idle speaker quill for quill
-  sprite npc_hobb_body at 1660,800 size 0.96 idle speaker hobb for hobb
-  sprite npc_vex_body at 2000,838 size 1.0 idle speaker vex for vex
-  sprite npc_dorrit_body at 2300,870 size 1.02 flip idle speaker dorrit for dorrit
+  sprite npc_quill_body at 1350,862 size 1 idle speaker quill for quill
+  sprite npc_hobb_body at 1660,800 size 1 idle speaker hobb for hobb
+  sprite npc_vex_body at 2000,838 size 1 idle speaker vex for vex
+  sprite npc_dorrit_body at 2300,870 size 1 flip idle speaker dorrit for dorrit
 
   hotspot shallows "the shallows"
     area (0,470) (1300,470) (1300,770) (0,770)

@@ -29,7 +29,7 @@ room key_gate "The Reef Gate"
   occluder floor 850 (1610,705) (1770,705) (1760,850) (1620,850)
 
   # By the brazier, a step back from the boat's track so the gate's opening stays clear.
-  sprite npc_vex_body at 1880,838 size 1.0 idle speaker vex for vex grade "saturate(0.72) brightness(0.86)" if act 3
+  sprite npc_vex_body at 1880,838 size 1 idle speaker vex for vex grade "saturate(0.72) brightness(0.86)" if act 3
 
   # Act III ends at this gate. The three things the castaways need are Elias's rules,
   # the name, and Hobb's plan for the bell; only then does Vex let them board.

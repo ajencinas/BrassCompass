@@ -13,6 +13,7 @@
     "typecheck": "tsc --noEmit",
     "test:fast": "tsc --noEmit && node tools/test-scripts.mjs && npm run test:unit",
     "test:unit": "node --test tests/unit/*.test.mjs",
+    "test:scale": "node tools/audit_scale.mjs",
     "test:fuzz": "node tools/fuzz/regression.mjs",
     "to-adv": "node tools/to-adv.mjs",
     "test:editor": "node tools/editor-test.mjs",

@@ -50,11 +50,11 @@ room lantern_deck "The Grey Lantern — Deck"
 
   # The crew. Vex holds the stern by the lantern; Quill is forward at the mast; Hobb inboard;
   # Elias centre; Tam comes out of the rigging to the cabin door. Five floor rows, not a rail line.
-  sprite npc_ansel_body at 1400,852 size 1.0 idle speaker elias for elias grade "saturate(0.88) brightness(0.95)"
-  sprite npc_quill_body at 1120,812 size 0.96 idle speaker quill for quill grade "saturate(0.85) brightness(0.95)"
-  sprite npc_hobb_body at 1710,788 size 0.98 idle speaker hobb for hobb grade "saturate(0.85) brightness(0.95)"
-  sprite npc_vex_body at 2380,800 size 0.98 idle speaker vex for vex grade "saturate(0.8) brightness(0.92)"
-  sprite npc_tamhobb_body at 2050,832 size 0.94 idle speaker tamhobb for tamhobb grade "saturate(0.8) brightness(0.95)" if tam_freed
+  sprite npc_ansel_body at 1400,852 size 1 idle speaker elias for elias grade "saturate(0.88) brightness(0.95)"
+  sprite npc_quill_body at 1120,812 size 1 idle speaker quill for quill grade "saturate(0.85) brightness(0.95)"
+  sprite npc_hobb_body at 1710,788 size 1 idle speaker hobb for hobb grade "saturate(0.85) brightness(0.95)"
+  sprite npc_vex_body at 2380,800 size 1 idle speaker vex for vex grade "saturate(0.8) brightness(0.92)"
+  sprite npc_tamhobb_body at 2050,832 size 1 idle speaker tamhobb for tamhobb grade "saturate(0.8) brightness(0.95)" if tam_freed
   # Mordant appears in his cabin (arcadia_cabin), where the name is spoken.
   # The wrapped lantern: once Quill smothers it, this dark canvas hangs over the painted green
   # glass, so the great lantern itself reads out, not just the dynamic light. The stern lantern

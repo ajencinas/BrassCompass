@@ -37,7 +37,7 @@ room alley "Wreckers' Lane"
 
   # Pike stands between the counting-house door and the chandlery, under the strung lantern,
   # a little deeper into the lane than Fenn's walking line. He faces the lane mouth.
-  sprite npc_pike_body at 1250,818 size 0.97 flip idle speaker pike for pike grade "saturate(0.82) brightness(0.85)"
+  sprite npc_pike_body at 1250,818 size 1 flip idle speaker pike for pike grade "saturate(0.82) brightness(0.85)"
 
   hotspot pike "Pike"
     area 1170,480 160x340

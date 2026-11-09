@@ -24,8 +24,8 @@ room chandlery "The Shipwright's"
   sprite prop_crowbar at 1350,780 size 0.42 for crowbar
   # Quill at the near end of the counter and Hobb further back by the mast: different depths,
   # sizes and facings, so they do not read as a chorus line.
-  sprite npc_quill_body at 1520,832 size 0.96 flip idle speaker quill for quill
-  sprite npc_hobb_body at 2180,820 size 0.95 idle speaker hobb for hobb
+  sprite npc_quill_body at 1520,832 size 1 flip idle speaker quill for quill
+  sprite npc_hobb_body at 2180,820 size 1 idle speaker hobb for hobb
 
   scene if act 1 and not chandlery_arrived
     set chandlery_arrived

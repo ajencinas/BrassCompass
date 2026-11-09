@@ -21,9 +21,9 @@ room village "Upper Town"
 
   # Three depths on the lane, not a chorus line: Nell back by the market stall, Tam at the
   # stair foot, Onn forward at the well. Each stays over its own hotspot.
-  sprite npc_nell_body at 1985,806 size 0.88 idle speaker nell for nell grade "saturate(0.85) brightness(0.9)"
+  sprite npc_nell_body at 1985,806 size 1 idle speaker nell for nell grade "saturate(0.85) brightness(0.9)"
   sprite npc_tam_body at 1322,816 size 0.72 idle speaker tam for tam grade "saturate(0.85) brightness(0.9)"
-  sprite npc_onn_body at 838,850 size 0.96 idle speaker onn for onn grade "saturate(0.8) brightness(0.86)"
+  sprite npc_onn_body at 838,850 size 1 idle speaker onn for onn grade "saturate(0.8) brightness(0.86)"
 
   scene if seen:marta.father and not village_father_room
     set village_father_room

@@ -24,7 +24,7 @@ room pier_end "The Harbour Mouth"
     say "Vex is at the lamp with his coat buttoned to the throat."
     say "The harbour is quiet. Even the gulls have gone to bed."
 
-  sprite npc_vex_body at 1160,700 size 1.06 idle speaker vex for vex grade "saturate(0.85) brightness(0.9)" if act 1 and vex_deal and dorrit_cleared and quill_compass and seen:quill.join and rook_story and hobb_joined
+  sprite npc_vex_body at 1160,700 size 1 idle speaker vex for vex grade "saturate(0.85) brightness(0.9)" if act 1 and vex_deal and dorrit_cleared and quill_compass and seen:quill.join and rook_story and hobb_joined
 
   hotspot vex "Captain Vex"
     show if act 1 and vex_deal and dorrit_cleared and quill_compass and seen:quill.join and rook_story and hobb_joined

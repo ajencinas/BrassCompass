@@ -28,9 +28,9 @@ room arcadia_cabin "The Grey Lantern — Captain's Cabin"
     say "\"This is where he kept his name,\" he says. \"A captain keeps it where he sits.\""
     say "He holds out his hand for the plate. Then he lets it fall. \"You read it. I'll say it.\""
 
-  sprite npc_ansel_body at 2100,850 size 1.0 idle speaker elias for elias grade "saturate(0.88) brightness(0.95)"
+  sprite npc_ansel_body at 2100,850 size 1 idle speaker elias for elias grade "saturate(0.88) brightness(0.95)"
   # The ghost captain, in the dark corner, once Elias has spoken his name.
-  sprite npc_mordant_body at 250,830 size 1.0 idle speaker mordant for mordant if name_spoken
+  sprite npc_mordant_body at 250,830 size 1 idle speaker mordant for mordant if name_spoken
   # The plate itself, set on the desk. It is there while it waits to be read and after the name
   # has been said; without it the desk shows only the clean oval in the dust.
   sprite prop_nameplate at 1660,620 size 0.30 grade "saturate(0.85) brightness(0.95)" if has nameplate

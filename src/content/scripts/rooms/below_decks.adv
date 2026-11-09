@@ -22,8 +22,8 @@ room below_decks "The Marrow — Crew Deck"
 
   # Hobb works the chest at the back of the deck (0.98), Dorrit stands over the stove in
   # the near row (1.0): two depths and two sizes, not a line.
-  sprite npc_hobb_body at 710,820 size 0.98 idle speaker hobb for hobb grade "saturate(0.85) brightness(0.86)" if act 2
-  sprite npc_dorrit_body at 1640,870 size 1.0 flip idle speaker dorrit for dorrit grade "saturate(0.85) brightness(0.9)" if act 2
+  sprite npc_hobb_body at 710,820 size 1 idle speaker hobb for hobb grade "saturate(0.85) brightness(0.86)" if act 2
+  sprite npc_dorrit_body at 1640,870 size 1 flip idle speaker dorrit for dorrit grade "saturate(0.85) brightness(0.9)" if act 2
 
   scene if act 2 and not below_arrived
     set below_arrived

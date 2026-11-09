@@ -20,10 +20,10 @@ room marrow_quarterdeck "The Marrow — Helm"
   # Act II: Vex at the foot of the helm, inboard of the binnacle and clear of the frame edge
   # at every camera position. The wheel and binnacle keep their painted ground; the crew
   # behind him is staggered in depth and size, not lined up abreast.
-  sprite npc_vex_body at 1240,800 size 1.05 idle speaker vex for vex grade "saturate(0.85) brightness(0.92)" if act 2 and not marrow_lost
-  sprite npc_quill_body at 1450,790 size 0.93 flip idle speaker quill for quill grade "saturate(0.85) brightness(0.92)" if act 2 and salvage_seen and not marrow_lost
-  sprite npc_hobb_body at 1650,842 size 1.02 flip idle speaker hobb for hobb grade "saturate(0.85) brightness(0.9)" if act 2 and salvage_seen and not marrow_lost
-  sprite npc_dorrit_body at 1860,808 size 0.95 idle speaker dorrit for dorrit grade "saturate(0.85) sepia(0.08) brightness(0.9)" if act 2 and salvage_seen and not marrow_lost
+  sprite npc_vex_body at 1240,800 size 1 idle speaker vex for vex grade "saturate(0.85) brightness(0.92)" if act 2 and not marrow_lost
+  sprite npc_quill_body at 1450,790 size 1 flip idle speaker quill for quill grade "saturate(0.85) brightness(0.92)" if act 2 and salvage_seen and not marrow_lost
+  sprite npc_hobb_body at 1650,842 size 1 flip idle speaker hobb for hobb grade "saturate(0.85) brightness(0.9)" if act 2 and salvage_seen and not marrow_lost
+  sprite npc_dorrit_body at 1860,808 size 1 idle speaker dorrit for dorrit grade "saturate(0.85) sepia(0.08) brightness(0.9)" if act 2 and salvage_seen and not marrow_lost
 
   scene if act 2 and salvage_seen and not vex_exposed
     say "Quill, Hobb and Dorrit come up behind me. Nobody says anything."

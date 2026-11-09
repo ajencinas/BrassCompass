@@ -25,7 +25,7 @@ room counting_house "Vex's Warehouse"
   light 2380,300 radius 180 moon
 
   # Vex stands in front of the centre desk, a little behind the walking line, facing the door.
-  sprite npc_vex_body at 1600,812 size 1.03 idle speaker vex for vex
+  sprite npc_vex_body at 1600,812 size 1 idle speaker vex for vex
 
   scene if act 1 and not vex_warehouse_arrived
     set vex_warehouse_arrived
