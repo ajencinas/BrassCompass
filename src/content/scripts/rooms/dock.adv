@@ -1,33 +1,28 @@
 room dock "Dreadwater Harbour"
-  bg bg_dock_wide
+  bg bg_dock_close_wide
   width 2560
   music music_dock
   grade "brightness(0.95) saturate(0.85)"
   ambience gulls
-  perspective horizon 335 ref 875 height 345
-  walk (720,875) (860,805) (965,712) (1075,555) (1640,550) (1720,600) (1820,640) (2080,675) (2290,750) (2290,875)
+  # The close-up of the harbour area view: the Marrow's bow at the left, the tavern front
+  # under the jettied house, the harbourmaster's door at the centre, the counting house and
+  # the lane at the right. The wet boardwalk runs clear across the lower third.
+  perspective horizon 550 ref 875 height 340
+  walk (900,878) (900,840) (960,812) (1040,795) (1120,780) (1240,762) (1330,752) (1430,744) (1520,744) (1620,772) (1720,780) (1850,782) (1960,800) (2040,822) (2150,834) (2280,834) (2380,822) (2480,815) (2540,840) (2540,878)
   entry 1100,800
-  arrive tavern 1390,600
-  arrive office 2000,700
-  arrive alley 1560,700
-  arrive village 1800,720
-  arrive pier_end 1110,575
-  arrive quay 1900,795
+  arrive tavern 1060,805
+  arrive office 1410,780
+  arrive alley 1620,790
+  arrive village 2200,850
+  arrive quay 2350,850
   footsteps wood
-  light 985,405 radius 110 lantern
-  light 1248,365 radius 150 lantern
-  light 1528,365 radius 150 lantern
-  light 1908,290 radius 150 lantern
-  light 2218,235 radius 190 lantern
-  water (0,578) (560,578) (600,492) (850,492) (850,540) (780,640) (700,880) (0,880) ripple 2.4
-  emit lapping at 400,700
-  occluder floor 452 (250,398) (420,401) (560,410) (600,432) (580,540) (250,560)
-
-  # The painted sign at the open right-hand end of the boardwalk: the quay runs on past the
-  # harbourmaster's house. It belongs to the pier hotspot, so it leaves with it.
-  sprite prop_quay_steps at 2040,858 size 0.85 for pier
-  sprite prop_quay_sign at 1800,858 size 0.62 for pier
-  sprite prop_quay_lamp at 1970,858 size 1.2 for pier
+  light 990,520 radius 85 lantern
+  light 1305,550 radius 105 lantern
+  light 1665,370 radius 130 lamp
+  light 1810,420 radius 95 lantern colour "#79e6a4"
+  light 2085,600 radius 75 lamp
+  water (0,735) (600,720) (660,760) (660,878) (0,878) ripple 1.8
+  emit lapping at 420,790
 
   # Act I: the boat from the mainland puts Fenn ashore. The harbour is half empty;
   # the only ship with her gear aloft is the Marrow.
@@ -40,8 +35,8 @@ room dock "Dreadwater Harbour"
     say "The quay runs on past the harbourmaster's house, out toward the harbour mouth."
 
   hotspot ship "the Marrow"
-    area (0,0) (650,0) (700,550) (0,600)
-    stand 880,830
+    area (0,430) (690,430) (760,700) (680,790) (0,790)
+    stand 930,840
     look "The Marrow. Her sails are still bent, and her deck is scrubbed. She is the only ship here with any gear aloft."
     talk "I call up to the deck. Nobody answers. The harbour has taught everyone not to shout at ships."
     open "I am not opening a ship. Ships open themselves, usually at the worst moment."
@@ -54,45 +49,67 @@ room dock "Dreadwater Harbour"
       name "the Marrow, Vex's ship"
       look "The Marrow. Vex's ship, and the only way off this island that is still afloat."
 
-  hotspot tavern_door "the Salty Keel"
-    area 1310,320 160x200
-    stand 1390,600
+  # The warm frontage under the jetty is the Salty Keel: lit windows, a plank door out of
+  # the weather, a lamp over the boardwalk.
+  hotspot tavern_door "the Salty Keel door"
+    area 955,490 210x215
+    stand 1060,805
     exit tavern
     look "The Salty Keel. Warm light, and the sound of people carefully not saying something."
     open "I push the door. The room goes quiet in the way a room does when it knows me."
 
+  # The harbourmaster's own door: the lantern beside it is the one Fenn sees from the water.
   hotspot office_door "the harbourmaster's house"
-    area 2080,190 140x350
-    stand 2000,700
+    area 1315,495 195x205
+    stand 1410,780
     exit office
     look "The harbourmaster's house. A lamp is burning behind the glass."
     open "I go in. Bramwick has run this harbour for thirty years, and he will know what to say."
 
+  # The shadowed passage under the jettied corner of the house, between its posts and
+  # the barrels: the mouth of Wreckers' Lane.
   hotspot alley_mouth "Wreckers' Lane"
-    area 1540,330 170x250
-    stand 1560,700
+    area 1515,470 80x230
+    stand 1580,790
     exit alley sound none
     look "A gap between two warehouses. Wreckers' Lane. The name is doing a lot of work."
     open "I turn into the lane. It smells of tar and wet rope."
 
+  # The lit lane behind the counting house's corner post, climbing to Upper Town.
   hotspot road "the road up to town"
-    area 1730,300 190x280
-    stand 1800,700
+    area 2040,520 95x190
+    stand 2200,850
     exit village sound none
     look "The road climbs between the warehouses to Upper Town. Every shutter up there is shut."
     open "I take the road up. The cobbles are wet, and the town is listening."
 
+  # The painted boardwalk itself, running on past the counting house to the harbour mouth.
   hotspot pier "the quay to the harbour mouth"
-    area 1700,650 360x220
-    stand 1880,790
+    area 2300,800 240x70
+    stand 2350,850
     exit quay sound none
     look "The boardwalk runs on past the harbourmaster's house. Past it is the quay, then the pier, then the harbour mouth."
     open "I walk on along the quay, out toward the harbour mouth."
 
   hotspot water "the harbour water"
-    area (0,600) (700,550) (780,470) (820,470) (820,880) (0,880)
+    area (0,790) (680,790) (660,878) (0,878)
     nowalk
     look "Black water. Past the headland, the fog has sat for three months without moving."
       say "Six ships used to tie up here. Now there is one."
     talk "I say my father's name to the water. The water has heard it before."
     use "I could drink it. I have had worse from the tavern."
+
+  # Painted props the close-up actually shows: the crate stack by the counting house and the
+  # weathered board hanging from its gib.
+  hotspot crates "the crates"
+    area 1590,470 260x270
+    stand 1750,840
+    look "Crates stacked against the counting house, stencilled for a ship that has not come in."
+    open "Nailed shut. The harbour's business is very good at staying inside boxes."
+    use "I'd need a crowbar and a reason. I have half of each."
+
+  hotspot chandlery_sign "the hanging board"
+    area 1710,170 135x150
+    nowalk
+    look "A weathered board on its gib. The paint has gone, but the shape of a chandler's sign is still there."
+    use "It swings when I touch it, and the whole quay seems to notice."

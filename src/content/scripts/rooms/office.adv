@@ -1,28 +1,33 @@
 room office "The Harbourmaster's House"
-  bg bg_office_wide
+  bg bg_office_close_wide
   width 2560
   music music_office
   grade "brightness(0.95) saturate(0.85)"
-  perspective horizon -200 ref 875 height 560
-  walk (60,875) (150,700) (2540,700) (2540,715) (1500,715) (1500,875)
-  entry 600,790
+  # The close-up of the harbourmaster's house in the harbour area view: the door open on the
+  # foggy quay at the left, the moonlit window over the Marrow, the ledgers, the desk and lamp.
+  perspective horizon 300 ref 875 height 620
+  walk (150,878) (150,830) (260,805) (430,795) (700,790) (1000,788) (1300,790) (1600,795) (1840,805) (1840,878)
+  entry 300,830
+  arrive dock 320,830
   footsteps wood
-  light 2222,200 radius 260 lamp
-  motes dust (990,120) (1240,0) (1760,250) (1420,630) (1080,630) count 60
-  # Repaint the desktop and its front over Bramwick's lap: he sits in the painted chair,
+  light 2230,270 radius 280 lamp
+  light 850,200 radius 230 moon
+  light 890,405 radius 65 lantern colour "#79e6a4"
+  motes dust (720,80) (950,80) (1250,620) (1080,700) count 50
+  # Repaint the desk top and its front over Bramwick's lap: he sits in the painted chair,
   # behind the desk, rather than standing on its near side.
-  occluder floor 668 (1585,316) (2372,316) (2372,668) (1585,668)
+  occluder floor 880 (1900,490) (2560,490) (2560,880) (1900,880)
 
   # Act I: Bramwick at his desk with the harbour's losses in front of him.
   scene if act 1 and not seen:bramwick.root and not office_called
     set office_called
     say "Bramwick is at his desk with his coat on. He looks like a man who has stopped going home."
 
-  sprite npc_bramwick_seated at 1850,610 size 0.72 visible 0.9 idle speaker bramwick for bramwick grade "saturate(0.72) brightness(0.78)"
+  sprite npc_bramwick_seated at 2020,650 size 0.9 visible 0.9 idle speaker bramwick for bramwick grade "saturate(0.72) brightness(0.78)"
 
   hotspot bramwick "Harbourmaster Bramwick"
-    area 1740,175 260x190
-    stand 1690,710
+    area 1930,160 260x330
+    stand 1800,820
     look "Harbourmaster Bramwick. Thirty years of harbour business, and all of it has settled in his face."
     talk "I clear my throat. Bramwick finishes writing before he looks up."
       talk bramwick
@@ -33,8 +38,8 @@ room office "The Harbourmaster's House"
       talk: talk bramwick at again
 
   hotspot desk "the harbourmaster's desk"
-    area 1600,285 450x140
-    stand 1690,710
+    area 1940,505 600x125
+    stand 1800,820
     look "The harbourmaster's desk. A lamp, a log book, and more paper than the harbour has ships."
     open "The desk has a drawer, and the drawer is locked."
     use "I have nothing to put on a harbourmaster's desk that would not insult us both."
@@ -42,15 +47,22 @@ room office "The Harbourmaster's House"
       look "The desk. The log book is closed, which I have never seen before."
 
   hotspot drawer "the locked drawer"
-    area 1845,425 250x110
-    stand 1690,710
+    area 2170,645 245x140
+    stand 1800,820
     look "A deep drawer with a brass keyhole. Bramwick's drawers are like his answers: locked and well made."
     open "Locked. I am not going to crowbar a harbourmaster's desk."
     pull "I pull. The drawer makes a small, satisfied noise."
     use "It needs a key, and I am not a key."
 
+  # The bookcases behind the desk: the harbour's ledgers, boxes and brass instruments.
+  hotspot shelves "the shelves"
+    area 1050,20 700x500
+    stand 1450,820
+    look "Ledgers from the floor to the beams. Every ship the harbour has lost is in there, squared away."
+    use "I'd need Bramwick's permission, and a ladder."
+
   hotspot window "the window"
-    area 900,0 320x300
+    area 690,10 320x330
     nowalk
     look "The harbour, framed. One ship, and a great deal of empty water."
     open "Painted shut. Bramwick does not believe in fresh air or new ideas."
@@ -59,10 +71,10 @@ room office "The Harbourmaster's House"
         say "Bramwick has not looked out of this window in a week."
 
   # The painted door stands open onto the harbour: the whole leaf and the dark opening
-  # beside it, lintel to threshold board (the boards start at y 655).
+  # beside it, lintel to threshold board (the interior boards start at y 790).
   hotspot door_out "the harbour door"
-    area 185,40 425x615
-    stand 380,755
+    area 120,30 320x770
+    stand 320,830
     exit dock
-    look "The door back to the docks."
+    look "The door back to the docks. The fog has come up to the step."
     open "I go back out to the harbour."

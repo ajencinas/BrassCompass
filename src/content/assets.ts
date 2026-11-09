@@ -22,6 +22,12 @@ export const MANIFEST = {
     bg_dock_wide: "/assets/scenes/dock_wide.webp",
     bg_office_wide: "/assets/scenes/office_wide.webp",
     bg_tavern_wide: "/assets/scenes/tavern_wide.webp",
+    // The harbour's three rooms as side-on close-ups of bg_area_harbour: the same fog-bound
+    // timber quay, iron lanterns, warm windows and green counting-house lamp. The three `_wide`
+    // plates above remain for the archived act paintings and the prologue.
+    bg_dock_close_wide: "/assets/scenes/dock_close_wide.webp",
+    bg_tavern_close_wide: "/assets/scenes/tavern_close_wide.webp",
+    bg_office_close_wide: "/assets/scenes/office_close_wide.webp",
     bg_alley_wide: "/assets/scenes/alley_wide.webp",
     bg_chandlery_wide: "/assets/scenes/chandlery_wide.webp",
     bg_warehouse_wide: "/assets/scenes/warehouse_wide.webp",

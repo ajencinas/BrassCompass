@@ -943,6 +943,64 @@ MANIFEST = [
                 f"central vertical band. {STYLE}",
       "resolution": BG_RES, "output_format": "png"}, "scenes/tavern_wide.webp"),
 
+    # ---------------- the harbour's rooms, as close-ups of the harbour area view ----------------
+    # The area view (bg_area_harbour) is the visual anchor now: these three plates must read as
+    # side-on close-ups of the same fog-bound timber quay, not neighbouring buildings. Same
+    # architecture (jettied timber, steep slate gables, small warm mullioned windows, iron wall
+    # lanterns, green counting-house lamp), same palette (indigo water, cold blue fog, warm amber
+    # windows) and same painterly brushwork. Each keeps an empty lower-third walking band.
+    ("bg_dock_close_wide", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide side-scrolling adventure game background: a side-on close-up of the "
+                f"harbour quay in front of the harbourmaster's house, the same fog-bound northern "
+                f"harbour as the wide night harbour establishing view. At the left the dark wooden "
+                f"bow, bulwark and rigging of the moored two-masted ship the Marrow, her hull "
+                f"doubled in black indigo water; at the centre the tall timber harbourmaster's "
+                f"house, steep slate gables, a jettied upper storey, rows of small warm-lit "
+                f"mullioned windows, a plank door under a painted board, an iron wall lantern "
+                f"burning amber beside it; at the right a dark timber counting house with a green "
+                f"lamp, a hanging tavern sign and a tall dock lamp post. Wet stone-and-timber quay, "
+                f"wet planks, mooring posts, a few crates and barrels stacked against the walls, "
+                f"cold blue fog rolling between the rooflines, warm amber reflections in the "
+                f"puddles and boards. No people. One continuous, completely empty walkable quay "
+                f"band across the lower third, with no crates, barrels, posts or ropes in it. Deep "
+                f"indigo and cold blue with warm amber windows and lanterns, matching the harbour "
+                f"establishing view. Essential architecture kept in the central horizontal band "
+                f"for an ultra-wide crop. {STYLE}",
+      "resolution": BG_RES, "output_format": "png"}, "scenes/dock_close_wide.webp"),
+
+    ("bg_tavern_close_wide", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide side-scrolling adventure game background: an interior close-up of the "
+                f"Salty Keel, the dockside tavern on the same fog-bound harbour quay. Dark oak "
+                f"posts and beams, plank walls, a low smoke-blackened ceiling; a long polished bar "
+                f"counter along the right with rows of bottles on shelves, pewter tankards and a "
+                f"brass hand-bell; wrought-iron lanterns hanging from the beams casting warm amber "
+                f"pools; fishing nets, glass floats and coiled rope; a heavy plank door with iron "
+                f"hinges at the far left standing ajar onto cold blue night and fog, a small-paned "
+                f"window beside it showing indigo harbour water; barrels and a long bench table "
+                f"against the rear wall; deep blue shadow in the corners against the amber light. "
+                f"No people. One continuous clear plank floor walking lane across the lower third "
+                f"from the door to the bar, with no stools, tables, barrels or mugs in it. Warm "
+                f"amber, dark timber and deep cold blue, matching the harbour establishing view. "
+                f"Essential scenery kept in the central horizontal band for an ultra-wide crop. {STYLE}",
+      "resolution": BG_RES, "output_format": "png"}, "scenes/tavern_close_wide.webp"),
+
+    ("bg_office_close_wide", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide side-scrolling adventure game background: an interior close-up of the "
+                f"harbourmaster's house on the fog-bound harbour quay, the same dark timber "
+                f"architecture as the harbour outside. A heavy oak desk at the right with a brass "
+                f"oil lamp burning warm amber, a locked drawer with a brass keyhole, ledgers and "
+                f"rolled charts; tall shelves along the back wall crowded with ledgers, wooden "
+                f"boxes and brass nautical instruments; a tall small-paned window left of centre "
+                f"with the full moon over the harbour, ship masts and a faint green lamp beyond it; "
+                f"a plank door at the far left standing open to cold blue fog and the wet quay; "
+                f"beamed ceiling, panelled walls, broad worn plank floor. Deep indigo moonlight and "
+                f"cold blue shadow against the warm pool of the desk lamp. No people. One "
+                f"continuous clear floor walking lane across the lower third, with no chairs, rugs, "
+                f"boxes or furniture in it. Deep blue night, dark timber and warm amber lamplight, "
+                f"matching the harbour establishing view. Essential architecture kept in the "
+                f"central horizontal band for an ultra-wide crop. {STYLE}",
+      "resolution": BG_RES, "output_format": "png"}, "scenes/office_close_wide.webp"),
+
     ("char_walk_v2", "image", BG_MODEL,
      {"prompt": "Sprite sheet of a walking animation, exactly six frames in one horizontal row, evenly "
                 "spaced and identical in size, strict side view facing right. A young harbour clerk with "
