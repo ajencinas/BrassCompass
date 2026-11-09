@@ -1411,6 +1411,36 @@ MANIFEST = [
                 "composition, no text, no UI, no watermark, no logos",
       "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/crowsnest_wide.webp"),
 
+    # The crow's nest as the room plate proper: a genuinely high view straight down onto the
+    # Marrow, with the platform and its rail close enough to stand on and a lashed stack of
+    # Vex's crates at the left end for the crates hotspot to sit on.
+    ("bg_crowsnest_high_wide", "image", BG_MODEL,
+     {"prompt": "Ultra-wide side-scrolling adventure game background painted from the crow's nest "
+                "of a two-masted pirate brig in cold fog at dawn: a steep bird's-eye view almost "
+                "straight down onto the ship's own deck, the drop dizzying. In the foreground the "
+                "crow's nest itself: a square platform of weathered salt-bleached planks fills the "
+                "bottom quarter of the frame, one continuous, completely empty, unobstructed "
+                "walkable band from the left edge to the right edge, no figures, crates, barrels, "
+                "ropes or debris standing in it. A stout tarred timber rail with heavy posts runs "
+                "along the platform's outer edge, and beyond the rail the platform drops away into "
+                "empty air and thin fog. At the far left end of the platform, behind the walking "
+                "band and against the rail, a lashed stack of wooden crates bound with new rope "
+                "and a coil of line. The thick foremast rises at the centre with tarred shrouds "
+                "and ratlines, halyards and blocks hanging still. Directly below the platform, "
+                "seen from high above and steeply foreshortened, the ship's own deck: small, "
+                "distant, its pale planks, capstan, two masts and tattered grey sails dwarfed by "
+                "the height, the deck pointing down and away from the viewer. Around it a vast "
+                "cold fog sea, grey water and a grey horizon under an overcast sky. The camera "
+                "looks steeply down from high above: the platform is close in the foreground, the "
+                "ship and the sea are far below. The empty platform band is the clearest, most "
+                "readable part of the painting. Cold blue-grey palette, damp weathered wood, thin "
+                "drifting mist, one faint pale light on the horizon. No people, no figures, no "
+                "second ship alongside. Hand-painted digital illustration, cinematic "
+                "point-and-click adventure game art, visible oil-painted brushwork, rich "
+                "atmospheric volumetric light, detailed rigging, strong colour grading, "
+                "ultra-wide panoramic composition, no text, no UI, no watermark, no logos",
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/crowsnest_high_wide.webp"),
+
     ("bg_quarterdeck_wide", "image", BG_MODEL,
      {"prompt": f"Ultra-wide side-scrolling adventure game background of a pirate brig's "
                 f"quarterdeck at dawn. A large spoked ship's wheel on a raised platform, a brass "
