@@ -5,7 +5,7 @@ room lagoon_shore "The Fog Flats"
   ambience sea
   # The plate is the Shroud's own cold, fog-bound flats. Only the figures are graded, so the
   # painting keeps the grey-blue palette it was made with.
-  grade "saturate(0.86) brightness(0.94)"
+  grade "saturate(0.66) brightness(0.86)"
   perspective horizon 470 ref 875 height 310
   # The walk hugs the wet sand and shallow channels in front of the painted longboat (which
   # fills the lower left) and runs east under the distant palisade.

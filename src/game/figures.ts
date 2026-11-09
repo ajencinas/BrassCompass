@@ -216,7 +216,11 @@ export function applyGradeByHand(cx: CanvasRenderingContext2D, w: number, h: num
   } catch { /* leave it ungraded rather than fail the draw */ }
 }
 
-/** The soft contact shadow under a figure that reaches the floor. */
+/**
+ * The contact shadow under a figure that reaches the floor. A hard black ellipse reads as a
+ * sticker on a painted plate, so this is a soft pool: a small, denser core right at the feet
+ * and a wide, faint falloff that fades to nothing. It grounds the figure without a disc edge.
+ */
 export function drawShadow(
   ctx: CanvasRenderingContext2D,
   x: number,
@@ -225,9 +229,24 @@ export function drawShadow(
   alpha = 0.34
 ): void {
   ctx.save();
-  ctx.fillStyle = `rgba(0,0,0,${alpha})`;
+  const rx = w / 2;
+  const ry = Math.max(3, w * 0.13);
+  // Wide, very faint falloff.
+  const grad = ctx.createRadialGradient(x, y - 2, 0, x, y - 2, rx * 1.7);
+  grad.addColorStop(0, `rgba(0,0,0,${alpha * 0.55})`);
+  grad.addColorStop(0.55, `rgba(0,0,0,${alpha * 0.22})`);
+  grad.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = grad;
   ctx.beginPath();
-  ctx.ellipse(x, y - 2, w / 2, Math.max(3, w * 0.13), 0, 0, Math.PI * 2);
+  ctx.ellipse(x, y - 2, rx * 1.7, ry * 1.7, 0, 0, Math.PI * 2);
+  ctx.fill();
+  // Tight contact core, softer than the old hard disc.
+  const core = ctx.createRadialGradient(x, y - 2, 0, x, y - 2, rx * 0.7);
+  core.addColorStop(0, `rgba(0,0,0,${alpha * 0.8})`);
+  core.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = core;
+  ctx.beginPath();
+  ctx.ellipse(x, y - 2, rx * 0.7, ry * 0.7, 0, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
 }

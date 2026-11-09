@@ -3,7 +3,7 @@ room lantern_deck "The Grey Lantern — Deck"
   width 2560
   music music_fog
   perspective horizon 300 ref 875 height 470
-  grade "saturate(0.88) brightness(0.95)"
+  grade "saturate(0.7) brightness(0.88)"
   walk (120,875) (180,720) (2380,720) (2500,875)
   entry 1400,820
   arrive arcadia_cabin 240,800

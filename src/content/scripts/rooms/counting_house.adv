@@ -2,6 +2,7 @@ room counting_house "Vex's Warehouse"
   bg bg_countinghouse_wide
   width 2560
   music music_office
+  grade "saturate(0.82) brightness(0.88)"
   perspective horizon 300 ref 875 height 360
   # Measured from the painted door (y 220-690, 470 px tall): an adult at its floor plane
   # is 413 px. The old 360 px scale put the desks at Vex's collar and the safe over his head.

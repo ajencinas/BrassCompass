@@ -1,7 +1,8 @@
 room arcadia_cabin "The Grey Lantern — Captain's Cabin"
-  bg bg_wreckcabin_wide
+  bg bg_ghostcabin_wide
   width 2560
   music music_fog
+  grade "saturate(0.62) brightness(0.82)"
   perspective horizon 330 ref 875 height 600
   # The plate is the sunlit wreck cabin; the Grey Lantern is eighty years under the fog. Grade the
   # painting cold and dim — desaturate, then sepia into a blue-green cast — so the broken planks
@@ -28,17 +29,17 @@ room arcadia_cabin "The Grey Lantern — Captain's Cabin"
     say "\"This is where he kept his name,\" he says. \"A captain keeps it where he sits.\""
     say "He holds out his hand for the plate. Then he lets it fall. \"You read it. I'll say it.\""
 
-  sprite npc_ansel_body at 1880,800 size 1.0 idle speaker elias for elias grade "saturate(0.88) brightness(0.95)"
+  sprite npc_ansel_body at 1560,820 size 1.0 idle speaker elias for elias grade "saturate(0.88) brightness(0.95)"
   # The ghost captain, in the dark corner, once Elias has spoken his name.
   sprite npc_mordant_body at 210,800 size 1.0 idle speaker mordant for mordant if name_spoken
   # The plate itself, set on the desk. It is there while it waits to be read and after the name
   # has been said; without it the desk shows only the clean oval in the dust.
-  sprite prop_nameplate at 1330,470 size 0.41 grade "saturate(0.85) brightness(0.95)" if has nameplate
+  sprite prop_nameplate at 1150,640 size 0.30 grade "saturate(0.85) brightness(0.95)" if has nameplate
 
   # The desk. The plate comes in from the wreck and is set down in the clean oval in the dust;
   # the painted plate above shows it there, and the hotspot covers the desk itself.
   hotspot nameplate "the nameplate"
-    area 1280,360 500x340
+    area 950,560 500x180
     stand 1450,715
     look "Mordant's desk. A log, a dry inkpot, and the brass plate set in the clean oval in the dust."
     use "I set the plate down. The brass catches the light from the broken planks."

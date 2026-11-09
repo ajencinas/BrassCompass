@@ -21,15 +21,17 @@ room tavern "The Salty Keel"
   light 2350,215 radius 160 lamp
   occluder floor 730 (1308,568) (2560,590) (2560,880) (1800,880) (1328,716)
 
-  sprite npc_marta_body_v2 at 1960,728 size 1.12 idle speaker marta for marta grade "saturate(0.85) sepia(0.08) brightness(0.9)"
+  # Staff feet are on the rear floor line, so the counter repaints over their legs. Fenn's
+  # walk lane stays on the near side of the 730 floor line.
+  sprite npc_marta_body_v2 at 2070,650 size 0.9 visible 0.94 idle speaker marta for marta grade "saturate(0.78) sepia(0.08) brightness(0.82)"
   sprite npc_rook_body at 545,805 size 0.82 flip idle speaker rook for rook grade "saturate(0.75) sepia(0.12) brightness(0.82)"
-  sprite npc_dorrit_body at 1700,790 size 0.95 flip idle speaker dorrit for dorrit grade "saturate(0.85) sepia(0.08) brightness(0.9)"
+  sprite npc_dorrit_body at 1690,650 size 0.88 visible 0.94 flip idle speaker dorrit for dorrit grade "saturate(0.78) sepia(0.08) brightness(0.82)"
 
   scene if not met_rook
     say "There's an old man at the corner table. His drink has gone flat."
 
   hotspot marta "Marta"
-    area 1888,330 170x405
+    area 1970,340 220x250
     stand 1500,800
     look "Marta, behind the bar. She's been wiping the same glass since I walked in."
     talk "I catch her eye. It takes some catching."
@@ -51,7 +53,7 @@ room tavern "The Salty Keel"
       look "Rook at his table by the door. He's put the mug down."
 
   hotspot dorrit "Dorrit"
-    area 1570,375 260x180
+    area 1550,350 280x230
     stand 1600,850
     look "Dorrit, in his apron, holding a spoon like a small weapon."
     talk "I ask about the stores. He turns before I finish."

@@ -6,7 +6,7 @@ room far_pans "The Far Flats"
   # The far pans are still in the Shroud: the sunset plate is graded cold and dim, and two fog
   # banks lie along the water. Quill stays readable against the pale flats.
   backdrop "grayscale(0.70) sepia(0.50) hue-rotate(172deg) saturate(1.4) brightness(0.47) contrast(1.08)"
-  grade "saturate(0.86) brightness(0.94)"
+  grade "saturate(0.66) brightness(0.86)"
   perspective horizon 270 ref 875 height 340
   walk (40,878) (62,810) (2498,810) (2528,878)
   entry 2380,846

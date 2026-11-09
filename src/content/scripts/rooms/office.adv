@@ -9,6 +9,8 @@ room office "The Harbourmaster's House"
   footsteps wood
   light 2222,200 radius 260 lamp
   motes dust (990,120) (1240,0) (1760,250) (1420,630) (1080,630) count 60
+  # Repaint the desktop and its front over Bramwick's lap: he sits in the painted chair,
+  # behind the desk, rather than standing on its near side.
   occluder floor 668 (1585,316) (2372,316) (2372,668) (1585,668)
 
   # Act I: Bramwick at his desk with the harbour's losses in front of him.
@@ -16,11 +18,11 @@ room office "The Harbourmaster's House"
     set office_called
     say "Bramwick is at his desk with his coat on. He looks like a man who has stopped going home."
 
-  sprite npc_bramwick_body_v2 at 1885,650 size 1.15 idle speaker bramwick for bramwick grade "saturate(0.85) brightness(0.9)"
+  sprite npc_bramwick_seated at 1850,610 size 0.72 visible 0.9 idle speaker bramwick for bramwick grade "saturate(0.72) brightness(0.78)"
 
   hotspot bramwick "Harbourmaster Bramwick"
-    area 1800,135 170x150
-    stand 2230,710
+    area 1740,175 260x190
+    stand 1690,710
     look "Harbourmaster Bramwick. Thirty years of harbour business, and all of it has settled in his face."
     talk "I clear my throat. Bramwick finishes writing before he looks up."
       talk bramwick

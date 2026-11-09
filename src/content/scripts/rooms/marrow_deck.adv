@@ -2,6 +2,7 @@ room marrow_deck "The Marrow — Deck"
   bg bg_deck_wide
   width 2560
   music music_sea
+  grade "saturate(0.85) brightness(0.9)"
   ambience sea
   perspective horizon 230 ref 875 height 330
   walk (80,875) (110,706) (1320,706) (1320,875)

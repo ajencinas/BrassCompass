@@ -6,6 +6,7 @@ room below_decks "The Marrow — Crew Deck"
   bg bg_below_wide
   width 2560
   music music_office
+  grade "saturate(0.8) brightness(0.86)"
   perspective horizon 470 ref 875 height 560
   walk (60,875) (120,845) (700,845) (760,808) (1180,808) (1200,815) (1440,815) (1480,770) (1580,770) (1600,850) (2060,865) (2100,875)
   entry 1800,868

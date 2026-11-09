@@ -15,8 +15,9 @@ room marrow_quarterdeck "The Marrow — Helm"
   motes glints (1640,262) (2160,262) (2160,365) (1600,380) count 24
   emit creak
 
-  # Act II: Vex at the helm, and the crew behind Fenn once the hold is open.
-  sprite npc_vex_body at 780,770 size 1.15 idle speaker vex for vex grade "saturate(0.85) brightness(0.92)" if act 2 and not marrow_lost
+  # Act II: Vex stands on the raised helm platform, immediately to the left of the wheel.
+  # The painted wheel is oversized, so his larger scale is deliberate; the binnacle stays clear.
+  sprite npc_vex_body at 650,505 size 1.12 idle speaker vex for vex grade "saturate(0.85) brightness(0.92)" if act 2 and not marrow_lost
   sprite npc_quill_body at 1250,780 size 0.98 flip idle speaker quill for quill grade "saturate(0.85) brightness(0.92)" if act 2 and salvage_seen and not marrow_lost
   sprite npc_hobb_body at 1450,800 size 1.03 flip idle speaker hobb for hobb grade "saturate(0.85) brightness(0.9)" if act 2 and salvage_seen and not marrow_lost
   sprite npc_dorrit_body at 1650,830 size 0.95 idle speaker dorrit for dorrit grade "saturate(0.85) sepia(0.08) brightness(0.9)" if act 2 and salvage_seen and not marrow_lost
@@ -30,8 +31,8 @@ room marrow_quarterdeck "The Marrow — Helm"
 
   hotspot vex "Captain Vex"
     show if act 2 and not marrow_lost
-    area 700,460 160x315
-    stand 980,810
+    area 500,225 300x285
+    stand 950,810
     look "Captain Vex at the helm, coat buttoned, both hands where the crew can see them. He likes to be seen working."
     talk "I get his attention. It takes some getting."
       talk vex at helm

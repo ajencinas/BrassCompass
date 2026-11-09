@@ -904,6 +904,28 @@ MANIFEST = [
                 f"standing on them. No people. {STYLE}",
       "resolution": BG_RES, "output_format": "png"}, "scenes/wreckcabin_wide.webp"),
 
+    ("bg_ghostwreck_wide", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide side-scrolling adventure game background, viewed flat side-on at "
+                f"eye level: the broken hull of an old two-masted sailing ship, a ghost-ship "
+                f"wreck, lying heeled over and half-sunk in a vast grey tidal flat under thick "
+                f"cold fog. Her hull fills the right two-thirds of the frame, her bow toward "
+                f"the left, her deck tilted toward us, the bow rail broken away. Both masts "
+                f"still stand, the foremast snapped short, with tattered grey canvas sails "
+                f"hanging in strips from the yards. A faint spectral green glow clings to the "
+                f"rigging and the mastheads, cold and unnatural. Several of her hull timbers "
+                f"are rotted through or half-translucent where the ghost light shows through, "
+                f"and her silhouette is subtly wrong and unnatural. She rests on wet grey "
+                f"ribbed sand; shallow channels of pewter-coloured water wind around her hull "
+                f"and out into the fog. Heavy cold grey fog fills the sky and hides the "
+                f"horizon; there is no sun, no blue sky, no tropical turquoise water, no palm "
+                f"trees, no greenery. A small wooden longboat is drawn up on the wet sand in "
+                f"the left foreground, her oars shipped. Cold grey and pewter palette, the "
+                f"only colour the sickly green glow in the rigging. No people, no figures "
+                f"anywhere. Leave the lower third as a clear walkable band of wet grey sand "
+                f"and shallow water running from the left edge to the right edge, nothing "
+                f"standing on it. No text. {STYLE}",
+      "resolution": BG_RES, "output_format": "png"}, "scenes/ghostwreck_wide.webp"),
+
     ("bg_shore_wide", "image", BG_MODEL,
      {"prompt": f"Ultra-wide side-scrolling adventure game background, viewed side-on at eye "
                 f"level: the white sand beach of a low tropical island in bright morning light. "

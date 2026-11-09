@@ -2,6 +2,7 @@ room weather_works "The Lighthouse"
   bg bg_lighthouse_wide
   width 2560
   music music_fog
+  grade "saturate(0.8) brightness(0.88)"
   ambience wind
   perspective horizon 380 ref 875 height 300
   walk (300,878) (310,830) (450,808) (650,792) (850,778) (1050,765) (1180,755) (1250,750) (1270,780) (1240,830) (1200,878)

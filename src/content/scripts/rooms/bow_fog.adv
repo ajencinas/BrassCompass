@@ -2,6 +2,7 @@ room bow_fog "The Shroud"
   bg bg_bow_wide
   width 2560
   music music_fog
+  grade "saturate(0.6) brightness(0.85)"
   ambience sea
   perspective horizon 555 ref 875 height 430
   walk (250,875) (600,690) (660,665) (930,665) (1010,700) (1035,860) (1060,875)

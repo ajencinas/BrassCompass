@@ -2,7 +2,7 @@
 # fog leaning before anyone else does, and hears something under it, which is as close as the
 # ghost comes to the screen in this act. No new flags: the scene is knowledge, not a key.
 room crows_nest "The Marrow — Crow's Nest"
-  bg bg_crowsnest_wide
+  bg bg_crowsnest_high_wide
   width 2560
   music music_fog
   ambience wind

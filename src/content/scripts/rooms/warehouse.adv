@@ -1,5 +1,5 @@
 room warehouse "The Boat Shed"
-  bg bg_warehouse_wide
+  bg bg_boatshed_wide
   width 2560
   music music_office
   grade "brightness(0.95) saturate(0.85)"

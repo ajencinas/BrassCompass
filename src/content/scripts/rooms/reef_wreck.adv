@@ -1,11 +1,11 @@
 room reef_wreck "The Sunken Wreck"
-  bg bg_reef_wide
+  bg bg_ghostwreck_wide
   width 2560
   music music_fog
   ambience sea
   # Act III is the Shroud: cool and dim the sunny reef plate, and cool the crew to match.
   backdrop "brightness(0.66) saturate(0.55) contrast(1.05) sepia(0.04)"
-  grade "saturate(0.86) brightness(0.94)"
+  grade "saturate(0.66) brightness(0.86)"
   perspective horizon 440 ref 875 height 300
   walk (1000,875) (1010,800) (1300,775) (1700,778) (2100,790) (2420,820) (2480,875)
   entry 1180,830
