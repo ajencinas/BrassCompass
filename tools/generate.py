@@ -288,6 +288,58 @@ def post_sprite(raw_bytes, out_path):
     return im.size
 
 
+IDLE_MAX_HEIGHT = 1100
+
+
+def _clean_matte(im):
+    """Pull the faint magenta haze out of the matte without hardening the silhouette.
+
+    key_out keeps a soft ramp so the edges read into the dark plates. For the standing idle
+    that ramp is exactly what makes the feet ambiguous: a few rows of near-transparent paint
+    below the soles are counted as "figure" by the trim, so the feet anchor sits under a ghost
+    of a shadow. Anything under 48/255 is lifted out; anything over 200/255 is made solid; the
+    one- or two-pixel edge in between survives.
+    """
+    import numpy as np
+    from PIL import Image
+
+    a = np.asarray(im.convert("RGBA")).copy()
+    alpha = a[:, :, 3].astype(np.float32)
+    alpha = np.clip((alpha - 48.0) / (200.0 - 48.0), 0.0, 1.0) * 255.0
+    a[:, :, 3] = alpha.astype(np.uint8)
+    return Image.fromarray(a, "RGBA")
+
+
+def post_painted_idle(raw_bytes, out_path, max_height=IDLE_MAX_HEIGHT):
+    """Key and trim a standing painted figure so the boot soles are the last opaque row.
+
+    The walk sheets never needed this: their soles are painted flush and each cell is re-packed
+    on a shared baseline. A single idle study can come back with a brushy shadow or a sole that
+    dissolves into the backdrop, which the game then reads as the foot of the figure. Trim on a
+    crisp matte, then cap the height like `tools/optimize_assets.py` does, so the shipped sprite
+    is the same scale as the walk cells.
+    """
+    from PIL import Image
+
+    im = _clean_matte(key_out(Image.open(BytesIO(raw_bytes))))
+    bbox = im.getbbox()
+    if bbox:
+        im = im.crop(bbox)
+    if im.height > max_height:
+        s = max_height / im.height
+        size = (max(1, round(im.width * s)), max_height)
+        im = im.resize(size, Image.LANCZOS, reducing_gap=3.0)
+        im = _clean_matte(im)
+        # The resize can leave a padded transparent row or two; trim again so the soles are
+        # exactly the bottom of the file.
+        bbox = im.getbbox()
+        if bbox:
+            im = im.crop(bbox)
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    im.save(out_path, optimize=True)
+    return im.size
+
+
 ICON_MAX = 256
 
 
@@ -1107,6 +1159,26 @@ MANIFEST = [
                 f"magenta background (#FF00FF) filling the entire canvas including under and "
                 f"around him, no shadow, no ground, no text",
       "resolution": "1728x2304 (3:4)", "output_format": "png"}, "characters/elias_painted.png"),
+
+    # The idle is the pose the player sees standing still, and the one place where the feet
+    # must be beyond argument: the walk cells paint both soles flush and crisp, but the first
+    # idle study let the boot leather dissolve into the magenta, so the keyer trimmed to a
+    # ghost of a sole and the figure read as hovering. This prompt says the quiet part out
+    # loud, and post_painted_idle trims it on a matte with no faint shadow below the feet.
+    ("char_elias_painted_v2", "image", BG_MODEL,
+     {"prompt": f"Full body oil study of {FENN}, standing still in a relaxed idle, side "
+                f"three-quarter view facing right, arms hanging naturally. Loose loaded "
+                f"brushstrokes, scumbled painterly edges, warm amber lamplight from the left "
+                f"and a cold blue rim light along his right edges, deep warm shadow, muted "
+                f"earthy navy and brown, semi-realistic anatomy with a real body's weight. "
+                f"Both brown leather boots are painted solid and completely opaque, with their "
+                f"dark leather soles and heels clearly shown; his feet are planted side by side "
+                f"on one level line, neither boot lower than the other, and the boots do not "
+                f"fade or turn transparent at the feet. The whole figure from hair to soles is "
+                f"inside the frame with a clear margin of flat magenta below the boots. Flat "
+                f"solid magenta background (#FF00FF), no shadow, no ground, no floor, no other "
+                f"props, no text",
+      "resolution": "1728x2304 (3:4)", "output_format": "png"}, "characters/elias_painted_v2.png"),
 
     ("char_walk_v2_painted", "image", BG_MODEL,
      {"prompt": f"Sprite sheet of one walking animation, exactly six frames in a single "
@@ -2166,6 +2238,8 @@ def postprocess(name, kind, rel, payload, raw, out_path):
             post_sprite(raw, out_path)
         elif name in PAINTED_WALK_KEYS:
             post_painted_walk_sheet(raw, out_path, rear_frames=3 if name == "char_walk_vertical_painted" else 0)
+        elif name == "char_elias_painted_v2":
+            post_painted_idle(raw, out_path)
         elif "walk" in rel:
             post_walk_sheet(raw, out_path)
         elif (rel.startswith("characters/") and name.startswith("npc_")
