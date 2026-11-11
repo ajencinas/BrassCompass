@@ -353,34 +353,38 @@ function drawVerbs(ctx: CanvasRenderingContext2D, model: PanelModel): void {
   });
 }
 
-/** The narration box over the bottom of the scene, if a line is showing. */
+/** The narration, as a cinematic lower-third: no box, just darkness gathering under the line. */
 function drawNarration(ctx: CanvasRenderingContext2D, model: PanelModel): Rect | null {
   const alpha = model.narrationAlpha ?? 1;
   if (!model.narration || alpha <= 0.001) return null;
-  const size = Math.round(26 * model.scale);
-  const lh = Math.round(size * 1.31);
+  const size = Math.round(27 * model.scale);
+  const lh = Math.round(size * 1.34);
   const style = { size, color: COLORS.narration, lineHeight: lh };
   const full = model.narrationFull ?? model.narration;
-  const lines = wrapOnce(ctx, full, 1760, style);
-  const height = Math.max(Math.round(92 * model.scale), lines.length * lh + 46);
-  const top = Math.max(76, SCENE_H - height - 12);
+  const lines = wrapOnce(ctx, full, 1560, style);
+  const height = Math.max(Math.round(84 * model.scale), lines.length * lh + 48);
+  const top = Math.max(64, SCENE_H - height - 4);
+  const grad = ctx.createLinearGradient(0, top, 0, top + height);
+  grad.addColorStop(0, "rgba(3,7,13,0)");
+  grad.addColorStop(0.22, "rgba(3,7,13,0.7)");
+  grad.addColorStop(1, "rgba(3,7,13,0.95)");
   ctx.save();
   ctx.globalAlpha = alpha;
-  ctx.fillStyle = "rgba(5,13,22,0.94)";
-  ctx.fillRect(40, top, 1840, height);
-  ctx.fillStyle = COLORS.gold;
-  ctx.fillRect(40, top, 4, height);
-  drawRevealed(ctx, lines, model.narration.length, 68, top + 20, style);
-  if (model.waiting && model.narration === model.narrationFull) {
-    // Something is waiting on this line: say how to move on.
-    drawText(ctx, model.keyboard ? "Enter ▸" : model.touch ? "tap ▸" : "click ▸", 1860, top + height - 34, {
-      size: Math.round(20 * model.scale), color: "#e8c98a", align: "right", shadow: false,
-    });
-  }
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, top, LOGICAL_W, height);
+  ctx.strokeStyle = "rgba(232,201,138,0.16)";
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(150, top + 1); ctx.lineTo(LOGICAL_W - 150, top + 1); ctx.stroke();
+  drawRevealed(ctx, lines, model.narration.length, 150, top + 22, style);
   ctx.restore();
-  return { x: 40, y: top, w: 1840, h: height };
+  return { x: 140, y: top, w: 1640, h: height };
 }
 
+/**
+ * The sentence line: what Fenn is about to do, or what a click on the thing under the pointer
+ * would do. It is a preview of the action, not a lesson in the controls — the instructions that
+ * used to sit under it are gone.
+ */
 function drawSentence(ctx: CanvasRenderingContext2D, model: PanelModel): Rect | null {
   const l = panelLayout(model.scale);
   const box = drawNarration(ctx, model);
@@ -389,8 +393,8 @@ function drawSentence(ctx: CanvasRenderingContext2D, model: PanelModel): Rect | 
   const verbLabel = verbDef?.label ?? "";
   const a = model.objA ?? "";
   const b = model.objB ?? "";
-  const line1 = [verbLabel, a].filter(Boolean).join(" ");
   const link = model.verb === "give" ? "to" : "with";
+  const line1 = [verbLabel, a].filter(Boolean).join(" ");
   // The sentence as it would finish on what the pointer (or focus) is on: "Look at" + crate,
   // or "Use crowbar" + "with impounded crate".
   const target = model.target && model.target !== a ? model.target : null;
@@ -398,39 +402,24 @@ function drawSentence(ctx: CanvasRenderingContext2D, model: PanelModel): Rect | 
     : !a ? ` ${target}`
     : verbDef?.twoObject ? ` ${link} ${target}` : null;
 
-  const hint = (text: string) => drawText(ctx, text, SENT_X, l.line2Y, {
-    size: fitSize(ctx, text, SENT_W, l.line2, 18), color: "#c3d3da", shadow: false,
-  });
   if (line1) {
     const size = fitSize(ctx, line1 + (preview ?? ""), SENT_W, l.line1, 20, "bold");
     drawText(ctx, line1, SENT_X, l.sentY + 4, { size, color: COLORS.sentence, weight: "bold" });
+    ctx.font = `bold ${size}px Georgia, "Times New Roman", serif`;
+    const at = SENT_X + ctx.measureText(line1).width;
     if (preview) {
-      ctx.font = `bold ${size}px Georgia, "Times New Roman", serif`;
-      const at = SENT_X + ctx.measureText(line1).width;
       drawText(ctx, preview, at, l.sentY + 4, { size, color: "#ecd29a", weight: "bold" });
+    } else if (verbDef?.twoObject && a && !b) {
+      // A two-object verb is still waiting for its second half. Say so in the sentence's own
+      // grammar — "Use crowbar with …" — rather than with a line of instructions beneath it.
+      drawText(ctx, ` ${link} …`, at, l.sentY + 4, { size, color: "rgba(236,210,154,0.6)", weight: "bold" });
     }
   } else if (model.suggestLine) {
-    drawText(ctx, model.suggestLine, SENT_X, l.sentY + 4, {
-      size: fitSize(ctx, model.suggestLine, SENT_W, l.line1, 20, "bold"), color: "#ecd29a", weight: "bold",
-    });
-    if (!b) {
-      hint(model.keyboard
-        ? (model.suggestExit ? "Enter to go through · arrows for the next thing · Tab for verbs" : "Enter to do it · arrows for the next thing · Tab for verbs and items")
-        : model.touch
-        ? (model.suggestExit ? "tap again to go through · long-press to look" : "tap again to do it · long-press to look · or pick a verb")
-        : (model.suggestExit ? "click to go through (double-click: at once) · right-click to look" : "click to do it · right-click to look · or pick a verb"));
-    }
-  } else {
-    const idle = model.keyboard
-      ? "Tab: scene, verbs, items · arrows to move · Enter to act · hold Q to reveal"
-      : model.touch
-      ? "Tap a thing to see it, again to act · tap the floor to walk"
-      : "Click a thing — best verb picked · Tab focus · Enter act · right-click look · Q reveals";
-    drawText(ctx, idle, SENT_X, l.sentY + 6, {
-      size: fitSize(ctx, idle, SENT_W, Math.round(Math.min(28, 22 * model.scale)), 18),
-      color: "#b9c8d3",
-      weight: "normal",
-      shadow: false,
+    // The lit-up verb as a promise: "Talk to Marta". A small compass mark, no caveat.
+    ctx.fillStyle = "rgba(232,201,138,0.85)";
+    ctx.beginPath(); ctx.arc(SENT_X + 7, l.sentY + 18, 3.5, 0, Math.PI * 2); ctx.fill();
+    drawText(ctx, model.suggestLine, SENT_X + 22, l.sentY + 4, {
+      size: fitSize(ctx, model.suggestLine, SENT_W - 22, l.line1, 20, "bold"), color: "#ecd29a", weight: "bold",
     });
   }
 
@@ -439,42 +428,76 @@ function drawSentence(ctx: CanvasRenderingContext2D, model: PanelModel): Rect | 
       size: Math.round(Math.min(28, 25 * model.scale)),
       color: COLORS.sentence,
     });
-  } else if (model.objA && verbDef?.twoObject && !preview) {
-    hint(model.verb === "give" ? "Choose who receives it" : "Choose an object to use it with");
   }
   return box;
 }
 
+/** A rounded rectangle, drawn by hand so it never depends on roundRect support. */
+function rounded(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number): void {
+  const k = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + k, y);
+  ctx.lineTo(x + w - k, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + k);
+  ctx.lineTo(x + w, y + h - k);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - k, y + h);
+  ctx.lineTo(x + k, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - k);
+  ctx.lineTo(x, y + k);
+  ctx.quadraticCurveTo(x, y, x + k, y);
+  ctx.closePath();
+}
+
+/**
+ * The satchel. A strip of leather above the pockets, brass clasp and stitching, and the items
+ * themselves shown as pictures in their pockets. A name is not written under each thing: it
+ * appears in the pocket, over the dimmed picture, only while the pointer or the keyboard is on it.
+ */
 function drawInventory(ctx: CanvasRenderingContext2D, model: PanelModel): void {
-  // The panel heading and the pager are chrome too: they follow the text scale, fitted to the
-  // fixed grid beneath them (the eight slots themselves cannot grow).
-  const heading = fitText(ctx, "INVENTORY", 330, Math.round(18 * model.scale), 14, "bold");
-  drawText(ctx, heading.text, INV_X, 889 - Math.max(0, Math.round((heading.size - 18) / 2)), {
-    size: heading.size,
-    color: "#d4b064",
-    weight: "bold",
-    shadow: false,
-  });
-  ctx.font = `bold ${heading.size}px Georgia, serif`;
-  const w = ctx.measureText(heading.text).width;
-  ctx.fillStyle = "rgba(201,162,74,0.35)";
-  ctx.fillRect(INV_X + w + 12, 899, 220, 1);
-
-  if (model.inventory.length === 0) {
-    drawText(ctx, "empty pockets", INV_X, INV_Y + 22, {
-      size: Math.round(20 * model.scale),
-      color: "rgba(176,166,186,0.8)",
-      weight: "normal",
-      shadow: false,
-    });
-    return;
-  }
-
   const pages = inventoryPages(model.inventory.length);
-  const page = Math.min(model.page, pages - 1);
+  const page = Math.max(0, Math.min(model.page, pages - 1));
+  const bandX = INV_X - 6, bandY = 879, bandW = 4 * (INV_W + INV_GAP) - INV_GAP + 12;
+
+  // The satchel's leather head: a band, stitching, a small clasp at the left.
+  ctx.save();
+  const leather = ctx.createLinearGradient(0, bandY, 0, bandY + 34);
+  leather.addColorStop(0, "rgba(50,36,23,0.92)");
+  leather.addColorStop(1, "rgba(26,18,12,0.94)");
+  ctx.fillStyle = leather;
+  rounded(ctx, bandX, bandY, bandW, 34, 5);
+  ctx.fill();
+  ctx.strokeStyle = "rgba(201,162,74,0.26)";
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.setLineDash([2, 4]);
+  ctx.strokeStyle = "rgba(232,201,138,0.18)";
+  ctx.beginPath();
+  ctx.moveTo(bandX + 34, bandY + 7);
+  ctx.lineTo(bandX + bandW - 12, bandY + 7);
+  ctx.moveTo(bandX + 34, bandY + 27);
+  ctx.lineTo(bandX + bandW - 12, bandY + 27);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  // The clasp: a brass ring and a tongue, the satchel's own compass.
+  ctx.beginPath(); ctx.arc(bandX + 18, bandY + 17, 9, 0, Math.PI * 2);
+  ctx.strokeStyle = "rgba(232,201,138,0.7)";
+  ctx.lineWidth = 1.4;
+  ctx.stroke();
+  ctx.fillStyle = "rgba(201,162,74,0.16)";
+  ctx.fill();
+  ctx.fillStyle = "#d9b877";
+  ctx.beginPath();
+  ctx.moveTo(bandX + 18, bandY + 10);
+  ctx.lineTo(bandX + 22, bandY + 17);
+  ctx.lineTo(bandX + 18, bandY + 24);
+  ctx.lineTo(bandX + 14, bandY + 17);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+
   if (pages > 1) {
     const arrow = (r: Rect, glyph: string, enabled: boolean, focused: boolean) => {
-      ctx.fillStyle = enabled ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.02)";
+      ctx.fillStyle = enabled ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.015)";
       ctx.fillRect(r.x, r.y, r.w, r.h);
       if (focused) {
         ctx.strokeStyle = "#fff3cf";
@@ -490,14 +513,20 @@ function drawInventory(ctx: CanvasRenderingContext2D, model: PanelModel): void {
     };
     arrow(PAGE_PREV, "‹", page > 0, model.focusItem === PAGE_FOCUS.prev);
     arrow(PAGE_NEXT, "›", page < pages - 1, model.focusItem === PAGE_FOCUS.next);
-    const counter = fitText(ctx, `${page + 1}/${pages}`, 80, Math.round(18 * model.scale), 13);
-    drawText(ctx, counter.text, (PAGE_PREV.x + PAGE_NEXT.x + PAGE_NEXT.w) / 2, 884, {
-      size: counter.size,
-      color: "#d4b064",
-      align: "center",
-      shadow: false,
-    });
+    // Pages as shot on a chart: a small row of beads, one lit, no numbers.
+    const mid = (PAGE_PREV.x + PAGE_PREV.w + PAGE_NEXT.x) / 2;
+    const gap = 11;
+    const start = mid - ((pages - 1) * gap) / 2;
+    for (let i = 0; i < pages; i++) {
+      ctx.beginPath();
+      ctx.arc(start + i * gap, 894, i === page ? 3.4 : 2.2, 0, Math.PI * 2);
+      ctx.fillStyle = i === page ? "#e8c98a" : "rgba(232,201,138,0.3)";
+      ctx.fill();
+    }
   }
+
+  // Every pocket is drawn, empty or not, so an empty satchel still reads as a satchel.
+  for (let i = 0; i < INV_PER_PAGE; i++) drawPocket(ctx, itemRect(i), false, false, false);
 
   const shown = pageItems(model);
   shown.forEach((it, i) => {
@@ -506,8 +535,7 @@ function drawInventory(ctx: CanvasRenderingContext2D, model: PanelModel): void {
     const hover = selected || model.hoverItem === it.id;
     const focused = model.focusItem === it.id;
     const glow = model.fresh?.[it.id] ?? 0;
-    ctx.fillStyle = hover ? "rgba(201,162,74,0.18)" : "rgba(255,255,255,0.035)";
-    ctx.fillRect(r.x, r.y, r.w, r.h);
+    drawPocket(ctx, r, hover, focused, true);
     if (glow > 0) {
       // Just arrived: a warm glow that fades, so the eye finds the new thing.
       const pulse = model.reduced ? 1 : 0.7 + 0.3 * Math.sin((model.time ?? 0) * 5.5);
@@ -517,47 +545,80 @@ function drawInventory(ctx: CanvasRenderingContext2D, model: PanelModel): void {
       ctx.lineWidth = 2.5;
       ctx.strokeRect(r.x - 1, r.y - 1, r.w + 2, r.h + 2);
     }
-    ctx.strokeStyle = hover ? "rgba(232,201,138,0.6)" : "rgba(201,162,74,0.22)";
-    ctx.lineWidth = 1;
-    ctx.strokeRect(r.x + 0.5, r.y + 0.5, r.w - 1, r.h - 1);
-
     if (selected) {
-      ctx.fillStyle = COLORS.gold; ctx.fillRect(r.x, r.y, 4, r.h);
+      ctx.fillStyle = COLORS.gold;
+      ctx.fillRect(r.x, r.y, 4, r.h);
     }
-    if (focused) {
-      ctx.strokeStyle = "#fff3cf";
-      ctx.lineWidth = 2.5;
-      ctx.strokeRect(r.x + 3, r.y + 3, r.w - 6, r.h - 6);
-    }
-    // With art, the picture leads and the name sits smaller beside it.
+
     const icon = it.icon && it.icon.width > 0 ? it.icon : null;
-    let textX = r.x + 12, textW = r.w - 24, base = 19, min = 18;
+    const reveal = hover || focused;
+    // The picture, dimmed while its name has the pocket.
     if (icon) {
       const k = Math.min(ICON / icon.width, ICON / icon.height);
       const iw = icon.width * k, ih = icon.height * k;
-      ctx.drawImage(icon, r.x + 8 + (ICON - iw) / 2, r.y + (r.h - ih) / 2, iw, ih);
-      textX = r.x + 8 + ICON + 8;
-      textW = r.x + r.w - 8 - textX;
-      base = 16;
-      min = 14;
+      ctx.save();
+      ctx.globalAlpha = reveal ? 0.22 : 1;
+      ctx.drawImage(icon, r.x + (r.w - iw) / 2, r.y + (r.h - ih) / 2, iw, ih);
+      ctx.restore();
+    } else if (!reveal) {
+      // A thing with no drawing of its own: a small brass knot, so the pocket is not blank.
+      ctx.save();
+      ctx.translate(r.x + r.w / 2, r.y + r.h / 2);
+      ctx.strokeStyle = "rgba(201,162,74,0.7)";
+      ctx.lineWidth = 1.4;
+      ctx.beginPath(); ctx.arc(0, 0, 9, 0, Math.PI * 2); ctx.stroke();
+      ctx.fillStyle = "rgba(232,201,138,0.85)";
+      ctx.beginPath(); ctx.arc(0, 0, 3, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
     }
-    // Largest size, up to the scale, at which the name fits in two lines.
-    let size = Math.round(base * model.scale);
-    let lines = wrapOnce(ctx, it.name, textW, { size, color: "" });
-    while (size > min && (lines.length > 2 || lines.length * (size + 4) > r.h - 12)) {
-      size--;
-      lines = wrapOnce(ctx, it.name, textW, { size, color: "" });
-    }
-    const lh = size + 4;
-    const y0 = r.y + Math.round((r.h - Math.min(2, lines.length) * lh) / 2) + 1;
-    lines.slice(0, 2).forEach((ln, li) => {
-      drawText(ctx, ln, textX, y0 + li * lh, {
-        size,
-        color: focused || hover ? COLORS.itemHover : COLORS.item,
-        shadow: false,
+
+    if (reveal) {
+      // The name, in the pocket. Largest size that fits in two lines, never below 13px.
+      let size = Math.round(18 * model.scale);
+      let lines = wrapOnce(ctx, it.name, r.w - 20, { size, color: "" });
+      while (size > 13 && (lines.length > 2 || lines.length * (size + 4) > r.h - 12)) {
+        size--;
+        lines = wrapOnce(ctx, it.name, r.w - 20, { size, color: "" });
+      }
+      const lh = size + 4;
+      const y0 = r.y + Math.round((r.h - Math.min(2, lines.length) * lh) / 2) + 1;
+      lines.slice(0, 2).forEach((ln, li) => {
+        drawText(ctx, ln, r.x + r.w / 2, y0 + li * lh, {
+          size, color: "#fff3d6", align: "center", shadow: false,
+        });
       });
-    });
+    }
   });
+}
+
+/** One leather pocket, stitched round the edge; brighter for a filled slot and its hover. */
+function drawPocket(ctx: CanvasRenderingContext2D, r: Rect, hover: boolean, focused: boolean, filled: boolean): void {
+  const grad = ctx.createLinearGradient(0, r.y, 0, r.y + r.h);
+  if (filled) {
+    grad.addColorStop(0, hover ? "rgba(74,53,31,0.92)" : "rgba(48,34,21,0.9)");
+    grad.addColorStop(1, hover ? "rgba(40,28,18,0.94)" : "rgba(23,16,11,0.94)");
+  } else {
+    grad.addColorStop(0, "rgba(28,20,14,0.5)");
+    grad.addColorStop(1, "rgba(15,11,8,0.6)");
+  }
+  ctx.save();
+  rounded(ctx, r.x, r.y, r.w, r.h, 6);
+  ctx.fillStyle = grad;
+  ctx.fill();
+  ctx.setLineDash([3, 4]);
+  ctx.strokeStyle = hover ? "rgba(232,201,138,0.5)" : "rgba(201,162,74,0.2)";
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.strokeStyle = "rgba(255,231,190,0.05)";
+  ctx.beginPath(); ctx.moveTo(r.x + 8, r.y + 3); ctx.lineTo(r.x + r.w - 8, r.y + 3); ctx.stroke();
+  if (focused) {
+    ctx.strokeStyle = "#fff3cf";
+    ctx.lineWidth = 2.5;
+    rounded(ctx, r.x + 3, r.y + 3, r.w - 6, r.h - 6, 4);
+    ctx.stroke();
+  }
+  ctx.restore();
 }
 
 // ---------------------------------------------------------------- cursor
@@ -663,15 +724,14 @@ export function dialogueLayout(ctx: CanvasRenderingContext2D, text: string, choi
   let size = Math.round(27 * scale), lineHeight = 38;
   let lines: string[] = [], choiceLines: string[][] = [], heights: number[] = [], height = 0;
   const pad = Math.round(16 * scale);
-  const footer = dialogueFooterSize(scale);
   const bodyOffset = 76 + Math.round(12 * (scale - 1));
   do {
     lineHeight = size + Math.round(11 * Math.min(scale, 1.25));
     lines = wrap(ctx, text, textW, { size, color: "" });
-    choiceLines = choices.map((c) => wrap(ctx, c, textW - 80, { size: size - 2, color: "" }));
+    choiceLines = choices.map((c) => wrap(ctx, c, textW - 64, { size: size - 2, color: "" }));
     heights = choiceLines.map((c) => Math.max(48, c.length * lineHeight + pad));
     const choicesHeight = heights.reduce((sum, h) => sum + h + 6, 0);
-    height = Math.max(420, bodyOffset + lines.length * lineHeight + 30 + choicesHeight + 8 + footer + 20);
+    height = Math.max(400, bodyOffset + lines.length * lineHeight + 28 + choicesHeight + 16);
     if (height <= 1040 || size <= 20) break;
     size--;
   } while (true);
@@ -685,10 +745,6 @@ export function dialogueLayout(ctx: CanvasRenderingContext2D, text: string, choi
   if (layouts.size > 48) layouts.delete(layouts.keys().next().value!);
   layouts.set(key, layout);
   return layout;
-}
-
-function dialogueFooterSize(scale: number): number {
-  return Math.round(Math.min(24, 19 * scale));
 }
 
 const approach = (from: number, to: number, dt: number, tau: number): number =>
@@ -854,46 +910,100 @@ export function drawDialogue(ctx: CanvasRenderingContext2D, m: DialogueModel): v
   ctx.globalAlpha = stage ? easeOut(stage.appear) : 1;
   // The box keeps its foot on the panel line and grows or shrinks at the top as lines change.
   const boxTop = l.top + off, boxBottom = l.top + l.height + rise;
-  ctx.fillStyle = "rgba(10,23,34,0.98)";
-  ctx.fillRect(60, boxTop, 1800, boxBottom - boxTop);
-  ctx.strokeStyle = "#9a8052"; ctx.lineWidth = 2;
-  ctx.strokeRect(61, boxTop + 1, 1798, boxBottom - boxTop - 2);
-  ctx.beginPath(); ctx.rect(60, boxTop, 1800, boxBottom - boxTop); ctx.clip();
+  // A cinematic lower-third, not a box: the picture keeps its top, the dark gathers at the foot.
+  const veil = ctx.createLinearGradient(0, boxTop, 0, boxBottom);
+  veil.addColorStop(0, "rgba(3,6,12,0)");
+  veil.addColorStop(0.16, "rgba(3,6,12,0.55)");
+  veil.addColorStop(0.46, "rgba(3,6,12,0.9)");
+  veil.addColorStop(1, "rgba(2,4,9,0.98)");
+  ctx.fillStyle = veil;
+  ctx.fillRect(0, boxTop, LOGICAL_W, boxBottom - boxTop);
+  ctx.save();
+  ctx.beginPath(); ctx.rect(0, boxTop, LOGICAL_W, boxBottom - boxTop); ctx.clip();
   ctx.translate(0, off);
 
   if (l.column) {
-    const p = { x: 96, y: l.top + 40, w: 248, h: Math.min(330, l.height - 80) };
+    const p = { x: 92, y: l.top + 34, w: 238, h: Math.min(326, l.height - 68) };
     const mix = stage ? stage.mix : 1;
+    // A film-still portrait: softly cropped, a hairline of brass around it, no picture frame.
+    ctx.save();
+    rounded(ctx, p.x, p.y, p.w, p.h, 3);
+    ctx.clip();
     if (stage?.prev) drawPortrait(ctx, stage.prev, p, 1 - mix);
     if (m.portrait) drawPortrait(ctx, m.portrait, p, mix);
     else if (m.monogram !== undefined && m.monogram !== null) {
       ctx.save(); ctx.globalAlpha *= mix; drawMonogram(ctx, p, m.monogram, m.speakerAccent ?? "#e8c98a"); ctx.restore();
     }
+    ctx.restore();
+    ctx.save();
+    rounded(ctx, p.x + 0.5, p.y + 0.5, p.w - 1, p.h - 1, 3);
+    ctx.strokeStyle = "rgba(232,201,138,0.28)";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.restore();
   }
+
   if (m.speaker) {
-    drawText(ctx, m.speaker, l.textX, l.top + 30, { size: Math.round(Math.min(30, 22 * m.scale)), color: m.speakerAccent ?? "#edce91", weight: "bold" });
+    const name = m.speaker.toUpperCase();
+    const nameSize = Math.round(Math.min(26, 20 * m.scale));
+    drawText(ctx, name, l.textX, l.top + 30, {
+      size: nameSize, color: m.speakerAccent ?? "#edce91", weight: "bold", shadow: false,
+    });
+    ctx.save();
+    ctx.font = `bold ${nameSize}px Georgia, "Times New Roman", serif`;
+    const nw = ctx.measureText(name).width;
+    ctx.strokeStyle = "rgba(232,201,138,0.32)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(l.textX + nw + 20, l.top + 30 + nameSize * 0.62);
+    ctx.lineTo(l.textX + l.textW, l.top + 30 + nameSize * 0.62);
+    ctx.stroke();
+    ctx.restore();
   }
+
   drawRevealed(ctx, l.lines, typewriterSlice(m.text, m.reveal).length, l.textX, l.bodyY, {
     size: l.size, color: "#f0e7d6", lineHeight: l.lineHeight,
   });
   m.choices.forEach((choice, i) => {
     const r = l.rects[i], hover = m.hoverIndex === i;
     const seen = Boolean(choice.seen) && !hover;
-    ctx.fillStyle = hover ? "#304955" : seen ? "#11242f" : "#152e3c";
-    ctx.fillRect(r.x, r.y, r.w, r.h);
+    // Choices are lines of type with a brass mark, not buttons.
+    if (hover) {
+      const washRow = ctx.createLinearGradient(r.x, 0, r.x + r.w, 0);
+      washRow.addColorStop(0, "rgba(232,201,138,0.14)");
+      washRow.addColorStop(0.7, "rgba(232,201,138,0.04)");
+      washRow.addColorStop(1, "rgba(232,201,138,0)");
+      ctx.fillStyle = washRow;
+      ctx.fillRect(r.x, r.y, r.w, r.h);
+      ctx.fillStyle = "#e8c98a";
+      ctx.fillRect(r.x, r.y + 4, 2, r.h - 8);
+    }
+    ctx.strokeStyle = hover ? "rgba(232,201,138,0.35)" : "rgba(232,201,138,0.12)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(r.x + 30, r.y + r.h - 1);
+    ctx.lineTo(r.x + r.w, r.y + r.h - 1);
+    ctx.stroke();
+    // The mark: a small diamond that fills in under the pointer or the arrow keys.
+    ctx.save();
+    ctx.translate(r.x + 14, r.y + r.h / 2);
+    ctx.rotate(Math.PI / 4);
+    ctx.strokeStyle = hover ? "#ffe6a8" : "rgba(232,201,138,0.55)";
+    ctx.fillStyle = hover ? "#e8c98a" : "rgba(232,201,138,0.08)";
+    ctx.lineWidth = 1.2;
+    ctx.fillRect(-4, -4, 8, 8);
+    ctx.strokeRect(-4, -4, 8, 8);
+    ctx.restore();
     const inset = Math.round(8 * m.scale + (l.lineHeight - (l.size - 2)) / 2);
-    drawText(ctx, String(i + 1), r.x + 14, r.y + inset, { size: l.size - 2, color: seen ? "#a08a5c" : "#e8c98a" });
     (l.choiceLines[i] ?? []).forEach((line, li) => {
-      drawText(ctx, line, r.x + 56, r.y + inset - 2 + li * l.lineHeight, {
-        size: l.size - 2, color: hover ? "#ffffff" : seen ? "#8c9da6" : "#cbd9de",
+      drawText(ctx, line, r.x + 40, r.y + inset - 2 + li * l.lineHeight, {
+        size: l.size - 2,
+        color: hover ? "#fffaf0" : seen ? "#8b928c" : "#d3cbbb",
+        shadow: false,
       });
     });
   });
-  const footer = m.choices.length
-    ? (m.keyboard ? "Press a reply's number, or arrows and Enter" : m.touch ? "Tap a reply · long-press to leave" : "Click a reply or press its number · right-click to end")
-    : (m.keyboard ? "Enter to continue" : m.touch ? "Tap to continue" : "Click to continue");
-  const fs = dialogueFooterSize(m.scale);
-  drawText(ctx, footer, l.textX, l.top + l.height - fs - 20, { size: fs, color: "#c3d3da", shadow: false });
+  ctx.restore();
   ctx.restore();
 }
 
