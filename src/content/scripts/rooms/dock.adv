@@ -1,40 +1,39 @@
 room dock "Dreadwater Harbour"
-  bg bg_dock_v2_wide
+  bg bg_dock_cinema_wide
   width 2560
   music music_dock
   grade "brightness(0.95) saturate(0.85)"
   ambience gulls
-  # The strict side-on close-up of the harbour area view: the Marrow's dark bow and rigging at
-  # the left, the harbourmaster's jettied house with its lit plank door at the centre, the
-  # counting house's green lamp at the right, and the wet board-and-stone quay running on past
-  # it to the signpost and the harbour-mouth steps at the far right.
+  # The harbour's opening painting: the Marrow's dark bow and rigging at the left, the Salty
+  # Keel's low warm frontage beyond her, the harbourmaster's jettied house with its lit door at
+  # the centre, and the wet quay running on past the counting house's green lamp to the lit
+  # steps and the lamps at the right. No signs: the way out is read by lamplight and wet path.
   perspective horizon 470 ref 875 height 330
-  # One continuous painted path across the lower third: stone flags at the left, wet boards and
-  # cobbles under the house, the worn steps at the right. Every stand and arrival sits on it;
-  # the crates and barrels stay against the walls, above it.
-  walk (860,878) (860,834) (900,810) (960,792) (1020,776) (1100,758) (1200,735) (1350,720) (1500,707) (1650,700) (1800,697) (1950,696) (2050,702) (2150,712) (2250,728) (2350,748) (2450,780) (2500,820) (2500,878)
-  entry 1180,800
-  arrive tavern 900,815
-  arrive office 1280,790
-  arrive alley 1470,790
-  arrive village 2380,830
-  arrive pier_end 1150,800
-  arrive quay 1950,790
+  # One continuous painted path across the lower third: stone at the left, wet cobbles under
+  # the house, cobbles and stone flags at the right. Every stand and arrival sits on it; the
+  # crates and barrels stay against the walls, above it.
+  walk (1120,878) (1120,845) (1130,805) (1150,770) (1180,740) (1220,716) (1270,700) (1330,688) (1400,678) (1500,672) (1600,672) (1700,680) (1800,690) (1900,702) (2000,716) (2100,732) (2200,752) (2300,774) (2400,802) (2470,878)
+  entry 1330,800
+  arrive tavern 1160,780
+  arrive office 1340,780
+  arrive alley 1620,780
+  arrive village 2320,830
+  arrive pier_end 1330,800
+  arrive quay 2420,842
   footsteps stone
-  # Painted lights, each on its flame or glass: the counting house's green lamp, the tall quay
-  # lamp, the hanging iron lantern on its gib, and the warm lamp over the harbourmaster's door.
-  # The Salty Keel's little window is the other warm light on this stretch of quay.
-  light 1692,320 radius 90 lantern colour "#79e6a4"
-  light 1975,345 radius 130 lantern
-  light 1878,365 radius 65 lantern
-  light 1250,540 radius 90 lantern
-  light 928,515 radius 70 lantern
-  # The harbour water under the Marrow's bow, kept clear of her hull and the jetty boards.
-  water (0,685) (260,690) (430,715) (480,745) (430,770) (0,770) ripple 1.6
-  emit lapping at 300,730
-  # The crate stacks against the house wall are solid: whoever stands behind them is repainted
-  # over. The path is in front of their floor line, so Fenn walking past is never covered.
-  occluder floor 690 (700,520) (1060,520) (1060,690) (700,690)
+  # Painted lights, each on its flame or glass: the two lamps over the Salty Keel's door, the
+  # harbourmaster's door and its wall lantern, the counting house's green lamp, and the two
+  # tall quay lamps that pool the path at the right.
+  light 878,520 radius 110 lantern
+  light 1040,620 radius 120 lantern
+  light 1315,560 radius 100 lantern
+  light 1430,470 radius 70 lantern
+  light 1870,440 radius 55 lantern colour "#79e6a4"
+  light 2035,415 radius 120 lantern
+  light 2445,300 radius 110 lantern
+  # The harbour water under the Marrow's bow, kept clear of her hull and the jetty.
+  water (0,650) (420,660) (600,680) (600,880) (0,880) ripple 1.8
+  emit lapping at 300,800
 
   # Act I: the boat from the mainland puts Fenn ashore. The harbour is half empty;
   # the only ship with her gear aloft is the Marrow.
@@ -46,13 +45,9 @@ room dock "Dreadwater Harbour"
     say "A lamp burns in the harbourmaster's house. It is the only welcome in sight."
     say "The quay runs on past the harbourmaster's house, out toward the harbour mouth."
 
-  # The painted signpost on the path at the counting house corner: its arrow points on along
-  # the quay to the harbour-mouth steps. It belongs to the pier hotspot, so it leaves with it.
-  sprite prop_quay_sign at 1880,830 size 0.68 for pier
-
   hotspot ship "the Marrow"
-    area (0,120) (620,120) (660,560) (600,680) (0,680)
-    stand 760,845
+    area (0,120) (620,120) (650,600) (600,680) (0,680)
+    stand 1180,790
     look "The Marrow. Her sails are still bent, and her deck is scrubbed. She is the only ship here with any gear aloft."
     talk "I call up to the deck. Nobody answers. The harbour has taught everyone not to shout at ships."
     open "I am not opening a ship. Ships open themselves, usually at the worst moment."
@@ -65,51 +60,51 @@ room dock "Dreadwater Harbour"
       name "the Marrow, Vex's ship"
       look "The Marrow. Vex's ship, and the only way off this island that is still afloat."
 
-  # The low warm frontage under the jettied house, beside the harbourmaster's door: the
-  # Salty Keel, its little window lit over the stacked crates.
+  # The low warm frontage beyond the Marrow's bow: the Salty Keel, two lanterns burning over
+  # its corner, its window warm above the wet stone and the warm pool at its threshold.
   hotspot tavern_door "the Salty Keel"
-    area 820,400 200x250
-    stand 900,815
+    area 990,460 120x200
+    stand 1160,760
     exit tavern
     look "The Salty Keel. Warm light, and the sound of people carefully not saying something."
     open "I push the door. The room goes quiet in the way a room does when it knows me."
 
   hotspot office_door "the harbourmaster's house"
-    area 1180,450 140x200
-    stand 1280,790
+    area 1250,420 140x210
+    stand 1340,760
     exit office
     look "The harbourmaster's house. A lamp is burning behind the glass."
     open "I go in. Bramwick has run this harbour for thirty years, and he will know what to say."
 
   # The shadowed slot between the house's corner post and the counting house wall: the mouth
-  # of Wreckers' Lane, with the crates stacked against it.
+  # of Wreckers' Lane, cold fog light deep inside it and crates stacked against it.
   hotspot alley_mouth "Wreckers' Lane"
-    area 1360,300 100x320
-    stand 1470,790
+    area 1560,340 110x280
+    stand 1620,780
     exit alley sound none
     look "A gap between two warehouses. Wreckers' Lane. The name is doing a lot of work."
     open "I turn into the lane. It smells of tar and wet rope."
 
-  # The lane runs on out of the frame at the far right, climbing between the counting house
-  # and the tall timber house below Upper Town.
+  # The lit stone steps climbing between the counting house and the tall timber house at the
+  # right: the road up to Upper Town, its gate and a lamp burning beyond it.
   hotspot road "the road up to town"
-    area 2340,600 210x260
-    stand 2400,835
+    area 2200,420 230x260
+    stand 2290,810
     exit village sound none
-    look "The road climbs between the warehouses to Upper Town. Every shutter up there is shut."
-    open "I take the road up. The cobbles are wet, and the town is listening."
+    look "The steps climb between the warehouses to Upper Town. Every shutter up there is shut."
+    open "I take the steps up. The stone is wet, and the town is listening."
 
-  # The painted path itself, running on past the counting house to the signpost, the lamp and
-  # the short flight of stone steps at the far right.
+  # The painted path at the right edge, running on under the tall quay lamp and out of frame:
+  # the way on to the quay and the harbour mouth.
   hotspot pier "the quay to the harbour mouth"
-    area (1830,580) (2320,580) (2320,830) (1830,830)
-    stand 2130,790
+    area (2360,650) (2550,650) (2550,880) (2360,880)
+    stand 2430,845
     exit quay sound none
-    look "The boardwalk runs on past the harbourmaster's house. Past it is the quay, then the pier, then the harbour mouth."
+    look "The wet path runs on past the harbourmaster's house. Past it is the quay, then the pier, then the harbour mouth."
     open "I walk on along the quay, out toward the harbour mouth."
 
   hotspot water "the harbour water"
-    area (0,685) (260,690) (430,715) (480,745) (430,770) (0,770)
+    area (0,650) (420,660) (600,680) (600,880) (0,880)
     nowalk
     look "Black water. Past the headland, the fog has sat for three months without moving."
       say "Six ships used to tie up here. Now there is one."

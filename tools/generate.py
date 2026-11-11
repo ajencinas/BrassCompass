@@ -515,6 +515,21 @@ STYLE = ("hand-painted digital illustration, cinematic point-and-click adventure
          "rich atmospheric volumetric lighting, painterly brushwork, detailed, "
          "strong colour grading, wide 16:9 composition, no text, no UI, no watermark, no logos")
 
+# The visual restart's language, shared by the repainted rooms and the rest of the restart plates:
+# the story is carried by light, weather and composition, never by painted information. One warm
+# lantern key against deep indigo, a cold fog rim, emerald kept for the Grey Lantern's ghost-light,
+# and no chart or signage furniture of any kind.
+RESTART_STYLE = (
+    "Fully painted cinematic concept art, not a map, a diagram or a poster: hand-painted digital "
+    "oil illustration with loaded, visible brushwork, deep indigo and slate-blue night shadows "
+    "that stay coloured rather than black, cold silver-blue fog light rimming every silhouette, "
+    "a few small warm amber lantern cores, wet stone and wet timber catching broken reflections, "
+    "soft volumetric shafts through mist, rich filmic colour grade, full-bleed to all four edges, "
+    "no border, no frame, no vignette furniture. No text, no lettering, no signage, no signboards, "
+    "no painted words or numbers, no labels, no compass rose, no rhumb lines, no sea serpent, no "
+    "parchment or paper texture, no UI, no watermark, no logos."
+)
+
 BG_MODEL = "bytedance/seedream-5/lite/text-to-image"
 BG_RES = "2848x1600 (16:9)"
 
@@ -2122,31 +2137,6 @@ MANIFEST = [
                 f"UI. {STYLE}",
       "resolution": BG_RES, "output_format": "png"}, "scenes/quay_wide.webp"),
 
-    # A small standing sign at the dock's open right-hand boardwalk, so the way on to the quay
-    # reads before the player hovers it. The lettering is part of the prop, like the nameplate.
-    ("prop_quay_sign", "image", BG_MODEL,
-     {"prompt": "A single weathered harbour signpost standing straight up: a dark tarred wooden "
-                "post with a rounded top, and a rough plank board fixed across it near the top, "
-                "the board's right-hand end cut into an arrow point. The board is painted a faded "
-                "cream-white and carries the words HARBOUR MOUTH in plain dark hand-painted "
-                "capital letters, one line, evenly spaced, with a small painted arrow beneath "
-                "them pointing right. Painted adventure game prop, oil-painted digital "
-                "illustration, soft warm side lighting from the left, three-quarter view, the "
-                "object isolated and floating, the ENTIRE background flat solid magenta (#FF00FF) "
-                "including underneath it, no shadow, no ground, no other text",
-      "resolution": "1728x2304 (3:4)", "output_format": "png"}, "props/quay_sign.png"),
-
-    ("prop_quay_sign_mouth", "image", BG_MODEL,
-     {"prompt": "A single weathered harbour signpost standing straight up: a dark tarred wooden "
-                "post with a rounded top, and a rough plank board fixed across it near the top, "
-                "the board's LEFT-hand end cut into an arrow point. The board is painted a faded "
-                "cream-white and carries the words HARBOUR MOUTH in plain dark hand-painted "
-                "capital letters, one line, evenly spaced, with a small painted arrow beneath "
-                "them pointing LEFT. Painted adventure game prop, oil-painted digital "
-                "illustration, soft warm side lighting from the right, three-quarter view, the "
-                "object isolated and floating, the ENTIRE background flat solid magenta (#FF00FF) "
-                "including underneath it, no shadow, no ground, no other text",
-      "resolution": "1728x2304 (3:4)", "output_format": "png"}, "props/quay_sign_mouth.png"),
 
     ("prop_quay_steps", "image", BG_MODEL,
      {"prompt": "A short flight of weathered stone harbour steps descending from the quay toward the water at night, seen from the side and slightly above: four broad wet stone treads, a black iron handrail on the near side, a little green weed and salt in the joints, a warm amber lamp glow falling across the top steps and a cold blue reflection in the wet stone below, the treads leading down and away to the right. Painted adventure game prop, oil-painted digital illustration, three-quarter view, the whole stair in frame, the object isolated and floating, the ENTIRE background flat solid magenta (#FF00FF) including underneath it, no shadow, no ground, no water, no other objects, no text",
@@ -2452,6 +2442,144 @@ MANIFEST = [
                 "(#FF00FF), including underneath and all around it; no shadow, no ground, no "
                 "ship, no other objects, no text",
       "resolution": "1728x2304 (3:4)", "output_format": "png"}, "props/lantern_wrapped.png"),
+
+    # ================= the harbour's five screens, repainted =================
+    # The restart's room paintings. Each is a full-bleed 2560x880 painting rendered at 21:9 and
+    # cover-cropped by post_background(); each carries the same indigo night, cold fog rim and
+    # warm amber lantern key as bg_area_harbour, and each is deserted: no people, no signs, no
+    # painted lettering anywhere. The way out of every room is lit into the painting — a warm
+    # pool at a door, a door ajar on light, a reflection trail running off-frame — so an exit is
+    # read by light and composition alone, never by a sign. The lower third is a continuous,
+    # uncluttered walkable band in all five.
+    ("bg_dock_cinema_wide", "image", BG_MODEL,
+     {"prompt": f"Full-bleed ultra-wide panoramic side-on painting of a fog-bound northern harbour "
+                f"quay at night, the same world, palette and brushwork as the harbour establishing "
+                f"painting: indigo night, cold silver-blue fog, wet timber and stone, small warm "
+                f"amber lanterns, long broken reflections. Left third: the dark tarred bow, "
+                f"bulwark and tangled rigging of a moored two-masted ship, her hull doubled in "
+                f"black indigo water, mooring ropes and a stone edge in front of her. Left of "
+                f"centre: a low dockside tavern frontage of dark tarred boards under a jettied "
+                f"upper storey, its heavy plank door standing wide open on a warm amber interior, "
+                f"a small iron lantern burning beside the door and a bright warm pool of light "
+                f"spilling across the wet cobbles in front of it; the dark timber wall above the "
+                f"door is plain and bare. Centre: the tall harbourmaster's timber house, steep "
+                f"slate gables, jettied upper storey, rows of small warm-lit mullioned windows, "
+                f"and a plank door standing open with warm amber light pouring out and a broad "
+                f"glowing pool on the wet quay, an iron wall lantern burning beside it, the plain "
+                f"timber wall above that door bare as well. Right of the house: a shadowed slot "
+                f"between buildings, cold fog light deep inside it, crates and barrels stacked "
+                f"against the walls; then a dark timber counting house whose doorway is marked by "
+                f"a small green glass lamp burning emerald over it. Far right: the wet "
+                f"board-and-cobble path runs on out of the right edge under a tall black lamp post "
+                f"with a warm amber lantern, its long reflection running along the boards toward "
+                f"the viewer; at the extreme right edge a second tall lamp post with a warm amber "
+                f"lantern throws its pool across the wet stones, the path continuing out of frame "
+                f"beneath it; between the two lamps a short flight of worn stone steps climbs "
+                f"between the houses to a small open gate with a faint warm lamp beyond, the steps "
+                f"catching the lamp light. The lower third is one continuous, completely empty and "
+                f"unobstructed wet walking band from the left edge to the right edge, nobody and "
+                f"nothing standing in it, shining with the reflections of the lamps. The whole "
+                f"painting is deserted: not a single person, no figures, no silhouettes of people. "
+                f"No signboard of any kind, no shop sign, no signpost, no hanging sign, no blank "
+                f"board, no plaque, no flat painted panel, no painted letters, numbers or words, "
+                f"no labels, no UI. {RESTART_STYLE}",
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/dock_cinema_wide.webp"),
+
+    ("bg_tavern_cinema_wide", "image", BG_MODEL,
+     {"prompt": f"Full-bleed ultra-wide panoramic side-on painting of the interior of a dockside "
+                f"tavern at night, the same world and brushwork as the harbour's night paintings: "
+                f"deep indigo shadow, dark oak, warm amber lantern light. At the far left a heavy "
+                f"plank door with black iron hinges stands wide open onto cold indigo night, the "
+                f"harbour water and fog and a distant warm lamp just visible outside, and a long "
+                f"cold blue wedge of night light falls across the worn plank floor from the "
+                f"threshold. Left of centre a small-paned window shows indigo water and a faint "
+                f"green harbour lamp. The centre is dark oak posts and smoke-blackened beams with "
+                f"fishing nets, glass floats and coiled rope hanging high above head height; "
+                f"against the back wall, clear of the walking aisle, stands a long dark plank table "
+                f"with a single pewter mug on it and benches tucked beneath, a few barrels and "
+                f"crates stacked beside it. The right half is a long polished bar counter of dark "
+                f"wood, rows of bottles on shelves behind it, pewter tankards, a brass hand-bell "
+                f"catching a small bright glint, and two iron lanterns hanging over the bar with "
+                f"warm amber pools; the bar is the warmest, brightest part of the room, and the "
+                f"counter's near edge and the bell are rimmed with warm light. The lower third is "
+                f"one continuous, completely empty walkable aisle of worn dark plank floor from the "
+                f"open door at the left edge to the bar at the right, no stools, tables, barrels or "
+                f"mugs standing in it, wet-looking boards carrying both the cold blue door light "
+                f"and the warm amber bar light. The room is deserted: not a single person, no "
+                f"figures, no bartender, no drinkers. No menu board, no chalkboard, no painted sign, "
+                f"no poster, no notice, no paper on the walls, no framed panel, no lettering or "
+                f"numbers anywhere, no labels, no UI. {RESTART_STYLE}",
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/tavern_cinema_wide.webp"),
+
+    ("bg_office_cinema_wide", "image", BG_MODEL,
+     {"prompt": f"Full-bleed ultra-wide panoramic side-on painting of the interior of a "
+                f"harbourmaster's house at night on a fog-bound quay, the same dark timber "
+                f"architecture as the harbour outside: deep indigo shadow, panelled walls, beamed "
+                f"ceiling, broad worn plank floor. At the far left a plank door stands wide open "
+                f"onto cold blue fog and the wet stone quay, a faint iron lamp glowing outside, a "
+                f"cold silver-blue wedge of fog light falling in across the threshold boards. "
+                f"Left of centre a tall small-paned window looks out on the harbour: a full moon "
+                f"above black water and the dark masts of one moored ship, a faint green lamp far "
+                f"off, cold moonlight falling in a broad pale beam that lays a bright cold patch "
+                f"on the floor boards. Centre and right: tall shelves crowded with ledgers, "
+                f"wooden boxes and brass nautical instruments; at the right a heavy oak desk with "
+                f"a brass oil lamp burning warm amber, its glow pooling on the desk top, a locked "
+                f"drawer with a brass keyhole catching a glint, an open log book and rolled charts "
+                f"with brass weights. The cold moon beam and the warm desk-lamp pool meet on the "
+                f"floor, and the two sources fight across the room. The lower third is one "
+                f"continuous, completely empty walkable floor of worn planks from the open door at "
+                f"the left edge to the desk at the right; no chairs, rugs, boxes or furniture "
+                f"standing in it. The room is deserted: no people, no seated figure, no "
+                f"silhouette. No plaque, no framed certificate, no map with labels, no painted "
+                f"lettering or numbers anywhere, no sign, no labels, no UI. {RESTART_STYLE}",
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/office_cinema_wide.webp"),
+
+    ("bg_quay_cinema_wide", "image", BG_MODEL,
+     {"prompt": f"Full-bleed ultra-wide panoramic strict side-on painting of the short quay "
+                f"between an inner harbour and its mouth, on a fog-bound northern island at "
+                f"night, the same fog-bound timber waterfront and brushwork as the harbour "
+                f"establishing painting. One broad flat wet quay path of grey stone flags runs "
+                f"clear across the whole width of the frame in the lower half, shining with long "
+                f"warm lantern reflections that lead off both the left and right edges. At the "
+                f"left the harbour mouth opens onto indigo open water and cold blue fog: a low "
+                f"stone breakwater runs out to a small white stone lighthouse on a distant point, "
+                f"its lamp burning gold, a soft gold halo in the fog and a thin gold reflection "
+                f"on the water; a black iron bollard and coiled rope sit on the quay edge above "
+                f"the path. At the right the inner harbour: the dark bow, furled rigging and tall "
+                f"masts of a moored two-masted ship doubled in black water, and behind her the "
+                f"corner, chimney and steep slate gable of a tall jettied timber house with a few "
+                f"small warm-lit mullioned windows and one iron wall lantern burning amber, wet "
+                f"wooden boards under it. Two tall black cast-iron lamp posts with warm amber "
+                f"lanterns light the path, one left of centre and one at the right; a few crates "
+                f"and barrels stacked against the far wall, none of them in the path. The lower "
+                f"third is the clearest, brightest, completely empty and unobstructed walking "
+                f"band of the painting, from the left edge to the right edge. Deserted: not a "
+                f"single person, no figures, no ship's crew, no signpost, no signboard, no "
+                f"lettering or numbers, no labels, no UI. {RESTART_STYLE}",
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/quay_cinema_wide.webp"),
+
+    ("bg_pierend_cinema_wide", "image", BG_MODEL,
+     {"prompt": f"Full-bleed ultra-wide panoramic side-on painting of the far end of a stone "
+                f"harbour pier at night, the same fog-bound world and brushwork as the harbour "
+                f"establishing painting: indigo night, cold blue fog, wet stone, warm amber "
+                f"lights. At the right a tall white stone lighthouse rises at the pier end, its "
+                f"great lamp burning gold inside the lantern room, a warm halo in the cold fog and "
+                f"a long gold reflection running down across the wet stone; beyond it to the right "
+                f"the flat black water and the towering fog bank at the harbour mouth. The centre "
+                f"is the pier's broad flat top of wet stone flags running left to right across the "
+                f"lower half, iron mooring bollards and coiled ropes along its seaward edge above "
+                f"the walking band, and a tall iron lamp post with a warm amber lantern whose pool "
+                f"of light falls on the stones in the middle of the pier. At the left the Marrow's "
+                f"small lapstrake boat is made fast under the lamp, her sail furled and oars "
+                f"shipped, the wet gunwale catching a thin glint, a gangplank down; behind her at "
+                f"the far left the warm lights of the harbour town along the quay path run on and "
+                f"off the left edge, their long reflections leading back toward the harbour, with "
+                f"stacked crates and sacks against the wall above the path. The lower third is one "
+                f"continuous, completely empty and unobstructed wet walking band from the left "
+                f"edge to the lighthouse at the right. Deserted: not a single person, no figures, "
+                f"no captain at the lamp, no signboard, no lettering or numbers, no labels, no UI. "
+                f"{RESTART_STYLE}",
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/pierend_cinema_wide.webp"),
 
     # ---------------- music ----------------
     ("music_dock", "audio", "acestep-ai/ace-step-1.5/text-to-audio",
