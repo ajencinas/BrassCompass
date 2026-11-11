@@ -56,6 +56,20 @@ export const MANIFEST = {
     bg_area_marrow: "/assets/scenes/area_marrow.webp",
     bg_area_shroud: "/assets/scenes/area_shroud.webp",
     bg_area_lantern: "/assets/scenes/area_lantern.webp",
+    // The visual restart (docs/VISUAL_RESTART.md): Dreadwater Isle repainted as a painting first,
+    // with no chart furniture and no painted lettering. `bg_title` is the 1920x1080 title screen's
+    // full-bleed aerial; `bg_atlas_island` is the same painting under the atlas's own key, so the
+    // chart view and the title can never drift apart. The five `_v2` plates are 2560x880 full-bleed
+    // establishing views that keep the old plates' geography (so the atlas markers still land) while
+    // replacing their lighting with the restart's language: warm lantern key, cold fog rim, emerald
+    // only for the Grey Lantern. The original area plates stay for the archived acts.
+    bg_title: "/assets/scenes/title_night.webp",
+    bg_atlas_island: "/assets/scenes/title_night.webp",
+    bg_area_harbour_v2: "/assets/scenes/area_harbour_v2.webp",
+    bg_area_town_v2: "/assets/scenes/area_town_v2.webp",
+    bg_area_marrow_v2: "/assets/scenes/area_marrow_v2.webp",
+    bg_area_shroud_v2: "/assets/scenes/area_shroud_v2.webp",
+    bg_area_lantern_v2: "/assets/scenes/area_lantern_v2.webp",
     // Rooms cut from the macro views: Upper Town's lane and lighthouse headland from area_town,
     // the Fog Flats from area_shroud. The wider plates above stay for the chart and ending art.
     bg_town_lane_wide: "/assets/scenes/town_lane_wide.webp",
