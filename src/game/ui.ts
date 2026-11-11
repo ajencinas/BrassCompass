@@ -425,7 +425,7 @@ function drawSentence(ctx: CanvasRenderingContext2D, model: PanelModel): Rect | 
       ? "Tab: scene, verbs, items · arrows to move · Enter to act · hold Q to reveal"
       : model.touch
       ? "Tap a thing to see it, again to act · tap the floor to walk"
-      : "Click to act · Tab to focus · Enter to act · right-click to look · Q reveals";
+      : "Click a thing — best verb picked · Tab focus · Enter act · right-click look · Q reveals";
     drawText(ctx, idle, SENT_X, l.sentY + 6, {
       size: fitSize(ctx, idle, SENT_W, Math.round(Math.min(28, 22 * model.scale)), 18),
       color: "#b9c8d3",
