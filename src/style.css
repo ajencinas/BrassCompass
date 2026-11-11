@@ -522,7 +522,9 @@ body.reduced-motion .cinematic { transition-duration: .15s; }
   outline: 2px solid #ffe6a8; outline-offset: 3px;
 }
 
-.atlas-foot small { font-size: 13px; }
+.atlas-foot small { font-size: 15px; color: #d6c6a2; }
+.atlas-legend { font-size: 13px !important; }
+.atlas-row-note { font-size: .82em !important; }
 
 /* Focus is the keyboard cursor: make it unmistakable, not just a browser ring. */
 .atlas-row:focus, .atlas-row:focus-visible {

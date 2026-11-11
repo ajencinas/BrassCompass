@@ -285,7 +285,7 @@ export class Atlas {
           this.goArea(a.id);
         };
         this.marker(i + 1, a.x, a.y, { klass: here ? "here" : locked ? "locked" : "", label, onPick: pick });
-        this.row(i + 1, a.name, locked ? "Beyond the fog. Not yet." : `Act ${a.act}`, {
+        this.row(i + 1, a.name, here ? "You are here." : locked ? "Beyond the fog. Not yet." : `Act ${a.act}`, {
           klass: here ? "here" : locked ? "locked" : "",
           label,
           onPick: pick,
@@ -324,7 +324,7 @@ export class Atlas {
         this.handlers.onTravel(room.id);
       };
       this.marker(i + 1, room.x, room.y, { klass, label, onPick: pick });
-      this.row(i + 1, room.name, room.note ?? "", { klass, label, onPick: pick });
+      this.row(i + 1, room.name, here ? "You are here." : room.note ?? "", { klass, label, onPick: pick });
     });
     this.focusFirst();
   }

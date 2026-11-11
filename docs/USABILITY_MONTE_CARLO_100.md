@@ -177,3 +177,20 @@ exits as the fix; the motor-impairment and low-vision testers still ask for **la
 hit targets at 1280×720** and an explicit UI/text-scale control. The atlas still needs a clearer
 “you are here” versus “selected” distinction for keyboard users, and the 12-verb grid still has no
 visible default verb. Those are the next polish items, not blockers.
+
+### Second polish (after the A/B)
+
+- Goal/label type raised again; exit labels are ~20 px at 1920 and sit on the painted door/ladder,
+  stack instead of colliding, and hide while a hotspot is focused so the focus label and the
+  persistent label cannot overlap. Their hit boxes are ~76 px tall.
+- Exit labels accept the click themselves, but only where no painted hotspot is under the pointer.
+- Atlas now says **“You are here.”** for the current area/room and gives the selected marker/row an
+  explicit gold ring; the note reads “Selected: … Enter to travel.”
+- The idle footer now says **“Click a thing — best verb picked”**, explaining the automatic verb
+  instead of leaving the 12-cell grid with no visible default.
+- Rechecked at 1280×720: goal, top bar, verbs, inventory and footer fit without clipping; the
+  focus label and sentence remain legible.
+
+Still open for a future accessibility pass: 44 px minimum targets at 720p (the whole HUD scales
+below that), the 12-verb grid could collapse to primary verbs + More, and the label/help type at
+150% browser zoom is still at the small end.

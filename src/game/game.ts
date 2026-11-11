@@ -69,7 +69,7 @@ const BAR_LABELS: Record<BarId, string> = {
 /** The plates' right edge and the gap between them; the room plate at the other end. */
 const BAR_RIGHT = 1896;
 const BAR_GAP = 10;
-const ROOM_PLATE = { x: 24, w: 400, h: 96 };
+const ROOM_PLATE = { x: 24, w: 400, h: 108 };
 /**
  * next-level: a11y — top-bar geometry at a text scale. The plates widen with the type (there is room: the row ends
  * at 1896 and the room plate stops at 424) and drawing and hit-testing both read this one layout,
@@ -88,7 +88,7 @@ function barLayout(scale: number): Record<BarId, { x: number; y: number; w: numb
   return out;
 }
 /** Below the top bar: where the tip-mode line and other banners sit, clear of the buttons. */
-const BANNER_Y = 120;
+const BANNER_Y = 132;
 
 const TIPS_KEY = "brasscompass.tips.v1";
 
@@ -240,7 +240,7 @@ const NOTE_TOAST_TIME = 4;
 const NOTE_TOAST_TEXT = "New place on the chart — J";
 /** One plain-English goal per room, shown under the room name. */
 const OBJECTIVES: Record<string, string> = {
-  dock: "Find the harbourmaster. The lit door is his.",
+  dock: "Find the harbourmaster — the warm-lit door at the centre.",
   quay: "Follow the quay to the harbour mouth.",
   pier_end: "Find Vex at the lamp.",
   tavern: "Ask Marta about your father.",
@@ -3276,13 +3276,13 @@ export class Game {
       drawText(ctx, where.text, ROOM_PLATE.x + 16, BAR.y + Math.round(12 * scale), {
         size: where.size, color: "#93a4af", shadow: false,
       });
-      const room = fitText(ctx, this.room.name, ROOM_PLATE.w - 32, Math.round(20 * scale), 14);
+      const room = fitText(ctx, this.room.name, ROOM_PLATE.w - 32, Math.round(22 * scale), 15);
       drawText(ctx, room.text, ROOM_PLATE.x + 16, BAR.y + Math.round(27 * scale), {
         size: room.size, color: "#e8c98a", shadow: false,
       });
       if (objective) {
-        const goal = fitText(ctx, "Goal: " + objective, ROOM_PLATE.w - 32, Math.round(15 * scale), 10);
-        drawText(ctx, goal.text, ROOM_PLATE.x + 16, BAR.y + Math.round(54 * scale), {
+        const goal = fitText(ctx, "Goal: " + objective, ROOM_PLATE.w - 32, Math.round(17 * scale), 11);
+        drawText(ctx, goal.text, ROOM_PLATE.x + 16, BAR.y + Math.round(58 * scale), {
           size: goal.size, color: "#cfc2a3", shadow: false,
         });
       }
@@ -3313,7 +3313,7 @@ export class Game {
         ctx.lineWidth = 1.5;
         ctx.strokeRect(b.x + 0.75, b.y + 0.75, b.w - 1.5, b.h - 1.5);
       }
-      const label = fitText(ctx, BAR_LABELS[id], b.w - 16, Math.round(22 * scale), 14);
+      const label = fitText(ctx, BAR_LABELS[id], b.w - 16, Math.round(24 * scale), 15);
       if (glow) {
         const k = this.reduced ? 0.8 : 0.5 + 0.5 * Math.sin(this.time * 6);
         ctx.save();
@@ -3399,6 +3399,8 @@ export class Game {
 
     const visible = this.visibleHotspots();
     const hovered = this.hoverHotspot ? visible.find((h) => h.id === this.hoverHotspot) : undefined;
+    const focusedId = this.keyboardFocus?.kind === "hotspot" ? this.keyboardFocus.id : null;
+    const showLabels = !hovered && !focusedId;
     this.exitCueHits = [];
     this.exitLabelBoxes = [];
     // Every way out keeps a named label at its threshold. The label is also a click target, so
@@ -3412,21 +3414,26 @@ export class Game {
       const x = b.x + b.w / 2;
       const y = Math.max(120, Math.min(SCENE_H - 34, b.y + b.h / 2));
       const near = raw === hovered || Math.hypot(base.x - this.x, base.y - this.y) <= EXIT_CUE_RANGE;
+      const active = raw === hovered || raw.id === focusedId;
       if (x < this.cameraX + 24 || x > this.cameraX + LOGICAL_W - 24) {
         const edge = x < this.cameraX ? "left" : "right";
         const edgeX = edge === "left" ? this.cameraX + 34 : this.cameraX + LOGICAL_W - 34;
         const angle = edge === "left" ? -Math.PI / 2 : Math.PI / 2;
         this.drawExitChevron(ctx, edgeX, y, angle, near ? 1 : 0.8);
-        const labelX = edge === "left" ? this.cameraX + 150 : this.cameraX + LOGICAL_W - 150;
-        const rect = this.drawExitLabel(ctx, labelX, y, state.name, near ? 1 : 0.8);
-        if (rect) this.exitCueHits.push({ hs: raw, ...rect });
+        if (showLabels && !active) {
+          const labelX = edge === "left" ? this.cameraX + 150 : this.cameraX + LOGICAL_W - 150;
+          const rect = this.drawExitLabel(ctx, labelX, y, edge === "left" ? "« " + state.name : state.name + " »", near ? 1 : 0.8);
+          if (rect) this.exitCueHits.push({ hs: raw, ...rect });
+        }
         continue;
       }
       const dx = base.x - this.x;
       const angle = Math.abs(dx) < 18 ? 0 : dx < 0 ? -Math.PI / 2 : Math.PI / 2;
       this.drawExitChevron(ctx, x, y, angle, near ? 1 : 0.75);
-      const rect = this.drawExitLabel(ctx, x, y, state.name, near ? 1 : 0.7);
-      if (rect) this.exitCueHits.push({ hs: raw, ...rect });
+      if (showLabels && !active) {
+        const rect = this.drawExitLabel(ctx, x, y, state.name, near ? 1 : 0.7);
+        if (rect) this.exitCueHits.push({ hs: raw, ...rect });
+      }
     }
   }
 
@@ -3438,14 +3445,14 @@ export class Game {
   /** A small dark label under a way out, so an exit reads as a named place, not scenery. */
   private drawExitLabel(ctx: CanvasRenderingContext2D, x: number, y: number, name: string, strength: number): { x: number; y: number; w: number; h: number } | null {
     if (y < 120 || y > SCENE_H - 34) return null;
-    const size = Math.round(18 * this.textScale);
+    const size = Math.round(20 * this.textScale);
     ctx.save();
     ctx.font = `${size}px Georgia, "Times New Roman", serif`;
-    const text = fitText(ctx, name, 280, size, 12);
+    const text = fitText(ctx, name, 300, size, 12);
     const w = ctx.measureText(text.text).width + 22;
-    const h = size + 14;
+    const h = size + 16;
     const bx = Math.max(this.cameraX + 8, Math.min(this.cameraX + LOGICAL_W - w - 8, x - w / 2));
-    let by = y - 38 - size;
+    let by = y - 42 - size;
     // Keep stacked exits (the dock has two at the right edge) from covering each other.
     for (let guard = 0; guard < 8; guard++) {
       const clash = this.exitLabelBoxes.some((r) =>
@@ -3463,7 +3470,7 @@ export class Game {
       size: text.size, color: "#f6e7c2", align: "center", shadow: false,
     });
     ctx.restore();
-    return { x: bx - 8, y: by - 7, w: w + 16, h: h + 14 };
+    return { x: bx - 12, y: by - 12, w: w + 24, h: h + 24 };
   }
 
   /** One small, soft chevron at a threshold; points toward the opening from Fenn's side. */
