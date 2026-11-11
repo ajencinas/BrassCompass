@@ -23,7 +23,7 @@ import { CinematicPlayer } from "./cinematic";
 import { VERBS } from "./verbs";
 import { characterOf } from "../content/characters";
 import type {
-  Room, Hotspot, VerbId, Effect, Cond, DialogueTree, DialogueNode, Area, Combo, DialogueChoice, SceneSprite,
+  Room, Hotspot, VerbId, Effect, Cond, DialogueTree, DialogueNode, Area, Combo, DialogueChoice, SceneSprite, DoorSound,
 } from "./types";
 import { ROOMS, START_ROOM, START_POS } from "../content/rooms";
 import { ACTS, ENDING, FIRST_ACT, LAST_ACT } from "../content/acts";
@@ -54,41 +54,38 @@ import { GLOBAL_COMBOS } from "../content/combos";
 import { TIPS } from "../content/hints";
 import { MANIFEST } from "../content/assets";
 import { TipLadder } from "./tips";
+import { drawGlyph, roundRectPath, type BarGlyph } from "./cues";
 
-// next-level: a11y — the top bar's plates grow with the text scale (see barLayout below).
-/** Top-bar buttons: base widths at 100%, right-aligned. Their plates grow with the text scale. */
-const BAR = {
-  y: 18, h: 44,
-  reveal: [1016, 150], log: [1176, 120], tip: [1306, 120], casebook: [1436, 170], map: [1616, 110], pause: [1726, 170],
-} as const;
+/**
+ * The top bar is icon-only and quiet: small square plates, right-aligned, with no words on the
+ * glass. The labels below are for the screen-reader toolbar and the canvas's hover title only.
+ */
+const BAR = { y: 18, h: 44, size: 44, gap: 8, right: 1896 } as const;
 type BarId = "reveal" | "log" | "tip" | "casebook" | "map" | "pause";
 const BAR_IDS: BarId[] = ["reveal", "log", "tip", "casebook", "map", "pause"];
 const BAR_LABELS: Record<BarId, string> = {
-  reveal: "Reveal (Q)", log: "History (L)", tip: "Tip (H)", casebook: "Chart (J)", map: "Map (A)", pause: "Pause (Esc)",
+  reveal: "Reveal interactive things", log: "Line history", tip: "Tip", casebook: "Chart", map: "Map", pause: "Pause",
 };
-/** The plates' right edge and the gap between them; the room plate at the other end. */
-const BAR_RIGHT = 1896;
-const BAR_GAP = 10;
-const ROOM_PLATE = { x: 24, w: 400, h: 108 };
+const BAR_KEYS: Record<BarId, string> = { reveal: "Q", log: "L", tip: "H", casebook: "J", map: "A", pause: "Escape" };
+const BAR_GLYPHS: Record<BarId, BarGlyph> = {
+  reveal: "eye", log: "scroll", tip: "candle", casebook: "chart", map: "compass", pause: "pause",
+};
 /**
- * next-level: a11y — top-bar geometry at a text scale. The plates widen with the type (there is room: the row ends
- * at 1896 and the room plate stops at 424) and drawing and hit-testing both read this one layout,
- * so a bigger label never moves the button out from under its text. At 100% it is the old layout.
+ * Icon geometry. The glyphs do not grow with the text scale — they are pictures, not type — so
+ * drawing and hit-testing read this one fixed layout.
  */
-function barLayout(scale: number): Record<BarId, { x: number; y: number; w: number; h: number }> {
-  const k = Math.max(1, Math.min(scale, 1.5));
+function barLayout(): Record<BarId, { x: number; y: number; w: number; h: number }> {
   const out = {} as Record<BarId, { x: number; y: number; w: number; h: number }>;
-  let right = BAR_RIGHT;
+  let right = BAR.right;
   for (let i = BAR_IDS.length - 1; i >= 0; i--) {
     const id = BAR_IDS[i];
-    const w = Math.round(BAR[id][1] * k);
-    out[id] = { x: right - w, y: BAR.y, w, h: BAR.h };
-    right -= w + BAR_GAP;
+    out[id] = { x: right - BAR.size, y: BAR.y, w: BAR.size, h: BAR.h };
+    right -= BAR.size + BAR.gap;
   }
   return out;
 }
 /** Below the top bar: where the tip-mode line and other banners sit, clear of the buttons. */
-const BANNER_Y = 132;
+const BANNER_Y = 76;
 
 const TIPS_KEY = "brasscompass.tips.v1";
 
@@ -108,8 +105,6 @@ type FocusGroup = "hotspot" | "verb" | "item";
 /** Tab order: the scene first (what the player came to touch), then the verbs, then the satchel. */
 const FOCUS_GROUPS: FocusGroup[] = ["hotspot", "verb", "item"];
 const ROMAN = ["", "I", "II", "III", "IV", "V", "VI"];
-/** A name drawn over the scene: centred on `x`, its text's top at `y`. */
-interface HotspotLabel { text: string; color: string; size: number; w: number; x: number; y: number }
 
 /** The painted bounds of a hotspot's area, in world coordinates. */
 function areaBox(area: Area): { x: number; y: number; w: number; h: number } {
@@ -119,28 +114,6 @@ function areaBox(area: Area): { x: number; y: number; w: number; h: number } {
     x: Math.min(...xs), y: Math.min(...ys),
     w: Math.max(...xs) - Math.min(...xs), h: Math.max(...ys) - Math.min(...ys),
   };
-}
-
-/**
- * Move labels that would cover each other to the nearest free height (just above or below the
- * one in the way), top to bottom, keeping clear of `fixed` ones too.
- */
-function placeLabels(labels: HotspotLabel[], fixed: HotspotLabel[], minY: number, maxY: number): void {
-  const placed = [...fixed];
-  const clash = (l: HotspotLabel, y: number): boolean => placed.some((p) =>
-    l.x - l.w / 2 - 14 < p.x + p.w / 2 + 14 && l.x + l.w / 2 + 14 > p.x - p.w / 2 - 14 &&
-    y - 8 < p.y + p.size + 12 && y + l.size + 12 > p.y - 8);
-  for (const l of [...labels].sort((a, b) => a.y - b.y || a.x - b.x)) {
-    if (clash(l, l.y)) {
-      const want = l.y;
-      // Just above or just below the label in the way, clear of its margin.
-      const options = placed.flatMap((p) => [p.y - l.size - 22, p.y + p.size + 22])
-        .filter((y) => y >= minY && y <= maxY && !clash(l, y))
-        .sort((a, b) => Math.abs(a - want) - Math.abs(b - want));
-      if (options.length) l.y = options[0];
-    }
-    placed.push(l);
-  }
 }
 
 /** Items that have art of their own (`item_<id>` in the manifest); the rest are drawn as names. */
@@ -213,7 +186,9 @@ const EXIT_EDGE_BAND = 70;
 /** How near the viewport edge an exit's painted area must reach to count as meeting it. */
 const EXIT_EDGE_TOUCH = 4;
 const EXIT_INTRO_TIME = 2.5;
-const EXIT_INTRO_MAX = 0; // persistent exit labels carry it; dashed first-entry outlines read as debug
+const EXIT_INTRO_MAX = 4; // a first-entry breath of light at up to four thresholds
+/** How near the pointer must be to a threshold for its light to answer. */
+const EXIT_POINTER_RANGE = 120;
 /** A read line lingers this long, then its box fades away over NARRATION_FADE seconds. */
 const NARRATION_LINGER = 2.5;
 const NARRATION_FADE = 0.6;
@@ -238,34 +213,6 @@ const SAVE_NOTICE_MIN = 8;
 /** How long a pinned note's banner and the chart button's glow last, in seconds. */
 const NOTE_TOAST_TIME = 4;
 const NOTE_TOAST_TEXT = "New place on the chart — J";
-/** One plain-English goal per room, shown under the room name. */
-const OBJECTIVES: Record<string, string> = {
-  dock: "Find the harbourmaster — the warm-lit door at the centre.",
-  quay: "Follow the quay to the harbour mouth.",
-  pier_end: "Find Vex at the lamp.",
-  tavern: "Ask Marta about your father.",
-  office: "Ask Bramwick what he knows.",
-  alley: "Find the way through Wreckers' Lane.",
-  chandlery: "Find Hobb and the crowbar.",
-  warehouse: "Search the boat shed.",
-  counting_house: "Find Vex's ledger.",
-  village: "Ask the villagers about Elias.",
-  weather_works: "Find Rook's log in the lighthouse.",
-  marrow_deck: "Find Vex at the helm.",
-  marrow_quarterdeck: "Speak to Vex.",
-  marrow_cabin: "Search Vex's chart table.",
-  below_decks: "Find Hobb and Dorrit.",
-  bow_fog: "Look into the fog from the bow.",
-  crows_nest: "Find Quill in the crow's nest.",
-  marrow_gallery: "Search the stern gallery.",
-  lagoon_shore: "Cross the Wrack Line to the camp.",
-  far_pans: "Follow the salt pans to the camp.",
-  reef_wreck: "Search the sunken wreck.",
-  salt_camp: "Find Elias among the castaways.",
-  key_gate: "Open the reef gate.",
-  lantern_deck: "Find the great lantern.",
-  arcadia_cabin: "Find Mordant and the nameplate.",
-};
 
 /** What a save may name, checked against the live content. */
 const KNOWN: SaveKnown = {
@@ -313,10 +260,7 @@ export class Game {
   private hoverHotspot: string | null = null;
   private hoverChoice = -1;
   private keyboardFocus: KeyboardFocus | null = null;
-  /** Last-drawn exit label boxes, so the labels are themselves clickable targets. */
-  private exitCueHits: Array<{ hs: Hotspot; x: number; y: number; w: number; h: number }> = [];
-  private exitLabelBoxes: Array<{ x: number; y: number; w: number; h: number }> = [];
-  /** Reveal: every hotspot outlined and named. Held with Q, or toggled by its button. */
+  /** Reveal: every hotspot outlined in light. Held with Q, or toggled by its button. */
   private revealHeld = false;
   private revealToggled = false;
   /** Touch: the hotspot a first tap showed; a second tap on it acts. */
@@ -372,6 +316,14 @@ export class Game {
   private titleClock = 0;
   private needle: { fromY: number | null; since: number } = { fromY: null, since: -99 };
   private cursorStyle = "";
+  /** Seconds of pointer/key quiet; the icon bar fades when nobody has touched it. */
+  private idle = 0;
+  /** Eased visibility of the icon bar: 1 when in use, low and quiet when idle. */
+  private barFade = 1;
+  /** A button just pressed, so its icon shows a short focus ring even after the key is up. */
+  private barFlash: { id: BarId; left: number } | null = null;
+  /** The button under the pointer, for the canvas's hover title. */
+  private lastBarHover: BarId | null = null;
   private cameraX = 0;
   private focusCameraX: number | null = null;
   private rejection = 0;
@@ -529,7 +481,12 @@ export class Game {
       const button = document.createElement("button");
       button.type = "button";
       button.textContent = label;
-      if (shortcut) button.setAttribute("aria-keyshortcuts", shortcut);
+      // The icon plate has no words; its accessible name and hover title carry the meaning.
+      button.title = shortcut ? `${label} (${shortcut})` : label;
+      if (shortcut) {
+        button.setAttribute("aria-keyshortcuts", shortcut);
+        button.setAttribute("aria-label", `${label} (${shortcut})`);
+      }
       button.addEventListener("click", action);
       root.append(button);
       return button;
@@ -744,6 +701,8 @@ export class Game {
     if (this.a11y && k !== "Escape" && event.target instanceof Node && this.a11y.root.contains(event.target)) return;
     // A modifier on its own, an F-key or a media key means nothing here, and must not skip a line.
     if (!actionKey(k)) return;
+    // Any key the game takes counts as use: the icon bar wakes for it.
+    this.idle = 0;
     // A held key acts once. Only movement repeats (Tab and the arrows walk focus along a row): a
     // held Enter, letter or Escape would confirm twice, flicker the pause menu, reopen and close
     // the casebook, or race through lines the player hasn't read.
@@ -809,6 +768,7 @@ export class Game {
         this.announce("Cancelled.");
         return;
       }
+      this.flashBar("pause");
       this.setPaused(true);
       return;
     }
@@ -819,11 +779,13 @@ export class Game {
     }
     if (k.toLowerCase() === "a" && !this.title && !this.won && !this.cinematic.active) {
       event.preventDefault();
+      this.flashBar("map");
       this.showAtlas();
       return;
     }
     if (k.toLowerCase() === "j" && !this.title && !this.won && !this.cinematic.active) {
       event.preventDefault();
+      this.flashBar("casebook");
       this.audio.page();
       // next-level: casebook — pass the plan from the J key too
       this.showCasebook();
@@ -831,6 +793,7 @@ export class Game {
     }
     if (k.toLowerCase() === "l" && !this.title && !this.cinematic.active) {
       event.preventDefault();
+      this.flashBar("log");
       this.audio.page();
       this.history.show();
       return;
@@ -838,11 +801,13 @@ export class Game {
     if (k.toLowerCase() === "q" && !this.title && !this.won) {
       // Held, not toggled: let go and the outlines go with it.
       event.preventDefault();
+      this.flashBar("reveal");
       if (!this.revealHeld) this.announce(this.revealSummary());
       this.revealHeld = true;
       return;
     }
     if ((k === "h" || k === "H") && !this.title && !this.won && !this.dialogue && !this.queue) {
+      this.flashBar("tip");
       this.showTip();
       return;
     }
@@ -1175,6 +1140,7 @@ export class Game {
   private onMove(x: number, y: number): void {
     this.lastInput = "pointer";
     this.pointerSeen = true;
+    this.idle = 0;
     this.keyboardFocus = null;
     this.focusCameraX = null;
     this.hoverVerb = null;
@@ -1215,7 +1181,7 @@ export class Game {
   /** next-level: a11y — which top-bar button a point is on, in the same layout it is drawn with. */
   private barHit(x: number, y: number): BarId | null {
     if (this.title || this.won || y < BAR.y || y > BAR.y + BAR.h) return null;
-    const boxes = barLayout(this.textScale);
+    const boxes = barLayout();
     for (const id of BAR_IDS) {
       const b = boxes[id];
       if (x >= b.x && x <= b.x + b.w) return id;
@@ -1300,6 +1266,7 @@ export class Game {
 
   private barAction(id: BarId): void {
     if (this.cinematic.active) return;
+    this.flashBar(id);
     if (id === "pause") {
       if (!this.paused) this.setPaused(true);
       return;
@@ -1323,6 +1290,11 @@ export class Game {
   /** Whether the reveal outlines are showing (Q held, or the button toggled on). */
   private get revealing(): boolean {
     return (this.revealHeld || this.revealToggled) && !this.title && !this.won && !this.dialogue;
+  }
+  /** Wake the icon bar and light the button just used, so a shortcut has a visible answer. */
+  private flashBar(id: BarId): void {
+    this.idle = 0;
+    this.barFlash = { id, left: 0.65 };
   }
   private revealSummary(): string {
     const names = this.visibleHotspots().map((h) => this.hotspotState(h).name);
@@ -1378,6 +1350,7 @@ export class Game {
     if (this.roomMenu) { this.roomMenuClick(x, y); return; }
     this.audio.unlock();
     this.lastInput = "pointer";
+    this.idle = 0;
     this.keyboardFocus = null;
     this.focusCameraX = null;
 
@@ -1469,13 +1442,6 @@ export class Game {
 
     const hs = this.hotspotAt(x + this.cameraX, y);
     if (!hs) {
-      // The persistent exit labels are targets too, but only where no painted hotspot already
-      // sits under the pointer: a label must never steal a click from its own door.
-      const cue = this.exitCueHits.find((r) => x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h);
-      if (cue) {
-        this.onHotspotClick(cue.hs);
-        return;
-      }
       this.touchArmed = null;
       // Walk-off: floor clicked in the last few pixels beside an exit that meets this edge is
       // that exit's own click. Without this, a painted path running off the frame ends in a
@@ -2272,6 +2238,13 @@ export class Game {
 
   private update(dt: number): void {
     this.tick++;
+    // The icon bar is quiet chrome: it stays up for a few seconds after use, then settles to a
+    // low alpha until the pointer or a key wakes it. Its hit boxes never move or go away.
+    this.idle = Math.min(this.idle + dt, 600);
+    if (this.barFlash && (this.barFlash.left -= dt) <= 0) this.barFlash = null;
+    const barHot = this.barHit(this.input.x, this.input.y);
+    const barWant = this.paused || this.cinematic.active || barHot || this.noteGlow > 0 || this.idle < 3.5 ? 1 : 0.22;
+    this.barFade += (barWant - this.barFade) * Math.min(1, dt * (barWant < this.barFade ? 2.4 : 8));
     this.tickAreaCard(dt);
     // The establishing card holds the scene under it, so no opening line plays unseen.
     if (this.areaCardBusy) return;
@@ -3100,19 +3073,8 @@ export class Game {
     // next-level: casebook
     this.drawNoteToast(ctx);
 
-    // hover name near cursor
-    let label: string | null = null;
-    if (!this.dialogue && !this.won) {
-      if (this.hoverHotspot) {
-        const hs = this.room.hotspots.find((h) => h.id === this.hoverHotspot);
-        label = hs ? this.hotspotState(hs).name : null;
-      } else if (this.hoverItem) {
-        label = ITEMS[this.hoverItem]?.name ?? null;
-      }
-    }
-    // A finger has no pointer to follow: its label sits by the tap, and only for a thing.
-    drawCursor(ctx, this.input.x, this.input.y, this.touch && !this.touchArmed && !this.hoverItem ? null : label,
-      this.rejection > 0, this.textScale, narrationBox);
+    // The cursor is a shape, not a word chip: hover is answered by the gold rim in the scene.
+    drawCursor(ctx, this.input.x, this.input.y, null, this.rejection > 0, this.textScale, narrationBox);
     this.renderFade(ctx);
   }
 
@@ -3135,16 +3097,8 @@ export class Game {
     else if (this.hoverVerb || this.hoverItem) cursor = "pointer";
     else if (this.hoverHotspot && !this.won) {
       const raw = this.room.hotspots.find((h) => h.id === this.hoverHotspot);
-      if (raw && !this.sentence.verb && this.isExit(raw)) {
-        // On an edge exit, match the walk-off cursor the bare floor beside it shows.
-        if (x <= EXIT_EDGE_BAND) cursor = "w-resize";
-        else if (x >= LOGICAL_W - EXIT_EDGE_BAND) cursor = "e-resize";
-        else {
-          const c = this.areaCentre(raw.area);
-          const dx = c.x - this.x;
-          cursor = Math.abs(dx) > 160 ? (dx < 0 ? "w-resize" : "e-resize") : c.y < this.y ? "n-resize" : "s-resize";
-        }
-      } else cursor = "pointer";
+      if (raw && !this.sentence.verb && this.isExit(raw)) cursor = this.exitCursor(raw, x);
+      else cursor = "pointer";
     }
     // The strip beside an exit that runs off the frame is itself a way out (see the walk-off
     // in onClick), so say so with the cursor even when the pointer is on bare floor — but only
@@ -3158,6 +3112,23 @@ export class Game {
       this.cursorStyle = cursor;
       this.view.canvas.style.cursor = cursor;
     }
+  }
+
+  /**
+   * What the OS cursor says on a way out: a hand on a door, an up/down arrow on stairs or a
+   * hatch, a sideways arrow on a path that runs out of the frame. The bare floor at a frame
+   * edge gets the same walk-off arrow (see onClick).
+   */
+  private exitCursor(hs: Hotspot, screenX: number): string {
+    if (screenX <= EXIT_EDGE_BAND) return "w-resize";
+    if (screenX >= LOGICAL_W - EXIT_EDGE_BAND) return "e-resize";
+    const sound = this.exitSound(hs);
+    if (sound === "stairs" || sound === "hatch") return "ns-resize";
+    if (sound === "none") {
+      const stand = this.exitStand(this.hotspotState(hs));
+      return stand.x < this.x ? "w-resize" : "e-resize";
+    }
+    return "pointer";
   }
 
   private areaCentre(area: Area): Pt {
@@ -3252,83 +3223,56 @@ export class Game {
     ctx.save();
     ctx.translate(-this.cameraX, 0);
     if (this.revealing) this.drawReveal(ctx);
-    // Exit legibility lives in the scene layer, under the chrome: the first-entry pulse, then
-    // the quiet chevron on the way out nearest Fenn (or under the pointer).
-    this.drawExitIntro(ctx);
+    // Exit legibility lives in the scene layer, under the chrome: warm threshold light, a
+    // breathing rim on the door/ladder in reach, then one small unlabeled chevron if needed.
+    this.drawExitLighting(ctx);
     this.drawHoverGlow(ctx);
     this.drawKeyboardFocus(ctx);
-    this.drawExitCue(ctx);
+    this.drawExitChevron(ctx);
     ctx.restore();
   }
 
-  /** The room's name, the top-bar buttons and the tip line: chrome, steady over the scene. */
+  /** The icon bar and the tip line: chrome, steady over the scene. The bar carries no words. */
   private renderTopBar(ctx: CanvasRenderingContext2D): void {
-    // next-level: a11y — the bar is chrome, so its type follows the text scale. The plates widen
-    // with it, and every label is fitted (then ellipsised) so a long word can never spill out.
-    const scale = this.textScale;
-    ctx.fillStyle = "rgba(5,13,22,0.9)";
-    ctx.fillRect(ROOM_PLATE.x, BAR.y, ROOM_PLATE.w, ROOM_PLATE.h);
-    const objective = OBJECTIVES[this.room.id];
-    // The atlas hierarchy, always visible: the area above the room.
-    const area = areaOfRoom(this.room.id);
-    if (area) {
-      const where = fitText(ctx, area.name.toUpperCase(), ROOM_PLATE.w - 32, Math.round(10 * scale), 8);
-      drawText(ctx, where.text, ROOM_PLATE.x + 16, BAR.y + Math.round(12 * scale), {
-        size: where.size, color: "#93a4af", shadow: false,
-      });
-      const room = fitText(ctx, this.room.name, ROOM_PLATE.w - 32, Math.round(22 * scale), 15);
-      drawText(ctx, room.text, ROOM_PLATE.x + 16, BAR.y + Math.round(27 * scale), {
-        size: room.size, color: "#e8c98a", shadow: false,
-      });
-      if (objective) {
-        const goal = fitText(ctx, "Goal: " + objective, ROOM_PLATE.w - 32, Math.round(17 * scale), 11);
-        drawText(ctx, goal.text, ROOM_PLATE.x + 16, BAR.y + Math.round(58 * scale), {
-          size: goal.size, color: "#cfc2a3", shadow: false,
-        });
-      }
-    } else {
-      const room = fitText(ctx, this.room.name, ROOM_PLATE.w - 32, Math.round(22 * scale), 15);
-      drawText(ctx, room.text, ROOM_PLATE.x + 16, BAR.y + Math.round((BAR.h - room.size) / 2), {
-        size: room.size, color: "#e8c98a", shadow: false,
-      });
-    }
     const hover = this.barHit(this.input.x, this.input.y);
-    const boxes = barLayout(scale);
+    // The canvas title is the wordless icon's name on hover; the hidden DOM toolbar below the
+    // canvas carries the same names, with their shortcuts, for a screen reader.
+    if (hover !== this.lastBarHover) {
+      this.lastBarHover = hover;
+      this.view.canvas.title = hover ? `${BAR_LABELS[hover]} (${BAR_KEYS[hover]})` : "";
+    }
+    const boxes = barLayout();
+    ctx.save();
+    ctx.globalAlpha = this.barFade;
     for (const id of BAR_IDS) {
       const b = boxes[id];
-      const on = id === "reveal" && this.revealing;
-      // next-level: casebook — a note just filed makes the button breathe gold
-      // A note just filed: the casebook button breathes gold until the player has had a moment
-      // to notice it. Reduced motion holds it steady instead.
+      const on = (id === "reveal" && this.revealing) || (id === "tip" && this.tipMode);
+      const focus = hover === id || this.barFlash?.id === id;
       const glow = id === "casebook" && this.noteGlow > 0;
-      // Always a dark plate: a pale "on" fill was unreadable against a bright sky. On is a gold rim.
-      ctx.fillStyle = hover === id ? "rgba(38,58,76,0.96)" : on ? "rgba(8,16,26,0.96)" : "rgba(5,13,22,0.9)";
-      ctx.fillRect(b.x, b.y, b.w, b.h);
-      if (on) {
-        ctx.strokeStyle = "#e8c98a";
-        ctx.lineWidth = 2.5;
-        ctx.strokeRect(b.x + 1.25, b.y + 1.25, b.w - 2.5, b.h - 2.5);
-      } else if (hover === id) {
-        ctx.strokeStyle = "rgba(232,201,138,0.7)";
-        ctx.lineWidth = 1.5;
-        ctx.strokeRect(b.x + 0.75, b.y + 0.75, b.w - 1.5, b.h - 1.5);
-      }
-      const label = fitText(ctx, BAR_LABELS[id], b.w - 16, Math.round(24 * scale), 15);
-      if (glow) {
-        const k = this.reduced ? 0.8 : 0.5 + 0.5 * Math.sin(this.time * 6);
+      const k = this.reduced ? 0.8 : 0.5 + 0.5 * Math.sin(this.time * 6);
+      // Quiet: one dark glass plate, a faint edge, one glyph. On or focused is a gold ring.
+      roundRectPath(ctx, b.x, b.y, b.w, b.h, 11);
+      ctx.fillStyle = hover === id ? "rgba(30,48,64,0.94)" : on ? "rgba(8,16,26,0.94)" : "rgba(5,13,22,0.72)";
+      ctx.fill();
+      ctx.strokeStyle = "rgba(232,201,138,0.16)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      if (on || focus || glow) {
         ctx.save();
-        ctx.globalAlpha = 0.5 + 0.5 * k;
-        ctx.strokeStyle = "#ffe6a8";
-        ctx.lineWidth = 2.5;
-        ctx.shadowColor = "rgba(255,214,140,0.95)";
-        ctx.shadowBlur = 12 + 8 * k;
-        ctx.strokeRect(b.x + 1.25, b.y + 1.25, b.w - 2.5, b.h - 2.5);
+        ctx.beginPath();
+        ctx.arc(b.x + b.w / 2, b.y + b.h / 2, 19, 0, Math.PI * 2);
+        ctx.strokeStyle = glow ? `rgba(255,230,168,${0.55 + 0.45 * k})`
+          : focus ? "rgba(255,240,200,0.95)" : "rgba(232,201,138,0.8)";
+        ctx.lineWidth = focus ? 2 : 1.5;
+        ctx.shadowColor = "rgba(255,206,130,0.7)";
+        ctx.shadowBlur = focus ? 10 : 6 + 6 * (glow ? k : 0);
+        ctx.stroke();
         ctx.restore();
       }
-      drawText(ctx, label.text, b.x + b.w / 2, BAR.y + Math.round((BAR.h - label.size) / 2) - 1, {
-        size: label.size, color: on || glow ? "#fff3cf" : "#e8c98a", align: "center", shadow: false,
-      });
+      const color = on || focus || glow ? "#fff3cf" : "#e8c98a";
+      drawGlyph(ctx, BAR_GLYPHS[id], b.x + b.w / 2, b.y + b.h / 2, focus ? 23 : 22, color, 0.96);
     }
+    ctx.restore();
     if (this.tipMode && !this.dialogue && !this.won) {
       // Its own row under the bar, so it never covers the buttons.
       const text = "Tip: " + this.tipLadder.shown();
@@ -3362,35 +3306,173 @@ export class Game {
     return this.vignetteFor.g;
   }
 
-  /**
-   * First entry into a room: breathe its ways out once so they read as exits before the
-   * hover/nearest cue takes over. More than four exits is too many to read as a hint, and a
-   * conversation, cutscene, pause or held Q keeps it off (update() holds the timer).
-   */
-  private drawExitIntro(ctx: CanvasRenderingContext2D): void {
-    if (this.exitIntro <= 0 || this.title || this.won || this.dialogue || this.cinematic.active ||
-        this.paused || this.revealing) return;
+  /** How strongly the one-time first-entry breath is still showing (0 when spent). */
+  private introGlow(): number {
+    if (this.exitIntro <= 0) return 0;
     const t = EXIT_INTRO_TIME - this.exitIntro;
     // Quick rise, one slow breath, and out before the eye starts ignoring it.
-    const fade = Math.min(1, t / 0.3, this.exitIntro / 0.65);
-    if (fade <= 0) return;
-    const pulse = this.reduced ? 0.65 : 0.5 + 0.5 * Math.sin((t / 1.25) * Math.PI * 2);
-    for (const raw of this.visibleHotspots()) {
-      if (!this.isExit(raw)) continue;
-      this.outlineHotspot(ctx, raw, {
-        stroke: `rgba(159,211,255,${(0.5 + 0.22 * pulse) * fade})`,
-        fill: `rgba(159,211,255,${0.045 * fade})`,
-        dash: [8, 6], width: 2,
-      });
-    }
+    return Math.max(0, Math.min(1, t / 0.3, this.exitIntro / 0.65));
   }
 
   /**
-   * The way out, without Q: a small low-alpha chevron at the threshold of the exit under the
-   * pointer, or of the single exit nearest Fenn once he is within reach of its stand. One cue
-   * only, so a room with many doors stays quiet.
+   * The way out, told in light. Every exit keeps a soft warm pool on its threshold; the door or
+   * ladder under the pointer, under keyboard focus, or within reach of Fenn breathes a little
+   * harder and picks up a warm rim. Q fills every exit with the same light at once. No names,
+   * no arrows drawn as signs — just the warm place on the floor where the room lets you leave.
    */
-  private drawExitCue(ctx: CanvasRenderingContext2D): void {
+  private drawExitLighting(ctx: CanvasRenderingContext2D): void {
+    if (this.title || this.won || this.dialogue || this.cinematic.active || this.paused) return;
+    const visible = this.visibleHotspots();
+    const hoveredId = this.hoverHotspot;
+    const focusedId = this.keyboardFocus?.kind === "hotspot" ? this.keyboardFocus.id : null;
+    const intro = this.introGlow();
+    let seed = 0;
+    for (const raw of visible) {
+      if (!this.isExit(raw)) continue;
+      seed++;
+      const hs = this.hotspotState(raw);
+      const stand = this.exitStand(hs);
+      const threshold = this.exitThreshold(hs);
+      if (threshold.x < this.cameraX - 150 || threshold.x > this.cameraX + LOGICAL_W + 150) continue;
+      const b = areaBox(hs.area);
+      const active = raw.id === hoveredId || raw.id === focusedId || this.pointerNear(threshold) || this.revealing;
+      const nearFenn = Math.hypot(stand.x - this.x, stand.y - this.y) <= EXIT_CUE_RANGE;
+      const strength = (active ? 1.3 : nearFenn ? 1.0 : 0.68) + intro * 0.8;
+      this.drawThresholdLight(ctx, threshold.x, threshold.y, b.w, b.h, strength, active, seed);
+      // The opening itself breathes a little light when the pointer, focus or Fenn is on it:
+      // the door leaf, the ladder, the rigging — whatever the threshold belongs to.
+      if (active && !this.revealing) {
+        const breath = this.reduced ? 0.7 : 0.5 + 0.5 * Math.sin(this.time * 3.1 + seed * 1.9);
+        ctx.save();
+        this.areaPath(ctx, hs.area);
+        ctx.globalCompositeOperation = "screen";
+        ctx.fillStyle = `rgba(255,206,140,${0.025 + 0.025 * breath})`;
+        ctx.fill();
+        ctx.restore();
+      }
+      // A compact opening (a door, hatch or ladder) can carry a visible rim of its own. Wide
+      // painted ways (a lane, a whole rigging) get only the pool: an outline there is furniture.
+      const compact = b.w <= 520 && b.h <= 620;
+      if (!this.revealing && compact && (active || intro > 0)) {
+        this.outlineHotspot(ctx, hs, {
+          fill: "rgba(255,190,110,0)",
+          stroke: `rgba(255,214,150,${0.2 + 0.16 * strength})`,
+          width: 1.6,
+          glow: 16,
+          glowColor: "rgba(255,170,80,0.7)",
+          core: 0.14,
+          edge: 0.12,
+        });
+      }
+    }
+  }
+
+  /** Is the pointer close enough to a threshold for its light to answer? */
+  private pointerNear(threshold: Pt): boolean {
+    if (!this.pointerSeen || this.touch || this.input.y >= SCENE_H) return false;
+    return Math.hypot(this.input.x + this.cameraX - threshold.x, this.input.y - threshold.y) <= EXIT_POINTER_RANGE;
+  }
+
+  /**
+   * A warm light pool and short rising column at a threshold. The dark contact ellipse keeps the
+   * warm light legible on a pale plate; on a dark one the pool and its soft rim do the work.
+   * `strength` is overall, `active` makes the breath quicker and deeper.
+   */
+  private drawThresholdLight(
+    ctx: CanvasRenderingContext2D, x: number, y: number, areaW: number, areaH: number,
+    strength: number, active: boolean, seed: number
+  ): void {
+    const pulse = this.reduced ? 0.74 : 0.56 + 0.44 * Math.sin(this.time * (active ? 3.2 : 1.55) + seed * 1.7);
+    const k = strength * Math.max(0.25, pulse);
+    const r = Math.max(42, Math.min(130, areaW * 0.62 || 64));
+    const rise = Math.max(70, Math.min(230, areaH * 0.55));
+    const beam = Math.max(26, Math.min(110, areaW * 0.52 || 44));
+    ctx.save();
+    // A soft shadow ring under the light: contrast on bright plates, invisible on dark ones.
+    const dark = ctx.createRadialGradient(x, y, r * 0.12, x, y, r * 1.55);
+    dark.addColorStop(0, "rgba(0,0,0,0)");
+    dark.addColorStop(0.6, "rgba(0,0,0,0)");
+    dark.addColorStop(0.78, `rgba(18,8,2,${0.10 + 0.07 * pulse})`);
+    dark.addColorStop(1, "rgba(18,8,2,0)");
+    ctx.fillStyle = dark;
+    ctx.beginPath();
+    ctx.ellipse(x, y, r * 1.55, r * 0.56, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // A warm tint first: on a pale plate a purely additive pool goes white and disappears, but
+    // a low amber wash turns the cool floor warm and reads at once. On a dark plate it is gentle.
+    ctx.globalCompositeOperation = "source-over";
+    ctx.fillStyle = `rgba(255,168,78,${0.1 * k})`;
+    ctx.beginPath();
+    ctx.ellipse(x, y, r * 0.95, r * 0.32, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Warm pool on the floor.
+    ctx.globalCompositeOperation = "lighter";
+    const pool = ctx.createRadialGradient(x, y, 0, x, y, r);
+    pool.addColorStop(0, `rgba(255,214,150,${0.22 * k})`);
+    pool.addColorStop(0.45, `rgba(255,172,86,${0.11 * k})`);
+    pool.addColorStop(1, "rgba(255,140,50,0)");
+    ctx.fillStyle = pool;
+    ctx.beginPath();
+    ctx.ellipse(x, y, r, r * 0.36, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // A short column of light rising into the opening: it reads as "through here" without a sign.
+    const column = ctx.createLinearGradient(0, y, 0, y - rise);
+    column.addColorStop(0, `rgba(255,205,130,${0.11 * k})`);
+    column.addColorStop(0.45, `rgba(255,185,100,${0.05 * k})`);
+    column.addColorStop(1, "rgba(255,170,80,0)");
+    ctx.fillStyle = column;
+    ctx.beginPath();
+    ctx.moveTo(x - beam / 2, y);
+    ctx.quadraticCurveTo(x - beam * 0.34, y - rise * 0.55, x - beam * 0.14, y - rise);
+    ctx.lineTo(x + beam * 0.14, y - rise);
+    ctx.quadraticCurveTo(x + beam * 0.34, y - rise * 0.55, x + beam / 2, y);
+    ctx.closePath();
+    ctx.fill();
+    // A soft ring around the pool: a dark contour gives it an edge on a sunlit deck, the warm
+    // line keeps it a light on a dark one.
+    ctx.globalCompositeOperation = "source-over";
+    ctx.beginPath();
+    ctx.ellipse(x, y, r * 0.64, r * 0.21, 0, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(38,18,4,${0.16 + 0.12 * pulse})`;
+    ctx.lineWidth = 5;
+    ctx.stroke();
+    ctx.strokeStyle = `rgba(255,214,150,${0.42 * k})`;
+    ctx.lineWidth = 1.8;
+    ctx.shadowColor = "rgba(255,186,96,0.8)";
+    ctx.shadowBlur = 9;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  /** Where Fenn stands before taking a way out: its own stand, else the base of its area. */
+  private exitStand(hs: Hotspot): Pt {
+    return hs.stand ?? this.areaStand(hs.area);
+  }
+
+  /** The painted threshold a pool should sit on: the stand's floor, kept within the opening. */
+  private exitThreshold(hs: Hotspot): Pt {
+    const b = areaBox(hs.area);
+    const stand = this.exitStand(hs);
+    return {
+      x: Math.max(b.x + b.w * 0.15, Math.min(b.x + b.w * 0.85, stand.x)),
+      y: stand.y,
+    };
+  }
+
+  /** How the way out sounds: a door, stairs, a hatch, or the open air. */
+  private exitSound(hs: Hotspot): DoorSound | null {
+    for (const effect of this.hotspotState(hs).do?.walk ?? []) {
+      if (effect.k === "go") return effect.sound ?? "door";
+    }
+    return null;
+  }
+
+  /**
+   * One small unlabeled chevron, only when it is needed: the exit under the pointer or keyboard
+   * focus, else the single one Fenn is close enough to take. Q already shows every way out in
+   * light, so no chevron competes with it.
+   */
+  private drawExitChevron(ctx: CanvasRenderingContext2D): void {
     if (this.exitIntro > 0 || this.title || this.won || this.dialogue || this.cinematic.active ||
         this.paused || this.revealing) return;
     // A verb or object on the line changes what clicking a door would do: no cue can promise
@@ -3400,127 +3482,105 @@ export class Game {
     const visible = this.visibleHotspots();
     const hovered = this.hoverHotspot ? visible.find((h) => h.id === this.hoverHotspot) : undefined;
     const focusedId = this.keyboardFocus?.kind === "hotspot" ? this.keyboardFocus.id : null;
-    const showLabels = !hovered && !focusedId;
-    this.exitCueHits = [];
-    this.exitLabelBoxes = [];
-    // Every way out keeps a named label at its threshold. The label is also a click target, so
-    // a player can click the words instead of hunting the painted door. The one under the
-    // pointer or nearest Fenn is brighter; Q still outlines the whole scene.
-    for (const raw of visible) {
-      if (!this.isExit(raw)) continue;
-      const state = this.hotspotState(raw);
-      const b = areaBox(state.area);
-      const base = this.exitStand(state);
-      const x = b.x + b.w / 2;
-      const y = Math.max(120, Math.min(SCENE_H - 34, b.y + b.h / 2));
-      const near = raw === hovered || Math.hypot(base.x - this.x, base.y - this.y) <= EXIT_CUE_RANGE;
-      const active = raw === hovered || raw.id === focusedId;
-      if (x < this.cameraX + 24 || x > this.cameraX + LOGICAL_W - 24) {
-        const edge = x < this.cameraX ? "left" : "right";
-        const edgeX = edge === "left" ? this.cameraX + 34 : this.cameraX + LOGICAL_W - 34;
-        const angle = edge === "left" ? -Math.PI / 2 : Math.PI / 2;
-        this.drawExitChevron(ctx, edgeX, y, angle, near ? 1 : 0.8);
-        if (showLabels && !active) {
-          const labelX = edge === "left" ? this.cameraX + 150 : this.cameraX + LOGICAL_W - 150;
-          const rect = this.drawExitLabel(ctx, labelX, y, edge === "left" ? "« " + state.name : state.name + " »", near ? 1 : 0.8);
-          if (rect) this.exitCueHits.push({ hs: raw, ...rect });
-        }
-        continue;
-      }
-      const dx = base.x - this.x;
-      const angle = Math.abs(dx) < 18 ? 0 : dx < 0 ? -Math.PI / 2 : Math.PI / 2;
-      this.drawExitChevron(ctx, x, y, angle, near ? 1 : 0.75);
-      if (showLabels && !active) {
-        const rect = this.drawExitLabel(ctx, x, y, state.name, near ? 1 : 0.7);
-        if (rect) this.exitCueHits.push({ hs: raw, ...rect });
-      }
+    let target = hovered && this.isExit(hovered) ? hovered : undefined;
+    if (!target && focusedId) {
+      const focused = visible.find((h) => h.id === focusedId);
+      if (focused && this.isExit(focused)) target = focused;
     }
-  }
-
-  /** Where Fenn stands before taking a way out: its own stand, else the base of its area. */
-  private exitStand(hs: Hotspot): Pt {
-    return hs.stand ?? this.areaStand(hs.area);
-  }
-
-  /** A small dark label under a way out, so an exit reads as a named place, not scenery. */
-  private drawExitLabel(ctx: CanvasRenderingContext2D, x: number, y: number, name: string, strength: number): { x: number; y: number; w: number; h: number } | null {
-    if (y < 120 || y > SCENE_H - 34) return null;
-    const size = Math.round(20 * this.textScale);
-    ctx.save();
-    ctx.font = `${size}px Georgia, "Times New Roman", serif`;
-    const text = fitText(ctx, name, 300, size, 12);
-    const w = ctx.measureText(text.text).width + 22;
-    const h = size + 16;
-    const bx = Math.max(this.cameraX + 8, Math.min(this.cameraX + LOGICAL_W - w - 8, x - w / 2));
-    let by = y - 42 - size;
-    // Keep stacked exits (the dock has two at the right edge) from covering each other.
-    for (let guard = 0; guard < 8; guard++) {
-      const clash = this.exitLabelBoxes.some((r) =>
-        bx < r.x + r.w + 4 && bx + w + 4 > r.x && by < r.y + r.h + 4 && by + h + 4 > r.y);
-      if (!clash) break;
-      by += h + 6;
+    let strength = 1;
+    if (!target) {
+      let best = Infinity;
+      for (const raw of visible) {
+        if (!this.isExit(raw)) continue;
+        const stand = this.exitStand(this.hotspotState(raw));
+        const d = Math.hypot(stand.x - this.x, stand.y - this.y);
+        if (d < best) { best = d; target = raw; }
+      }
+      if (!target || best > EXIT_CUE_RANGE) return;
+      strength = 0.82;
     }
-    this.exitLabelBoxes.push({ x: bx, y: by, w, h });
-    ctx.fillStyle = `rgba(4,12,20,${0.64 + 0.22 * strength})`;
-    ctx.fillRect(bx, by, w, h);
-    ctx.strokeStyle = `rgba(232,201,138,${0.3 + 0.5 * strength})`;
-    ctx.lineWidth = 1.5;
-    ctx.strokeRect(bx + 0.75, by + 0.75, w - 1.5, h - 1.5);
-    drawText(ctx, text.text, bx + w / 2, by + 6, {
-      size: text.size, color: "#f6e7c2", align: "center", shadow: false,
-    });
-    ctx.restore();
-    return { x: bx - 12, y: by - 12, w: w + 24, h: h + 24 };
+    const hs = this.hotspotState(target);
+    const threshold = this.exitThreshold(hs);
+    const sound = this.exitSound(hs);
+    let x = threshold.x;
+    let y = Math.max(76, Math.min(SCENE_H - 34, threshold.y - 26));
+    // A doorway or ladder says "through here" with an upward spark; a path running out of the
+    // picture points the way it goes.
+    let angle = 0;
+    if (sound === "none") {
+      const dx = threshold.x - this.x;
+      angle = Math.abs(dx) < 18 ? 0 : dx < 0 ? -Math.PI / 2 : Math.PI / 2;
+    }
+    if (x < this.cameraX + 24 || x > this.cameraX + LOGICAL_W - 24) {
+      const edge = x < this.cameraX ? "left" : "right";
+      x = edge === "left" ? this.cameraX + 30 : this.cameraX + LOGICAL_W - 30;
+      angle = edge === "left" ? -Math.PI / 2 : Math.PI / 2;
+    }
+    this.drawChevronAt(ctx, x, y, angle, strength);
   }
 
-  /** One small, soft chevron at a threshold; points toward the opening from Fenn's side. */
-  private drawExitChevron(ctx: CanvasRenderingContext2D, x: number, y: number, angle: number, strength = 1): void {
-    const pulse = this.reduced ? 0.6 : 0.5 + 0.5 * Math.sin(this.time * 2.3);
-    const alpha = (0.22 + 0.14 * pulse) * strength;
-    const bob = this.reduced ? 0 : Math.sin(this.time * 1.8) * 1.6;
+  /** One small, soft chevron with a dark contour so it survives a bright plate. */
+  private drawChevronAt(ctx: CanvasRenderingContext2D, x: number, y: number, angle: number, strength = 1): void {
+    const pulse = this.reduced ? 0.6 : 0.5 + 0.5 * Math.sin(this.time * 2.6);
+    const alpha = (0.42 + 0.26 * pulse) * strength;
+    const bob = this.reduced ? 0 : Math.sin(this.time * 2) * 1.4;
     ctx.save();
     ctx.translate(x, y + bob);
+    // A soft light behind the glyph so it sits in the pool rather than on top of it.
+    ctx.globalCompositeOperation = "lighter";
+    const halo = ctx.createRadialGradient(0, 2, 0, 0, 2, 26);
+    halo.addColorStop(0, `rgba(255,206,130,${0.16 * strength})`);
+    halo.addColorStop(1, "rgba(255,180,90,0)");
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(0, 2, 26, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalCompositeOperation = "source-over";
     ctx.rotate(angle);
+    ctx.scale(1.12, 1.12);
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
-    ctx.lineWidth = 2.2;
-    ctx.strokeStyle = `rgba(214,236,255,${alpha})`;
-    ctx.shadowColor = "rgba(120,190,255,0.55)";
-    ctx.shadowBlur = 7;
     // A leading chevron and a fainter echo: enough motion to catch the eye, never a signpost.
-    for (const [dy, strength] of [[0, 1], [8, 0.45]] as const) {
-      ctx.globalAlpha = strength;
-      ctx.beginPath();
-      ctx.moveTo(-9, dy + 4);
-      ctx.lineTo(0, dy - 4);
-      ctx.lineTo(9, dy + 4);
+    for (const [dy, echo] of [[0, 1], [9, 0.5]] as const) {
+      ctx.globalAlpha = echo;
+      const shape = (): void => {
+        ctx.beginPath();
+        ctx.moveTo(-9, dy + 4);
+        ctx.lineTo(0, dy - 4);
+        ctx.lineTo(9, dy + 4);
+      };
+      // A dark contour first (contrast on light plates), then the warm light itself.
+      ctx.strokeStyle = "rgba(16,8,2,0.38)";
+      ctx.lineWidth = 5;
+      shape();
+      ctx.stroke();
+      ctx.strokeStyle = `rgba(255,238,200,${alpha})`;
+      ctx.lineWidth = 2.4;
+      ctx.shadowColor = "rgba(255,186,96,0.8)";
+      ctx.shadowBlur = 10;
+      shape();
       ctx.stroke();
     }
     ctx.restore();
   }
 
-  /** Reveal: every thing in the room outlined and named, ways out marked with an arrow. */
+  /** Reveal: every thing in the room outlined in light, ways out warmer and fuller. No names. */
   private drawReveal(ctx: CanvasRenderingContext2D): void {
-    const focus = this.keyboardFocus?.kind === "hotspot" ? this.keyboardFocus.id : null;
-    const labels: HotspotLabel[] = [];
+    const pulse = this.reduced ? 0.7 : 0.5 + 0.5 * Math.sin(this.time * 3.4);
     for (const raw of this.visibleHotspots()) {
-      if (raw.id === this.hoverHotspot || raw.id === focus) continue;
       const hs = this.hotspotState(raw);
       const exit = this.isExit(hs);
-      const text = exit ? "#d6ecff" : "#f6e6c0";
+      // Exits are warm amber; everything else is a paler gold. Both are light, neither is a label.
       this.outlineHotspot(ctx, hs, {
-        stroke: exit ? "rgba(159,211,255,0.85)" : "rgba(232,201,138,0.85)",
-        fill: exit ? "rgba(159,211,255,0.07)" : "rgba(232,201,138,0.07)",
-        dash: [8, 6], width: 2,
+        fill: exit ? `rgba(255,196,120,${0.05 + 0.025 * pulse})` : `rgba(255,214,150,${0.055 + 0.03 * pulse})`,
+        stroke: exit ? `rgba(255,206,140,${0.58 + 0.24 * pulse})` : `rgba(255,228,175,${0.5 + 0.22 * pulse})`,
+        width: exit ? 2.2 : 2,
+        glow: exit ? 18 : 14,
+        glowColor: exit ? "rgba(255,170,80,0.8)" : "rgba(255,196,110,0.72)",
+        core: 0.2,
+        edge: 0.2,
       });
-      labels.push(this.hotspotLabel(ctx, hs, exit ? `\u2192 ${hs.name}` : hs.name, text));
     }
-    // Nested things (a drawer in a desk, an IOU in the drawer) would stack their names on one
-    // spot: move each label to the nearest free height. The focused thing's label is fixed.
-    const focused = focus ? this.visibleHotspots().find((h) => h.id === focus) : undefined;
-    const fixed = focused ? [this.hotspotLabel(ctx, this.hotspotState(focused), this.hotspotState(focused).name, "")] : [];
-    placeLabels(labels, fixed, this.labelTop(ctx), SCENE_H - Math.round(20 * this.textScale) - 24);
-    for (const label of labels) this.drawLabel(ctx, label);
   }
 
   /** The tip row's height (0 when it is off), measured the way it is drawn. */
@@ -3531,96 +3591,146 @@ export class Game {
     return lines.length * lh + Math.round(17 * this.textScale) + 8;
   }
 
-  /** Labels start below the top bar, and below the tip line when it shows. */
-  private labelTop(ctx: CanvasRenderingContext2D): number {
-    return this.tipMode ? BANNER_Y + this.tipBannerHeight(ctx) : 74;
+  private areaPath(ctx: CanvasRenderingContext2D, area: Area): void {
+    ctx.beginPath();
+    if ("rect" in area) {
+      const r = area.rect;
+      ctx.rect(r.x, r.y, r.w, r.h);
+    } else {
+      area.forEach((p, i) => (i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)));
+      ctx.closePath();
+    }
   }
 
   private outlineHotspot(ctx: CanvasRenderingContext2D, hs: Hotspot,
-    style: { stroke: string; fill: string; dash?: number[]; width: number }): void {
+    style: {
+      stroke: string; fill: string; dash?: number[]; width: number; glow?: number; glowColor?: string;
+      /** How much of the pale inner core to draw; a big area wants less of a crisp box. */
+      core?: number;
+      /** A dark thin contour under the light, so the rim survives a pale plate. */
+      edge?: number;
+    }): void {
     ctx.save();
-    ctx.beginPath();
-    if ("rect" in hs.area) {
-      const r = hs.area.rect;
-      ctx.rect(r.x, r.y, r.w, r.h);
-    } else {
-      hs.area.forEach((p, i) => (i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)));
-      ctx.closePath();
-    }
+    this.areaPath(ctx, hs.area);
     ctx.fillStyle = style.fill;
     ctx.fill();
+    if (style.glow) {
+      // A broad, very soft halo first: the shape is lit, not framed.
+      ctx.globalAlpha = 0.3;
+      ctx.strokeStyle = style.glowColor ?? style.stroke;
+      ctx.lineWidth = Math.max(7, style.width * 4.5);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+      ctx.shadowColor = style.glowColor ?? style.stroke;
+      ctx.shadowBlur = style.glow;
+    }
+    if (style.edge) {
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = `rgba(12,7,2,${style.edge})`;
+      ctx.lineWidth = style.width + 2.4;
+      ctx.stroke();
+      if (style.glow) {
+        ctx.shadowColor = style.glowColor ?? style.stroke;
+        ctx.shadowBlur = style.glow * 0.7;
+      }
+    }
     ctx.strokeStyle = style.stroke;
     ctx.lineWidth = style.width;
     if (style.dash) ctx.setLineDash(style.dash);
     ctx.stroke();
-    ctx.restore();
-  }
-
-  /** A hotspot's name, set above it (or just inside its top edge) and kept on screen. */
-  private hotspotLabel(ctx: CanvasRenderingContext2D, hs: Hotspot, text: string, color: string): HotspotLabel {
-    let centerX: number, top: number;
-    if ("rect" in hs.area) {
-      centerX = hs.area.rect.x + hs.area.rect.w / 2;
-      top = hs.area.rect.y;
-    } else {
-      centerX = hs.area.reduce((sum, p) => sum + p.x, 0) / hs.area.length;
-      top = Math.min(...hs.area.map((p) => p.y));
+    if (style.glow && (style.core ?? 0.3) > 0) {
+      // A thin pale core inside the glow: the rim reads as light, not as a selection box.
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = `rgba(255,246,220,${style.core ?? 0.3})`;
+      ctx.lineWidth = Math.max(0.8, style.width * 0.5);
+      ctx.stroke();
     }
-    const size = Math.round(20 * this.textScale);
-    ctx.save();
-    ctx.font = `italic ${size}px Georgia, serif`;
-    const w = ctx.measureText(text).width;
     ctx.restore();
-    const x = Math.max(this.cameraX + 16 + w / 2, Math.min(centerX, this.cameraX + LOGICAL_W - w / 2 - 16));
-    return { text, color, size, w, x, y: Math.max(this.labelTop(ctx), top - size - 22) };
   }
 
-  private drawLabel(ctx: CanvasRenderingContext2D, l: HotspotLabel): void {
-    ctx.fillStyle = "rgba(4,6,12,0.88)";
-    ctx.fillRect(l.x - l.w / 2 - 10, l.y - 5, l.w + 20, l.size + 14);
-    drawText(ctx, l.text, l.x, l.y, { size: l.size, color: l.color, align: "center", shadow: false });
-  }
-
-  /** Outline a hotspot and set its name above it, kept on screen. */
-  private markHotspot(ctx: CanvasRenderingContext2D, hs: Hotspot, name: string,
-    style: { stroke: string; fill: string; text: string; dash?: number[]; width: number }): void {
-    this.outlineHotspot(ctx, hs, style);
-    this.drawLabel(ctx, this.hotspotLabel(ctx, hs, name, style.text));
-  }
-
-  /** Soft outline around whatever the pointer is over — the discoverability layer. */
+  /** Soft gold rim and a slight warm brightening around whatever the pointer is over. */
   private drawHoverGlow(ctx: CanvasRenderingContext2D): void {
     if (!this.hoverHotspot || this.dialogue || this.won) return;
-    const hs = this.room.hotspots.find((h) => h.id === this.hoverHotspot);
-    if (!hs) return;
-
-    const pulse = this.reduced ? 0.7 : 0.55 + 0.25 * Math.sin(this.time * 5);
+    const raw = this.room.hotspots.find((h) => h.id === this.hoverHotspot);
+    if (!raw) return;
+    const hs = this.hotspotState(raw);
+    // A way out has its own light language (threshold pool, pulse, chevron): a rim here would
+    // trace the whole painted opening, which on a door or a rigging is a wireframe, not a light.
+    if (this.isExit(hs)) return;
+    const b = areaBox(hs.area);
+    const huge = Math.max(b.w, b.h) > 500;
+    const pulse = this.reduced ? 0.72 : 0.58 + 0.32 * Math.sin(this.time * 4.4);
+    const heat = 0.5 + 0.5 * pulse;
+    // The "slight brightening": a warm screen light over the shape, strongest where it is small.
     ctx.save();
-    ctx.beginPath();
-    if ("rect" in hs.area) {
-      const r = hs.area.rect;
-      ctx.rect(r.x, r.y, r.w, r.h);
-    } else {
-      const poly = hs.area;
-      poly.forEach((p, i) => (i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)));
-      ctx.closePath();
-    }
-    ctx.fillStyle = `rgba(232,201,138,${0.07 * pulse})`;
+    this.areaPath(ctx, hs.area);
+    ctx.globalCompositeOperation = "screen";
+    ctx.fillStyle = `rgba(255,215,150,${0.05 + 0.045 * heat})`;
     ctx.fill();
-    ctx.strokeStyle = `rgba(232,201,138,${0.55 * pulse})`;
-    ctx.lineWidth = 2.5;
-    ctx.setLineDash([10, 8]);
-    ctx.lineDashOffset = this.reduced ? 0 : -this.time * 26;
+    ctx.restore();
+    this.outlineHotspot(ctx, hs, {
+      fill: "rgba(255,205,130,0.015)",
+      stroke: `rgba(255,214,150,${(huge ? 0.28 : 0.44) + 0.24 * heat})`,
+      width: huge ? 1.4 : 2.4,
+      glow: huge ? 22 : 16,
+      glowColor: `rgba(255,190,100,${0.5 + 0.35 * heat})`,
+      core: huge ? 0.1 : 0.4,
+    });
+  }
+
+  /** A small warm focus ring where Fenn would act: for openings too big to outline honestly. */
+  private drawFocusRing(ctx: CanvasRenderingContext2D, x: number, y: number): void {
+    const pulse = this.reduced ? 0.8 : 0.7 + 0.24 * Math.sin(this.time * 3.1);
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.globalCompositeOperation = "lighter";
+    const pool = ctx.createRadialGradient(0, 0, 0, 0, 0, 38);
+    pool.addColorStop(0, `rgba(255,230,170,${0.2 * pulse})`);
+    pool.addColorStop(1, "rgba(255,180,90,0)");
+    ctx.fillStyle = pool;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 38, 15, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalCompositeOperation = "source-over";
+    ctx.strokeStyle = `rgba(255,243,207,${0.62 + 0.26 * pulse})`;
+    ctx.lineWidth = 2;
+    ctx.shadowColor = "rgba(255,210,140,0.9)";
+    ctx.shadowBlur = 14;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 27, 10, 0, 0, Math.PI * 2);
     ctx.stroke();
     ctx.restore();
   }
 
+  /** Tab/arrow focus: the same light, steadier and a little brighter, still without a name. */
   private drawKeyboardFocus(ctx: CanvasRenderingContext2D): void {
     if (this.keyboardFocus?.kind !== "hotspot" || this.dialogue || this.won) return;
-    const hs = this.visibleHotspots().find((hotspot) => hotspot.id === this.keyboardFocus?.id);
-    if (!hs) return;
-    this.markHotspot(ctx, hs, this.hotspotState(hs).name, {
-      stroke: "#fff3cf", fill: "rgba(255,243,207,0.06)", text: "#fff3cf", width: 3,
+    const raw = this.visibleHotspots().find((hotspot) => hotspot.id === this.keyboardFocus?.id);
+    if (!raw) return;
+    const hs = this.hotspotState(raw);
+    const b = areaBox(hs.area);
+    const huge = Math.max(b.w, b.h) > 500;
+    const pulse = this.reduced ? 0.8 : 0.68 + 0.2 * Math.sin(this.time * 3.2);
+    ctx.save();
+    this.areaPath(ctx, hs.area);
+    ctx.globalCompositeOperation = "screen";
+    ctx.fillStyle = `rgba(255,243,207,${(huge ? 0.03 : 0.055) + 0.025 * pulse})`;
+    ctx.fill();
+    ctx.restore();
+    if (huge) {
+      // A whole rigging or a sky cannot be ringed like a cupboard: put the ring where Fenn acts.
+      const at = this.isExit(hs) ? this.exitThreshold(hs) : this.areaStand(hs.area);
+      this.drawFocusRing(ctx, at.x, at.y);
+      return;
+    }
+    this.outlineHotspot(ctx, hs, {
+      fill: "rgba(255,243,207,0.02)",
+      stroke: `rgba(255,246,220,${0.7 + 0.2 * pulse})`,
+      width: 3,
+      glow: 20,
+      glowColor: "rgba(255,220,150,0.85)",
+      core: 0.5,
+      edge: 0.18,
     });
   }
 
