@@ -518,6 +518,22 @@ STYLE = ("hand-painted digital illustration, cinematic point-and-click adventure
 BG_MODEL = "bytedance/seedream-5/lite/text-to-image"
 BG_RES = "2848x1600 (16:9)"
 
+# ---------------- the visual restart: paintings first ----------------
+# The restart's language, shared by the title painting and the five atlas plates
+# (docs/VISUAL_RESTART.md): the story is carried by light, weather and composition, never by
+# painted information. One warm lantern key against deep indigo, a cold fog rim, emerald kept for
+# the Grey Lantern's own ghost-light, and no chart furniture of any kind.
+RESTART_STYLE = (
+    "Fully painted cinematic concept art, not a map, a diagram or a poster: hand-painted digital "
+    "oil illustration with loaded, visible brushwork, deep indigo and slate-blue night shadows "
+    "that stay coloured rather than black, cold silver-blue fog light rimming every silhouette, "
+    "a few small warm amber lantern cores, wet stone and wet timber catching broken reflections, "
+    "soft volumetric shafts through mist, rich filmic colour grade, full-bleed to all four edges, "
+    "no border, no frame, no vignette furniture. No text, no lettering, no signage, no signboards, "
+    "no painted words or numbers, no labels, no compass rose, no rhumb lines, no sea serpent, no "
+    "parchment or paper texture, no UI, no watermark, no logos."
+)
+
 # Characters must sit inside painterly backgrounds without looking pasted on.
 CHAR_STYLE = ("rendered in the same painterly style as a cinematic adventure game background: "
               "oil-painted digital illustration, visible brushwork, soft warm rim lighting, "
@@ -948,6 +964,115 @@ MANIFEST = [
                 f"lower third. Clear side view, essential scenery in the central vertical band. "
                 f"{STYLE}",
       "resolution": BG_RES, "output_format": "png"}, "scenes/area_lantern.webp"),
+
+    # ---------------- the visual restart: a painted title and five painted area plates --------
+    # A new lighting language, not new geography. The old chart and the five area plates above are
+    # the anchors: the same island, the same quays and ships, repainted as full-bleed cinematic
+    # establishing views. The chart furniture goes (compass rose, rhumb lines, sea serpent, torn
+    # paper, all painted lettering); light, weather and composition carry the place instead. No
+    # painted signs — the harbour reads by its lanterns, the town by its lit lane, the Grey
+    # Lantern by its green flame. Prompts keep the anchors' subject placement so the atlas markers
+    # over the plates still land on the right places.
+    ("bg_title", "image", BG_MODEL,
+     {"prompt": f"An oil painting of Dreadwater Isle at night, a cinematic aerial seen in "
+                f"perspective from high above the cold pewter sea, looking down and across at a "
+                f"fog-bound northern island. The island holds the left half of the frame: a "
+                f"huddled harbour town of dark timber and stone along a stone quay at the "
+                f"south-west, a scatter of warm amber lanterns and lit windows along the "
+                f"waterfront, the town climbing steeply to a lighthouse on its headland at the "
+                f"upper left, its great lamp burning gold and throwing a long gold beam into the "
+                f"fog. In the western water at the far left the Marrow, a dark two-masted sailing "
+                f"ship, lies at anchor, her stern lantern one warm point on the black water. The "
+                f"whole eastern half of the frame is drowned in a great soft bank of pale "
+                f"blue-grey sea fog; deep inside it stand the broken ribs of a wreck on a reef, "
+                f"and far off a faint sickly emerald green lantern glow, barely visible, the only "
+                f"green in the picture. Above, torn cloud and a thin cold moon; the top quarter "
+                f"is quiet dark sky and high fog, calm enough to carry a title. Moonlight silver "
+                f"on the water, warm town lights reflected in long broken streaks, deep indigo "
+                f"shadows, sea running to every edge of the frame. The island reads at a glance "
+                f"with no label anywhere: a painting first, a place before an atlas. "
+                f"{RESTART_STYLE}",
+      "resolution": "2848x1600 (16:9)", "output_format": "png"}, "scenes/title_night.webp"),
+
+    ("bg_area_harbour_v2", "image", BG_MODEL,
+     {"prompt": f"A cinematic establishing painting of the harbour at Dreadwater Isle at night, "
+                f"seen from the quay, full-bleed. The dark two-masted Marrow is moored at the "
+                f"left, her furled sails and rigging black against cold indigo water, a single "
+                f"lamp warm at her stern. Left of centre the tall timber tavern, its windows warm "
+                f"behind small panes, a blank weathered board above its door and nothing written "
+                f"on it; beyond it the harbourmaster's tall house and a narrow lane between two "
+                f"warehouses. Right of centre a boat shed with its door ajar, a counting house "
+                f"whose windows glow a thin green, and a shipwright's chandlery with stacked "
+                f"spars under its eave. Wet cobbles and stone edging run across the foreground, "
+                f"tallow and green lantern light pooling on the wet stone, thin fog drifting "
+                f"between the buildings, the hills behind lost in it. Warm lantern light against "
+                f"cold blue fog, wet reflections, deep indigo shadows. Empty: no people, no "
+                f"signs, no lettering. One continuous harbour scene; all essential buildings in "
+                f"the middle band of the frame, sky and foreground may crop. {RESTART_STYLE}",
+      "resolution": "4704x2016 (21:9)", "output_format": "png"},
+     "scenes/area_harbour_v2.webp"),
+
+    ("bg_area_town_v2", "image", BG_MODEL,
+     {"prompt": f"A cinematic establishing painting of Upper Town, Dreadwater Isle, at night: a "
+                f"steep cobbled lane climbing between dark timber-framed and stone cottages, "
+                f"full-bleed. Warm lit windows and a few iron lamps along the lane, laundry lines "
+                f"strung between gables, a stone well at the right, an empty shrine niche in a "
+                f"cottage wall. The lane rises to a headland at the upper right where the "
+                f"lighthouse stands, its great lamp burning gold, one long gold beam sweeping "
+                f"through cold blue fog. Wet cobbles mirroring the lamps and windows, cold fog "
+                f"pooling in the lane, roofs fading up into the murk, no horizon but fog. Warm "
+                f"amber windows against cold blue-grey night, deep indigo shadows, wet stone. "
+                f"Empty: no people, no signs, no lettering. All essential buildings in the middle "
+                f"band of the frame, sky and foreground may crop. {RESTART_STYLE}",
+      "resolution": "4704x2016 (21:9)", "output_format": "png"},
+     "scenes/area_town_v2.webp"),
+
+    ("bg_area_marrow_v2", "image", BG_MODEL,
+     {"prompt": f"A cinematic establishing painting of the Marrow, a two-masted sailing ship, at "
+                f"sea in cold fog at dusk, painted from her own deck, full-bleed. Her bow and "
+                f"carved figurehead at the left, tattered grey canvas hanging in strips from the "
+                f"yards, tarred ratlines and tangled rigging; the helm and brass binnacle at the "
+                f"right above a short flight of steps, the stern cabin dark timber with warm "
+                f"amber windows and a single glowing warm lantern at its corner; the crow's nest "
+                f"high on the foremast, half lost in fog. Beyond the rail a pewter fog sea under "
+                f"a pale gold dusk sky, the low sun breaking through grey cloud at the left "
+                f"horizon, cold fog rolling over the water. Wet deck planks catching cold light "
+                f"and one warm lamp, deep indigo-teal shadows, desaturated slate and pewter. "
+                f"Empty: no people, no signs, no lettering. All essential scenery in the middle "
+                f"band of the frame, sky and foreground may crop. {RESTART_STYLE}",
+      "resolution": "4704x2016 (21:9)", "output_format": "png"},
+     "scenes/area_marrow_v2.webp"),
+
+    ("bg_area_shroud_v2", "image", BG_MODEL,
+     {"prompt": f"A cinematic establishing painting of the Shroud, a vast grey tidal flat under "
+                f"thick cold fog, full-bleed. A beached longboat at the left, her clinker hull "
+                f"dark against ribbed wet sand; in the centre a broken ghost-ship wreck heeled "
+                f"into the flats, tattered grey sails hanging in rags, a faint spectral green "
+                f"glow threading through her rigging; at the right a low castaway camp of grey "
+                f"tents behind a driftwood palisade, no banners and nothing written; a pale track "
+                f"curving away into the far-right fog toward a reef gate, and a distant spectral "
+                f"ship at anchor on the grey horizon. Ribbed wet sand and pewter channels "
+                f"mirroring the fog, low fog lying in the hollows, no sun, no tropical colour, one "
+                f"faint ember of warm light at the camp the only warmth. Empty: no people, no "
+                f"signs, no lettering. All essential scenery in the middle band of the frame, sky "
+                f"and foreground may crop. {RESTART_STYLE}",
+      "resolution": "4704x2016 (21:9)", "output_format": "png"},
+     "scenes/area_shroud_v2.webp"),
+
+    ("bg_area_lantern_v2", "image", BG_MODEL,
+     {"prompt": f"A cinematic establishing painting of the Grey Lantern, an ancient ghost ship, "
+                f"at anchor in thick cold fog at night, seen from a low deck rail, full-bleed. Her "
+                f"dark rotted hull and torn grey sails fill the frame; the great iron lantern on "
+                f"its stern post at the right, a swollen green flame inside cloudy glass throwing "
+                f"a sickly emerald halo through the fog; spectral green light threading the "
+                f"rigging and washing the wet planks. A weathered deck rail and a low dark cabin "
+                f"door run across the lower edge, black water below, pale teal fog beyond, one "
+                f"faint warm ember far aft the only warmth left in the world. Cold moonlit "
+                f"silver-blue-green palette, deep black-green shadows, eerie and lonely but not "
+                f"gory. Empty: no people, no signs, no lettering. All essential scenery in the "
+                f"middle band of the frame, sky and foreground may crop. {RESTART_STYLE}",
+      "resolution": "4704x2016 (21:9)", "output_format": "png"},
+     "scenes/area_lantern_v2.webp"),
 
     # ---------------- the ships' rooms as close-ups of the area views ----------------
     # The area plates above are the anchor; these paint the rooms the player walks in as
@@ -2409,7 +2534,10 @@ def save_cache(c):
     # Resolve a symlink first (a git worktree sharing the main checkout's cache), so the write
     # lands in that file instead of replacing the link with a private copy.
     path = os.path.realpath(CACHE)
-    tmp = path + ".tmp"
+    # Other worktrees may be generating against the same cache at the same time. A shared temp
+    # name makes the writers race for one file: one wins the replace, the other raises ENOENT.
+    # Give each process its own temp file.
+    tmp = f"{path}.{os.getpid()}.tmp"
     with open(tmp, "w") as f:
         json.dump(c, f, indent=2)
         f.flush()
@@ -2422,6 +2550,12 @@ RETIRED = {"bg_dock", "bg_office", "bg_tavern", "char_walk", "npc_bramwick_body"
 
 # Scenes that are not room backgrounds but the whole 1920x1080 screen: the cold open's plate.
 FULL_PLATES = {"bg_coldopen", "bg_island_map"}
+
+# The visual restart: the painted title/island view is a whole 1920x1080 screen, and the five
+# atlas plates are 2560x880 full-bleed paintings cropped from a 21:9 render (the same crop the
+# `_wide` room plates use). They are full-bleed paintings, not room backgrounds.
+TITLE_PLATES = {"bg_title"}
+AREA_PLATES_V2 = {f"bg_area_{area}_v2" for area in ("harbour", "town", "marrow", "shroud", "lantern")}
 
 
 def output_url(kind, res):
@@ -2438,8 +2572,10 @@ def output_url(kind, res):
 
 def postprocess(name, kind, rel, payload, raw, out_path):
     if kind == "image":
-        if name in FULL_PLATES:
+        if name in FULL_PLATES or name in TITLE_PLATES:
             post_background(raw, out_path, width=1920, height=1080)
+        elif name in AREA_PLATES_V2:
+            post_background(raw, out_path, width=2560, height=880)
         elif rel.startswith("scenes/"):
             post_background(raw, out_path, width=2560 if name.endswith("_wide") else SCENE_W)
         elif rel.startswith("props/items/"):
