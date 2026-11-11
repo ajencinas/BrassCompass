@@ -141,3 +141,39 @@ navigation/legibility counts. The testers’ raw structured output is in
 These are screenshot-based persona reviews, not live telemetry. They measure what a player can infer
 from a single frame plus the control legend, and they over-sample first-impression friction. The
 convergence across 99 independent testers is the signal; the exact counts are directional.
+
+---
+
+## Follow-up: the wayfinding + accessibility pass
+
+Implemented in `60b9b7d` and the polish that followed:
+
+- Persistent **named exit labels** for every way out, including off-screen exits pinned to the screen
+  edge. The labels sit on the painted door/ladder or at the area's edge; clicking the words is the
+  same as clicking the exit, and the hit box is ~51 px tall.
+- A one-line **goal under the room name** for all 25 rooms (e.g. “Goal: Find the harbourmaster. The
+  lit door is his.”).
+- The footer and title now document **Tab/arrows + Enter**; Tab draws a cream ring on the scene
+  hotspot, names the pending action, and Enter acts.
+- The atlas gains a **Close** button, click-outside dismiss, **↑↓ + Enter** navigation, a visible
+  selected marker/row, and the legend “Bright: visited · Dim: not yet found · Fog: beyond.”
+- Renamed **The Wrack Line** and **The Marrow — Bow**; “right-click to leave” now reads “right-click
+  to end”; the chart toast reads “New place on the chart — J.”
+- Larger room plate/HUD type and the 1280×720 HUD checked for clipping.
+
+### Fixed-build A/B
+
+Twenty testers (five personas × four focused scenarios: onboarding, navigation, atlas, 1280 legibility).
+Nineteen usable responses:
+
+| Metric | Before | After |
+|---|---|---|
+| Average score | **2.9 / 5** | **3.6 / 5** |
+| Pass / friction / blocker | 0 / 98 / 1 | **2 / 17 / 0** |
+| Would continue | 96 / 99 | **19 / 19** |
+
+The single blocker is gone. Every tester independently identified the new goal line and the named
+exits as the fix; the motor-impairment and low-vision testers still ask for **larger label type and
+hit targets at 1280×720** and an explicit UI/text-scale control. The atlas still needs a clearer
+“you are here” versus “selected” distinction for keyboard users, and the 12-verb grid still has no
+visible default verb. Those are the next polish items, not blockers.
