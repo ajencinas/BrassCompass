@@ -1,29 +1,33 @@
 room marrow_quarterdeck "The Marrow — Helm"
-  bg bg_quarterdeck_wide
+  bg bg_quarterdeck_v2_wide
   width 2560
   music music_sea
   ambience sea
-  perspective horizon 250 ref 875 height 320
-  # The painted helm platform is a solid knee-high box from x 245 to x 1305; the walk steps
-  # out around its front face so nobody stands inside it, and runs to the rail on both sides.
-  walk (100,875) (130,700) (230,695) (245,730) (1300,730) (1320,700) (2440,700) (2470,875)
-  entry 300,800
-  arrive marrow_deck 430,800
-  arrive marrow_cabin 660,740
+  perspective horizon 260 ref 875 height 330
+  # The painting's raised helm deck: the companionway and its thrown-back cover at the left,
+  # the wheel and binnacle amidships, the stern cabin door at the right. The walk stays on the
+  # clear foreground planks and stops short of the open stairwell and the cabin threshold.
+  walk (420,878) (430,760) (520,735) (2450,730) (2500,790) (2500,878)
+  entry 470,830
+  arrive marrow_deck 470,830
+  arrive marrow_cabin 2150,830
   footsteps deck
-  light 175,515 radius 130 lantern if not rule_light
-  light 1382,432 radius 90 lantern if not rule_light
-  light 2060,450 radius 140 lantern if not rule_light
-  motes glints (1640,262) (2160,262) (2160,365) (1600,380) count 24
+  # Warm light rising from the companionway, the wall lantern, and the lamplit cabin door.
+  light 300,610 radius 220 lamp
+  light 1765,180 radius 130 lantern
+  light 1990,520 radius 160 lamp
+  water (600,380) (1700,380) (1700,560) (600,560) ripple 1.4
+  motes glints (1500,300) (2200,300) (2200,400) (1500,400) count 24
+  emit lapping at 1300,620
   emit creak
 
   # Act II: Vex at the foot of the helm, inboard of the binnacle and clear of the frame edge
   # at every camera position. The wheel and binnacle keep their painted ground; the crew
   # behind him is staggered in depth and size, not lined up abreast.
-  sprite npc_vex_body at 1240,800 size 1 idle speaker vex for vex grade "saturate(0.85) brightness(0.92)" if act 2 and not marrow_lost
-  sprite npc_quill_body at 1450,790 size 1 flip idle speaker quill for quill grade "saturate(0.85) brightness(0.92)" if act 2 and salvage_seen and not marrow_lost
-  sprite npc_hobb_body at 1650,842 size 1 flip idle speaker hobb for hobb grade "saturate(0.85) brightness(0.9)" if act 2 and salvage_seen and not marrow_lost
-  sprite npc_dorrit_body at 1860,808 size 1 idle speaker dorrit for dorrit grade "saturate(0.85) sepia(0.08) brightness(0.9)" if act 2 and salvage_seen and not marrow_lost
+  sprite npc_vex_body at 1240,800 size 1 idle speaker vex for vex grade "saturate(0.9) brightness(0.98)" if act 2 and not marrow_lost
+  sprite npc_quill_body at 1450,790 size 1 flip idle speaker quill for quill grade "saturate(0.9) brightness(0.98)" if act 2 and salvage_seen and not marrow_lost
+  sprite npc_hobb_body at 1650,842 size 1 flip idle speaker hobb for hobb grade "saturate(0.9) brightness(0.96)" if act 2 and salvage_seen and not marrow_lost
+  sprite npc_dorrit_body at 1860,808 size 1 idle speaker dorrit for dorrit grade "saturate(0.9) sepia(0.08) brightness(0.96)" if act 2 and salvage_seen and not marrow_lost
 
   scene if act 2 and salvage_seen and not vex_exposed
     say "Quill, Hobb and Dorrit come up behind me. Nobody says anything."
@@ -57,8 +61,8 @@ room marrow_quarterdeck "The Marrow — Helm"
         talk vex at last
 
   hotspot wheel "the wheel"
-    area 760,100 320x360
-    stand 950,810
+    area 820,210 230x300
+    stand 1080,815
     look "The wheel, lashed to the captain's heading. It is bigger than it looks from the quay."
     use "I put a hand on it. The ship does not notice, but I do."
     turnon "There is nothing to turn on. The ship is already doing it."
@@ -68,36 +72,36 @@ room marrow_quarterdeck "The Marrow — Helm"
         talk vex at last
 
   hotspot binnacle "the binnacle"
-    area 1000,150 220x330
-    stand 1080,810
+    area 1010,200 130x320
+    stand 1140,815
     look "The binnacle. A ship's compass in brass and glass, swinging slow. My father's compass disagrees with it."
     use "The ship's compass points north. Mine points at the fog. One of them is wrong."
     open "Sealed. You do not open a binnacle any more than you open a doctor."
     turnon "It is lit. It has been lit since before I came aboard."
 
   hotspot seas "the Shroud"
-    area 1400,180 900x280
+    area 1140,210 500x290
     nowalk
     look "The Shroud, ahead and to starboard, grey where the weather sits. It has taken every ship for eighty years."
     use "I hold up my father's compass. The needle settles on the grey and stays there."
 
   hotspot cabin_door "the cabin door"
-    area 430,260 200x170
-    stand 680,740
+    area 1830,200 270x420
+    stand 2150,830
     exit marrow_cabin
-    look "Carved doors under the helm: the captain's cabin, and the charts."
+    look "The captain's door, carved and warm at the edges. The charts are in there."
     open "I knock, then go in. Nobody is here to stop me."
 
   hotspot stairs_down "the steps to the deck"
-    area 260,440 400x400
-    stand 420,800
+    area 110,330 330x360
+    stand 470,830
     exit marrow_deck sound stairs
-    look "The steps back down to the main deck."
+    look "The open companionway, its cover thrown back. Warm light comes up the steps from the main deck."
     open "I go down."
 
   hotspot rail_lantern "the rail lantern"
-    area 1335,380 70x170
-    stand 1250,840
+    area 1735,100 90x190
+    stand 1660,840
     look "The rail lantern. It burns all night, whether anyone is watching or not."
     state if rule_light
       name "the last lantern"
@@ -109,7 +113,7 @@ room marrow_quarterdeck "The Marrow — Helm"
     area 1405,520 105x280
     stand 1360,810
     look "Quill has her spyglass out. She is not looking at the horizon."
-    talk "She says, \"Those crates had ships' names on them. I could read them from the door.\""
+    talk "She says, \"Those crates came off another ship. I could tell from the door.\""
     give "She does not take it. \"Keep your hands where I can see them. Both of them.\""
 
   hotspot hobb "Hobb"

@@ -63,6 +63,13 @@ export const MANIFEST = {
     bg_shroud_flats_wide: "/assets/scenes/shroud_flats_wide.webp",
     // The ships' rooms, painted as side-on close-ups of the area views above.
     bg_marrow_deck_wide: "/assets/scenes/marrow_deck_wide.webp",
+    // Visual restart: the Marrow's upper rooms as full-bleed cinematic plates. Every way out
+    // reads by light alone (a lit hatch and ladder, warm lamplight through an open door, stairs
+    // rim-lit against the sky), and no plate carries a painted label or sign.
+    bg_marrow_deck_v2_wide: "/assets/scenes/marrow_deck_v2_wide.webp",
+    bg_quarterdeck_v2_wide: "/assets/scenes/quarterdeck_v2_wide.webp",
+    bg_cabin_v2_wide: "/assets/scenes/cabin_v2_wide.webp",
+    bg_gallery_v2_wide: "/assets/scenes/gallery_v2_wide.webp",
     bg_grey_lantern_deck_wide: "/assets/scenes/grey_lantern_deck_wide.webp",
     bg_arcadia_cabin_wide: "/assets/scenes/arcadia_cabin_wide.webp",
     bg_boatshed_wide: "/assets/scenes/boatshed_wide.webp",
