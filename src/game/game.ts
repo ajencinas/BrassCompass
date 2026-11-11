@@ -60,7 +60,7 @@ import { drawGlyph, roundRectPath, type BarGlyph } from "./cues";
  * The top bar is icon-only and quiet: small square plates, right-aligned, with no words on the
  * glass. The labels below are for the screen-reader toolbar and the canvas's hover title only.
  */
-const BAR = { y: 18, h: 44, size: 44, gap: 8, right: 1896 } as const;
+const BAR = { y: 14, h: 52, size: 52, gap: 8, right: 1896 } as const;
 type BarId = "reveal" | "log" | "tip" | "casebook" | "map" | "pause";
 const BAR_IDS: BarId[] = ["reveal", "log", "tip", "casebook", "map", "pause"];
 const BAR_LABELS: Record<BarId, string> = {
@@ -3238,7 +3238,7 @@ export class Game {
         ctx.restore();
       }
       const color = on || focus || glow ? "#fff3cf" : "#e8c98a";
-      drawGlyph(ctx, BAR_GLYPHS[id], b.x + b.w / 2, b.y + b.h / 2, focus ? 23 : 22, color, 0.96);
+      drawGlyph(ctx, BAR_GLYPHS[id], b.x + b.w / 2, b.y + b.h / 2, focus ? 27 : 26, color, 0.96);
     }
     ctx.restore();
     if (this.tipMode && !this.dialogue && !this.won) {
@@ -3450,6 +3450,7 @@ export class Game {
     const focusedId = this.keyboardFocus?.kind === "hotspot" ? this.keyboardFocus.id : null;
     // Every way out carries a small, quiet chevron. A door, hatch, ladder or path should never
     // be visible only to a player who happens to stand close enough. No names, no signs.
+    const placed: Array<{ x: number; y: number }> = [];
     for (const raw of visible) {
       if (!this.isExit(raw)) continue;
       const hs = this.hotspotState(raw);
@@ -3469,6 +3470,9 @@ export class Game {
       }
       const near = raw === hovered || raw.id === focusedId || this.pointerNear(threshold) ||
         Math.hypot(threshold.x - this.x, threshold.y - this.y) <= EXIT_CUE_RANGE;
+      // Two thresholds that share a screen spot (the dock stair foot) get one cue, not a pile.
+      if (!near && placed.some((p) => Math.hypot(p.x - x, p.y - y) < 70)) continue;
+      placed.push({ x, y });
       this.drawChevronAt(ctx, x, y, angle, near ? 1 : 0.72);
     }
   }

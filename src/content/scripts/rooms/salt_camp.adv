@@ -19,6 +19,7 @@ room salt_camp "The Castaway Camp"
   haze 620 780 floor 830 alpha 0.08 speed 4 tint "#a7b7c3"
   # Two lamps on the west tracks, the brazier and the lamp over the hut door: the ways out and
   # the one lit doorway all stand on painted flames.
+  light 170,830 radius 120 fire
   light 180,340 radius 100 lantern
   light 520,380 radius 90 lantern
   light 1790,560 radius 95 fire

@@ -18,6 +18,7 @@ room far_pans "The Far Flats"
   # A thin bank in front of the near bank, so the walker and Quill sit in the haze.
   haze 700 820 floor 872 alpha 0.05 speed 4 tint "#bcc9d6"
   # The lamp on the camp track and the camp fire beyond it are the way back.
+  light 2360,820 radius 120 fire
   light 1500,360 radius 110 lantern
   light 2300,520 radius 80 fire
   emit lapping at 900,700
