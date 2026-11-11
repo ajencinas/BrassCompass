@@ -33,7 +33,7 @@ ending "THE FATHER AND THE FOG"
     "THE LONG WAY HOME"
   painting bg_shore_wide focus 1280,420 music music_sea if ending_fog_lifts
   painting bg_deck_wide focus 1250,300 music music_fog if ending_long_way
-  painting bg_dock_wide focus 1280,420 music music_dock
+  painting bg_dock_cinema_wide focus 1280,420 music music_dock
 
   # THE FOG LIFTS — the crews go free, and the island sails again.
   line if ending_fog_lifts

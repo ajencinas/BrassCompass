@@ -137,6 +137,7 @@ interface AtlasHandlers {
 export class Atlas {
   private overlay = document.createElement("div");
   private chart = document.createElement("canvas");
+  private wash!: HTMLElement;
   private stage = document.createElement("div");
   private markers = document.createElement("div");
   private heading = document.createElement("h1");
@@ -173,6 +174,7 @@ export class Atlas {
     document.body.append(this.overlay);
 
     this.chart = this.overlay.querySelector(".atlas-chart")!;
+    this.wash = this.overlay.querySelector(".atlas-wash")!;
     this.stage = this.overlay.querySelector(".atlas-stage")!;
     this.markers = this.overlay.querySelector(".atlas-markers")!;
     this.heading = this.overlay.querySelector(".atlas-head h1")!;
@@ -185,9 +187,12 @@ export class Atlas {
     window.addEventListener("resize", () => { if (this.open) this.drawChart(); });
     this.back.addEventListener("click", () => this.goIsland());
     this.closeBtn.addEventListener("click", () => this.hide());
-    // A click on the dark chart table outside the panel closes it, like every other page.
-    this.overlay.addEventListener("click", (event) => {
-      if (event.target === this.overlay) this.hide();
+    // The chart is a full-screen object, so "outside the chart" is the dark water around it.
+    this.wash.addEventListener("click", () => this.hide());
+    // Clicking the painted chart itself should not strand keyboard focus on <body>: return it to
+    // the current marker so arrows/Enter keep working.
+    this.chart.addEventListener("pointerdown", () => {
+      if (document.activeElement === document.body) this.focusFirst();
     });
     this.overlay.addEventListener("keydown", (event) => {
       event.stopPropagation();
