@@ -1,35 +1,39 @@
 room salt_camp "The Castaway Camp"
-  bg bg_saltcamp_wide
+  bg bg_salt_camp_v2b_wide
   width 2560
   music music_fog
-  # The camp sits in the Shroud: the bright salt plate is graded cold and dim — desaturated, then
-  # sepia into a blue cast — and two fog banks lie over the pans. The crew takes the same cold,
-  # flattened grade, so nobody reads as a warm cut-out against the white flats.
-  backdrop "grayscale(0.70) sepia(0.50) hue-rotate(172deg) saturate(1.4) brightness(0.60) contrast(1.05)"
-  grade "saturate(0.52) brightness(0.76) contrast(0.97)"
-  perspective horizon 312 ref 875 height 380
-  walk (60,878) (120,780) (1100,760) (1500,740) (1650,780) (1800,815) (2470,815) (2500,878)
-  entry 1500,800
+  # The plate is the camp at night already: a cold blue-grey salt sheen with two warm lamps.
+  # The crew takes the same cold, flattened grade, so nobody reads as a warm cut-out.
+  grade "saturate(0.78) brightness(0.92) contrast(0.98)"
+  perspective horizon 480 ref 875 height 260
+  walk (40,878) (90,838) (400,826) (900,818) (1400,812) (1900,812) (2350,820) (2500,840) (2520,878)
+  entry 1500,845
   # The two ways off the camp are both west and both out of the entry frame: the shore to the
   # wreck (near) and the pan bank to the far flats (further out). Arrivals sit by each.
-  arrive reef_wreck 190,845
-  arrive far_pans 300,830
+  arrive reef_wreck 250,852
+  arrive far_pans 560,850
   footsteps sand
-  motes glints (0,470) (1000,470) (1000,720) (0,720) count 25
-  motes glints (0,300) (500,300) (520,460) (0,460) count 15
-  haze 280 480 floor 760 alpha 0.30 speed 6 tint "#b3c2ce"
-  haze 540 760 floor 870 alpha 0.17 speed 4 tint "#a7b7c3"
-  emit lapping at 150,450
+  water (0,560) (700,560) (700,660) (0,660) ripple 1.0
+  water (780,600) (1180,600) (1180,680) (780,680) ripple 1.0
+  haze 300 470 floor 560 alpha 0.18 speed 6 tint "#b3c2ce"
+  haze 620 780 floor 830 alpha 0.08 speed 4 tint "#a7b7c3"
+  # Two lamps on the west tracks, the brazier and the lamp over the hut door: the ways out and
+  # the one lit doorway all stand on painted flames.
+  light 180,340 radius 100 lantern
+  light 520,380 radius 90 lantern
+  light 1790,560 radius 95 fire
+  light 1965,300 radius 80 lantern
+  emit lapping at 160,580
 
   # Act III. The crew comes ashore on the fog rock and finds the camp that has been waiting
   # for them: tents, washing, salt pans, and one man who has been charting the Lantern's road.
   # A staggered camp: Dorrit near the rakes in the foreground, Elias back among the tents,
   # Hobb and Quill at middle depth, Vex out by the store hut. No two share a floor line.
-  sprite npc_dorrit_body at 700,856 size 1 idle speaker dorrit for dorrit if act 3
-  sprite npc_ansel_body at 1330,740 size 1 idle speaker elias for elias if act 3
-  sprite npc_hobb_body at 1660,828 size 1 idle speaker hobb for hobb if act 3
-  sprite npc_quill_body at 1850,820 size 1 idle speaker quill for quill if act 3
-  sprite npc_vex_body at 2290,870 size 1 idle speaker vex for vex if act 3
+  sprite npc_dorrit_body at 600,846 size 1 idle speaker dorrit for dorrit if act 3
+  sprite npc_ansel_body at 1400,720 size 1 idle speaker elias for elias if act 3
+  sprite npc_hobb_body at 1560,800 size 1 idle speaker hobb for hobb if act 3
+  sprite npc_quill_body at 1750,790 size 1 idle speaker quill for quill if act 3
+  sprite npc_vex_body at 2300,842 size 1 idle speaker vex for vex if act 3
 
   scene if act 3 and not elias_found
     say "The shore runs white into the salt pans. Tents, a line of washing, a hut with its door shut."
@@ -45,44 +49,44 @@ room salt_camp "The Castaway Camp"
     say "Elias does not look up from the chart. \"The far flats are a dead end,\" he says. \"The wreck is the way back to the gate.\""
 
   hotspot pans "the salt pans"
-    area 0,480 1150x260
+    area 0,450 1150x260
     nowalk
     look "Salt pans, raked into squares. The salt is stacked in white heaps at the corners."
     use "I touch a heap and lick my finger. Salt. It has been here longer than the camp."
 
   hotspot tents "the tents"
-    area 280,350 1700x270
+    area 1120,340 700x320
     nowalk
     look "A row of tents, patched with sailcloth. The doors are tied shut from the outside."
     talk "I call out. The tents do not answer."
 
   hotspot washing "the washing"
-    area 1000,430 680x140
+    area 1580,370 450x150
     nowalk
     look "Shirts on a line, stiff with salt. Somebody washed them for men who did not come back."
 
   hotspot hut "the store hut"
-    area 1990,280 570x520
-    stand 2180,850
+    area 1840,110 580x650
+    stand 2000,850
     look "A stout hut with a barred window and a padlock. The camp's store, or its gaol."
     open "The padlock is new. The hut is not. It does not open for me."
     talk "I knock. The sound goes in and does not come back."
     use "I rattle the padlock. It holds. Nothing inside answers."
 
   hotspot pallet "the pallet"
-    area 1740,560 190x100
-    stand 1820,840
+    area 1240,590 180x100
+    stand 1350,846
     look "A low wooden pallet, half buried in salt. Somebody sat here to work."
     use "There is a hollow in the salt beside it, the shape of a man who sat too long."
 
   hotspot rakes "the rakes"
-    area 280,730 170x110
-    stand 330,850
+    area 600,470 420x200
+    stand 650,850
     look "Two rakes, left where they were put down. The salt has started to grow over them."
     pickup "I would only be taking a rake from a man who is not coming back for it."
 
   hotspot lagoon "the lagoon"
-    area (0,300) (260,300) (260,500) (0,500)
+    area (0,280) (300,280) (300,500) (0,500)
     nowalk
     look "The lagoon, flat and bright. Past it, the fog is a white line."
     talk "I say my father's name to the water. This time he is close enough to hear me."
@@ -91,30 +95,30 @@ room salt_camp "The Castaway Camp"
   # The plate paints no trail off the camp (art gap): both exits are the open salt at the west
   # edge, one on the near shore, one out across the raked pans. The stands are on the walk.
   hotspot shore_path "the shore to the wreck"
-    area (0,730) (250,740) (340,780) (340,880) (0,880)
-    stand 140,860
+    area (0,700) (300,710) (360,762) (360,880) (0,880)
+    stand 160,854
     exit reef_wreck sound none
     look "The shore runs back toward the wreck, white and empty."
     open "I walk back along the shore."
 
   hotspot pans_path "the path to the far pans"
     show if elias_found
-    area (0,540) (380,550) (430,610) (430,700) (0,710)
-    stand 300,795
+    area (0,500) (300,510) (400,580) (390,660) (0,680)
+    stand 300,850
     exit far_pans sound none
     look "The salt pans run on toward the far flats. The shore is open that way."
     open "I walk out along the bank."
 
   hotspot dorrit "Dorrit"
-    area 586,488 228x369
-    stand 840,856
+    area 520,548 180x300
+    stand 560,850
     look "Dorrit, with his sleeves rolled up and salt on his boots. He is already planning a meal."
     talk "He is looking at the empty camp as if it has personally offended him."
       talk dorrit at camp
 
   hotspot elias "Elias Fenn"
-    area 1210,450 240x292
-    stand 1180,800
+    area 1280,430 240x310
+    stand 1240,826
     look "A thin man in a coat too big for him. He has been drawing all morning."
     talk "He looks up. Then he looks at me properly."
       talk elias at found
@@ -130,8 +134,8 @@ room salt_camp "The Castaway Camp"
         talk elias at hub
 
   hotspot hobb "Hobb"
-    area 1569,478 182x351
-    stand 1540,860
+    area 1480,512 160x300
+    stand 1470,846
     look "Hobb, with his back to the camp, looking at the fog."
     talk "He does not turn round."
       say "\"The bell,\" Hobb says. \"I heard it. It's Tam.\""
@@ -142,15 +146,15 @@ room salt_camp "The Castaway Camp"
         say "He nods. It is the whole speech."
 
   hotspot quill "Quill"
-    area 1802,462 96x319
-    stand 1740,795
+    area 1702,502 96x300
+    stand 1690,842
     look "Quill, with her glass under her arm and salt in her hair. She has been counting the tents."
     talk "She is watching the camp, not me."
       talk quill at camp
 
   hotspot vex "Captain Vex"
-    area 2186,490 208x381
-    stand 2170,870
+    area 2226,520 148x330
+    stand 2280,848
     look "Vex, standing apart from the tents with his coat pulled round him. He has not sat down."
     talk "He sees me coming and does not look away. That is new."
       say "He says: \"I saw him. After the Arcadia went down. He was on the reef, waving.\""

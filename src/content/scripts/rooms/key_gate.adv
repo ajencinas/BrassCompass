@@ -1,35 +1,40 @@
 room key_gate "The Reef Gate"
-  bg bg_gate_fog_wide
+  bg bg_key_gate_v2b_wide
   width 2560
   music music_office
-  # The plate is already the Shroud's cold gate: the open leaf, the longboat in the shallows
-  # and the Grey Lantern half-seen beyond. Only the figures need cooling.
-  grade "saturate(0.58) brightness(0.80) contrast(0.98)"
-  perspective horizon 400 ref 875 height 290
-  # The sandbank runs along the bottom, dropping into the shallows in front of the boat and
-  # rising again to the brazier. Everything the crew stands on is inside this band.
-  walk (60,878) (70,810) (380,802) (560,835) (660,845) (700,852) (1380,852) (1410,810) (1600,792) (2000,792) (2470,820) (2500,878)
-  entry 300,850
+  # The plate is already the Shroud's cold gate: the open leaf with firelight beyond, the
+  # longboat in the shallows and the Grey Lantern half-seen. Only the figures need cooling.
+  grade "saturate(0.64) brightness(0.86) contrast(0.98)"
+  perspective horizon 420 ref 875 height 250
+  # The sandbank runs along the bottom, in front of the boat and the brazier. Everything the
+  # crew stands on is inside this band; the boat's hull stands above it.
+  walk (60,878) (80,842) (600,836) (1100,844) (1300,858) (1700,862) (2000,858) (2300,856) (2520,878)
+  entry 300,862
   # Arriving from the flats you appear on the painted shore path at the west edge. (The old
   # `arrive weather_works` stub is gone: the lighthouse no longer opens onto the reef gate.)
-  arrive lagoon_shore 200,850
+  arrive lagoon_shore 220,862
   footsteps sand
   ambience sea
-  emit crackle at 1685,690
-  light 1685,650 radius 90 fire
-  # One green light on the Grey Lantern's rail, never the ship entire and never her captain.
-  light 1910,225 radius 150 lantern colour "#6fe8a8" if act 3
-  light 1910,225 radius 70 lantern colour "#c8ffe2" if act 3
-  haze 40 430 floor 700 alpha 0.18 speed 5 tint "#d7dee2"
+  # Fire beyond the open gate, the signal brazier on the right, and one green light on the
+  # Grey Lantern's rail: never the ship entire and never her captain.
+  light 900,650 radius 100 fire
+  light 985,640 radius 80 fire
+  light 2140,790 radius 120 fire
+  # A cold lift on the wet sand at the west edge, so the path out reads even without the label.
+  light 160,790 radius 170 moon
+  light 1770,250 radius 150 lantern colour "#6fe8a8" if act 3
+  light 1770,250 radius 70 lantern colour "#c8ffe2" if act 3
+  haze 40 430 floor 700 alpha 0.16 speed 5 tint "#d7dee2"
   haze 470 650 floor 700 alpha 0.1 speed 4 tint "#dfe6ea"
-  haze 600 880 floor 858 alpha 0.08 speed 3 tint "#cfd8dc"
-  motes embers (1620,575) (1755,575) (1755,715) (1620,715) count 18
+  haze 700 880 floor 870 alpha 0.06 speed 3 tint "#cfd8dc"
+  motes embers (840,570) (1020,570) (1020,700) (840,700) count 18
+  motes embers (2050,700) (2240,700) (2240,860) (2050,860) count 20
 
-  # The brazier stands on the sand; walk round in front of it.
-  occluder floor 850 (1610,705) (1770,705) (1760,850) (1620,850)
+  # The signal brazier stands on the sand; walk round in front of it.
+  occluder floor 876 (2070,700) (2260,700) (2245,876) (2085,876)
 
   # By the brazier, a step back from the boat's track so the gate's opening stays clear.
-  sprite npc_vex_body at 1880,838 size 1 idle speaker vex for vex grade "saturate(0.72) brightness(0.86)" if act 3
+  sprite npc_vex_body at 1880,856 size 1 idle speaker vex for vex grade "saturate(0.78) brightness(0.9)" if act 3
 
   # Act III ends at this gate. The three things the castaways need are Elias's rules,
   # the name, and Hobb's plan for the bell; only then does Vex let them board.
@@ -44,11 +49,11 @@ room key_gate "The Reef Gate"
     say "Beyond it, the Grey Lantern is at anchor. One green light, and no other lights."
     say "Vex is by the brazier. He has not looked at the gate once."
 
-  # The two painted leaves and the dark opening between them (x 1150-1400), under the boards
-  # overhead. The stand is the sand strip at the gate's foot.
+  # The painted leaves and the open passage between them (x 700-1000), with the brazier light
+  # beyond. The stand is the sand strip at the gate's foot.
   hotspot gate "the reef gate"
-    area (1000,560) (1005,280) (1010,115) (1540,115) (1545,560) (1400,600) (1150,600)
-    stand 1275,865
+    area (700,368) (1000,368) (1010,560) (980,690) (790,700) (700,600)
+    stand 1060,866
     look "The reef gate. Ship's timber, twice my height, one leaf standing open on the fog."
     open "I step toward the opening. Vex does not move out of the way."
     push "I push the open leaf. It swings a little and comes back."
@@ -77,8 +82,8 @@ room key_gate "The Reef Gate"
   # The painted longboat waits in the shallows before the open gate. The hotspot follows the
   # painted hull; the stand is on the sand below her, clear of her footprint.
   hotspot boat "the longboat"
-    area (690,700) (720,640) (790,600) (900,585) (1030,590) (1160,610) (1280,650) (1330,700) (1340,760) (1330,820) (1200,820) (1050,805) (900,780) (780,745) (710,720)
-    stand 800,865
+    area (1240,632) (1400,610) (1600,612) (1780,650) (1842,720) (1830,850) (1500,862) (1280,822) (1240,720)
+    stand 1900,866
     look "The longboat, waiting in the shallow water before the gate. Her oars are shipped and her hull is the only thing here that still floats."
     talk "I put a hand on her gunwale. She rode five of us in and did not complain."
     use "Vex has the oars. He is not moving them yet."
@@ -93,17 +98,17 @@ room key_gate "The Reef Gate"
 
   # Never the whole ship: the painted hull is a shape in the fog, the lantern a green light on it.
   hotspot dark_hull "the dark hull"
-    area 1500,0 950x340
+    area 1350,30 780x350
     nowalk
-    stand 2200,830
+    stand 2200,858
     look "Out past the palisade, the fog has a shape in it. A dark hull, long and low, and one green light."
     use "I cannot reach it from here. That is what the gate is for."
     state if act 3 and elias_found and bell_plan and rule_name
       look "The Grey Lantern, half-seen. Dark hull, green lantern, and a bell I can hear."
 
   hotspot brazier "the signal brazier"
-    area 1600,560 190x190
-    stand 1650,860
+    area 2040,706 214x174
+    stand 2000,864
     look "A brazier of cold kelp, smoking to keep the fog down. Somebody has kept it lit all night."
     use "I warm my hands. The smoke leans out to sea."
     turnoff "Vex would only light it again. He likes a fire he can stand beside."
@@ -111,15 +116,15 @@ room key_gate "The Reef Gate"
   # The pale shore track at the frame's left edge, running from the gate's sand off west: the
   # target is the painted sandbar and wet channel, not the fog above it.
   hotspot path "the path to the flats"
-    area (0,770) (360,790) (470,840) (470,880) (0,880)
-    stand 240,858
+    area (0,700) (380,700) (470,760) (470,880) (0,880)
+    stand 240,864
     exit lagoon_shore sound none
     look "The path back into the fog flats. The sand is the only thing out here that has not moved."
 
   hotspot vex "Captain Vex"
     show if act 3
-    area 1806,568 148x272
-    stand 1760,860
+    area 1806,556 148x312
+    stand 1830,862
     look "Vex by the brazier, coat buttoned to the chin, watching the fog as if it owes him money."
     talk "He does not turn round. \"If you've come to blame me, form a queue.\""
     state if act 3 and elias_found and bell_plan and rule_name

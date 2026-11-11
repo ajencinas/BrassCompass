@@ -1,33 +1,31 @@
 room far_pans "The Far Flats"
-  bg bg_farpans_wide
+  bg bg_far_pans_v2b_wide
   width 2560
   music music_pans
   ambience wind
-  # The far pans are still in the Shroud: the sunset plate is graded cold and dim, and two fog
-  # banks lie along the water. Quill takes the same cold, flattened grade as the flats.
-  backdrop "grayscale(0.70) sepia(0.50) hue-rotate(172deg) saturate(1.4) brightness(0.60) contrast(1.05)"
-  grade "saturate(0.55) brightness(0.80) contrast(0.98)"
-  perspective horizon 270 ref 875 height 340
-  walk (40,878) (62,810) (2498,810) (2528,878)
-  entry 2380,846
-  arrive salt_camp 2380,846
+  # The plate is the far flats at night already: cold pewter pans, one lamp on the camp track.
+  # Quill takes the same cold, flattened grade as the flats.
+  grade "saturate(0.76) brightness(0.92) contrast(0.98)"
+  perspective horizon 480 ref 875 height 220
+  walk (40,878) (60,842) (900,828) (1600,820) (2200,828) (2500,844) (2520,878)
+  entry 2300,846
+  arrive salt_camp 2300,846
   footsteps sand
-  water (590,560) (820,560) (820,630) (590,630) ripple 1.4
-  water (960,545) (1320,545) (1320,635) (960,635) ripple 1.4
-  water (1990,600) (2240,600) (2240,685) (1990,685) ripple 1.4
-  motes glints (590,565) (820,565) (820,625) (590,625) count 20
-  motes glints (960,550) (1320,550) (1320,630) (960,630) count 25
-  motes glints (1990,605) (2240,605) (2240,680) (1990,680) count 15
-  haze 245 380 floor 400 alpha 0.26 speed 6 tint "#bcc9d3"
-  haze 360 540 floor 780 alpha 0.22 speed 7 tint "#aebdca"
+  water (700,500) (1500,500) (1500,600) (700,600) ripple 1.0
+  water (1520,540) (1850,540) (1850,640) (1520,640) ripple 1.0
+  haze 300 400 floor 460 alpha 0.20 speed 6 tint "#bcc9d3"
+  haze 500 680 floor 760 alpha 0.10 speed 5 tint "#aebdca"
   # A thin bank in front of the near bank, so the walker and Quill sit in the haze.
-  haze 520 760 floor 872 alpha 0.09 speed 4 tint "#bcc9d6"
+  haze 700 820 floor 872 alpha 0.05 speed 4 tint "#bcc9d6"
+  # The lamp on the camp track and the camp fire beyond it are the way back.
+  light 1500,360 radius 110 lantern
+  light 2300,520 radius 80 fire
   emit lapping at 900,700
 
   # Act III, optional: the quiet scene away from the camp. Quill walks out to the end of the
   # boardwalk to look at the Shroud, and says the things she will not say in front of Vex.
   # One figure, far out on the bank below the boardwalk's foot: the wide empty vista is the point.
-  sprite npc_quill_body at 540,820 size 1 idle speaker quill for quill if act 3
+  sprite npc_quill_body at 760,838 size 1 idle speaker quill for quill if act 3
 
   scene if act 3 and not pans_seen
     set pans_seen
@@ -45,54 +43,54 @@ room far_pans "The Far Flats"
     look "Flooded pans, flat as glass. The salt is still in rows, waiting for someone to rake it."
 
   hotspot fog "the fog"
-    area 560,236 1000x130
+    area 620,300 1100x110
     nowalk
     look "The fog is a white line along the water. It does not look big enough to take a ship."
 
   hotspot wreck "the wreck"
-    area 1060,40 380x330
+    area 1600,150 400x300
     nowalk
     look "A ship on the reef, three masts and a broken back. She has been there longer than the fog."
 
   hotspot boardwalk "the boardwalk"
-    area 0,330 860x300
+    area 0,300 540x330
     stand 430,846
     look "A boardwalk on stilts, running out over the pans and stopping short. It lost its nerve."
     walk "It goes out over the water and stops. I know the feeling."
     use "The planks are warm. I stand on the last one and look at the fog."
 
   hotspot rakes "the rake"
-    area 820,650 160x120
+    area 300,470 300x200
     nowalk
     look "A rake, left in the salt. The handle is bleached white."
 
   hotspot heron "the heron"
-    area 852,525 88x132
+    area 580,420 110x170
     nowalk
     look "A heron, standing in a salt pan like it owns the place. It probably does."
 
   hotspot salt "the salt heap"
-    area 1660,520 320x160
+    area 100,560 260x150
     nowalk
     look "A heap of salt, raked and left. The wind has smoothed the top."
 
   hotspot gull "the gull"
-    area 1792,582 100x62
+    area 560,555 160x80
     nowalk
     look "A gull on the salt heap, watching me. It has the look of a landlord."
 
   # The tents, the stake fence and the pale beach track that runs down the right edge to the
   # walk are all the camp; the whole east corner is the target.
   hotspot camp "the camp path"
-    area (1985,185) (2560,165) (2560,880) (2380,880) (2360,800) (1960,470)
-    stand 2470,846
+    area (1850,300) (2150,300) (2280,460) (2380,640) (2560,640) (2560,880) (2000,880) (1920,700) (1860,540)
+    stand 2300,850
     exit salt_camp sound none
     look "The camp, back along the shore. Tents, and a fence of stakes."
     open "I walk back along the shore to the camp."
 
   hotspot quill "Quill"
-    area 470,508 150x314
-    stand 700,860
+    area 700,526 150x320
+    stand 820,848
     look "Quill, with her glass up and the wind in her coat. She is looking at the fog."
     talk "She lowers the glass when she hears me."
       talk quill at pans

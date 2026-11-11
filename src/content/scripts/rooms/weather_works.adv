@@ -1,21 +1,27 @@
 room weather_works "The Lighthouse"
-  bg bg_town_head_wide
+  bg bg_weather_works_v2b_wide
   width 2560
   music music_fog
-  grade "saturate(0.88) brightness(0.94)"
+  # The plate is already the Shroud's cold night: only the figures need a touch of the same key.
+  grade "saturate(0.82) brightness(0.94)"
   ambience wind
-  perspective horizon 380 ref 875 height 300
-  # The wet flagstone yard crosses the whole foreground of the headland, from below the keeper's
-  # store to the rock shelf under the tower; the walk is the clear painted band on it.
-  walk (40,878) (60,820) (300,800) (700,790) (1100,788) (1400,800) (1500,830) (1500,878)
+  perspective horizon 520 ref 875 height 240
+  # The wet flagstone yard crosses the whole foreground of the headland, from the lamp-lit path
+  # down at the left edge to the rock shelf below the tower; the walk is the clear painted band.
+  walk (30,878) (40,834) (240,820) (520,812) (820,805) (1100,798) (1320,800) (1420,815) (1440,878)
   entry 800,845
-  arrive village 800,845
+  arrive village 330,846
   footsteps stone
-  light 1730,215 radius 230 lantern
-  light 345,675 radius 95 fire
-  motes embers (280,610) (440,610) (440,740) (280,740) count 30
-  haze 0 520 floor 760 alpha 0.10 speed 5 tint "#c8d4dc"
-  emit crackle at 345,675
+  # Every light sits on a painted source: the great lamp, the brazier, the lamp post that marks
+  # the way down, and the small lantern over the keeper's open door.
+  light 1855,90 radius 240 lantern
+  light 420,640 radius 95 fire
+  light 90,205 radius 130 lantern
+  light 520,540 radius 70 lantern
+  motes embers (380,610) (470,610) (470,700) (380,700) count 30
+  haze 500 680 floor 700 alpha 0.12 speed 5 tint "#c8d4dc"
+  haze 700 850 floor 872 alpha 0.05 speed 3 tint "#bcc9d6"
+  emit crackle at 420,640
 
   scene if seen:rook.book and not weather_works_store
     say "The lighthouse yard. Rook's log should be in the keeper's store, behind the brazier."
@@ -23,41 +29,41 @@ room weather_works "The Lighthouse"
   # The painted flagstones are the way down: they run in from the left edge below the store, so
   # the stand is the near end of that paving, not the middle of the yard.
   hotspot path_down "the path down to Upper Town"
-    area 80,740 520x140
-    stand 400,850
+    area (0,596) (150,590) (215,620) (220,700) (220,878) (0,878)
+    stand 280,850
     exit village sound none
     look "The path down the hill to Upper Town. The wind comes up it, cold."
 
   hotspot fog "the Shroud"
-    area (1900,430) (2560,430) (2560,780) (2050,780) (1900,650)
+    area (2080,420) (2560,420) (2560,790) (2140,790) (2080,660)
     nowalk
-    stand 1450,845
+    stand 1400,845
     look "The Shroud, lying on the water below the headland. It looks like weather. The island knows better."
     talk "I say the island's name into the fog. Nothing answers, which is something."
 
   hotspot path "the path to the lighthouse"
-    area 850,650 650x140
-    stand 1100,845
+    area 610,610 700x150
+    stand 1060,845
     look "The path climbs the headland to the lighthouse door. Wet flagstones, and the wind coming up them."
     use "It goes up. It also goes down. I know which way I came."
 
   hotspot lighthouse "the lighthouse"
-    area 1500,250 400x450
-    stand 1450,845
+    area 1660,30 340x600
+    stand 1400,845
     look "The lighthouse. Stone on stone, and a lamp lit at the top of it. From the sea it must look like the only thing holding the dark up."
     talk "I talk to the tower. It has heard worse from the wind."
     use "The door at the base is barred. The keeper is up top, where the light is."
 
   hotspot light "the great lamp"
-    area 1580,100 280x240
-    stand 1450,845
+    area 1770,30 170x140
+    stand 1400,845
     look "The great lamp, burning behind its glass. The keeper trims it twice a night, and has never once been late."
     talk "I say nothing to the light. It has enough to do."
     use "The glass is warm from the other side. I leave it alone."
 
   hotspot store "the keeper's store"
-    area 0,320 680x380
-    stand 600,845
+    area 240,280 360x410
+    stand 610,845
     look "The keeper's store, behind the brazier. Rook's old log is on the shelf behind the brazier. Not mine to take yet."
       note rook_log "Rook's old log is in the keeper's store at the lighthouse. The last page is a list of names."
     use "I take the log down. The keeper can have it back when Rook has read it."
@@ -72,8 +78,8 @@ room weather_works "The Lighthouse"
       open "I have what I need."
 
   hotspot brazier "the brazier"
-    area 250,590 190x170
-    stand 480,845
+    area 365,585 115x115
+    stand 520,845
     look "The brazier at the keeper's door, heaped with kelp. It throws more smoke than light."
     use "I'd only add to the smoke."
     turnoff "There's no lid and no switch. The sea is a long walk down."

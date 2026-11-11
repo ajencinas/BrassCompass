@@ -1,27 +1,30 @@
 room lagoon_shore "The Wrack Line"
-  bg bg_shroud_flats_wide
+  bg bg_lagoon_shore_v2b_wide
   width 2560
   music music_sea
   ambience sea
-  # The plate is the Shroud's own cold, fog-bound flats. Only the figures are graded, so the
-  # painting keeps the grey-blue palette it was made with.
-  grade "saturate(0.7) brightness(0.9)"
-  perspective horizon 470 ref 875 height 310
+  # The plate is the Shroud's own cold, fog-bound flats, painted at night. Only the figures are
+  # graded, so the painting keeps the grey-blue palette it was made with.
+  grade "saturate(0.76) brightness(0.92)"
+  perspective horizon 500 ref 875 height 300
   # The longboat fills the lower left, so the walk starts to the right of her hull and runs the
   # clear wet-sand band east under the palisade, along the near edge of the shallow channels.
-  walk (850,878) (860,824) (1000,806) (1300,796) (1700,798) (2100,812) (2400,832) (2520,878)
-  entry 1000,840
+  walk (720,878) (740,832) (1050,818) (1400,808) (1750,804) (2100,814) (2400,834) (2520,878)
+  entry 1250,845
   # Arrivals sit on the walk by the thing you came through: the longboat from the wreck, the
   # gate path from the reef gate.
-  arrive reef_wreck 900,848
-  arrive key_gate 1990,832
+  arrive reef_wreck 820,850
+  arrive key_gate 1950,842
   footsteps sand
-  water (620,470) (1500,470) (1500,640) (1150,650) (620,600) ripple 1.2
-  water (0,450) (560,450) (570,510) (0,520) ripple 1.0
-  motes glints (620,476) (1500,476) (1500,634) (1150,644) (620,594) count 24
-  haze 200 430 floor 520 alpha 0.14 speed 6 tint "#d9e3ea"
-  haze 700 760 floor 820 alpha 0.05 speed 3 tint "#c6d2dc"
-  emit lapping at 1100,600
+  water (700,500) (980,500) (980,650) (900,670) (700,640) ripple 1.2
+  water (1520,500) (1720,500) (1720,620) (1520,620) ripple 1.0
+  haze 300 470 floor 560 alpha 0.15 speed 6 tint "#d9e3ea"
+  haze 640 770 floor 830 alpha 0.05 speed 3 tint "#c6d2dc"
+  # The lamp at the palisade gap and the tents' warmth behind it are the only warm notes, and
+  # the lamp is what makes the gate read from the entry frame.
+  light 1730,340 radius 100 lantern
+  light 2240,470 radius 80 candle
+  emit lapping at 1250,660
 
   # Act III opens here: five alive, one ship gone, and Vex's admission on the sand. The crew
   # stands apart on the flats; the longboat is the way out to the wreck, the gate the way east.
@@ -49,23 +52,23 @@ room lagoon_shore "The Wrack Line"
     say "East along the wet sand, the palisade stands where the flats end. One pale gap in it, and that is the gate."
     say "Vex does not turn round. \"When the plan is real,\" he says. \"Not before.\""
 
-  sprite npc_vex_body at 1040,815 size 1 idle speaker vex for vex
-  sprite npc_quill_body at 1260,815 size 1 flip idle speaker quill for quill
-  sprite npc_dorrit_body at 1480,840 size 1 idle speaker dorrit for dorrit
-  sprite npc_hobb_body at 1700,805 size 1 idle speaker hobb for hobb
+  sprite npc_vex_body at 1050,822 size 1 idle speaker vex for vex
+  sprite npc_quill_body at 1400,828 size 1 flip idle speaker quill for quill
+  sprite npc_dorrit_body at 1900,842 size 1 idle speaker dorrit for dorrit
+  sprite npc_hobb_body at 2120,822 size 1 idle speaker hobb for hobb
 
   hotspot lagoon "the lagoon"
-    area (600,470) (1500,470) (1500,660) (1150,660) (600,620)
-    stand 1200,850
+    area (560,480) (1700,480) (1700,640) (1450,680) (900,660) (560,620)
+    stand 1300,850
     look "The lagoon, flat and cold. The water lies in grey channels between the sandbars."
     talk "I say my father's name out over the water. The water has heard it before."
     use "I could drink it. I have had worse from the tavern."
     pickup "I would need something to carry it in. My hands have been tried."
 
   hotspot wreck_far "the wreck in the fog"
-    area 380,150 430x300
+    area 1020,330 500x500
     nowalk
-    stand 900,850
+    stand 1100,850
     look "A wreck far out in the fog, only her broken masts showing. The longboat is the only way out to her."
     talk "I call across the flats. The fog takes it and gives nothing back."
     use "She is further out than she looks. Wrecks usually are."
@@ -73,15 +76,15 @@ room lagoon_shore "The Wrack Line"
   # The gate is the pale gap in the palisade above the dune, with its painted track running down
   # the sand to the shore. The whole opening and track are the target; the stand is the walk below.
   hotspot reef_gate "the reef gate"
-    area (1800,240) (2110,240) (2120,540) (1920,560) (1780,470)
-    stand 1950,838
+    area (1680,300) (1890,300) (1910,520) (1970,660) (1840,700) (1690,560)
+    stand 2000,846
     exit key_gate sound none
     look "A palisade on the dune above the flats, sharpened posts against the fog. Whatever it keeps out, it has kept out for years."
     open "I start across the wet flats toward the palisade."
 
   hotspot boat "the longboat to the wreck"
-    area (150,430) (250,410) (300,480) (430,505) (620,540) (820,610) (835,800) (810,878) (620,878) (430,830) (260,770) (170,690)
-    stand 900,850
+    area (20,590) (60,560) (300,540) (490,548) (640,590) (690,700) (680,815) (400,825) (180,790) (40,700)
+    stand 800,850
     exit reef_wreck sound none
     look "The longboat, drawn up on the wet sand. She carried five of us in and did not complain."
     talk "I put my hand on her gunwale. She is the only thing we own that still floats."
@@ -90,32 +93,32 @@ room lagoon_shore "The Wrack Line"
 
   hotspot vex "Vex"
     show if act 3
-    area 965,545 170x275
-    stand 930,850
+    area 1010,535 170x300
+    stand 1010,850
     look "Vex, on the flats, with his coat half off. He has stopped being the captain of anything."
     talk "He does not look up. \"The tide is wrong. We have until it turns.\""
     give "He looks at my hands, then at the water. \"Keep it. I travel light these days.\""
 
   hotspot quill "Quill"
     show if act 3
-    area 1219,545 82x270
-    stand 1150,850
+    area 1358,545 92x292
+    stand 1300,850
     look "Quill, her back to the boat. She is watching the wreck as if it owes her money."
     talk "She says, \"I can row us out there. I want it noted that I said us.\""
     give "She does not turn around. \"Put it away. I have oars to carry.\""
 
   hotspot dorrit "Dorrit"
     show if act 3
-    area 1395,561 172x280
-    stand 1390,860
+    area 1818,550 172x304
+    stand 1820,852
     look "Dorrit, counting what came ashore, and not liking the total."
     talk "He holds up a spoon. \"One pot. Four spoons. A captain with no ship. That is the whole of it.\""
     give "He weighs it in one hand and gives it back. \"Not unless it is a spoon.\""
 
   hotspot hobb "Hobb"
     show if act 3
-    area 1634,552 132x258
-    stand 1610,850
+    area 2056,540 136x288
+    stand 2030,848
     look "Hobb, standing apart with his hands behind his back. He is looking at the wreck in the fog."
     talk "He does not turn. \"That wreck is older than the island. Somebody should have taken her apart years ago.\""
     give "He shakes his head. \"Keep your hands free. We will need them.\""
