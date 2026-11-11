@@ -65,6 +65,14 @@ export const MANIFEST = {
     bg_marrow_deck_wide: "/assets/scenes/marrow_deck_wide.webp",
     bg_grey_lantern_deck_wide: "/assets/scenes/grey_lantern_deck_wide.webp",
     bg_arcadia_cabin_wide: "/assets/scenes/arcadia_cabin_wide.webp",
+    // The visual restart: the five lower-ship rooms as full-bleed cinematic plates with no
+    // painted lettering, where each exit reads by light alone. The old `_wide` plates above
+    // stay in the manifest for the archive and the act paintings.
+    bg_below_decks_restart_wide: "/assets/scenes/below_decks_restart_wide.webp",
+    bg_bow_fog_restart_b_wide: "/assets/scenes/bow_fog_restart_b_wide.webp",
+    bg_crows_nest_restart_wide: "/assets/scenes/crows_nest_restart_wide.webp",
+    bg_lantern_deck_restart_b_wide: "/assets/scenes/lantern_deck_restart_b_wide.webp",
+    bg_arcadia_cabin_restart_b_wide: "/assets/scenes/arcadia_cabin_restart_b_wide.webp",
     bg_boatshed_wide: "/assets/scenes/boatshed_wide.webp",
     bg_ghostcabin_wide: "/assets/scenes/ghostcabin_wide.webp",
     bg_ghostwreck_wide: "/assets/scenes/ghostwreck_wide.webp",
