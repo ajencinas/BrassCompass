@@ -15,6 +15,7 @@ room marrow_gallery "The Marrow — Stern Gallery"
   arrive marrow_cabin 640,842
   footsteps deck
   # The cabin doorway is the only warm interior; the stern lantern answers it at the right.
+  light 150,760 radius 180 fire
   light 2100,180 radius 140 lantern
   light 110,500 radius 200 lamp
   water (520,300) (2300,300) (2300,470) (520,470) ripple 1.4

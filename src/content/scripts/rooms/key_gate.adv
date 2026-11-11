@@ -17,6 +17,7 @@ room key_gate "The Reef Gate"
   ambience sea
   # Fire beyond the open gate, the signal brazier on the right, and one green light on the
   # Grey Lantern's rail: never the ship entire and never her captain.
+  light 150,790 radius 230 fire
   light 900,650 radius 100 fire
   light 985,640 radius 80 fire
   light 2140,790 radius 120 fire

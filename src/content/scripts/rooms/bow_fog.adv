@@ -11,6 +11,7 @@ room bow_fog "The Marrow — Bow"
   entry 300,840
   arrive marrow_deck 300,840
   footsteps deck
+  light 170,760 radius 170 fire
   light 1875,380 radius 170 lantern
   light 110,440 radius 60 lantern
   haze 120 760 floor 690 alpha 0.24 speed 9

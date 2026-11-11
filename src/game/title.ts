@@ -406,6 +406,17 @@ function drawQuietButton(ctx: CanvasRenderingContext2D, label: string, top: numb
   if (focus) {
     drawStar(ctx, cx - fitted.text.length * 4.6 - 34, top + TITLE_BUTTON.height / 2, 6, glow);
     drawStar(ctx, cx + fitted.text.length * 4.6 + 34, top + TITLE_BUTTON.height / 2, 6, glow);
+  } else if (/CHAPTER SELECT/.test(fitted.text)) {
+    // Quiet, but unmistakably a second way in: a brass rule and a diamond, no button box.
+    const w = fitted.text.length * fitted.size * 0.62;
+    ctx.save();
+    ctx.strokeStyle = "rgba(201,162,74,0.52)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cx - w / 2 - 24, y + fitted.size + 8); ctx.lineTo(cx + w / 2 + 24, y + fitted.size + 8);
+    ctx.stroke();
+    drawStar(ctx, cx - w / 2 - 34, top + TITLE_BUTTON.height / 2, 4, "rgba(216,203,176,0.7)");
+    ctx.restore();
   }
   drawSpaced(ctx, fitted.text, cx, y, fitted.size, color, 4.2);
   if (danger) {
