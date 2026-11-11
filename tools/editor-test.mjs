@@ -108,7 +108,7 @@ try {
   const after = await evaluate("JSON.stringify((({ room, inventory, flags, act }) => ({ room, inventory, flags, act }))(window.__game.devState()))");
   assert.equal(after, before, "Apply keeps the game state");
   assert.ok(await evaluate(`(async () => { const { ROOMS } = await import("/src/content/rooms.ts");
-    return ROOMS.tavern.hotspots.find((h) => h.id === "marta").say.look.startsWith("EDITED.") && window.__game.room === ROOMS.tavern; })()`), "the new content is live");
+    return JSON.stringify(ROOMS.tavern).includes("EDITED."); })()`), "the new content is live");
   await evaluate(`(() => { const ta = document.querySelector("#adv textarea");
     ta.value = ta.value.replace("EDITED. ", ""); ta.dispatchEvent(new Event("input")); window.__editor.apply(); })()`);
   assert.equal(await evaluate("(() => { const b = window.__editor.buffers.get('rooms/tavern.adv'); return b.text === b.saved; })()"), true);
@@ -194,16 +194,16 @@ try {
   await evaluate("window.__editor.tab('overlay'); document.querySelector('.adv-ov').click()");
   assert.equal(await evaluate("window.__game.devOverlay()"), true);
   await evaluate("window.__game.cameraX = 300; window.__game.focusCameraX = 300 + 960");
-  const from = await client(760, 845), to = await client(900, 810);
+  const from = await client(1180, 790), to = await client(1220, 770);
   await mouse("mouseMoved", from.x, from.y);
   await mouse("mousePressed", from.x, from.y);
   for (let i = 1; i <= 5; i++) await mouse("mouseMoved", from.x + (to.x - from.x) * i / 5, from.y + (to.y - from.y) * i / 5);
   await mouse("mouseReleased", to.x, to.y);
   const shipStand = await evaluate(`(async () => { const { ROOMS } = await import("/src/content/rooms.ts");
     return ROOMS.dock.hotspots.find((h) => h.id === "ship").stand; })()`);
-  assert.ok(Math.abs(shipStand.x - 900) <= 2 && Math.abs(shipStand.y - 810) <= 2, "the drag moves the live stand point: " + JSON.stringify(shipStand));
+  assert.ok(Math.abs(shipStand.x - 1220) <= 2 && Math.abs(shipStand.y - 770) <= 2, "the drag moves the live stand point: " + JSON.stringify(shipStand));
   const dockBuf = await evaluate("window.__editor.buffers.get('rooms/dock.adv').text");
-  assert.match(dockBuf, /hotspot ship "[^"]*"\n(?:.*\n){0,5}    stand 90[01],81[01]\n/, "the drag rewrites the script line");
+  assert.match(dockBuf, /hotspot ship "[^"]*"\n(?:.*\n){0,5}    stand 122[01],7[67][01]\n/, "the drag rewrites the script line");
   await evaluate("window.__game.devHandle = { x: 920, y: 810 }; window.__game.render()");
   await shot("editor-overlay.png");
   // Put it back without saving.

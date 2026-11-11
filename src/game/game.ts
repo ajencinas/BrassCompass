@@ -4147,7 +4147,7 @@ export class Game {
   }
   private renderTitle(ctx: CanvasRenderingContext2D): void {
     drawTitle(ctx, {
-      bg: this.assets.img("bg_island_map"),
+      bg: this.assets.img("bg_title"),
       buttons: this.titleButtons(),
       focus: this.titleFocus,
       dev: import.meta.env.DEV,

@@ -42,7 +42,7 @@ export const ATLAS: AtlasArea[] = [
     name: "The Harbour",
     act: 1,
     blurb: "The quay, the Salty Keel, the harbourmaster's house, and the lanes behind them.",
-    image: "bg_area_harbour",
+    image: "bg_area_harbour_v2",
     x: 0.455,
     y: 0.605,
     rooms: [
@@ -62,7 +62,7 @@ export const ATLAS: AtlasArea[] = [
     name: "Upper Town",
     act: 1,
     blurb: "The lane climbs from the harbour to the light on the headland.",
-    image: "bg_area_town",
+    image: "bg_area_town_v2",
     x: 0.275,
     y: 0.335,
     rooms: [
@@ -75,7 +75,7 @@ export const ATLAS: AtlasArea[] = [
     name: "The Marrow",
     act: 2,
     blurb: "Vex's ship, out on the water, with her crew and her cargo.",
-    image: "bg_area_marrow",
+    image: "bg_area_marrow_v2",
     x: 0.155,
     y: 0.60,
     rooms: [
@@ -93,7 +93,7 @@ export const ATLAS: AtlasArea[] = [
     name: "The Shroud",
     act: 3,
     blurb: "The fog flats, the wreck, the castaway camp, and the gate to the Grey Lantern.",
-    image: "bg_area_shroud",
+    image: "bg_area_shroud_v2",
     x: 0.705,
     y: 0.425,
     rooms: [
@@ -109,7 +109,7 @@ export const ATLAS: AtlasArea[] = [
     name: "The Grey Lantern",
     act: 4,
     blurb: "Mordant's ship, deep in the fog, where the bell and the name wait.",
-    image: "bg_area_lantern",
+    image: "bg_area_lantern_v2",
     x: 0.79,
     y: 0.335,
     rooms: [
@@ -261,7 +261,7 @@ export class Atlas {
     this.stage.classList.toggle("island", !area);
 
     if (!area) {
-      const url = atlasImageUrl("bg_island_map");
+      const url = atlasImageUrl("bg_atlas_island");
       this.paintChart(url, "Fenn's chart of Dreadwater Isle");
       this.heading.textContent = "Dreadwater Isle";
       this.back.hidden = true;
@@ -434,12 +434,18 @@ export class Atlas {
 
 export function atlasImageUrl(key: string): string {
   const images: Record<string, string> = {
-    bg_island_map: "/assets/scenes/island_map.webp",
+    bg_atlas_island: "/assets/scenes/title_night.webp",
+    bg_title: "/assets/scenes/title_night.webp",
     bg_area_harbour: "/assets/scenes/area_harbour.webp",
     bg_area_town: "/assets/scenes/area_town.webp",
     bg_area_marrow: "/assets/scenes/area_marrow.webp",
     bg_area_shroud: "/assets/scenes/area_shroud.webp",
     bg_area_lantern: "/assets/scenes/area_lantern.webp",
+    bg_area_harbour_v2: "/assets/scenes/area_harbour_v2.webp",
+    bg_area_town_v2: "/assets/scenes/area_town_v2.webp",
+    bg_area_marrow_v2: "/assets/scenes/area_marrow_v2.webp",
+    bg_area_shroud_v2: "/assets/scenes/area_shroud_v2.webp",
+    bg_area_lantern_v2: "/assets/scenes/area_lantern_v2.webp",
   };
   return images[key] ?? "";
 }
