@@ -43,6 +43,14 @@ export const MANIFEST = {
     bg_countinghouse_close_wide: "/assets/scenes/countinghouse_close_wide.webp",
     bg_alley_wide: "/assets/scenes/alley_wide.webp",
     bg_chandlery_wide: "/assets/scenes/chandlery_wide.webp",
+    // The harbour restart: full-bleed cinematic repaints of the lane, the shipwright's, the
+    // boat shed and the counting house. Their ways out are painted in light and composition
+    // only — no signs, no lettering, no UI text. Two attempts were painted for each screen;
+    // the winning attempt is the file the room points at (A, A, B, B).
+    bg_alley_restart_wide: "/assets/scenes/alley_restart_a.webp",
+    bg_chandlery_restart_wide: "/assets/scenes/chandlery_restart_a.webp",
+    bg_warehouse_restart_wide: "/assets/scenes/warehouse_restart_b.webp",
+    bg_countinghouse_restart_wide: "/assets/scenes/countinghouse_restart_b.webp",
     bg_warehouse_wide: "/assets/scenes/warehouse_wide.webp",
     bg_deck_wide: "/assets/scenes/deck_wide.webp",
     bg_crowsnest_wide: "/assets/scenes/crowsnest_wide.webp",

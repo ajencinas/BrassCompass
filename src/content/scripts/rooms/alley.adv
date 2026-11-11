@@ -1,27 +1,34 @@
 room alley "Wreckers' Lane"
-  bg bg_alley_close_wide
+  bg bg_alley_restart_wide
   width 2560
   music music_dock
-  grade "brightness(0.95) saturate(0.85)"
-  # The shadowed slot between the harbourmaster's house and the counting house, as a strict
-  # side-on close-up of the harbour: the quay and its masts through the lane mouth at the far
-  # left, the boat shed's black doors and crate stack, the counting house's green lamp over its
-  # green door, and the shipwright's lit rope window at the right. Wet cobbles run the whole
-  # lower third; nothing painted stands in the walking band below the sills and crate bases.
+  grade "brightness(0.98) saturate(0.9)"
+  # The harbour restart: a full-bleed painting of the lane between the warehouses, strict
+  # side-on. Every way out is painted in light, not lettering: the lane mouth and its ship at
+  # the far left, the boat shed's open doors burning with cold fog light, the counting house's
+  # broad green sliding door under a green lamp with its green pool on the cobbles, and the
+  # shipwright's lit door and rope window at the right. No signs anywhere. Wet cobbles run the
+  # whole lower third; nothing painted stands in the walking band below the crate bases.
   perspective horizon 380 ref 875 height 330
-  walk (250,872) (280,850) (420,836) (650,826) (900,820) (1200,816) (1500,814) (1800,816) (2100,820) (2350,828) (2520,838) (2520,872)
+  walk (0,872) (30,844) (140,830) (400,822) (800,818) (1200,816) (1600,816) (2000,818) (2300,822) (2480,830) (2540,844) (2540,872)
   entry 300,850
   arrive dock 300,850
-  arrive chandlery 1740,842
-  arrive warehouse 760,842
-  arrive counting_house 1010,842
+  arrive chandlery 2300,844
+  arrive warehouse 1050,844
+  arrive counting_house 1430,844
   footsteps stone
-  # Painted lights only: the jettied corner's iron lantern, the counting house's green glass
-  # lamp, the iron lantern strung over the lane, and the shipwright's warm window at the right.
-  light 315,250 radius 120 lantern
-  light 1065,250 radius 130 lantern colour "#79e6a4"
-  light 1290,85 radius 110 lantern
-  light 1750,300 radius 230 lantern
+  # Painted lights only: the corner lantern at the lane mouth, the string of lamps overhead,
+  # the counting house's green glass lamp, the small sconce beside it, and the chandlery's
+  # warm window and door lantern. Each point sits on its painted flame or glass.
+  light 90,260 radius 150 lantern
+  light 430,120 radius 70 lantern
+  light 780,110 radius 80 lantern
+  light 1250,40 radius 80 lantern
+  light 1415,120 radius 170 lantern colour "#79e6a4"
+  light 1620,145 radius 90 lantern
+  light 1900,420 radius 300 lantern
+  light 2280,115 radius 110 lantern
+  light 2470,300 radius 140 lantern
 
   # Act I: the wreckers work the bottom of the lane. Pike keeps the paperwork.
   scene if act 1 and not alley_seen
@@ -33,15 +40,15 @@ room alley "Wreckers' Lane"
   # up the lane. Say where it is, once.
   scene if not alley_way_out_seen
     set alley_way_out_seen
-    say "Up the lane, past Vex's lamps and the shipwright's lit window, the boat shed's latch is up and its door stands open a hand's width."
+    say "Up the lane, past Vex's green lamp and the shipwright's lit window, the boat shed's latch is up and its door stands open on the fog."
 
-  # Pike stands between the counting-house door and the chandlery, under the strung lantern,
-  # a little deeper into the lane than Fenn's walking line. He faces the lane mouth.
-  sprite npc_pike_body at 1250,818 size 1 flip idle speaker pike for pike grade "saturate(0.82) brightness(0.85)"
+  # Pike stands under the chandlery's hanging lantern, between the lit shop and its door, a
+  # little deeper into the lane than Fenn's walking line. He faces the lane mouth.
+  sprite npc_pike_body at 2180,832 size 1 flip idle speaker pike for pike grade "saturate(0.82) brightness(0.85)"
 
   hotspot pike "Pike"
-    area 1170,480 160x340
-    stand 1120,824
+    area 2110,450 170x360
+    stand 2080,840
     look "Pike. Grey coat, yellow armband, and a clipboard he holds like a shield."
     talk "He lowers the clipboard a little."
       talk pike
@@ -53,8 +60,8 @@ room alley "Wreckers' Lane"
 
   # The crate stack against the boat-shed wall: ships' stores with the marks scraped off.
   hotspot shed "the wreckers' shed"
-    area 590,395 240x250
-    stand 600,842
+    area 580,420 220x290
+    stand 600,844
     look "A lean-to against the shed wall, packed with crates of ships' stores."
       say "Somebody has scraped the shipping marks off."
       set saw_stores
@@ -64,39 +71,39 @@ room alley "Wreckers' Lane"
       name "the picked-over shed"
       look "The lean-to is tidier than it was. The chain is down, and the best crates have gone."
 
-  # The tall black boat-shed doors, one leaf ajar on a blade of fog light. The top of the
-  # opening clears the crates, so the hotspot sits there and the stand is on the cobbles.
+  # The tall black boat-shed doors, one leaf open on a blade of cold fog light. The opening
+  # catches the eye from the lane mouth, and the stand is on the cobbles in front of it.
   hotspot boat_shed "the boat shed door"
-    area 630,250 160x150
-    stand 760,842
+    area 880,220 230x400
+    stand 1050,844
     exit warehouse
-    look "The boat shed. The latch is up, and the door is open a hand's width. Somebody is inside."
+    look "The boat shed. The latch is up, and the door is open on the fog. Somebody is inside."
     open "I push the door. It gives quietly, as if it has been opened carefully before."
     state if dorrit_cleared
       look "The boat shed. The door is shut now, and the latch is down."
       open "The shed is quiet. Dorrit has packed his spoons."
 
-  # The green glass lamp and the green-lit plank door: Vex's counting house, at the point where
-  # the lane's paving is widest in front of it.
+  # The broad green sliding door under the green glass lamp: Vex's counting house, green light
+  # spilling across the cobbles at the widest point of the lane.
   hotspot counting_door "the counting house door"
-    area 930,295 185x390
-    stand 1010,842
+    area 1300,240 300x400
+    stand 1430,844
     exit counting_house
-    look "A warehouse door with a lamp above it. The paint is newer than the rest of the lane. Vex's counting house."
+    look "A broad green warehouse door with a lamp above it. The paint is newer than the rest of the lane. Vex's counting house."
     open "I go up the lane to Vex's warehouse."
 
-  # The shipwright's window, not a door: the broad small-paned front full of rope and oars.
+  # The shipwright's lit door at the right edge, with the broad rope-and-oar window beside it.
   hotspot chandlery_door "the shipwright's door"
-    area 1480,50 560x520
-    stand 1750,842
+    area 2350,180 210x370
+    stand 2290,844
     exit chandlery
-    look "The shipwright's window, lit and full of rope. Open late, because ships are always leaving."
+    look "The shipwright's door, and a broad lit window full of rope and oars. Open late, because ships are always leaving."
     open "I push the door. A bell somewhere in the shop regrets it."
 
   # The lane turns out of frame at the left, past the jettied corner: the painted cobbles are
   # the way back down to the quay, not the water itself.
   hotspot to_dock "the lane back down to the docks"
-    area 240,660 100x200
-    stand 330,852
+    area 0,540 230x320
+    stand 300,850
     exit dock sound none
     look "The lane runs back down to the waterfront."

@@ -1,81 +1,85 @@
 room counting_house "Vex's Warehouse"
-  bg bg_countinghouse_close_wide
+  bg bg_countinghouse_restart_wide
   width 2560
   music music_office
-  grade "saturate(0.82) brightness(0.88)"
-  # Vex's counting house as a close-up of the harbour: the lane door and the brass cloud at the
-  # left, the pigeonholed ledger wall under the portrait, the clerks' desks with their brass
-  # scales under green glass lamps, and the black safe at the right. Green glass and green
-  # lamplight are the same motif as the counting-house lamp outside on the quay.
+  grade "saturate(0.85) brightness(0.95)"
+  # Vex's counting house as a full-bleed painting, strict side-on: the tall lane door open on
+  # cold blue night at the left, the pigeonholed ledger wall and the clerks' desks under three
+  # green glass lamps, the shuttered window and the portrait high on the right wall, and the
+  # black safe beside them. No lettering on the ledgers, papers or frames; the green lamps and
+  # the open door are the room's two lights.
   perspective horizon 300 ref 875 height 360
-  # Measured from the painted lane door (y 290-780, 490 px tall): an adult at its floor plane is
-  # about 420 px, and the near floor row at 875 is larger still.
-  scale 720 413
-  scale 800 470
-  scale 875 520
-  walk (80,872) (110,820) (220,806) (450,798) (700,796) (1000,796) (1300,796) (1600,798) (1900,800) (2200,804) (2450,810) (2520,818) (2520,872)
-  entry 300,806
-  arrive alley 300,806
+  # Measured from the painted lane door (y 50-800, 750 px tall): an adult at its floor plane is
+  # about 455 px, and the near floor row at 875 is 505 px.
+  scale 720 400
+  scale 800 455
+  scale 875 505
+  walk (60,872) (80,842) (200,828) (500,820) (900,816) (1300,814) (1700,814) (2000,816) (2180,820) (2260,830) (2300,852) (2300,872)
+  entry 300,836
+  arrive alley 300,836
   footsteps wood
   # The three painted green glass lamps, each on its bulb under the shade, plus the cold blue
-  # window light beyond the safe.
-  light 900,540 radius 150 lantern colour "#79e6a4"
-  light 1450,555 radius 150 lantern colour "#79e6a4"
-  light 1880,565 radius 150 lantern colour "#79e6a4"
-  light 2380,300 radius 180 moon
+  # light from the open door and the shuttered window beyond the safe.
+  light 280,480 radius 280 moon
+  light 1000,500 radius 160 lantern colour "#79e6a4"
+  light 1400,530 radius 150 lantern colour "#79e6a4"
+  light 1900,500 radius 160 lantern colour "#79e6a4"
+  light 2100,260 radius 220 moon
 
-  # Vex stands in front of the centre desk, a little behind the walking line, facing the door.
-  sprite npc_vex_body at 1600,812 size 1 idle speaker vex for vex
+  # Vex stands in the gap between the centre and right desks, a little behind the walking line,
+  # facing the door.
+  sprite npc_vex_body at 1600,814 size 1 idle speaker vex for vex
 
   scene if act 1 and not vex_warehouse_arrived
     set vex_warehouse_arrived
     say "Vex's warehouse. Desks, green lamps, and one very good safe."
 
-  # The painted door: the whole leaf and its dark opening, threshold to lintel.
+  # The painted door: the whole leaf and its dark opening, threshold to lintel, with the cold
+  # night pouring in.
   hotspot door_out "the lane door"
-    area 110,290 320x490
-    stand 300,806
+    area 30,40 460x760
+    stand 300,836
     exit alley
     look "The lane door. Oiled hinges, and no lock. Vex likes to hear who comes in."
 
   hotspot portrait "the portrait"
-    area 1080,0 330x250
+    area 2270,0 290x350
     nowalk
     look "The last owner in oils: top hat, sword, and a chin the painter improved. Vex bought the warehouse with the portrait still hanging."
     talk "I ask why he keeps it. Vex says it is the only honest man in the room, and he likes to be reminded what honesty looks like."
 
   hotspot pigeonholes "the pigeonholes"
-    # The lower grid only: the portrait hangs in front of the upper wall.
-    area 600,250 1200x190
+    # The lower grid only: the window and the portrait hang in front of the upper wall.
+    area 520,20 1470x400
     nowalk
     look "Rolled charts in every hole, one for each ship that didn't come home."
     use "Vex calls this his library. The sea calls it salvage."
 
-  # The row of standing desks, their brass scales and inkwells, and the ledger stacks between.
+  # The row of desks, their brass scales and inkwells, and the ledger stacks between.
   hotspot desks "the desks"
-    area 680,560 1600x170
-    stand 1200,806
+    area 740,560 1360x250
+    stand 1200,820
     look "The tall desks, pens out, no clerks. Vex does his own accounts and enjoys it."
     open "The drawers are locked. The keys are on a ring in Vex's pocket, alphabetised."
     use "I straighten a pen. It was already straight."
 
   hotspot safe "the strongbox"
-    area 2210,450 330x380
-    stand 2200,808
+    area 2230,440 330x440
+    stand 2200,820
     look "A black safe with a brass dial. Vex says it holds tide tables."
     open "The dial is worn smooth on one side. Vex opens it with his thumb and a look."
     use "It is bolted through the floor. The floor seems nervous about it."
 
-  # The brass cloud in its carved panel on the wall above the door.
-  hotspot brass_cloud "the brass cloud"
-    area 200,75 360x210
+  # The tall shuttered window above the safe: the room's cold light, and no lettering on it.
+  hotspot window "the shuttered window"
+    area 1990,0 260x430
     nowalk
-    look "A brass cloud over the door. Vex says it's his family crest."
-    use "I've seen that cloud on salvage from three ships. Vex says it's a coincidence."
+    look "The shutters are barred, and cold moonlight falls through the slats across the ledgers."
+    use "The shutters are bolted from the inside. Vex does not like the view."
 
   hotspot vex "Captain Vex"
-    area 1550,300 320x510
-    stand 1480,806
+    area 1550,360 300x470
+    stand 1500,820
     look "Captain Vex, in a coat worth more than the Marrow."
     talk "I take my hat off. He likes that."
       talk vex
