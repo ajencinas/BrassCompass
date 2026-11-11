@@ -1,4 +1,4 @@
-room bow_fog "The Shroud"
+room bow_fog "The Marrow — Bow"
   bg bg_bow_wide
   width 2560
   music music_fog

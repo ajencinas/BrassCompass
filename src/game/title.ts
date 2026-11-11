@@ -262,7 +262,7 @@ export function drawTitle(ctx: CanvasRenderingContext2D, view: TitleView): void 
     });
   }
 
-  const help = fitText(ctx, "Click a thing to act on it    ·    right-click to look    ·    hold Q to reveal what's interactive",
+  const help = fitText(ctx, "Click to act  ·  Tab / arrows + Enter  ·  right-click to look  ·  hold Q for exits and props",
     1840, Math.round(20 * scale), 14);
   drawText(ctx, help.text, LOGICAL_W / 2, 982, {
     size: help.size, color: "#dbe3ee", align: "center",

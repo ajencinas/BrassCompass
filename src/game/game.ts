@@ -69,7 +69,7 @@ const BAR_LABELS: Record<BarId, string> = {
 /** The plates' right edge and the gap between them; the room plate at the other end. */
 const BAR_RIGHT = 1896;
 const BAR_GAP = 10;
-const ROOM_PLATE = { x: 24, w: 400 };
+const ROOM_PLATE = { x: 24, w: 400, h: 84 };
 /**
  * next-level: a11y — top-bar geometry at a text scale. The plates widen with the type (there is room: the row ends
  * at 1896 and the room plate stops at 424) and drawing and hit-testing both read this one layout,
@@ -88,7 +88,7 @@ function barLayout(scale: number): Record<BarId, { x: number; y: number; w: numb
   return out;
 }
 /** Below the top bar: where the tip-mode line and other banners sit, clear of the buttons. */
-const BANNER_Y = 70;
+const BANNER_Y = 108;
 
 const TIPS_KEY = "brasscompass.tips.v1";
 
@@ -213,7 +213,7 @@ const EXIT_EDGE_BAND = 70;
 /** How near the viewport edge an exit's painted area must reach to count as meeting it. */
 const EXIT_EDGE_TOUCH = 4;
 const EXIT_INTRO_TIME = 2.5;
-const EXIT_INTRO_MAX = 0; // dashed first-entry outlines read as debug; the chevron + signposts carry it
+const EXIT_INTRO_MAX = 0; // persistent exit labels carry it; dashed first-entry outlines read as debug
 /** A read line lingers this long, then its box fades away over NARRATION_FADE seconds. */
 const NARRATION_LINGER = 2.5;
 const NARRATION_FADE = 0.6;
@@ -237,7 +237,35 @@ const SAVE_NOTICE_MIN = 8;
 // next-level: casebook
 /** How long a pinned note's banner and the chart button's glow last, in seconds. */
 const NOTE_TOAST_TIME = 4;
-const NOTE_TOAST_TEXT = "Pinned to the chart — J";
+const NOTE_TOAST_TEXT = "New place on the chart — J";
+/** One plain-English goal per room, shown under the room name. */
+const OBJECTIVES: Record<string, string> = {
+  dock: "Find the harbourmaster. The lit door is his.",
+  quay: "Follow the quay to the harbour mouth.",
+  pier_end: "Find Vex at the lamp.",
+  tavern: "Ask Marta about your father.",
+  office: "Ask Bramwick what he knows.",
+  alley: "Find the way through Wreckers' Lane.",
+  chandlery: "Find Hobb and the crowbar.",
+  warehouse: "Search the boat shed.",
+  counting_house: "Find Vex's ledger.",
+  village: "Ask the villagers about Elias.",
+  weather_works: "Find Rook's log in the lighthouse.",
+  marrow_deck: "Find Vex at the helm.",
+  marrow_quarterdeck: "Speak to Vex.",
+  marrow_cabin: "Search Vex's chart table.",
+  below_decks: "Find Hobb and Dorrit.",
+  bow_fog: "Look into the fog from the bow.",
+  crows_nest: "Find Quill in the crow's nest.",
+  marrow_gallery: "Search the stern gallery.",
+  lagoon_shore: "Cross the Wrack Line to the camp.",
+  far_pans: "Follow the salt pans to the camp.",
+  reef_wreck: "Search the sunken wreck.",
+  salt_camp: "Find Elias among the castaways.",
+  key_gate: "Open the reef gate.",
+  lantern_deck: "Find the great lantern.",
+  arcadia_cabin: "Find Mordant and the nameplate.",
+};
 
 /** What a save may name, checked against the live content. */
 const KNOWN: SaveKnown = {
@@ -3228,19 +3256,26 @@ export class Game {
     // next-level: a11y — the bar is chrome, so its type follows the text scale. The plates widen
     // with it, and every label is fitted (then ellipsised) so a long word can never spill out.
     const scale = this.textScale;
-    ctx.fillStyle = "rgba(5,13,22,0.8)";
-    ctx.fillRect(ROOM_PLATE.x, BAR.y, ROOM_PLATE.w, BAR.h);
+    ctx.fillStyle = "rgba(5,13,22,0.9)";
+    ctx.fillRect(ROOM_PLATE.x, BAR.y, ROOM_PLATE.w, ROOM_PLATE.h);
+    const objective = OBJECTIVES[this.room.id];
     // The atlas hierarchy, always visible: the area above the room.
     const area = areaOfRoom(this.room.id);
     if (area) {
       const where = fitText(ctx, area.name.toUpperCase(), ROOM_PLATE.w - 32, Math.round(10 * scale), 8);
-      drawText(ctx, where.text, ROOM_PLATE.x + 16, BAR.y + Math.round(13 * scale), {
+      drawText(ctx, where.text, ROOM_PLATE.x + 16, BAR.y + Math.round(12 * scale), {
         size: where.size, color: "#93a4af", shadow: false,
       });
-      const room = fitText(ctx, this.room.name, ROOM_PLATE.w - 32, Math.round(19 * scale), 13);
-      drawText(ctx, room.text, ROOM_PLATE.x + 16, BAR.y + Math.round(26 * scale), {
+      const room = fitText(ctx, this.room.name, ROOM_PLATE.w - 32, Math.round(20 * scale), 14);
+      drawText(ctx, room.text, ROOM_PLATE.x + 16, BAR.y + Math.round(27 * scale), {
         size: room.size, color: "#e8c98a", shadow: false,
       });
+      if (objective) {
+        const goal = fitText(ctx, "Goal: " + objective, ROOM_PLATE.w - 32, Math.round(12.5 * scale), 9);
+        drawText(ctx, goal.text, ROOM_PLATE.x + 16, BAR.y + Math.round(50 * scale), {
+          size: goal.size, color: "#cfc2a3", shadow: false,
+        });
+      }
     } else {
       const room = fitText(ctx, this.room.name, ROOM_PLATE.w - 32, Math.round(22 * scale), 15);
       drawText(ctx, room.text, ROOM_PLATE.x + 16, BAR.y + Math.round((BAR.h - room.size) / 2), {
@@ -3257,7 +3292,7 @@ export class Game {
       // to notice it. Reduced motion holds it steady instead.
       const glow = id === "casebook" && this.noteGlow > 0;
       // Always a dark plate: a pale "on" fill was unreadable against a bright sky. On is a gold rim.
-      ctx.fillStyle = hover === id ? "rgba(30,48,64,0.94)" : on ? "rgba(8,16,26,0.92)" : "rgba(5,13,22,0.8)";
+      ctx.fillStyle = hover === id ? "rgba(38,58,76,0.96)" : on ? "rgba(8,16,26,0.96)" : "rgba(5,13,22,0.9)";
       ctx.fillRect(b.x, b.y, b.w, b.h);
       if (on) {
         ctx.strokeStyle = "#e8c98a";
@@ -3268,7 +3303,7 @@ export class Game {
         ctx.lineWidth = 1.5;
         ctx.strokeRect(b.x + 0.75, b.y + 0.75, b.w - 1.5, b.h - 1.5);
       }
-      const label = fitText(ctx, BAR_LABELS[id], b.w - 16, Math.round(20 * scale), 13);
+      const label = fitText(ctx, BAR_LABELS[id], b.w - 16, Math.round(22 * scale), 14);
       if (glow) {
         const k = this.reduced ? 0.8 : 0.5 + 0.5 * Math.sin(this.time * 6);
         ctx.save();
@@ -3354,32 +3389,28 @@ export class Game {
 
     const visible = this.visibleHotspots();
     const hovered = this.hoverHotspot ? visible.find((h) => h.id === this.hoverHotspot) : undefined;
-    // Hovered wins outright: the player has already found that door and asked about it.
-    let target = hovered && this.isExit(hovered) ? hovered : undefined;
-    if (!target) {
-      let best = Infinity;
-      for (const raw of visible) {
-        if (!this.isExit(raw)) continue;
-        const stand = this.exitStand(raw);
-        const d = Math.hypot(stand.x - this.x, stand.y - this.y);
-        if (d < best) { best = d; target = raw; }
+    // Every way out keeps a small, quiet chevron at its threshold. The one under the pointer —
+    // or the nearest once Fenn is within reach — is brighter. This is the persistent exit cue
+    // the usability study asked for; Q still outlines the whole scene.
+    for (const raw of visible) {
+      if (!this.isExit(raw)) continue;
+      const state = this.hotspotState(raw);
+      const b = areaBox(state.area);
+      const base = this.exitStand(state);
+      const x = b.x + b.w / 2;
+      const y = Math.max(76, Math.min(SCENE_H - 26, base.y - 12));
+      const near = raw === hovered || Math.hypot(base.x - this.x, base.y - this.y) <= EXIT_CUE_RANGE;
+      if (x < this.cameraX + 24 || x > this.cameraX + LOGICAL_W - 24) {
+        // The door/stairs are painted off the current camera: keep a screen-edge marker so the
+        // way out is never invisible just because Fenn is standing on the other side of it.
+        this.drawEdgeExit(ctx, x < this.cameraX ? "left" : "right", y, state.name, near ? 1 : 0.8);
+        continue;
       }
-      if (!target || best > EXIT_CUE_RANGE) return;
+      const dx = base.x - this.x;
+      const angle = Math.abs(dx) < 18 ? 0 : dx < 0 ? -Math.PI / 2 : Math.PI / 2;
+      this.drawExitChevron(ctx, x, y, angle, near ? 1 : 0.7);
+      this.drawExitLabel(ctx, x, y, state.name, near ? 1 : 0.6);
     }
-    const state = this.hotspotState(target);
-    const b = areaBox(state.area);
-    const base = this.exitStand(state);
-    // The base is the spot Fenn walks to, not the rectangle's bottom edge: a doorway's painted
-    // bottom can sit well above the threshold. Centre it under the opening.
-    const x = b.x + b.w / 2;
-    // A base outside the frame has nothing to point at; keep the mark below the top bar and
-    // above the verb panel so it never sits on the chrome.
-    if (x < this.cameraX + 24 || x > this.cameraX + LOGICAL_W - 24) return;
-    const y = Math.max(76, Math.min(SCENE_H - 26, base.y - 12));
-    const dx = base.x - this.x;
-    // Point into the opening from the side Fenn is on; a door dead ahead points up.
-    const angle = Math.abs(dx) < 18 ? 0 : dx < 0 ? -Math.PI / 2 : Math.PI / 2;
-    this.drawExitChevron(ctx, x, y, angle);
   }
 
   /** Where Fenn stands before taking a way out: its own stand, else the base of its area. */
@@ -3387,10 +3418,40 @@ export class Game {
     return hs.stand ?? this.areaStand(hs.area);
   }
 
+  /** A pinned marker at the screen edge for a way out painted beyond the camera. */
+  private drawEdgeExit(ctx: CanvasRenderingContext2D, side: "left" | "right", y: number, name: string, strength: number): void {
+    const edge = side === "left" ? this.cameraX + 34 : this.cameraX + LOGICAL_W - 34;
+    const angle = side === "left" ? -Math.PI / 2 : Math.PI / 2;
+    this.drawExitChevron(ctx, edge, Math.max(120, Math.min(SCENE_H - 46, y)), angle, strength);
+    const labelX = side === "left" ? this.cameraX + 132 : this.cameraX + LOGICAL_W - 132;
+    this.drawExitLabel(ctx, labelX, Math.max(148, Math.min(SCENE_H - 46, y)), name, strength);
+  }
+
+  /** A small dark label under a way out, so an exit reads as a named place, not scenery. */
+  private drawExitLabel(ctx: CanvasRenderingContext2D, x: number, y: number, name: string, strength: number): void {
+    if (y < 110 || y > SCENE_H - 34) return;
+    const size = Math.round(14 * this.textScale);
+    ctx.save();
+    ctx.font = `${size}px Georgia, "Times New Roman", serif`;
+    const text = fitText(ctx, name, 210, size, 11);
+    const w = ctx.measureText(text.text).width + 18;
+    const bx = Math.max(this.cameraX + 8, Math.min(this.cameraX + LOGICAL_W - w - 8, x - w / 2));
+    const by = y - 34 - size;
+    ctx.fillStyle = `rgba(4,12,20,${0.5 + 0.28 * strength})`;
+    ctx.fillRect(bx, by, w, size + 12);
+    ctx.strokeStyle = `rgba(232,201,138,${0.18 + 0.5 * strength})`;
+    ctx.lineWidth = 1;
+    ctx.strokeRect(bx + 0.5, by + 0.5, w - 1, size + 11);
+    drawText(ctx, text.text, bx + w / 2, by + 5, {
+      size: text.size, color: "#f0dfb8", align: "center", shadow: false,
+    });
+    ctx.restore();
+  }
+
   /** One small, soft chevron at a threshold; points toward the opening from Fenn's side. */
-  private drawExitChevron(ctx: CanvasRenderingContext2D, x: number, y: number, angle: number): void {
+  private drawExitChevron(ctx: CanvasRenderingContext2D, x: number, y: number, angle: number, strength = 1): void {
     const pulse = this.reduced ? 0.6 : 0.5 + 0.5 * Math.sin(this.time * 2.3);
-    const alpha = 0.25 + 0.16 * pulse;
+    const alpha = (0.22 + 0.14 * pulse) * strength;
     const bob = this.reduced ? 0 : Math.sin(this.time * 1.8) * 1.6;
     ctx.save();
     ctx.translate(x, y + bob);

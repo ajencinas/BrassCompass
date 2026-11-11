@@ -76,7 +76,7 @@ export const ATLAS: AtlasArea[] = [
     x: 0.155,
     y: 0.60,
     rooms: [
-      { id: "bow_fog", name: "The Bow", x: 0.10, y: 0.48, note: "The first attempt at the Shroud." },
+      { id: "bow_fog", name: "The Bow of the Marrow", x: 0.10, y: 0.48, note: "The first attempt at the Shroud." },
       { id: "marrow_deck", name: "The Deck", x: 0.30, y: 0.68, note: "The crew, the hatch and the rigging." },
       { id: "crows_nest", name: "The Crow's Nest", x: 0.36, y: 0.10, note: "Quill's office, high on the foremast." },
       { id: "below_decks", name: "The Crew Deck", x: 0.44, y: 0.62, note: "Dorrit's stove, and the hold below." },
@@ -94,7 +94,7 @@ export const ATLAS: AtlasArea[] = [
     x: 0.705,
     y: 0.425,
     rooms: [
-      { id: "lagoon_shore", name: "The Fog Flats", x: 0.10, y: 0.66, note: "The longboat, and the way into the Shroud." },
+      { id: "lagoon_shore", name: "The Wrack Line", x: 0.10, y: 0.66, note: "The longboat, and the way into the Shroud." },
       { id: "reef_wreck", name: "The Sunken Wreck", x: 0.46, y: 0.55, note: "The bell, the nameplate, and the dead." },
       { id: "salt_camp", name: "The Castaway Camp", x: 0.68, y: 0.60, note: "Elias, alive, and still charting." },
       { id: "far_pans", name: "The Far Flats", x: 0.82, y: 0.66, note: "The edge of the fog, and the ghost ship beyond." },
@@ -143,6 +143,7 @@ export class Atlas {
   private list = document.createElement("ol");
   private note = document.createElement("p");
   private back = document.createElement("button");
+  private closeBtn = document.createElement("button");
   private previousFocus: HTMLElement | null = null;
   private view: "island" | string = "island";
   private state: AtlasState = { act: 1, room: null, visited: () => false };
@@ -170,11 +171,13 @@ export class Atlas {
             <p class="atlas-key-title">KEY</p>
             <ol class="atlas-list"></ol>
             <p class="atlas-note" aria-live="polite"></p>
+            <p class="atlas-legend">Bright: visited · Dim: not yet found · Fog: beyond</p>
           </aside>
         </div>
         <footer class="atlas-foot">
           <button class="atlas-back" type="button">← The island</button>
-          <small>Click a place to travel · A or Escape to close</small>
+          <small>Click a place to travel · ↑ ↓ + Enter · Esc or Close</small>
+          <button class="atlas-close" type="button">Close</button>
         </footer>
       </section>`;
     document.body.append(this.overlay);
@@ -189,8 +192,14 @@ export class Atlas {
     this.list = this.overlay.querySelector(".atlas-list")!;
     this.note = this.overlay.querySelector(".atlas-note")!;
     this.back = this.overlay.querySelector(".atlas-back")!;
+    this.closeBtn = this.overlay.querySelector(".atlas-close")!;
 
     this.back.addEventListener("click", () => this.goIsland());
+    this.closeBtn.addEventListener("click", () => this.hide());
+    // A click on the dark chart table outside the panel closes it, like every other page.
+    this.overlay.addEventListener("click", (event) => {
+      if (event.target === this.overlay) this.hide();
+    });
     this.overlay.addEventListener("keydown", (event) => {
       event.stopPropagation();
       if (event.key === "Escape" || event.key.toLowerCase() === "a") {
@@ -199,10 +208,14 @@ export class Atlas {
         else this.hide();
         return;
       }
-      if (event.key === "Tab") {
-        const stops = [...this.overlay.querySelectorAll<HTMLElement>("button")].filter((b) => !b.hidden);
+      if (event.key === "Tab" || event.key === "ArrowDown" || event.key === "ArrowUp" ||
+          event.key === "ArrowRight" || event.key === "ArrowLeft") {
+        const stops = [...this.overlay.querySelectorAll<HTMLElement>("button")]
+          .filter((b) => !b.hidden && b.offsetParent !== null);
+        if (!stops.length) return;
         const at = stops.indexOf(document.activeElement as HTMLElement);
-        const next = (at + (event.shiftKey ? -1 : 1) + stops.length) % stops.length;
+        const back = event.shiftKey || event.key === "ArrowUp" || event.key === "ArrowLeft";
+        const next = at < 0 ? (back ? stops.length - 1 : 0) : (at + (back ? -1 : 1) + stops.length) % stops.length;
         event.preventDefault();
         stops[next]?.focus();
       }

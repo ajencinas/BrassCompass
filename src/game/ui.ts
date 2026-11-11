@@ -425,7 +425,7 @@ function drawSentence(ctx: CanvasRenderingContext2D, model: PanelModel): Rect | 
       ? "Tab: scene, verbs, items · arrows to move · Enter to act · hold Q to reveal"
       : model.touch
       ? "Tap a thing to see it, again to act · tap the floor to walk"
-      : "Click a thing to act · right-click to look · hold Q to reveal";
+      : "Click to act · Tab to focus · Enter to act · right-click to look · Q reveals";
     drawText(ctx, idle, SENT_X, l.sentY + 6, {
       size: fitSize(ctx, idle, SENT_W, Math.round(Math.min(28, 22 * model.scale)), 18),
       color: "#b9c8d3",
@@ -890,7 +890,7 @@ export function drawDialogue(ctx: CanvasRenderingContext2D, m: DialogueModel): v
     });
   });
   const footer = m.choices.length
-    ? (m.keyboard ? "Press a reply's number, or arrows and Enter" : m.touch ? "Tap a reply · long-press to leave" : "Click a reply or press its number · right-click to leave")
+    ? (m.keyboard ? "Press a reply's number, or arrows and Enter" : m.touch ? "Tap a reply · long-press to leave" : "Click a reply or press its number · right-click to end")
     : (m.keyboard ? "Enter to continue" : m.touch ? "Tap to continue" : "Click to continue");
   const fs = dialogueFooterSize(m.scale);
   drawText(ctx, footer, l.textX, l.top + l.height - fs - 20, { size: fs, color: "#c3d3da", shadow: false });

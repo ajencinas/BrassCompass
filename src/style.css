@@ -510,3 +510,16 @@ body.reduced-motion .cinematic { transition-duration: .15s; }
   .area-card-text { left: 6vw; max-width: 80vw; }
   .area-card-text h1 { font-size: 2em; }
 }
+
+.atlas-close {
+  margin-left: auto; padding: 8px 18px; border: 1px solid #c6a365; border-radius: 3px;
+  background: rgba(8, 18, 28, .9); color: #f3d99e; font: 600 13px system-ui, sans-serif;
+  letter-spacing: .08em; cursor: pointer;
+}
+.atlas-close:hover, .atlas-close:focus-visible { background: #c6a365; color: #071018; }
+.atlas-legend { margin: 10px 0 0; color: #8fa0aa; font: 11px/1.4 system-ui, sans-serif; }
+.atlas-row:focus-visible, .atlas-marker:focus-visible, .atlas-back:focus-visible {
+  outline: 2px solid #ffe6a8; outline-offset: 3px;
+}
+
+.atlas-foot small { font-size: 13px; }
