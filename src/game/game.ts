@@ -212,7 +212,6 @@ const SAVE_NOTICE_MIN = 8;
 // next-level: casebook
 /** How long a pinned note's banner and the chart button's glow last, in seconds. */
 const NOTE_TOAST_TIME = 4;
-const NOTE_TOAST_TEXT = "New place on the chart — J";
 
 /** What a save may name, checked against the live content. */
 const KNOWN: SaveKnown = {
@@ -2569,36 +2568,6 @@ export class Game {
     return !this.title && !this.dialogue && !this.won && !this.paused && !this.cinematic.active &&
       this.fade < 0.5 && !this.casebook.open && !this.history.open && !this.deeds.open;
   }
-  /** The height of a wrapped banner in the save notice's geometry, for stacking under it. */
-  private bannerHeight(ctx: CanvasRenderingContext2D, text: string): number {
-    const size = Math.round(20 * this.textScale), lh = Math.round(27 * this.textScale);
-    const lines = wrap(ctx, text, 1830, { size, color: "", weight: "normal" });
-    return lines.length * lh + Math.round(17 * this.textScale);
-  }
-  /**
-   * The filed-note banner: the save notice's shape under the top bar, ruled in gold rather than
-   * red, and short enough to read at a glance. It queues under a conversation (see noteToast).
-   */
-  private drawNoteToast(ctx: CanvasRenderingContext2D): void {
-    if (!this.noteToast || !this.noteToastShown()) return;
-    const size = Math.round(20 * this.textScale), lh = Math.round(27 * this.textScale);
-    let y = BANNER_Y + this.tipBannerHeight(ctx);
-    if (this.saveNotice && this.saveNoticeShown()) y += this.bannerHeight(ctx, this.saveNotice.text) + 8;
-    ctx.save();
-    ctx.globalAlpha = Math.min(1, this.noteToast.left / 0.4);
-    ctx.font = `${size}px Georgia, serif`;
-    const w = Math.min(1872, ctx.measureText(NOTE_TOAST_TEXT).width + 40);
-    const h = lh + Math.round(17 * this.textScale);
-    ctx.fillStyle = "rgba(5,13,22,0.92)";
-    ctx.fillRect(24, y, w, h);
-    ctx.fillStyle = "#c9a24a";
-    ctx.fillRect(24, y, 3, h);
-    drawText(ctx, NOTE_TOAST_TEXT, 44, y + Math.round(10 * this.textScale), {
-      size, color: "#f3d99e", weight: "normal", shadow: false,
-    });
-    ctx.restore();
-  }
-
   /** The save banner: the tip line's style under the top bar (below the tip line when it's on). */
   private drawSaveNotice(ctx: CanvasRenderingContext2D): void {
     if (!this.saveNotice || !this.saveNoticeShown()) return;
@@ -3071,7 +3040,6 @@ export class Game {
     if (this.explore) this.renderExplore(ctx);
     this.drawSaveNotice(ctx);
     // next-level: casebook
-    this.drawNoteToast(ctx);
 
     // The cursor is a shape, not a word chip: hover is answered by the gold rim in the scene.
     drawCursor(ctx, this.input.x, this.input.y, null, this.rejection > 0, this.textScale, narrationBox);
@@ -3473,7 +3441,7 @@ export class Game {
    * light, so no chevron competes with it.
    */
   private drawExitChevron(ctx: CanvasRenderingContext2D): void {
-    if (this.exitIntro > 0 || this.title || this.won || this.dialogue || this.cinematic.active ||
+    if (this.title || this.won || this.dialogue || this.cinematic.active ||
         this.paused || this.revealing) return;
     // A verb or object on the line changes what clicking a door would do: no cue can promise
     // "walk through" while the sentence says "use crowbar".
@@ -3482,47 +3450,35 @@ export class Game {
     const visible = this.visibleHotspots();
     const hovered = this.hoverHotspot ? visible.find((h) => h.id === this.hoverHotspot) : undefined;
     const focusedId = this.keyboardFocus?.kind === "hotspot" ? this.keyboardFocus.id : null;
-    let target = hovered && this.isExit(hovered) ? hovered : undefined;
-    if (!target && focusedId) {
-      const focused = visible.find((h) => h.id === focusedId);
-      if (focused && this.isExit(focused)) target = focused;
-    }
-    let strength = 1;
-    if (!target) {
-      let best = Infinity;
-      for (const raw of visible) {
-        if (!this.isExit(raw)) continue;
-        const stand = this.exitStand(this.hotspotState(raw));
-        const d = Math.hypot(stand.x - this.x, stand.y - this.y);
-        if (d < best) { best = d; target = raw; }
+    // Every way out carries a small, quiet chevron. A door, hatch, ladder or path should never
+    // be visible only to a player who happens to stand close enough. No names, no signs.
+    for (const raw of visible) {
+      if (!this.isExit(raw)) continue;
+      const hs = this.hotspotState(raw);
+      const threshold = this.exitThreshold(hs);
+      const sound = this.exitSound(hs);
+      let x = threshold.x;
+      const y = Math.max(76, Math.min(SCENE_H - 34, threshold.y - 26));
+      let angle = 0;
+      if (sound === "none") {
+        const dx = threshold.x - this.x;
+        angle = Math.abs(dx) < 18 ? 0 : dx < 0 ? -Math.PI / 2 : Math.PI / 2;
       }
-      if (!target || best > EXIT_CUE_RANGE) return;
-      strength = 0.82;
+      if (x < this.cameraX + 24 || x > this.cameraX + LOGICAL_W - 24) {
+        const edge = x < this.cameraX ? "left" : "right";
+        x = edge === "left" ? this.cameraX + 30 : this.cameraX + LOGICAL_W - 30;
+        angle = edge === "left" ? -Math.PI / 2 : Math.PI / 2;
+      }
+      const near = raw === hovered || raw.id === focusedId || this.pointerNear(threshold) ||
+        Math.hypot(threshold.x - this.x, threshold.y - this.y) <= EXIT_CUE_RANGE;
+      this.drawChevronAt(ctx, x, y, angle, near ? 1 : 0.72);
     }
-    const hs = this.hotspotState(target);
-    const threshold = this.exitThreshold(hs);
-    const sound = this.exitSound(hs);
-    let x = threshold.x;
-    let y = Math.max(76, Math.min(SCENE_H - 34, threshold.y - 26));
-    // A doorway or ladder says "through here" with an upward spark; a path running out of the
-    // picture points the way it goes.
-    let angle = 0;
-    if (sound === "none") {
-      const dx = threshold.x - this.x;
-      angle = Math.abs(dx) < 18 ? 0 : dx < 0 ? -Math.PI / 2 : Math.PI / 2;
-    }
-    if (x < this.cameraX + 24 || x > this.cameraX + LOGICAL_W - 24) {
-      const edge = x < this.cameraX ? "left" : "right";
-      x = edge === "left" ? this.cameraX + 30 : this.cameraX + LOGICAL_W - 30;
-      angle = edge === "left" ? -Math.PI / 2 : Math.PI / 2;
-    }
-    this.drawChevronAt(ctx, x, y, angle, strength);
   }
 
   /** One small, soft chevron with a dark contour so it survives a bright plate. */
   private drawChevronAt(ctx: CanvasRenderingContext2D, x: number, y: number, angle: number, strength = 1): void {
     const pulse = this.reduced ? 0.6 : 0.5 + 0.5 * Math.sin(this.time * 2.6);
-    const alpha = (0.42 + 0.26 * pulse) * strength;
+    const alpha = (0.62 + 0.24 * pulse) * strength;
     const bob = this.reduced ? 0 : Math.sin(this.time * 2) * 1.4;
     ctx.save();
     ctx.translate(x, y + bob);
@@ -3537,7 +3493,7 @@ export class Game {
     ctx.fill();
     ctx.globalCompositeOperation = "source-over";
     ctx.rotate(angle);
-    ctx.scale(1.12, 1.12);
+    ctx.scale(1.48, 1.48);
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     // A leading chevron and a fainter echo: enough motion to catch the eye, never a signpost.
