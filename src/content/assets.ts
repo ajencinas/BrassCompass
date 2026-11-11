@@ -129,6 +129,17 @@ export const MANIFEST = {
     bg_farpans_wide: "/assets/scenes/farpans_wide.webp",
     bg_countinghouse_wide: "/assets/scenes/countinghouse_wide.webp",
     bg_pierend_wide: "/assets/scenes/pierend_wide.webp",
+    // The restart plates: the Upper Town, Shroud and reef-gate rooms repainted as full-bleed
+    // 2560x880 night paintings in one key (indigo fog, pewter water, amber lamps). No painted
+    // signs or lettering anywhere; every way out is carried by a lamp, a lit stair, a glowing
+    // doorway or a gap where the fog thins. The old plates above stay for the atlas and endings.
+    bg_village_v2_wide: "/assets/scenes/village_v2_wide.webp",
+    bg_weather_works_v2b_wide: "/assets/scenes/weather_works_v2b_wide.webp",
+    bg_lagoon_shore_v2b_wide: "/assets/scenes/lagoon_shore_v2b_wide.webp",
+    bg_reef_wreck_v2b_wide: "/assets/scenes/reef_wreck_v2b_wide.webp",
+    bg_salt_camp_v2b_wide: "/assets/scenes/salt_camp_v2b_wide.webp",
+    bg_far_pans_v2b_wide: "/assets/scenes/far_pans_v2b_wide.webp",
+    bg_key_gate_v2b_wide: "/assets/scenes/key_gate_v2b_wide.webp",
     // The short connective quay between the harbour and the harbour mouth.
     bg_quay_wide: "/assets/scenes/quay_wide.webp",
     // The cold open's full-screen plate (1920x1080, not a room background).

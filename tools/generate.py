@@ -533,20 +533,24 @@ RESTART_STYLE = (
 BG_MODEL = "bytedance/seedream-5/lite/text-to-image"
 BG_RES = "2848x1600 (16:9)"
 
-# ---------------- the visual restart: paintings first ----------------
-# The restart's language, shared by the title painting and the five atlas plates
-# (docs/VISUAL_RESTART.md): the story is carried by light, weather and composition, never by
-# painted information. One warm lantern key against deep indigo, a cold fog rim, emerald kept for
-# the Grey Lantern's own ghost-light, and no chart furniture of any kind.
-RESTART_STYLE = (
-    "Fully painted cinematic concept art, not a map, a diagram or a poster: hand-painted digital "
-    "oil illustration with loaded, visible brushwork, deep indigo and slate-blue night shadows "
-    "that stay coloured rather than black, cold silver-blue fog light rimming every silhouette, "
-    "a few small warm amber lantern cores, wet stone and wet timber catching broken reflections, "
-    "soft volumetric shafts through mist, rich filmic colour grade, full-bleed to all four edges, "
-    "no border, no frame, no vignette furniture. No text, no lettering, no signage, no signboards, "
-    "no painted words or numbers, no labels, no compass rose, no rhumb lines, no sea serpent, no "
-    "parchment or paper texture, no UI, no watermark, no logos."
+# The restart plate pass: seven rooms repainted as full-bleed 2560x880 paintings sharing one key.
+# The rule for all seven is the same: no painted information. No signs, no lettering, no UI, no
+# labels. A way out has to read from light and composition alone — a lamp over the path, a lit
+# stair climbing out of frame, a glowing doorway, a gap where the fog thins, an open gate with
+# firelight beyond — and an interactable is marked by a glint of wet edge or firelight, not a sign.
+RESTART_PLATE = (
+    "Full-bleed panoramic painting for a side-scrolling point-and-click adventure game, seen flat "
+    "side-on at eye level with no vanishing-point perspective, no frame, no border and no "
+    "vignette. Hand-painted digital illustration in the manner of a traditional oil painting: "
+    "visible loaded brushwork, broad confident strokes, fine painterly detail in stone, salt and "
+    "wet wood, rich atmospheric volumetric fog, strong filmic colour grade. One cold blue-grey "
+    "night key throughout: indigo fog, pewter water, wet slate and dark tarred timber, with the "
+    "only warmth a handful of small amber lamps, lanterns and firelight. The lower third is a "
+    "clear, continuous, completely empty walking band from the left edge to the right edge with "
+    "nothing standing on it. No people, no human figures. Absolutely no text, no lettering, no "
+    "signage, no shop signs, no signposts, no notices, no banners, no flags, no labels, no UI, no "
+    "watermark, no logos."
+
 )
 
 # Characters must sit inside painterly backgrounds without looking pasted on.
@@ -3115,6 +3119,279 @@ MANIFEST = [
               "fingerpicked nylon-string guitar and soft celesta over warm sustained strings, "
               "spacious and gentle, no percussion, instrumental, loopable",
       "lyrics": "[instrumental]", "duration": 50, "seed": 53}, "audio/pans.mp3"),
+
+    # ---------------- the restart plate pass: seven rooms, one night key ----------------
+    # 2560x880 full-bleed plates, painted 21:9 and cover-cropped. Each leaves the lower third as
+    # one clear walking band, puts every interactable on a painted object, and makes each way out
+    # legible from light alone. The prompts carry the shared direction in RESTART_PLATE.
+    ("bg_village_v2_wide", "image", BG_MODEL,
+     {"prompt": (
+         "Full-bleed panoramic painting of Upper Town, a steep cobbled lane in a fog-bound "
+         "northern harbour town at night, seen flat side-on at eye level from a few paces down "
+         "the lane, the near stonework large in frame. From left to right: a low wet stone "
+         "retaining wall carrying a black iron lamp; a short flight of worn stone steps dropping "
+         "away out of frame toward the harbour, the lamp's warm amber light falling down the "
+         "treads so the way down reads as a lit lane leaving the picture; a low round stone well "
+         "with a timber windlass, a rope and a hanging bucket standing on the wet cobbles; a "
+         "squat grey stone cottage with a carved shrine niche in its wall, a small painted "
+         "figure inside and a shelf of votive candles burning warm; a tall jettied timber-framed "
+         "cottage, its plaster dark with age, leaded windows lit amber, a plank back door under "
+         "a small lantern; then the lane climbs steeply between two leaning dark cottages as a "
+         "broad flight of worn stone steps with an iron handrail, a hanging lamp at the foot of "
+         "the stair washing warm light up the treads so the stair reads as the way up toward the "
+         "light; above the rooftops, right of centre and high in the blue fog, the lighthouse on "
+         "its black rock, its great lamp burning gold with a soft beam raking right through the "
+         "mist; at the far right a tall dark stone-and-timber house with one warm lit window, a "
+         "line of white laundry strung across the lane, and a small market stall with a dark "
+         "canvas awning, a trestle table, rope coils and dried fish, with no signboard and no "
+         "writing. Wet cobblestones reflect the lanterns and the windows; cold low fog drifts "
+         "between the houses. No shop signs, no hanging boards, no painted lettering anywhere. "
+         "The lower third is a continuous clear wet cobbled walking band from the left edge to "
+         "the right edge with nothing standing on it. ") + RESTART_PLATE,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/village_v2_wide.webp"),
+
+    ("bg_weather_works_v2_wide", "image", BG_MODEL,
+     {"prompt": (
+         "Full-bleed panoramic painting of the lighthouse headland above Upper Town at night, "
+         "seen flat side-on at eye level. From left to right: a low stone keeper's store with a "
+         "slate roof, a warm-lit shuttered window and a plank door standing ajar under a small "
+         "lantern; a black iron brazier burning at its door on the wet flagstones, orange "
+         "firelight and a thin curl of smoke leaning away in the wind; at the extreme left edge "
+         "the wet flagstone path drops away out of frame between two low stones, a black lamp "
+         "post above it dropping a pool of warm light on the wet stones so the way down reads "
+         "unmistakably; a broad empty wet flagstone yard shining with cold sky and firelight, a "
+         "low stone kerb, wet black rocks and shallow tidal pools; at the right the lighthouse "
+         "tower standing close and tall on its rock plinth, pale stone, a gallery rail, a domed "
+         "glass lantern room, the great amber lamp burning and a long soft beam raking right "
+         "through the fog; beyond the tower the cliff falls away to a pale pewter fog sea with a "
+         "faint cold moon behind the mist. The lower third is one continuous clear wet "
+         "flagstone walking band from the left edge to the right edge with nothing standing on "
+         "it. No keeper, no figures, no signs, no handbills, no lettering anywhere. ") + RESTART_PLATE,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/weather_works_v2_wide.webp"),
+
+    ("bg_lagoon_shore_v2_wide", "image", BG_MODEL,
+     {"prompt": (
+         "Full-bleed panoramic painting of the Shroud's fog flats at low tide, seen flat "
+         "side-on at eye level. In the left foreground a ship's longboat is drawn up and canted "
+         "on a ribbed wet sandbar, dark tarred planks, her oars shipped across the thwarts, a "
+         "coil of rope at the bow, her wet gunwale catching a thin cold glint; beyond her the "
+         "flats open into ribbed grey-blue wet sand and shallow pewter channels winding away "
+         "into the middle distance; half-lost in cold fog, the broken hull and leaning masts of "
+         "a large wrecked sailing ship, very distant and muted with her ribs showing; at the "
+         "right a low dune carrying a weathered palisade of salt-grey sharpened posts, two "
+         "patched canvas tents behind it, and one pale gap in the palisade where a faint "
+         "trodden track of wet sand leads up from the flats, the fog beyond the gap visibly "
+         "brighter and thinner than the fog elsewhere, so the gap reads as the way through; "
+         "beyond, dense white-grey ground fog hides the horizon, with faint dark cliffs far off "
+         "in the mist. No signposts, no notices, no lettering, no flags. The lower third is a "
+         "clear continuous band of wet sand and shallow water from the left edge to the right "
+         "edge with nothing standing on it. ") + RESTART_PLATE,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/lagoon_shore_v2_wide.webp"),
+
+    ("bg_reef_wreck_v2_wide", "image", BG_MODEL,
+     {"prompt": (
+         "Full-bleed panoramic painting of an old wreck on a reef in thick cold fog at night, "
+         "seen flat side-on at eye level. Right of centre, large in frame: the broken hull of an "
+         "old two-masted sailing ship, a ghost ship, lying heeled over and half sunk, her bow "
+         "toward the left, her deck tilted toward us, the bow rail broken away; both masts "
+         "still stand, the foremast snapped short, tattered grey canvas sails hanging in strips "
+         "from the yards; a faint spectral green glow clings to the rigging and the mastheads, "
+         "cold and unnatural and the only colour in the picture; several hull timbers are rotted "
+         "or half-translucent where the ghost light shows through. On a broken bow timber hangs "
+         "a small tarnished brass plate with a dull warm glint, its engraving worn smooth, no "
+         "legible letters. Shallow channels of pewter water wind around her hull and out into "
+         "the fog. In the left foreground a small wooden longboat is drawn up on the wet grey "
+         "sand, her oars shipped, her wet gunwale glinting. At the right edge the reef flattens "
+         "into shallow water and ribbed sand, and the fog thins there to a faint warm glow of "
+         "firelight from somewhere beyond, suggesting people and a camp out of frame, so the "
+         "east edge reads as a way on. Heavy cold grey fog fills the sky and hides the horizon; "
+         "no sun, no blue sky, no tropical colour, no palm trees. The lower third is a clear "
+         "walkable band of wet sand and shallow water from the left edge to the right edge with "
+         "nothing standing on it. No people, no figures, no nameplate lettering, no signs, no "
+         "labels anywhere. ") + RESTART_PLATE,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/reef_wreck_v2_wide.webp"),
+
+    ("bg_salt_camp_v2_wide", "image", BG_MODEL,
+     {"prompt": (
+         "Full-bleed panoramic painting of a castaway salt camp on the Shroud's fog flats at "
+         "night, seen flat side-on at eye level. From left to right: shallow raked salt pans in "
+         "cold blue-grey, two long wooden rakes left standing where they were put down, small "
+         "conical heaps of salt; a row of patched canvas tents, a line of stiff white shirts on "
+         "a rope, a low wooden pallet half buried in salt; a small iron brazier burning warm at "
+         "the edge of the camp, its firelight the only strong warmth; at the right a stout "
+         "timber store hut with a barred window, a padlock on the hasp and a plank door with a "
+         "lamp bracket above it, warm light falling on the threshold so the hut reads as a lit "
+         "doorway; at the far left edge the shore track runs out of frame along the wet flat "
+         "under a small lamp on a post, and beyond it a raised pan-bank track with a second "
+         "marker lamp leads away west into the fog, so both ways off the camp read as lit paths "
+         "continuing out of frame. The salt is a cold blue-grey sheen under the fog, not a white "
+         "glare. No signs, no notices, no boards, no lettering anywhere, no people. The lower "
+         "third is clear packed salt ground from the left edge to the right edge with nothing "
+         "standing on it. ") + RESTART_PLATE,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/salt_camp_v2_wide.webp"),
+
+    ("bg_far_pans_v2_wide", "image", BG_MODEL,
+     {"prompt": (
+         "Full-bleed panoramic painting of the far salt pans at the edge of a fog-bound lagoon "
+         "at night, seen flat side-on at eye level. The foreground is a broad clear band of "
+         "packed salt crust running the full width. From left to right: a low weathered "
+         "boardwalk of grey planks on stilts running out over the pans and stopping short; a "
+         "grey heron standing in a shallow pan; long wooden salt rakes leaning against low raked "
+         "walls of salt and small conical heaps; across the middle distance a wide patchwork of "
+         "shallow flooded pans, their still water reflecting a cold pewter sky; at the right a "
+         "low dune with the distant castaway camp small in the fog, patched canvas tents and a "
+         "sharpened-log palisade, and a lit track of packed salt leading toward them with a lamp "
+         "on a post at the track's bend glowing warm amber, so the way back reads by that single "
+         "warm light; far out across the water, small and distant on the reef, an old wreck "
+         "heeled over with two masts, and a thin white line of surf on the outer reef. The salt "
+         "is a cold blue-grey sheen, not a white glare; low ground fog lies along the water. No "
+         "signs, no notices, no lettering, no people. The lower third is one continuous clear "
+         "walking band of packed salt from the left edge to the right edge with nothing standing "
+         "on it. ") + RESTART_PLATE,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/far_pans_v2_wide.webp"),
+
+    ("bg_key_gate_v2_wide", "image", BG_MODEL,
+     {"prompt": (
+         "Full-bleed panoramic painting of the fog-bound reef gate of the Shroud at night, seen "
+         "flat side-on at eye level. A weathered wooden palisade of salt-grey sharpened posts "
+         "runs across the frame; in the centre a heavy gate of ship's timber stands with one "
+         "leaf wide open, and beyond the opening a warm brazier glow blooms in the fog so the "
+         "opening reads as a way through; in the shallow grey water before the gate a ship's "
+         "longboat waits, her oars across the thwarts, her dark hull reflected in the still "
+         "water; to the right of the gate a low iron signal brazier burns on the sand, throwing "
+         "a warm pool of light across the wet sand with a thin curl of smoke; on the left a wet "
+         "sandy path leads in from the flats, its near edge lit by the brazier so the way west "
+         "reads; behind the palisade in the upper right the black hull of the Grey Lantern, an "
+         "ancient wooden sailing ship, lies at anchor half lost in the fog, a long low dark "
+         "silhouette of tarred planks and a broken rail rising above the posts; one small green "
+         "lantern burns on her deck, a sickly green glow with a faint green reflection in the "
+         "water below. No buildings, no cliffs behind the palisade, no people. No signs, no "
+         "lettering, no labels anywhere. The lower third is a clear continuous band of wet sand "
+         "and shallow water from the left edge to the right edge with nothing standing on it. ") + RESTART_PLATE,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/key_gate_v2_wide.webp"),
+
+    # Second studies: the same seven rooms, same key and same rules, painted from a lower eye-line
+    # and with each way out given its own pool of light. Every screen gets two attempts; the
+    # better of the pair is the one the room points at in src/content/assets.ts.
+    ("bg_village_v2b_wide", "image", BG_MODEL,
+     {"prompt": (
+         "Full-bleed panoramic painting of Upper Town, a steep cobbled lane in a fog-bound "
+         "northern harbour town at night, seen from a low eye-line in the middle of the lane so "
+         "the wet cobbles catch every lamp. At the extreme left a black iron lamp on a stone "
+         "gatepost lights a flight of worn steps that drops steeply away out of frame toward the "
+         "harbour; then a low round stone well with a timber windlass, rope and hanging bucket; a "
+         "grey stone cottage with a carved shrine niche glowing warm with votive candles; a tall "
+         "jettied timber-framed cottage with leaded amber windows and a plank door under a "
+         "lantern; right of centre a broad stone stair with an iron handrail climbs between two "
+         "leaning dark cottages, two hanging lanterns lighting the treads all the way up and out "
+         "of frame, so the stair reads as the way up; high above the rooftops in the blue fog the "
+         "lighthouse burns its great gold lamp; at the far right a tall dark house, a line of "
+         "white laundry and a plain market stall with a dark awning and rope coils, no signboard. "
+         "Cold deep blue night, warm amber windows, wet stone. No shop signs, no hanging boards, "
+         "no lettering anywhere. The lower third is one continuous clear wet cobbled walking band "
+         "from the left edge to the right edge with nothing standing on it. ") + RESTART_PLATE,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/village_v2b_wide.webp"),
+
+    ("bg_weather_works_v2b_wide", "image", BG_MODEL,
+     {"prompt": (
+         "Full-bleed panoramic painting of the lighthouse headland above Upper Town at night, "
+         "seen from a low eye-line across the wet flagstone yard. At the extreme left the wet "
+         "flagstone path leaves the frame downward, a tall black lamp post on its edge dropping a "
+         "pool of warm light across the stones; left of centre the low stone keeper's store with "
+         "a slate roof, a warm-lit shuttered window, a plank door standing ajar under a lantern, "
+         "and an iron brazier burning at its door; the broad empty yard shining with cold sky and "
+         "firelight, a stone kerb, wet black rocks and tidal pools; at the right the lighthouse "
+         "tower fills the right third from its rock plinth to the domed glass lantern room, pale "
+         "stone and gallery rail, the great amber lamp burning with a long soft beam raking right "
+         "through the fog; beyond it a pale pewter fog sea, a faint cold moon. The lower third is "
+         "a clear continuous wet flagstone walking band from the left edge to the right edge with "
+         "nothing standing on it. No keeper, no figures, no signs, no lettering anywhere. ") + RESTART_PLATE,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/weather_works_v2b_wide.webp"),
+
+    ("bg_lagoon_shore_v2b_wide", "image", BG_MODEL,
+     {"prompt": (
+         "Full-bleed panoramic painting of the Shroud's fog flats at low tide, seen from a low "
+         "eye-line across ribbed wet sand. In the left foreground a ship's longboat is drawn up "
+         "and canted on a sandbar, dark tarred planks, oars shipped, a coil of rope at the bow, "
+         "her wet gunwale glinting; beyond her the flats open into ribbed grey-blue sand and "
+         "shallow pewter channels; half lost in fog, the broken masts of a distant wreck; at the "
+         "right a low dune carrying a weathered palisade of salt-grey sharpened posts with tents "
+         "behind it, and a wide open gap in the palisade with a lamp on a post above it spilling "
+         "warm light down a trodden track of wet sand onto the flats, so the gap is unmistakably "
+         "a way through; beyond, dense white-grey fog hides the horizon, faint dark cliffs in the "
+         "mist. No signposts, no notices, no lettering, no flags. The lower third is a clear "
+         "continuous band of wet sand and shallow water from the left edge to the right edge with "
+         "nothing standing on it. ") + RESTART_PLATE,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/lagoon_shore_v2b_wide.webp"),
+
+    ("bg_reef_wreck_v2b_wide", "image", BG_MODEL,
+     {"prompt": (
+         "Full-bleed panoramic painting of an old wreck on a reef in thick cold fog at night, "
+         "seen from a low eye-line. Right of centre the broken hull of an old two-masted sailing "
+         "ship, heeled over and half sunk, her bow toward the left, deck tilted toward us, bow "
+         "rail broken away, both masts standing with tattered grey canvas in strips, a faint "
+         "spectral green glow clinging to the rigging and mastheads as the only colour; a small "
+         "tarnished brass plate nailed to the broken bow timber catches a dull warm glint, its "
+         "engraving worn smooth with no legible letters. In the left foreground a wooden longboat "
+         "is drawn up on the wet grey sand, oars shipped, gunwale glinting. At the right edge the "
+         "reef flattens into ribbed wet sand and a trodden path leading east under a faint warm "
+         "glow of firelight from beyond, so the east edge reads as a way on. Shallow pewter "
+         "channels wind around the hull; heavy cold fog hides the horizon. The lower third is a "
+         "clear walkable band of wet sand and shallow water from the left edge to the right edge "
+         "with nothing standing on it. No people, no figures, no nameplate lettering, no signs, "
+         "no labels anywhere. ") + RESTART_PLATE,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/reef_wreck_v2b_wide.webp"),
+
+    ("bg_salt_camp_v2b_wide", "image", BG_MODEL,
+     {"prompt": (
+         "Full-bleed panoramic painting of a castaway salt camp on the Shroud's fog flats at "
+         "night, seen from a low eye-line. From left to right: shallow raked salt pans in cold "
+         "blue-grey, long wooden rakes and small conical heaps; a row of patched canvas tents, a "
+         "line of stiff white shirts, a low pallet half buried in salt; a small iron brazier "
+         "burning warm; at the right a stout timber store hut with a barred window, a padlock on "
+         "the hasp and a plank door under a lamp bracket, warm light falling on the threshold so "
+         "the doorway reads lit; at the far left edge the shore track leaves the frame along the "
+         "wet flat under a small lamp on a post, and beyond it a raised pan-bank track with a "
+         "second lamp leads away west into the fog, so both ways off the camp read as lit paths. "
+         "The salt is a cold blue-grey sheen, not a white glare. No signs, no notices, no boards, "
+         "no lettering, no people. The lower third is clear packed salt ground from the left edge "
+         "to the right edge with nothing standing on it. ") + RESTART_PLATE,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/salt_camp_v2b_wide.webp"),
+
+    ("bg_far_pans_v2b_wide", "image", BG_MODEL,
+     {"prompt": (
+         "Full-bleed panoramic painting of the far salt pans at the edge of a fog-bound lagoon "
+         "at night, seen from a low eye-line with the foreground a broad clear band of packed "
+         "salt crust. At the left a low weathered boardwalk on stilts runs out over the pans and "
+         "stops short; a grey heron stands in a shallow pan; long rakes lean against low raked "
+         "walls of salt and small conical heaps; the middle distance is a wide patchwork of "
+         "shallow flooded pans mirroring a cold pewter sky; at the right a low dune carries the "
+         "distant castaway camp, patched tents and a sharpened-log palisade small in the fog, "
+         "with a lit track of packed salt leading toward them and a lamp on a post at the bend "
+         "glowing warm amber, so the way back reads by that single light; far out on the reef a "
+         "small distant wreck heeled over with two masts, a thin line of surf beyond. Cold "
+         "blue-grey salt sheen, low ground fog. No signs, no notices, no lettering, no people. "
+         "The lower third is one continuous clear walking band of packed salt from the left edge "
+         "to the right edge with nothing standing on it. ") + RESTART_PLATE,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/far_pans_v2b_wide.webp"),
+
+    ("bg_key_gate_v2b_wide", "image", BG_MODEL,
+     {"prompt": (
+         "Full-bleed panoramic painting of the fog-bound reef gate of the Shroud at night, seen "
+         "from a low eye-line on the wet sand. A weathered palisade of salt-grey sharpened posts "
+         "runs across the frame; left of centre a heavy gate of ship's timber stands with one "
+         "leaf wide open and a bright brazier fire burning just beyond it, so the opening is a "
+         "warm doorway in the fog; in the shallow grey water right of the gate a ship's longboat "
+         "waits, oars across the thwarts, her dark hull reflected; to the right a low iron signal "
+         "brazier burns on the sand, its warm light reaching across the wet sand to the left "
+         "edge, where a wet sandy path leads away into the flats, so the way west is lit; behind "
+         "the palisade at the right the black hull of the Grey Lantern lies at anchor half lost "
+         "in fog, a long low silhouette with a broken rail, one small green lantern burning on "
+         "her deck with a faint green reflection below. No buildings, no cliffs, no people. No "
+         "signs, no lettering, no labels anywhere. The lower third is a clear continuous band of "
+         "wet sand and shallow water from the left edge to the right edge with nothing standing "
+         "on it. ") + RESTART_PLATE,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/key_gate_v2b_wide.webp"),
 ]
 
 # ---------------- the painted cast: standing bodies that sit inside the plates ----------------
