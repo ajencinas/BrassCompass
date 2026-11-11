@@ -1439,6 +1439,186 @@ MANIFEST = [
                 f"scenery kept in the central horizontal band for an ultra-wide crop. {STYLE}",
       "resolution": BG_RES, "output_format": "png"}, "scenes/countinghouse_close_wide.webp"),
 
+    # ---------------- the harbour restart: four full-bleed cinematic plates ----------------
+    # Redesigned with no signage anywhere. Each way out is painted as light and composition
+    # only: a cold blue lane mouth, a blade of fog under a shed door, a green lamp over a
+    # counting-house door, a warm shop window, a cold doorway beside a warm work lamp. Two
+    # attempts per screen are kept here; the room points at whichever painting won:
+    # alley A, chandlery A, warehouse B, counting house B.
+    ("bg_alley_restart_wide", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide full-bleed cinematic painting for a point-and-click adventure game, "
+                f"strict side-on view: Wreckers' Lane, the narrow wet cobbled back lane between the "
+                f"timber warehouses of a fog-bound northern harbour at night, a single continuous "
+                f"painting with no camera tilt. At the far left the lane opens back onto the quay: "
+                f"a jettied corner post carrying a warm iron lantern, a glimpse of indigo harbour "
+                f"water and a dark moored mast beyond, cold blue fog pouring in. Left of centre, the "
+                f"boat shed's tall black plank double doors, one leaf standing open on a thin blade "
+                f"of cold silver fog light with a shadowy interior behind it, a lean-to of crates "
+                f"pushed against the tarred boards above the walking band. At the centre, the "
+                f"counting house frontage of dark tarred boards, a solid plank door under a small "
+                f"green glass lamp in an iron bracket, green light spilling a long pool across the "
+                f"wet cobbles. At the right, the shipwright's chandlery: a broad small-paned shop "
+                f"window burning warm amber, coils of rope and oar blades silhouetted inside, and "
+                f"beside it a painted plank door under a warm hanging lamp, amber light pooling at "
+                f"its threshold. Iron lanterns strung overhead between jettied beams, tiled roofs "
+                f"and gutters framing the top of the frame. Wet cobbles carrying amber, green and "
+                f"cold blue reflections. No shop sign, no hanging sign, no painted lettering, no "
+                f"text, no numbers, no words, no labels, no plaques, no graffiti, no UI. No people, "
+                f"no figures, no animals. Indigo night, amber lantern light and a single green lamp, "
+                f"deep cold shadow, rich atmospheric fog. One continuous, completely empty wet-cobble "
+                f"walking band from the left edge to the right edge across the lower third, with no "
+                f"crates, barrels, posts, puddles or debris standing in it. Essential architecture "
+                f"kept in the central horizontal band for an ultra-wide crop. {STYLE}",
+      "resolution": BG_RES, "output_format": "png"}, "scenes/alley_restart_a.webp"),
+
+    ("bg_alley_restart_alt_wide", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide full-bleed cinematic painting for a point-and-click adventure game, "
+                f"strict side-on view: a fog-bound northern harbour back lane at night, painted "
+                f"from a low eye-line so the wet cobbles mirror the lights. The composition runs "
+                f"left to right as one continuous lane. At the extreme left a dark corner post and "
+                f"a warm iron lantern mark the lane mouth back to the quay, with black water, a "
+                f"mast and cold indigo fog just beyond. Then the boat shed's tall black plank wall, "
+                f"its double doors parted onto a narrow wedge of cold pale fog light and a dark "
+                f"timber interior. Then the counting house's tarred frontage, a heavy plank door "
+                f"beneath a green glass lamp in an iron bracket, the green pool reaching the lane. "
+                f"Then the shipwright's chandlery frontage at the right: a wide small-paned window "
+                f"full of rope coils, oars and lanterns glowing warm amber, a plank door beside it "
+                f"with a brass handle and warm light under the door. Overhead, jettied beams and a "
+                f"string of small iron lanterns; wet cobbles reflecting every light. No signboards, "
+                f"no painted signs, no lettering, no text, no numbers, no labels, no plaques, no "
+                f"graffiti, no UI. No people, no figures. Deep indigo and cold blue against warm "
+                f"amber and one green lamp, thick atmospheric fog, painterly oil brushwork, rich "
+                f"filmic grade. One continuous, completely clear wet-stone walking lane across the "
+                f"lower third, no crates, barrels, posts or debris in it. Essential architecture "
+                f"kept in the central horizontal band for an ultra-wide crop. {STYLE}",
+      "resolution": BG_RES, "output_format": "png"}, "scenes/alley_restart_b.webp"),
+
+    ("bg_chandlery_restart_wide", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide full-bleed cinematic painting for a point-and-click adventure game, "
+                f"strict side-on view: the interior of a shipwright's chandlery on a fog-bound "
+                f"harbour quay at night. At the far left a heavy plank lane door stands wide open "
+                f"onto cold blue fog, wet stone and a glimpse of indigo harbour water; a small-paned "
+                f"window beside it, and a long shaft of cold moonlight falling across the board "
+                f"floor. Along the back wall tall shelves crowded with coils of tarred rope, wooden "
+                f"blocks and tackle, oars leaning in a bundle, bolts of canvas in their wrapping, "
+                f"iron lanterns, pitch barrels and jars. Centre-right, a long worn wooden counter "
+                f"holds a polished brass balance scale, a lit ship's lantern with clean glass, small "
+                f"brass weights and a hundred small ship's fittings. A warm oil lamp hangs from a "
+                f"dark beam above the counter, its amber pool the heart of the room; a second dim "
+                f"lamp over the shelves. At the right the Marrow's bare mast leans against the wall, "
+                f"banded with iron, wrapped sailcloth beside it. Broad worn plank floor scattered "
+                f"with sawdust and rope ends. No shop sign, no counter sign, no lettering on crates, "
+                f"labels, bins or beams, no text, no numbers, no words, no plaques, no UI. No "
+                f"people, no figures. Deep indigo shadow and dark timber against warm amber "
+                f"lamplight and cold blue door light, thick atmospheric dust, visible oil brushwork. "
+                f"One continuous, completely empty plank-floor walking lane across the lower third, "
+                f"with no barrels, crates, rope coils or furniture in it. Essential scenery kept in "
+                f"the central horizontal band for an ultra-wide crop. {STYLE}",
+      "resolution": BG_RES, "output_format": "png"}, "scenes/chandlery_restart_a.webp"),
+
+    ("bg_chandlery_restart_alt_wide", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide full-bleed cinematic painting for a point-and-click adventure game, "
+                f"strict side-on view: the inside of a harbour chandlery at night, a low camera at "
+                f"counter height. Left third: a plank door flung open to cold blue fog and the wet "
+                f"quay, a small four-paned window beside it; the cold light lies in a long blade "
+                f"across the boards. Centre: a long dark counter sweeping right, carrying a brass "
+                f"balance scale, a lit ship's lantern, brass weights, twine, a mallet and small "
+                f"fittings, with a warm hanging oil lamp burning above it and a soft amber pool on "
+                f"the wood. Behind the counter, shelves to the ceiling: tarred rope in coils, "
+                f"blocks, oars, sailcloth, lanterns, barrels, jars. Right: the Marrow's bare mast "
+                f"leans against the wall with a seized iron band, beside it wrapped canvas and a "
+                f"stack of crates. Worn plank floor, sawdust, rope ends. No signage of any kind, no "
+                f"shop sign, no lettering on any crate, barrel, jar or beam, no text, no numbers, no "
+                f"labels, no plaques, no UI. No people, no figures. Indigo and cold blue against "
+                f"amber lantern light, deep shadow, atmospheric dust and fog, painterly oil "
+                f"brushwork. One continuous, completely clear plank walking lane across the lower "
+                f"third from edge to edge, no barrels, crates, coils, stools or furniture in it. "
+                f"Essential scenery kept in the central horizontal band for an ultra-wide crop. "
+                f"{STYLE}",
+      "resolution": BG_RES, "output_format": "png"}, "scenes/chandlery_restart_b.webp"),
+
+    ("bg_warehouse_restart_wide", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide full-bleed cinematic painting for a point-and-click adventure game, "
+                f"strict side-on view: the interior of a harbour boat shed at night. At the left a "
+                f"heavy workbench under a warm work lamp: tools, a candle, wood shavings, three "
+                f"swollen books and a drawer, with crates and barrels stacked against the tarred "
+                f"wall and coils of rope above them. Across the centre a long wooden longboat hauled "
+                f"out on its timber cradle, under repair: tarred clinker planks, exposed ribs, a "
+                f"staging plank along its side, tools resting on the hull, the paint handling open "
+                f"and loose. At the right the boat shed's wide double doors stand open onto cold blue "
+                f"fog and the night harbour, distant quay lamps glinting across black water, cold "
+                f"light spilling in a broad wedge over the plank floor. Above, roof beams, a block "
+                f"and tackle hanging from a chain, and a second small warm lantern deep in the roof. "
+                f"No boat name, no lettering on the hull, no numbers on crates, no shop sign, no "
+                f"painted text, no labels, no plaques, no UI. No people, no figures. Warm amber work "
+                f"lamp against cold indigo doorway, deep shadow, dust in the light, painterly oil "
+                f"brushwork. One continuous, completely empty plank-floor walking lane across the "
+                f"lower third from the left edge to the right edge, with no crates, barrels, tools, "
+                f"spars or debris in it. Essential architecture kept in the central horizontal band "
+                f"for an ultra-wide crop. {STYLE}",
+      "resolution": BG_RES, "output_format": "png"}, "scenes/warehouse_restart_a.webp"),
+
+    ("bg_warehouse_restart_alt_wide", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide full-bleed cinematic painting for a point-and-click adventure game, "
+                f"strict side-on view: a boat builder's shed at night, full of half-finished work. "
+                f"At the left a workbench and tool rack under a low warm lamp, a stool, shavings, "
+                f"crates and a salt-stained barrel stacked against the wall. In the centre the great "
+                f"curved hull of a longboat on its cradle, ribs bare at the near end, fresh tarred "
+                f"planking at the far end, a ladder leaning against the bow, a rope hoist hanging "
+                f"from the black roof beams. At the right the shed's open doorway, wide and tall, "
+                f"cold blue fog and the pale lights of a distant quay beyond it, the cold light "
+                f"laying a long pale path across the floor toward the boat. Warm amber work lamp at "
+                f"the bench, a small red lantern by the door, deep indigo shadow everywhere else. No "
+                f"name on the boat, no lettering on planks, crates or walls, no signage, no text, no "
+                f"numbers, no labels, no plaques, no UI. No people, no figures. Rich painterly oil "
+                f"brushwork, cinematic volumetric light, strong filmic grade, dust and thin fog. One "
+                f"continuous, completely empty plank floor walking lane across the lower third from "
+                f"edge to edge, no tools, crates, barrels, spars or debris in it. Essential scenery "
+                f"kept in the central horizontal band for an ultra-wide crop. {STYLE}",
+      "resolution": BG_RES, "output_format": "png"}, "scenes/warehouse_restart_b.webp"),
+
+    ("bg_countinghouse_restart_wide", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide full-bleed cinematic painting for a point-and-click adventure game, "
+                f"strict side-on view: the interior of a merchant's counting house at night, lit by "
+                f"green glass lamps. At the far left a tall panelled door stands open on a thin "
+                f"seam of cold blue night, and above it a large polished brass cloud emblem in "
+                f"raised relief catches the lamplight. The back wall is a great grid of plain "
+                f"wooden pigeonholes packed with rolled charts and ledgers whose covers and spines "
+                f"are entirely blank and unmarked. Below it, a row of tall clerks' standing desks "
+                f"with brass scales, inkwells and neat stacks of blank ledgers, no papers with "
+                f"writing. Three green-glass shaded brass desk lamps burn with warm green pools over "
+                f"the desks. At the right a squat black iron safe with a plain brass dial, and a tall "
+                f"shuttered window above it letting in cold blue moonlight. Above the ledger wall a "
+                f"large gilt-framed oil portrait of a smug gentleman in a tall black hat, the frame "
+                f"plain and unplaque. Dark polished mahogany panelling, green pools, deep indigo "
+                f"shadow. No lettering on ledgers, spines, papers, plaques or panels; no text, no "
+                f"numbers, no words, no signs, no labels, no UI. No people walking, no figures in the "
+                f"room (the only painted face is inside the framed portrait). One continuous, "
+                f"completely empty polished floor walking band across the lower third, with no "
+                f"desks, stools or rugs in it. Essential scenery kept in the central horizontal band "
+                f"for an ultra-wide crop. {STYLE}",
+      "resolution": BG_RES, "output_format": "png"}, "scenes/countinghouse_restart_a.webp"),
+
+    ("bg_countinghouse_restart_alt_wide", "image", BG_MODEL,
+     {"prompt": f"Ultra-wide full-bleed cinematic painting for a point-and-click adventure game, "
+                f"strict side-on view: a green-lamped counting room at night. Left: a tall plank "
+                f"door open onto cold indigo fog, a thin blade of blue light on the floor, a heavy "
+                f"brass cloud ornament fixed to the panelling above the lintel. Centre: a towering "
+                f"wall of wooden pigeonholes packed with rolled charts and ledgers with blank, "
+                f"unlettered covers, beneath it a row of tall standing desks with brass scales, "
+                f"inkwells and plain paper, three green glass desk lamps casting three green pools. "
+                f"Right: a black iron safe with a brass dial against the panelling, a tall shuttered "
+                f"window above it with cold moonlight through the slats, and a gilt-framed portrait "
+                f"of a gentleman in a tall hat hung high on the dark wall, its frame bare of any "
+                f"plaque. Dark polished mahogany, green glass, cold blue and warm green light. No "
+                f"lettering anywhere: no writing on ledgers, papers, spines, plaques or panels, no "
+                f"text, no numbers, no words, no signs, no labels, no UI. No people standing in the "
+                f"room, no figures (only the painted face inside the framed portrait). One "
+                f"continuous, completely clear polished floor walking band across the lower third, "
+                f"no desks, stools, rugs or debris in it. Essential scenery kept in the central "
+                f"horizontal band for an ultra-wide crop. {STYLE}",
+      "resolution": BG_RES, "output_format": "png"}, "scenes/countinghouse_restart_b.webp"),
+
     ("char_walk_v2", "image", BG_MODEL,
      {"prompt": "Sprite sheet of a walking animation, exactly six frames in one horizontal row, evenly "
                 "spaced and identical in size, strict side view facing right. A young harbour clerk with "
