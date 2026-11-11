@@ -19,18 +19,25 @@ export function assetUrl(path: string): string {
 
 export const MANIFEST = {
   images: {
+    // The visual restart's five harbour screens: full-bleed 2560x880 paintings, deserted, and
+    // with no painted lettering anywhere. The way out of each room is lit into the painting —
+    // a warm pool at a door, a door ajar on light, a reflection trail running off-frame — so an
+    // exit reads by light and composition alone. The older `_wide`/`_close_wide` plates below
+    // stay in the manifest for the archived act paintings and the prologue, but no room uses
+    // them any more.
+    bg_dock_cinema_wide: "/assets/scenes/dock_cinema_wide.webp",
+    bg_tavern_cinema_wide: "/assets/scenes/tavern_cinema_wide.webp",
+    bg_office_cinema_wide: "/assets/scenes/office_cinema_wide.webp",
+    bg_quay_cinema_wide: "/assets/scenes/quay_cinema_wide.webp",
+    bg_pierend_cinema_wide: "/assets/scenes/pierend_cinema_wide.webp",
     bg_dock_wide: "/assets/scenes/dock_wide.webp",
     bg_office_wide: "/assets/scenes/office_wide.webp",
     bg_tavern_wide: "/assets/scenes/tavern_wide.webp",
-    // The harbour's three rooms as side-on close-ups of bg_area_harbour: the same fog-bound
-    // timber quay, iron lanterns, warm windows and green counting-house lamp. The three `_wide`
-    // plates above remain for the archived act paintings and the prologue.
+    // Superseded harbour plates: the older side-on close-ups and the wide act paintings. No
+    // room points at these any more; they stay for the archived story and the ending cards, so
+    // the restart can be rolled back without losing the old art. The dock one is the plate with
+    // the painted signpost, which the restart deleted along with its prop.
     bg_dock_close_wide: "/assets/scenes/dock_close_wide.webp",
-    // The dock's readable close-up: strict side-on, the Marrow's bow at the left, the
-    // harbourmaster's lit door at the centre, and the quay running on past the green
-    // counting-house lamp to the signpost and steps at the far right. bg_dock_close_wide
-    // (three-quarter, too dark, way out off-frame) and bg_dock_wide (the wide plate, still
-    // the ending card's painting) both stay in the manifest.
     bg_dock_v2_wide: "/assets/scenes/dock_quay_wide.webp",
     bg_tavern_close_wide: "/assets/scenes/tavern_close_wide.webp",
     bg_office_close_wide: "/assets/scenes/office_close_wide.webp",
@@ -137,9 +144,8 @@ export const MANIFEST = {
     prop_spyglass: "/assets/props/spyglass.png",
     prop_longboat: "/assets/props/longboat.png",
     prop_invoices: "/assets/props/invoices.png",
-    // The painted sign at the harbour end of the quay: HARBOUR MOUTH and an arrow.
-    prop_quay_sign: "/assets/props/quay_sign.png",
-    prop_quay_sign_mouth: "/assets/props/quay_sign_mouth.png",
+    // The quay's sign props (HARBOUR MOUTH and its arrow) are gone with the visual restart:
+    // the way on is painted as light and path now, so neither plate nor prop exists any more.
     prop_quay_lamp: "/assets/props/quay_lamp.png",
     prop_quay_steps: "/assets/props/quay_steps.png",
     // Painted on the ghost ship: Mordant's plate on the cabin desk, and the canvas-wrapped lantern.

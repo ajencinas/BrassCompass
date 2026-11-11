@@ -1,38 +1,50 @@
 room tavern "The Salty Keel"
-  bg bg_tavern_close_wide
+  bg bg_tavern_cinema_wide
   width 2560
   music music_tavern
   ambience tavern
   grade "brightness(0.95) saturate(0.85)"
-  # The close-up of the harbour area view's tavern: the plank door open on the cold blue
-  # harbour at the left, the nets and barrels under the beams, the long bar at the right.
+  # The interior of the Salty Keel: the plank door standing open on the cold blue harbour at
+  # the left, the long table under the nets in the middle, the bar and its lamps at the right.
   perspective horizon 300 ref 875 height 440
-  walk (560,878) (560,850) (620,835) (700,830) (800,825) (900,815) (1000,800) (1100,790) (1200,782) (1320,775) (1450,775) (1580,778) (1680,790) (1680,878)
-  entry 1060,850
-  arrive dock 600,850
+  # The clear painted aisle: worn boards from the open door at the left across to the bar at
+  # the right, in front of the long table and its benches. Every stand and arrival sits on it.
+  walk (560,878) (560,850) (580,825) (620,810) (700,800) (800,792) (900,786) (1000,782) (1100,778) (1200,776) (1300,776) (1400,778) (1500,782) (1600,790) (1690,800) (1720,878)
+  entry 900,850
+  arrive dock 590,840
   footsteps wood
-  light 830,180 radius 120 lantern
-  light 1120,275 radius 105 lantern
-  light 1180,360 radius 85 lantern
-  light 1450,60 radius 130 lantern
-  light 2380,540 radius 140 lamp
-  # The bar counter and the long table are solid painted furniture: whoever stands behind
-  # them is repainted over, so the staff read as behind the bar and Rook as at the table.
-  occluder floor 880 (1690,545) (2560,545) (2560,880) (1690,880)
-  occluder floor 700 (1060,545) (1690,545) (1690,700) (1060,700)
+  # The bar lamps, the iron lanterns over the aisle, the cold window's green harbour lamp and
+  # the one warm lamp burning outside the open door.
+  light 1855,240 radius 120 lantern
+  light 2260,218 radius 115 lantern
+  light 1450,150 radius 110 lantern
+  light 300,390 radius 80 lantern
+  light 810,410 radius 55 lantern colour "#79e6a4"
+  # The bar counter and the long table are solid painted furniture: whoever stands behind them
+  # is repainted over, so the staff read as behind the bar and Rook as at the table. The floor
+  # lines sit below the walk band, so Fenn walking past is never covered.
+  occluder floor 700 (1700,570) (2560,570) (2560,880) (1700,880)
+  occluder floor 700 (1080,545) (1700,545) (1700,880) (1080,880)
 
   # Staff feet are on the floor behind the counter, so the counter repaints over their legs.
-  # Fenn's walk lane stays on the near side of the bar's 880 floor line.
-  sprite npc_marta_body_v2 at 2200,640 size 1 visible 0.94 idle speaker marta for marta grade "saturate(0.78) sepia(0.08) brightness(0.82)"
-  sprite npc_rook_body at 1220,690 size 1 idle speaker rook for rook grade "saturate(0.75) sepia(0.12) brightness(0.82)"
-  sprite npc_dorrit_body at 1950,640 size 1 visible 0.94 flip idle speaker dorrit for dorrit grade "saturate(0.78) sepia(0.08) brightness(0.82)"
+  sprite npc_marta_body_v2 at 2200,640 size 1 visible 0.94 idle speaker marta for marta grade "saturate(0.78) sepia(0.08) brightness(0.85)"
+  sprite npc_rook_body at 1220,690 size 1 idle speaker rook for rook grade "saturate(0.75) sepia(0.12) brightness(0.85)"
+  sprite npc_dorrit_body at 2020,640 size 1 visible 0.94 flip idle speaker dorrit for dorrit grade "saturate(0.78) sepia(0.08) brightness(0.85)"
 
   scene if not met_rook
     say "There's an old man at the long table. His drink has gone flat."
 
+  # The bottles are listed before the staff: later hotspots win where they overlap, so the
+  # people behind the bar stay clickable even though the shelves are a bigger target.
+  hotspot bottles "the bottle shelf"
+    area 1920,280 640x290
+    stand 1600,830
+    look "Bottles, sorted by colour and trouble."
+    use "I'd have to reach over the bar. Marta is watching."
+
   hotspot marta "Marta"
-    area 2120,330 250x230
-    stand 1500,800
+    area 2150,340 250x240
+    stand 1600,830
     look "Marta, behind the bar. She's been wiping the same glass since I walked in."
     talk "I catch her eye. It takes some catching."
       talk marta
@@ -42,8 +54,8 @@ room tavern "The Salty Keel"
       look "Marta's watching the corner where Rook sits. She's stopped wiping the glass."
 
   hotspot rook "old sailor"
-    area 1140,150 220x400
-    stand 1060,830
+    area 1140,380 240x330
+    stand 1250,830
     look "An old man at the long table. His mug is full and his eyes aren't."
     talk "He looks up before I speak. He's been waiting."
       talk rook
@@ -53,7 +65,7 @@ room tavern "The Salty Keel"
       look "Rook at the long table against the back wall. He's put the mug down."
 
   hotspot dorrit "Dorrit"
-    area 1840,190 220x350
+    area 1850,340 220x280
     stand 1600,850
     look "Dorrit, in his apron, holding a spoon like a small weapon."
     talk "I ask about the stores. He turns before I finish."
@@ -64,8 +76,8 @@ room tavern "The Salty Keel"
       look "Dorrit, still furious and still cooking. The spoon has not been put down."
 
   hotspot bar "the bar"
-    area 1730,560 830x80
-    stand 1580,800
+    area 1740,570 820x110
+    stand 1600,830
     look "The bar. It's been polished by elbows and one very determined mop."
     use "I'd need money, and Marta's permission. I've neither."
     open "It's a bar, not a crate."
@@ -73,29 +85,23 @@ room tavern "The Salty Keel"
   # The painted harbour door fills the left edge of the tavern: the open leaf, the doorway
   # and the cold blue harbour beyond it, down to the boards.
   hotspot door_out "the door down to the harbour"
-    area 45,15 390x860
-    stand 600,850
+    area 60,180 500x560
+    stand 620,840
     exit dock
     look "The door down to the harbour. The wind smells of salt and something colder."
 
   hotspot window "the window"
-    area 700,250 300x200
-    stand 1150,790
+    area 730,250 190x250
+    stand 900,830
     look "The window looks out on the harbour. There's one lamp and a lot of dark."
     use "It doesn't open. Marta says the view is better with the glass in."
 
   hotspot nets "the nets"
-    area 580,430 440x320
-    stand 1000,830
+    area 1180,120 400x200
+    stand 1300,830
     look "Nets heaped by the door, dry and stiff with salt, and more hung from the beams overhead."
     use "I'd need a boat and a reason."
     pull "The net is tied off. Everything in this room is tied off."
-
-  hotspot bottles "the bottle shelf"
-    area 2130,80 430x250
-    stand 1580,850
-    look "Bottles, sorted by colour and trouble."
-    use "I'd have to reach over the bar. Marta is watching."
 
   use compass on rook
     "He turns it over once. 'Your father's. It still points at the fog.'"

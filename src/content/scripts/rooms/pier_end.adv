@@ -1,21 +1,34 @@
 room pier_end "The Harbour Mouth"
-  bg bg_pierend_wide
+  bg bg_pierend_cinema_wide
   width 2560
   music music_sea
   grade "brightness(0.95) saturate(0.85)"
   ambience sea
-  perspective horizon 455 ref 875 height 330
-  walk (545,875) (560,790) (760,770) (1010,705) (1230,672) (1350,668) (1420,648) (1660,610) (1530,700) (1480,780) (1300,875)
-  entry 640,830
-  arrive quay 830,815
+  # The pier end: the lighthouse burning at the right, the harbour town's lights and the
+  # Marrow's boat at the left, and the wet stone walk between them.
+  perspective horizon 580 ref 875 height 330
+  # A measured curve: the pier top is a deep foreground plane, so an adult at the near edge is
+  # taller than the old single vanishing point allowed.
+  scale 710 185
+  scale 875 320
+  # One continuous painted walking band: in from the town's waterfront at the left, along the
+  # pier top past the boat and the lamp, and out to the lighthouse at the right.
+  walk (520,878) (540,830) (580,790) (640,760) (720,740) (820,725) (950,715) (1100,712) (1300,716) (1500,725) (1680,740) (1830,760) (1830,878)
+  entry 700,840
+  arrive quay 560,840
   footsteps stone
-  light 1265,365 radius 150 lantern
-  beacon 2135,140 period 14
-  water (0,465) (380,465) (380,560) (0,560) ripple 1.6
-  water (2000,880) (2440,600) (2560,600) (2560,880) ripple 2.2
-  emit lapping at 2300,800
-  occluder floor 698 (752,624) (832,634) (996,658) (960,700) (912,760) (760,745) (752,700)
-  occluder floor 656 (1210,588) (1346,592) (1346,660) (1210,660)
+  # The tall pier lamp where Vex waits, the lighthouse above, and the town's scaled-down lights.
+  light 1135,240 radius 170 lantern
+  light 1725,215 radius 100 lantern
+  light 60,510 radius 70 lantern
+  light 265,470 radius 60 lantern
+  light 380,530 radius 55 lantern
+  beacon 1725,215 period 14
+  # The harbour water under the town at the left and the open sea beyond the pier at the right.
+  water (0,720) (210,720) (300,760) (300,880) (0,880) ripple 1.6
+  water (2350,620) (2560,620) (2560,880) (2350,880) ripple 2.2
+  emit lapping at 150,800
+  emit lapping at 2450,800
 
   # Act I's last scene: with the crew and the chart aboard, Vex waits at the lamp.
   # The Marrow's boat is the painted launch under it.
@@ -24,11 +37,11 @@ room pier_end "The Harbour Mouth"
     say "Vex is at the lamp with his coat buttoned to the throat."
     say "The harbour is quiet. Even the gulls have gone to bed."
 
-  sprite npc_vex_body at 1160,700 size 1 idle speaker vex for vex grade "saturate(0.85) brightness(0.9)" if act 1 and vex_deal and dorrit_cleared and quill_compass and seen:quill.join and rook_story and hobb_joined
+  sprite npc_vex_body at 1160,720 size 1 idle speaker vex for vex grade "saturate(0.85) brightness(0.9)" if act 1 and vex_deal and dorrit_cleared and quill_compass and seen:quill.join and rook_story and hobb_joined
 
   hotspot vex "Captain Vex"
     show if act 1 and vex_deal and dorrit_cleared and quill_compass and seen:quill.join and rook_story and hobb_joined
-    area 1095,485 135x225
+    area 1095,500 150x235
     stand 990,770
     look "Captain Vex, at the lamp, dressed for a portrait and a fight. He is watching the fog, not me."
     talk "Captain. The crew is ready, and the rudder is on."
@@ -39,23 +52,25 @@ room pier_end "The Harbour Mouth"
     give "He looks at my hands. \"Keep it. I have been paid enough for one lifetime.\""
 
   hotspot boat "the Marrow's boat"
-    area (400,300) (1060,300) (1060,660) (700,690) (400,660)
-    stand 1030,750
+    area (470,470) (1060,470) (1060,700) (900,740) (470,720)
+    stand 1050,780
     look "The Marrow's boat, made fast under the lamp. Her sail is furled and her oars are shipped."
     open "I step aboard. It rocks like a boat that has been waiting."
     use "I could row out to the Marrow myself. I would rather not arrive out of breath."
     state if act 1 and vex_deal and dorrit_cleared and quill_compass and seen:quill.join and rook_story and hobb_joined
       look "The boat is ready. Somebody has folded her sail and left the gangplank down."
 
+  # The town's lights run on along the waterfront at the left edge; the wet stone carries a
+  # warm trail of reflections out of frame.
   hotspot town "back along the quay"
-    area 520,775 280x105
-    stand 575,850
+    area 480,760 220x120
+    stand 560,840
     exit quay sound none
     look "Back along the quay, the lights of Dreadwater. Half of them are out."
     open "I walk back toward the harbour."
 
   hotspot lighthouse "the lighthouse"
-    area 2080,90 140x420
+    area 1630,140 240x460
     nowalk
     look "The lighthouse. It has burned every night for eighty years, and it does not reach the fog."
     use "I cannot climb it from here. I am not sure I would want to."
