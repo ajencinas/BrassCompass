@@ -1,16 +1,19 @@
 room bow_fog "The Marrow — Bow"
-  bg bg_bow_wide
+  bg bg_bow_fog_restart_b_wide
   width 2560
   music music_fog
-  grade "saturate(0.6) brightness(0.85)"
+  grade "saturate(0.72) brightness(0.94)"
   ambience sea
-  perspective horizon 555 ref 875 height 430
-  walk (250,875) (250,745) (600,735) (640,745) (800,745) (840,760) (900,770) (950,790) (1050,840) (1150,845) (1230,800) (1280,765) (1420,750) (1500,780) (1500,875)
-  entry 700,800
-  arrive marrow_deck 560,820
+  perspective horizon 500 ref 875 height 460
+  # The bow lamp burns at the right, on its post; the wet deck runs back aft to the left, where
+  # the ship's lamps thin into the fog. The way back is the lit line of planks at the left edge.
+  walk (40,875) (60,700) (1900,700) (2000,875)
+  entry 300,840
+  arrive marrow_deck 300,840
   footsteps deck
-  light 1447,48 radius 130 lantern
-  haze 120 760 floor 690 alpha 0.28 speed 9
+  light 1875,380 radius 170 lantern
+  light 110,440 radius 60 lantern
+  haze 120 760 floor 690 alpha 0.24 speed 9
   emit creak
 
   # Act II, the first try: the bell rings with no hand on the rope, the bow lantern dies, and
@@ -37,8 +40,8 @@ room bow_fog "The Marrow — Bow"
     say "When I can hear again, the bow is quiet. The lantern is out, and nothing follows us."
 
   hotspot fog "the fog"
-    area (520,0) (1520,0) (1520,90) (1480,220) (1420,360) (1330,460) (1200,520) (1000,555) (800,585) (620,605) (520,600)
-    stand 700,780
+    area (0,0) (1500,0) (1500,400) (1400,480) (1100,540) (600,560) (200,560) (0,560)
+    stand 700,820
     look "The Shroud. It stands on the water like a wall and does not move."
       say "Past it the sea goes on to nowhere I have charted."
     talk "I say the Marrow's name into the fog, the way sailors do. Nothing answers."
@@ -48,8 +51,8 @@ room bow_fog "The Marrow — Bow"
         say "Past it the sea goes on to nowhere I have charted."
 
   hotspot bow_rail "the bow rail"
-    area (820,610) (1150,560) (1500,510) (1620,530) (1640,680) (1100,730) (840,690)
-    stand 1350,795
+    area (300,540) (1450,580) (1600,660) (1200,720) (600,700) (300,680)
+    stand 900,840
     look "The bow rail. The paint is worn pale where hands have held it."
     talk "I lean on the rail and tell it we are still here. It does not answer."
     use "I lean on it and look down. The water under us is white and says nothing."
@@ -60,8 +63,8 @@ room bow_fog "The Marrow — Bow"
   hotspot bow_lantern "the bow lantern"
     # The lamp itself and the lit post it stands on. The glass is cut by the top of the frame,
     # so the area carries down the post where it can be clicked without hunting the top bar.
-    area (1390,0) (1510,0) (1560,80) (1560,470) (1510,520) (1450,470) (1450,80)
-    stand 1440,800
+    area (1800,280) (1950,280) (1950,650) (1880,680) (1800,650)
+    stand 1850,845
     look "The bow lantern on its post, big enough to read a chart by. It burns all night."
     talk "I leave the lantern alone. It is a lamp. Lamps have enough to do."
     use "The wick is trimmed and the glass is clean. Somebody looks after it."
@@ -70,8 +73,8 @@ room bow_fog "The Marrow — Bow"
       use "I turn it down until the flame is a seed, then step back from it."
 
   hotspot bell_rope "the bell rope"
-    area (1548,0) (1626,0) (1650,440) (1600,480) (1550,440)
-    stand 1430,805
+    area (1450,0) (1550,0) (1550,230) (1500,270) (1450,230)
+    stand 1500,840
     look "The bell rope, hanging out of the fog above the lantern. The bell is up there too, out of sight."
     talk "I do not talk to the bell. I have heard it answer."
     use "I put a hand on the rope. It is cold, and it does not move."
@@ -81,8 +84,8 @@ room bow_fog "The Marrow — Bow"
 
   hotspot aft "back along the deck"
     # The painted bench and rail along the port side, and the deck at its foot.
-    area (0,560) (220,540) (430,575) (440,700) (300,760) (120,830) (0,860)
-    stand 520,830
+    area (0,620) (180,620) (300,875) (0,875)
+    stand 320,840
     exit marrow_deck sound none
     look "The deck runs back toward the mast and the helm. The fog sits between me and the rest of the ship."
     open "I go back aft along the deck, keeping to the middle of it."

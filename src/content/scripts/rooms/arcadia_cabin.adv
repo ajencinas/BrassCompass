@@ -1,25 +1,29 @@
 room arcadia_cabin "The Grey Lantern — Captain's Cabin"
-  # A side-on close-up of the stern cabin under the great lantern: the same desk, charts, bunk,
-  # stern windows, brass nameplate and green lantern, already painted in the ship's cold
-  # blue-green. The lower third is the clear plank floor.
-  bg bg_arcadia_cabin_wide
+  # A side-on close-up of the stern cabin under the great lantern: the bunk and books at the
+  # left, the open companionway climbing through the broken deck, the desk with its blank brass
+  # plate at the right, the stern windows and the green lantern. The lower third is clear floor.
+  bg bg_arcadia_cabin_restart_b_wide
   width 2560
   music music_fog
-  grade "saturate(0.8) brightness(0.9)"
+  grade "saturate(0.86) brightness(0.97)"
   perspective horizon 500 ref 875 height 500
-  walk (40,875) (60,790) (2500,790) (2530,875)
-  entry 1500,845
+  walk (40,875) (60,845) (2150,845) (2180,875)
+  entry 1500,858
   # Coming down the companionway you land on the boards beside its foot.
-  arrive lantern_deck 820,845
+  arrive lantern_deck 1000,858
   footsteps wood
   motes dust (650,0) (1260,0) (1520,860) (620,860) count 60
-  emit drip at 520,860
+  emit drip at 700,860
   emit creak
 
   # Act IV. Mordant's cabin, still dry after eighty years. The desk is where the name is read,
   # and the cold at the end of the cabin is where the man who kept it is waiting.
-  light 1970,200 radius 240 lantern colour "#4fd98c" if name_spoken
-  light 1970,200 radius 90 lantern colour "#c8ffe0" if name_spoken
+  # The companionway's cold daylight is the way up; the green lantern burns at the stern.
+  light 1000,250 radius 180 lantern colour "#cfe6ff"
+  light 1000,720 radius 130 lantern colour "#bfe0ff"
+  light 2060,180 radius 90 lantern colour "#4fd98c"
+  light 2060,180 radius 240 lantern colour "#4fd98c" if name_spoken
+  light 2060,180 radius 90 lantern colour "#c8ffe0" if name_spoken
 
   scene if not arcadia_cabin_entered
     set arcadia_cabin_entered
@@ -28,18 +32,15 @@ room arcadia_cabin "The Grey Lantern — Captain's Cabin"
     say "\"This is where he kept his name,\" he says. \"A captain keeps it where he sits.\""
     say "He holds out his hand for the plate. Then he lets it fall. \"You read it. I'll say it.\""
 
-  sprite npc_ansel_body at 2100,850 size 1 idle speaker elias for elias grade "saturate(0.88) brightness(0.95)"
+  sprite npc_ansel_body at 1800,852 size 1 idle speaker elias for elias grade "saturate(0.88) brightness(0.95)"
   # The ghost captain, in the dark corner, once Elias has spoken his name.
-  sprite npc_mordant_body at 250,830 size 1 idle speaker mordant for mordant if name_spoken
-  # The plate itself, set on the desk. It is there while it waits to be read and after the name
-  # has been said; without it the desk shows only the clean oval in the dust.
-  sprite prop_nameplate at 1660,620 size 0.30 grade "saturate(0.85) brightness(0.95)" if has nameplate
+  sprite npc_mordant_body at 250,850 size 1 idle speaker mordant for mordant if name_spoken
 
   # The desk. The plate comes in from the wreck and is set down in the clean oval in the dust;
   # the painted plate above shows it there, and the hotspot covers the desk itself.
   hotspot nameplate "the nameplate"
-    area 1120,540 840x260
-    stand 1400,845
+    area 1200,520 580x280
+    stand 1450,858
     look "Mordant's desk. A log, a dry inkpot, and the brass plate set in the clean oval in the dust."
     use "I set the plate down. The brass catches the light from the broken planks."
       say "GREY LANTERN. M. MORDANT, MASTER."
@@ -59,8 +60,8 @@ room arcadia_cabin "The Grey Lantern — Captain's Cabin"
 
   hotspot mordant "Mordant"
     show if name_spoken
-    area 0,390 360x440
-    stand 420,850
+    area 0,480 340x360
+    stand 420,858
     look "A cold place at the end of the cabin. The green light comes from nowhere I can see."
     talk "I say his name again. The cold turns toward me."
       talk mordant
@@ -71,35 +72,35 @@ room arcadia_cabin "The Grey Lantern — Captain's Cabin"
         talk mordant
 
   hotspot hammock "the bunk"
-    area 0,560 640x200
-    stand 420,850
+    area 0,480 650x320
+    stand 550,858
     look "A built-in bunk, still made, the blanket folded as if the cabin were expecting its captain back."
     use "I put a hand on the blanket. It is dry, and cold enough to feel like it has just been left."
 
   hotspot pigeonholes "the books"
-    area 0,260 470x240
+    area 220,260 470x230
     nowalk
     look "A shelf of books and bundles, salt-stained and swollen. Every loose sheet is blank. A captain's name is on the ones he signed."
     use "I pull one out. Blank. The next is blank. The ship stopped needing paper a long time ago."
 
   hotspot portrait "the stern windows"
-    area 1050,350 900x220
+    area 1300,300 900x200
     nowalk
     look "Three stern windows, their curtains torn to rags, and past them the ship's own carved gallery and the fog."
     talk "I say nothing. The cabin does not need me to."
 
-  # The painted companionway climbs the centre-left bulkhead through the deck opening: foot at
-  # x 620-760 on the boards, top at x 880-1000. The band follows it; the stand is below.
+  # The painted companionway climbs the centre-left bulkhead through the open hatch in the
+  # deckhead: the ladder's foot on the boards, the bright opening above it.
   hotspot ladder "the ladder to the deck"
-    area (600,810) (760,810) (1000,170) (870,160)
-    stand 830,845
+    area (880,80) (1120,80) (1120,720) (1050,740) (880,720)
+    stand 1000,858
     exit lantern_deck sound stairs
     look "A ladder up through the broken deck. The fog comes down the opening."
     open "I go up."
 
   hotspot elias "Elias Fenn"
-    area 2040,330 260x490
-    stand 2100,850
+    area 1720,480 230x360
+    stand 1800,858
     look "My father, with salt in his beard and ink on his fingers. He is waiting for me to read it."
     talk "He says, \"Go on. I'll say the name. You just have to read it.\""
       say "\"And then we finish it,\" he says. \"All of us.\""

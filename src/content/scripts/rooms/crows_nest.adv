@@ -2,27 +2,33 @@
 # fog leaning before anyone else does, and hears something under it, which is as close as the
 # ghost comes to the screen in this act. No new flags: the scene is knowledge, not a key.
 room crows_nest "The Marrow — Crow's Nest"
-  bg bg_crowsnest_high_wide
+  bg bg_crows_nest_restart_wide
   width 2560
   music music_fog
   ambience wind
   grade "sepia(0.08) saturate(1.02) brightness(0.98)"
-  perspective horizon 300 ref 875 height 380
+  perspective horizon 390 ref 875 height 400
   # The platform is shallow in the painting; a gentler curve than the cone keeps Quill at the
   # rail a person and not a doll, while Fenn still grows as he comes forward.
-  scale 875 380
-  scale 760 330
-  scale 640 295
-  scale 520 270
-  walk (60,875) (60,560) (300,570) (520,600) (700,640) (900,690) (940,760) (940,875)
-  entry 620,840
-  arrive marrow_deck 620,840
+  scale 875 400
+  scale 760 350
+  scale 640 310
+  scale 520 280
+  # The open hatch is a hole in the planks: two platform walks meet on a narrow strip of boards
+  # in front of the opening, so Fenn can cross the nest without stepping into the drop.
+  walk (40,875) (60,760) (600,760) (600,875)
+  walk (1100,875) (1100,760) (2300,760) (2300,875)
+  walk (600,858) (1100,858) (1100,875) (600,875)
+  entry 580,780
+  arrive marrow_deck 580,780
   footsteps deck
-  haze 200 480 floor 560 alpha 0.10 speed 6 tint "#cfd8dc"
+  light 675,700 radius 140 lantern
+  light 900,760 radius 80 candle colour "#ffd39a"
+  haze 200 520 floor 620 alpha 0.10 speed 6 tint "#cfd8dc"
   emit creak
 
   # Quill at the rail, a row back from where Fenn joins her.
-  sprite npc_quill_body at 720,665 size 1 idle speaker quill for quill grade "saturate(0.85) brightness(0.92)" if act 2
+  sprite npc_quill_body at 480,780 size 1 idle speaker quill for quill grade "saturate(0.85) brightness(0.92)" if act 2
 
   scene if act 2 and not nest_arrived
     set nest_arrived
@@ -30,9 +36,9 @@ room crows_nest "The Marrow — Crow's Nest"
     say "She comes down the shrouds when she hears me, and holds her hand out for the spyglass."
 
   hotspot shroud "the Shroud"
-    area 1450,130 1000x350
+    area (300,100) (1500,100) (1500,450) (1200,500) (700,520) (300,500)
     nowalk
-    stand 900,820
+    stand 500,780
     look "The Shroud, low and white on the water. It looks like weather. The island knows better."
     state if seen:quill.nest
       look "The fog has a lean on it now. I can see it from here, and I wish I could not."
@@ -42,28 +48,22 @@ room crows_nest "The Marrow — Crow's Nest"
     nowalk
     look "The sky, doing the one thing it does well out here: nothing at all."
 
-  hotspot shrouds "the shrouds down to the deck"
-    # The ratlines on the near side of the mast, from the platform up into the rigging.
-    area (700,0) (960,0) (1000,520) (930,660) (790,520) (700,260)
-    stand 900,840
+  hotspot shrouds "the hatch down to the deck"
+    # The open hatch and the rope ladder dropping through it into the lit deck below.
+    area (620,640) (1100,640) (1100,870) (620,870)
+    stand 580,780
     exit marrow_deck sound stairs
-    look "The shrouds down to the deck. Quill goes up them like a ladder. I come down like a sack of charts."
-
-  hotspot steps "the steps down"
-    area 760,380 160x160
-    nowalk
-    stand 840,830
-    look "The steps down from the nest. A short ladder, then a long way of shrouds."
+    look "The hatch down to the deck. The rope ladder drops into warm lamplight, a long way down."
 
   hotspot crates "the crates"
-    area 0,270 340x220
-    stand 300,850
+    area 80,390 330x320
+    stand 420,820
     look "Crates lashed down in the corner of the nest with new line. Vex's cargo, going out with us."
     use "The rope is new. The knots are Vex's. He ties them like he is counting."
 
   hotspot rail "the rail"
-    area (0,380) (300,400) (600,460) (900,530) (960,610) (760,560) (400,480) (0,450)
-    stand 700,800
+    area (0,460) (1500,470) (1800,520) (1800,620) (900,620) (300,600) (0,580)
+    stand 460,800
     look "The rail, cold and wet under my hand. Beyond it the sea is going about its business."
     use "I put my ear on the rail. The wood hums. That is the ship, probably."
     state if seen:quill.nest
@@ -71,8 +71,8 @@ room crows_nest "The Marrow — Crow's Nest"
 
   hotspot quill "Quill"
     show if act 2
-    area 640,350 200x310
-    stand 560,850
+    area 380,470 210x330
+    stand 560,780
     look "Quill, spyglass to her eye, watching the fog's edge the way I watch a page."
     talk "She takes it without a word and puts it to her eye."
       talk quill at nest

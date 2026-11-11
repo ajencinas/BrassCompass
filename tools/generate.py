@@ -910,6 +910,26 @@ def icon(subject, text="no text, no lettering"):
             "resolution": "2048x2048 (1:1)", "output_format": "png"}
 
 
+# The visual restart: the five lower-ship rooms are repainted as full-bleed cinematic plates in
+# which every exit reads by light alone and no painted lettering of any kind appears. Appended to
+# each scene prompt below; the kept attempt of each pair is repointed in src/content/assets.ts.
+RESTART = (
+    "Full-bleed cinematic side-on painting for a painterly point-and-click adventure game: "
+    "the camera is level at standing eye height and square to the scene, the back wall or "
+    "far rail parallel to the picture plane, the deck or floor running horizontally across "
+    "the frame; depth is made by overlapping shapes and pooled light, never by a corridor "
+    "receding away from the viewer. Cold blue-grey fog and spectral green light against "
+    "warm lamps, visible oil-painted brushwork, rich atmospheric volumetric light, strong "
+    "cinematic colour grade, ultra-wide panoramic composition that stays readable cropped "
+    "to a very wide band. One continuous, completely empty, unobstructed walkable band of "
+    "floor across the lower third, from the left edge to the right edge. No people, no "
+    "figures, no human silhouettes. Absolutely no text anywhere: no lettering, no words, "
+    "no numbers, no painted signs, no signboards, no labels, no name boards, no chalk "
+    "marks, no graffiti, no runes, no UI, no watermark, no logos. Every way out of the room "
+    "is legible by light and composition alone, never by a sign."
+)
+
+
 MANIFEST = [
     # ---------------- the atlas: the island chart and the macro views above the rooms ----------------
     ("bg_island_map", "image", BG_MODEL,
@@ -1167,6 +1187,202 @@ MANIFEST = [
                 f"lighting, strong colour grading, ultra-wide panoramic composition, no text, no "
                 f"UI, no watermark, no logos",
       "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/arcadia_cabin_wide.webp"),
+
+    # ---------------- visual restart: the ship's lower rooms ----------------
+    # Five side-on plates repainted as full-bleed cinematic paintings with no lettering and no
+    # painted signs. Every way out reads by light alone: a lit ladder through an open hatch
+    # (below_decks), a lit bow lamp with the deck path back aft thinning out of the fog
+    # (bow_fog), a lit hatch with the rope ladder down (crows_nest), an open stern-cabin door
+    # spilling lamplight (lantern_deck), and a lit companionway (arcadia_cabin). Two attempts
+    # were painted per room; the kept attempt is the one repointed in src/content/assets.ts and
+    # the five room scripts. Each renders 21:9 and is cover-cropped to the 2560x880 room plate.
+    ("bg_below_decks_restart_wide", "image", BG_MODEL,
+     {"prompt": "Full-bleed cinematic side-on painting of the crew deck and galley below decks "
+                "of a wooden sailing brig at dawn. A low deckhead of heavy oak beams; a plank "
+                "bulkhead; and one continuous clear band of wet dark plank floor across the "
+                "lower third. From left to right: canvas hammocks slung in rows in the shadow of "
+                "the forecastle at the far left, a battered sea-chest with iron bands on the "
+                "floor beneath them, its lid and the barrel heads completely bare with no burnt "
+                "names or marks; a long scrubbed mess table with two benches at centre under a "
+                "hanging brass lantern; a cramped ship's galley at the right with a black iron "
+                "stove, a huge steaming copper stew pot, copper pans and a warm firebox glow; and "
+                "at the far right a steep wooden ladder rising to an open hatch in the deckhead, "
+                "its hatch cover thrown back, bright cold daylight and a shaft of pale sea light "
+                "pouring down the ladder and pooling on the floor, making the way up the "
+                "brightest thing in the room. Warm amber lantern light pools on the table and "
+                "the stove, cold blue-grey dawn light comes down the hatch, thin steam and dust "
+                "drift in the beams. Deep umber shadows, warm copper and brass, cold blue rim "
+                "light on the ladder. " + RESTART,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"},
+     "scenes/below_decks_restart_wide.webp"),
+
+    ("bg_below_decks_restart_b_wide", "image", BG_MODEL,
+     {"prompt": "Full-bleed cinematic side-on painting of a sailing brig's crew deck and galley "
+                "at dawn, low camera close to the planks. The deckhead beams press low over a "
+                "warm, smoky room: canvas hammocks slung in rows at the left, a lashed stack of "
+                "salt-stained salvage barrels and one iron-banded sea-chest beneath them, a long "
+                "mess table with benches at centre under a brass "
+                "lantern, and at the right a black ship's stove with a great steaming copper pot "
+                "and a red firebox glow. At the far right an open hatch in the deckhead is the "
+                "only cold light in the picture: a hard pale shaft falls through it onto a steep "
+                "wooden ladder and floods the floor at the foot of the ladder, so the way up is "
+                "unmistakable from across the room. One continuous empty band of wet planks "
+                "across the lower third, unobstructed; all furniture stands behind it. Warm "
+                "amber lanterns, copper highlights, deep umber shadow, cold blue daylight, "
+                "drifting steam and dust. The hatch cover is hooked back; no lettering anywhere, "
+                "not on the chest, barrels, beams or pots. " + RESTART,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"},
+     "scenes/below_decks_restart_b_wide.webp"),
+
+    ("bg_bow_fog_restart_wide", "image", BG_MODEL,
+     {"prompt": "Full-bleed cinematic side-on painting of the bow of a wooden sailing brig in "
+                "thick cold fog at dawn. The camera is square to the deck: the wet planks run "
+                "from the left edge, where the ship continues aft into thinning fog and a faint "
+                "warm glow, to the bow at the right edge, where the dark rail lifts to a carved "
+                "figurehead and bowsprit in silhouette. A tall iron bow lantern on a tarred post "
+                "stands right of centre, burning a warm amber flame inside cloudy glass; its "
+                "glow pools on the wet planks, lights the post and the rail, and marks the bow. "
+                "A tarred bell rope hangs out of the fog above the lantern, still and heavy. "
+                "Beyond the rail a wall of pale white fog over flat pewter water, a faint "
+                "spectral green glimmer deep beneath the surface, and the dark shapes of reef "
+                "rocks barely there. The fog is dense at the right around the bow and thins "
+                "toward the left, where the lit deck path leads back aft past an open gap in the "
+                "rail: the way back is the brightest walkable line in the picture. One "
+                "continuous empty band of wet deck across the lower third, no coils, crates or "
+                "debris in it. Cold blue-white fog, pewter sea, one warm lantern, wet timber "
+                "catching the light. The rail is plain weathered wood with no carved words or "
+                "name board. " + RESTART,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"},
+     "scenes/bow_fog_restart_wide.webp"),
+
+    ("bg_bow_fog_restart_b_wide", "image", BG_MODEL,
+     {"prompt": "Full-bleed cinematic side-on painting of a wooden brig's bow in dense dawn fog, "
+                "seen from the deck. The bow rail and a carved figurehead close the right edge of "
+                "the frame; a tall iron lantern mounted on the rail post burns warm gold just "
+                "left of it, its glass fogged, its light laying a long amber path across the wet "
+                "planks toward the left edge; above it a tarred bell rope hangs out of the fog, "
+                "still and heavy. At the left the deck runs aft and the fog opens "
+                "into a paler, thinner gap with a distant warm lamp glow, so the way back reads "
+                "as a lit corridor of planks disappearing into soft light. Beyond the bow rail a "
+                "solid wall of cold white fog, flat pewter water, one sickly green spectral "
+                "glimmer under the surface, black reef teeth faint in the mist. One continuous "
+                "empty band of wet deck across the lower third, unobstructed. Cold blue-grey fog "
+                "with a single warm lantern, wet wood, salt bloom, visible brushwork, "
+                "atmospheric and lonely. No lettering or signs on the rail, lantern or post. "
+                + RESTART,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"},
+     "scenes/bow_fog_restart_b_wide.webp"),
+
+    ("bg_crows_nest_restart_wide", "image", BG_MODEL,
+     {"prompt": "Full-bleed cinematic side-on painting inside the crow's nest of a two-masted "
+                "sailing brig at cold dawn, high above the sea. The square timber platform fills "
+                "the lower third with one continuous clear band of salt-bleached planks; behind "
+                "it a stout tarred rail with heavy posts runs across the frame, and beyond the "
+                "rail the ship's deck lies far below in steep perspective, tiny and distant, "
+                "then a vast pale fog sea and a grey horizon. At the centre-left an open square "
+                "hatch in the platform floor, its wooden cover thrown back, and warm lantern "
+                "light pouring up out of the hatch from the deck far below, spilling across the "
+                "planks; a rope ladder drops away through the opening into that warm glow, "
+                "making the way down unmistakable. At the far left, a lashed stack of crates and "
+                "a coil of new rope behind the walking band. At the right the thick foremast "
+                "rises through the platform, tarred shrouds and ratlines climbing into the rigging, "
+                "halyards and blocks hanging still. Cold blue-grey sky and fog, pale dawn light, "
+                "one warm hatch glow, weathered wood and wet rope. The crates and rail are bare: "
+                "no lettering, no shipping marks, no signs. " + RESTART,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"},
+     "scenes/crows_nest_restart_wide.webp"),
+
+    ("bg_crows_nest_restart_b_wide", "image", BG_MODEL,
+     {"prompt": "Full-bleed cinematic side-on painting of the crow's nest of a sailing brig "
+                "before dawn, the sea far below under cold fog. The platform is a broad band of "
+                "grey planks across the lower third, empty and clear; the tarred rail and its "
+                "posts cut the middle distance, and beyond them the drop to the ship's deck and "
+                "the white fog sea. At centre-left an open hatch breaks the planks: the cover is "
+                "flung back, a rope ladder hangs through it into a warm amber glow rising from "
+                "the deck below, and that glow is the warmest, clearest shape in the painting, "
+                "lighting the hatch frame, the ladder and the boards around it. At the left end a "
+                "stack of lashed crates wrapped in new rope; at the right the black foremast "
+                "rises with tarred shrouds, ratlines and blocks. Cold slate and teal fog, pale "
+                "dawn light on the horizon, one warm hatch, wet weathered timber. The crates are "
+                "bare timber with no stencilled words, numbers or marks. " + RESTART,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"},
+     "scenes/crows_nest_restart_b_wide.webp"),
+
+    ("bg_lantern_deck_restart_wide", "image", BG_MODEL,
+     {"prompt": "Full-bleed cinematic side-on painting of the deck of the Grey Lantern, an "
+                "ancient ghost ship, at night in thick fog. The camera is square along the deck; "
+                "wet silver-grey planks form one continuous clear empty band across the lower "
+                "third. At the right the high carved stern gallery rises in near-black "
+                "silhouette, and beneath it a low cabin door stands open, warm amber lamplight "
+                "spilling out of the dark cabin across the wet boards: the open doorway is the "
+                "warmest, brightest shape in the frame and the unmistakable way below. Just left "
+                "of it, the great iron stern lantern hangs from its post, a swollen sickly-green "
+                "flame behind cloudy glass, throwing a spectral emerald halo over the rail and "
+                "the planks. Centre and left: the broken mainmast and torn sails, spectral green "
+                "light threading through the rigging, frayed shrouds, a low splintered rail, and "
+                "beyond it a wall of pale teal fog over flat black water. Cold black-green "
+                "shadows, sickly emerald glow, one warm doorway, wet reflecting deck. The hull, "
+                "rail and gallery are plain carved timber with no name board, no lettering and "
+                "no signs. " + RESTART,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"},
+     "scenes/lantern_deck_restart_wide.webp"),
+
+    ("bg_lantern_deck_restart_b_wide", "image", BG_MODEL,
+     {"prompt": "Full-bleed cinematic side-on painting of a rotting ghost ship's deck at night, "
+                "the Grey Lantern, in flat black water under thick fog. A low camera skims the "
+                "wet silver planks of an empty lower third. At the right the carved stern "
+                "gallery looms, and under it a low door stands wide open with golden lamplight "
+                "pouring out and running in a bright wedge across the deck, a warm human light "
+                "in a dead green ship, the clearest way off the deck. Above and right of the "
+                "door the great iron stern lantern burns green, huge and swollen behind cloudy "
+                "glass, its emerald halo staining the gallery and the fog. The centre is a "
+                "tangle of broken masts, tattered sails and spectral green-lit rigging; the left "
+                "runs to a splintered rail and a wall of pale teal fog over black water. Cold "
+                "green-black shadow, sickly emerald light, one warm open door, wet reflections. "
+                "No name board, no lettering, no painted signs anywhere on the wood. " + RESTART,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"},
+     "scenes/lantern_deck_restart_b_wide.webp"),
+
+    ("bg_arcadia_cabin_restart_wide", "image", BG_MODEL,
+     {"prompt": "Full-bleed cinematic side-on painting of Captain Mordant's stern cabin aboard "
+                "the Grey Lantern, dry after eighty years, lit by cold blue-green fog light. The "
+                "camera is square to the cabin, the bulkhead parallel to the picture plane, one "
+                "continuous clear empty band of worn plank floor across the lower third. From "
+                "the left: a built-in bunk with a pale pillow and dark folded blanket beneath a "
+                "shelf of salt-swollen books; then an open companionway in the deckhead at "
+                "centre-left, its hatch cover thrown back, a steep wooden ladder rising through "
+                "the square opening, bright pale fog daylight pouring down the opening and down "
+                "the ladder and pooling on the boards, making the way up the brightest shape in "
+                "the room. At centre a captain's desk with unrolled blank sea charts, brass "
+                "dividers, a dry inkpot and quill, a leather log and a small completely blank "
+                "brass nameplate lying in a clean oval in the dust, with a chair pushed aside. "
+                "At the right, three stern windows with torn grey curtains and the carved stern "
+                "gallery beyond, and a green ship's lantern hanging from a beam with a faint "
+                "green glow in its glass. Cold blue-green palette, desaturated teal shadow, pale "
+                "companionway light, faint green lantern glow, worn dark timber. Every paper, "
+                "book and plate is blank: no writing, no printed words, no numbers, no signs, no "
+                "labels. " + RESTART,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"},
+     "scenes/arcadia_cabin_restart_wide.webp"),
+
+    ("bg_arcadia_cabin_restart_b_wide", "image", BG_MODEL,
+     {"prompt": "Full-bleed cinematic side-on painting of an old captain's stern cabin on a "
+                "ghost ship, lit by cold green-blue light and one pale opening. The cabin is "
+                "squared to the viewer: empty worn planks across the lower third. At the left a "
+                "built-in bunk with a folded blanket, a sea-chest beneath and a shelf of blank "
+                "salt-stained books. At centre-left an open companionway: the hatch in the "
+                "deckhead is thrown back, a steep ladder climbs through it, and cold pale "
+                "daylight floods down the ladder and across the floor, the strongest and "
+                "clearest light in the picture and the obvious way out. At right of centre the "
+                "captain's desk with blank charts, a divider, an inkpot, a quill and a small "
+                "brass plate, entirely unengraved; a chair pushed aside. At the right the stern "
+                "windows with torn curtains, the carved gallery beyond, and a green ship's "
+                "lantern hanging from a beam, its green glass glowing faintly in the fog light. "
+                "Cold desaturated teal and blue-green, dark wet timber, pale companionway glow, "
+                "faint emerald lantern light. All paper and brass is blank: absolutely no "
+                "lettering, no handwriting, no signs, no labels. " + RESTART,
+      "resolution": "4704x2016 (21:9)", "output_format": "png"},
+     "scenes/arcadia_cabin_restart_b_wide.webp"),
 
     # ---------------- backgrounds (scene art, no characters) ----------------
     ("bg_dock", "image", BG_MODEL,
@@ -2955,6 +3171,19 @@ def save_cache(c):
 
 # Superseded assets: kept in the manifest for the record, never rebuilt.
 RETIRED = {"bg_dock", "bg_office", "bg_tavern", "char_walk", "npc_bramwick_body", "npc_marta_body"}
+
+# The ship's-lower restart: two attempts were painted for each room and the better one kept.
+# The losing attempts stay in the manifest as the record of that comparison but are not rebuilt:
+# below_decks kept A (the warmer enclosed galley), bow_fog kept B (the long lit deck path aft),
+# crows_nest kept A (the larger open hatch), lantern_deck kept B (the great lantern over the
+# door), arcadia_cabin kept B (the brighter, wider companionway).
+RETIRED |= {
+    "bg_below_decks_restart_b_wide",
+    "bg_bow_fog_restart_wide",
+    "bg_crows_nest_restart_b_wide",
+    "bg_lantern_deck_restart_wide",
+    "bg_arcadia_cabin_restart_wide",
+}
 
 # Scenes that are not room backgrounds but the whole 1920x1080 screen: the cold open's plate.
 FULL_PLATES = {"bg_coldopen", "bg_island_map"}

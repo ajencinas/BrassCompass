@@ -1,25 +1,33 @@
 room lantern_deck "The Grey Lantern — Deck"
-  # A side-on close-up of the Grey Lantern's own area plate: the dark rotted hull, the tattered
-  # sails, the great green lantern on its stern post at the right, spectral light, clear deck.
-  bg bg_grey_lantern_deck_wide
+  # A side-on close-up of the Grey Lantern: the spectral ship in the fog beyond the rail, the
+  # great green lantern hanging over the carved stern gallery at the right, and beneath it the
+  # open cabin door, whose warm lamplight is the way below.
+  bg bg_lantern_deck_restart_b_wide
   width 2560
   music music_fog
   perspective horizon 300 ref 875 height 470
-  grade "saturate(0.7) brightness(0.88)"
-  walk (40,875) (60,820) (2500,820) (2530,875)
-  entry 1500,820
-  arrive arcadia_cabin 2160,825
+  # A shallow measured scale: the deck is close and level, and the great lantern hangs high
+  # above the floor, so the wrapped-canvas prop is sized against a person height up there too.
+  scale 40 360
+  scale 300 380
+  scale 650 420
+  scale 875 470
+  grade "saturate(0.82) brightness(0.98)"
+  walk (40,875) (60,650) (2150,650) (2200,875)
+  entry 1600,840
+  arrive arcadia_cabin 1980,845
   footsteps deck
   ambience sea
 
   # The great lantern is the only light the ghost ship has left. The rail lamp is the only
   # warm thing on the deck, and it is not for us.
-  light 2340,350 radius 190 lantern colour "#79e6a4" if not lantern_doused
-  light 2340,350 radius 80 lantern colour "#dcffe9" if not lantern_doused
-  light 1800,600 radius 55 candle colour "#ffb070"
-  haze 260 640 floor 700 alpha 0.14 speed 4 tint "#cfd8dc"
+  light 1880,170 radius 190 lantern colour "#79e6a4" if not lantern_doused
+  light 1880,170 radius 80 lantern colour "#dcffe9" if not lantern_doused
+  light 1990,560 radius 80 candle colour "#ffb070"
+  light 1980,760 radius 120 candle colour "#ff9f55"
+  haze 260 620 floor 700 alpha 0.14 speed 4 tint "#cfd8dc"
   motes dust (360,60) (720,60) (730,370) (340,370) count 20
-  emit lapping at 1800,780
+  emit lapping at 700,790
   emit creak
 
   # Act IV. The crew is aboard, the three jobs are open, and the deck is the hub between the
@@ -50,21 +58,22 @@ room lantern_deck "The Grey Lantern — Deck"
 
   # The crew. Vex holds the stern by the lantern; Quill is forward at the mast; Hobb inboard;
   # Elias centre; Tam comes out of the rigging to the cabin door. Five floor rows, not a rail line.
-  sprite npc_ansel_body at 1400,852 size 1 idle speaker elias for elias grade "saturate(0.88) brightness(0.95)"
-  sprite npc_quill_body at 1120,812 size 1 idle speaker quill for quill grade "saturate(0.85) brightness(0.95)"
-  sprite npc_hobb_body at 1710,788 size 1 idle speaker hobb for hobb grade "saturate(0.85) brightness(0.95)"
-  sprite npc_vex_body at 2380,800 size 1 idle speaker vex for vex grade "saturate(0.8) brightness(0.92)"
-  sprite npc_tamhobb_body at 2050,832 size 1 idle speaker tamhobb for tamhobb grade "saturate(0.8) brightness(0.95)" if tam_freed
+  sprite npc_ansel_body at 1550,845 size 1 idle speaker elias for elias grade "saturate(0.88) brightness(0.95)"
+  sprite npc_quill_body at 950,840 size 1 idle speaker quill for quill grade "saturate(0.85) brightness(0.95)"
+  sprite npc_hobb_body at 1250,835 size 1 idle speaker hobb for hobb grade "saturate(0.85) brightness(0.95)"
+  sprite npc_vex_body at 1800,850 size 1 idle speaker vex for vex grade "saturate(0.8) brightness(0.92)"
+  sprite npc_tamhobb_body at 1680,855 size 1 idle speaker tamhobb for tamhobb grade "saturate(0.8) brightness(0.95)" if tam_freed
   # Mordant appears in his cabin (arcadia_cabin), where the name is spoken.
   # The wrapped lantern: once Quill smothers it, this dark canvas hangs over the painted green
   # glass, so the great lantern itself reads out, not just the dynamic light. The stern lantern
   # hangs close and large in this plate, so the size is measured to its painted glass.
-  sprite prop_lantern_wrapped at 2350,480 size 3.0 visible 0.99 grade "saturate(0.8) brightness(0.95)" if lantern_doused
+  sprite prop_lantern_wrapped at 1880,300 size 0.70 visible 0.99 grade "saturate(0.8) brightness(0.95)" if lantern_doused
 
-  # The painted green lantern, on its post at the stern. High enough that only Quill can reach it.
+  # The painted green lantern, hanging from the carved gallery above the cabin door. High
+  # enough that only Quill can reach it.
   hotspot great_lantern "the great lantern"
-    area 2250,40 230x480
-    stand 2250,790
+    area 1800,40 200x300
+    stand 1860,845
     look "The great lantern, green and swollen with light. It hangs from the stern, and the fog leans in to look at it."
     use "The canvas is wet and heavy in my hands. Quill holds out her hand for it."
       say "I pass it up. Quill climbs the stern without hurrying."
@@ -85,7 +94,7 @@ room lantern_deck "The Grey Lantern — Deck"
 
   # The mast and rigging, painted from the deck to the top of the frame. The bell is a sound in it.
   hotspot rigging "the mast and rigging"
-    area 1120,0 560x620
+    area 900,0 900x600
     nowalk
     look "The mast and the shrouds, black against the fog. Somewhere up there a rope is moving."
     talk "I call up into the rigging. It creaks and does not answer."
@@ -93,7 +102,7 @@ room lantern_deck "The Grey Lantern — Deck"
 
   # The bell: heard, never seen. Three notes, then one, the way Tam rang the Arcadia's watch.
   hotspot bell "the bell"
-    area 1200,0 260x160
+    area 1250,0 260x160
     nowalk
     look "A bell, high in the rigging. I cannot see it. I hear it: three notes, then one, slow."
     talk "I call up. The bell keeps its time and does not answer."
@@ -115,10 +124,11 @@ room lantern_deck "The Grey Lantern — Deck"
       talk "The rigging is empty. Whatever was ringing has stopped."
         nothing
 
-  # The low door under the carved gallery at the stern, just left of the great lantern.
+  # The low door under the carved gallery at the stern, below the great lantern, standing open
+  # with warm lamplight across the deck.
   hotspot cabin_door "the cabin door"
-    area 2050,430 230x240
-    stand 2100,835
+    area 1890,380 220x340
+    stand 2070,845
     exit arcadia_cabin sound door
     look "A low door under the carved gallery. The dark behind it is not empty."
     open "I duck under the carved beam and go in."
@@ -129,22 +139,22 @@ room lantern_deck "The Grey Lantern — Deck"
 
   # The rail, and the fog past it. There is no horizon out there at all.
   hotspot rail "the rail"
-    area 120,560 1250x160
-    stand 700,790
+    area 100,430 1200x170
+    stand 650,820
     look "The rail, and the fog past it. The sea is flat and grey, and there is no horizon."
     talk "I lean over the rail and say nothing. The fog keeps that too."
     use "I put my hand on the rail. It is wet, and it is not cold."
 
   hotspot elias "Elias Fenn"
-    area 1280,410 250x420
-    stand 1400,850
+    area 1470,480 190x380
+    stand 1550,845
     look "My father, coat buttoned wrong, chart under one arm. He is looking at the cabin door."
     talk "He says, \"The name is in there. I've said everyone else's for three months.\""
       say "\"I never had his,\" he says. \"I would like to finish this one.\""
 
   hotspot quill "Quill"
-    area 1030,410 180x420
-    stand 1120,850
+    area 880,480 170x370
+    stand 950,845
     look "Quill, with her boots off and her sleeves up. She is measuring the climb with her eyes."
     talk "She does not look at me. \"The lantern needs something wet, and a hand that can reach it.\""
       say "She puts a wad of oiled canvas in my hands. It is soaked through and cold."
@@ -159,8 +169,8 @@ room lantern_deck "The Grey Lantern — Deck"
         nothing
 
   hotspot hobb "Hobb"
-    area 1620,410 180x420
-    stand 1710,835
+    area 1180,480 170x370
+    stand 1250,845
     look "Hobb, at the foot of the mast with the crowbar through his belt. He is listening upward."
     talk "He says, \"Three notes, then one. That is Tam's hand on the rope.\""
       say "He does not say how he knows. He does not have to."
@@ -169,8 +179,8 @@ room lantern_deck "The Grey Lantern — Deck"
       talk "He looks at me. \"He is alive,\" he says. \"That is all I asked.\""
 
   hotspot vex "Captain Vex"
-    area 2300,410 180x420
-    stand 2380,835
+    area 1730,480 160x380
+    stand 1810,845
     look "Vex, coat buttoned to the chin, hands in his pockets. He is standing where the rail is highest."
     talk "He does not turn round. \"I'm not going below. Ghosts and I have an understanding.\""
       say "\"You cut the bell, I take the credit,\" Vex says. \"That's a good deal. For me.\""
@@ -181,8 +191,8 @@ room lantern_deck "The Grey Lantern — Deck"
 
   hotspot tamhobb "Tam Hobb"
     show if tam_freed
-    area 1950,410 130x420
-    stand 2050,840
+    area 1620,500 120x360
+    stand 1680,855
     look "Tam Hobb, with the camp's salt rake still in one hand. He has not put it down."
     talk "He says, \"I rang it for three months. I don't know what I was counting.\""
       say "Hobb looks over at his brother. Neither of them says anything else."
