@@ -523,3 +523,21 @@ body.reduced-motion .cinematic { transition-duration: .15s; }
 }
 
 .atlas-foot small { font-size: 13px; }
+
+/* Focus is the keyboard cursor: make it unmistakable, not just a browser ring. */
+.atlas-row:focus, .atlas-row:focus-visible {
+  outline: 3px solid #ffe6a8; outline-offset: 2px;
+  background: rgba(232, 201, 138, .14) !important;
+}
+.atlas-row:focus .atlas-row-name, .atlas-row:focus-visible .atlas-row-name { color: #fff3cf; }
+.atlas-marker:focus, .atlas-marker:focus-visible {
+  outline: 3px solid #ffe6a8; outline-offset: 3px;
+  box-shadow: 0 0 0 7px rgba(255, 230, 168, .22);
+}
+.atlas-close:focus, .atlas-close:focus-visible, .atlas-back:focus, .atlas-back:focus-visible {
+  outline: 3px solid #ffe6a8; outline-offset: 2px;
+}
+
+.atlas-marker.selected { outline: 3px solid #ffe6a8 !important; outline-offset: 4px; box-shadow: 0 0 0 8px rgba(255,230,168,.18) !important; }
+.atlas-row.selected { outline: 3px solid #ffe6a8 !important; outline-offset: 2px; background: rgba(232,201,138,.14) !important; }
+.atlas-row.selected .atlas-row-name { color: #fff3cf; }

@@ -217,6 +217,8 @@ export class Atlas {
         const back = event.shiftKey || event.key === "ArrowUp" || event.key === "ArrowLeft";
         const next = at < 0 ? (back ? stops.length - 1 : 0) : (at + (back ? -1 : 1) + stops.length) % stops.length;
         event.preventDefault();
+        this.overlay.querySelectorAll(".selected").forEach((el) => el.classList.remove("selected"));
+        stops[next]?.classList.add("selected");
         stops[next]?.focus();
       }
     });
@@ -336,6 +338,11 @@ export class Atlas {
     b.setAttribute("aria-label", opts.label);
     b.textContent = String(n);
     b.addEventListener("click", opts.onPick);
+    b.addEventListener("focus", () => {
+      b.classList.add("selected");
+      this.note.textContent = `Selected: ${opts.label}. Enter to open.`;
+    });
+    b.addEventListener("blur", () => b.classList.remove("selected"));
     this.markers.append(b);
   }
 
@@ -347,13 +354,21 @@ export class Atlas {
     b.setAttribute("aria-label", opts.label);
     b.innerHTML = `<span class="atlas-num">${n}</span><span class="atlas-row-text"><span class="atlas-row-name">${escapeHtml(name)}</span><span class="atlas-row-note">${escapeHtml(note)}</span></span>`;
     b.addEventListener("click", opts.onPick);
+    b.addEventListener("focus", () => {
+      b.classList.add("selected");
+      this.note.textContent = `Selected: ${name}. Enter to travel.`;
+    });
+    b.addEventListener("blur", () => b.classList.remove("selected"));
     li.append(b);
     this.list.append(li);
   }
 
   private focusFirst(): void {
     const first = this.overlay.querySelector<HTMLElement>(".atlas-marker") ?? this.back;
-    first?.focus();
+    if (!first) return;
+    this.overlay.querySelectorAll(".selected").forEach((el) => el.classList.remove("selected"));
+    first.classList.add("selected");
+    first.focus();
   }
 }
 

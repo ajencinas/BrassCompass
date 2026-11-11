@@ -69,7 +69,7 @@ const BAR_LABELS: Record<BarId, string> = {
 /** The plates' right edge and the gap between them; the room plate at the other end. */
 const BAR_RIGHT = 1896;
 const BAR_GAP = 10;
-const ROOM_PLATE = { x: 24, w: 400, h: 84 };
+const ROOM_PLATE = { x: 24, w: 400, h: 96 };
 /**
  * next-level: a11y — top-bar geometry at a text scale. The plates widen with the type (there is room: the row ends
  * at 1896 and the room plate stops at 424) and drawing and hit-testing both read this one layout,
@@ -88,7 +88,7 @@ function barLayout(scale: number): Record<BarId, { x: number; y: number; w: numb
   return out;
 }
 /** Below the top bar: where the tip-mode line and other banners sit, clear of the buttons. */
-const BANNER_Y = 108;
+const BANNER_Y = 120;
 
 const TIPS_KEY = "brasscompass.tips.v1";
 
@@ -313,6 +313,9 @@ export class Game {
   private hoverHotspot: string | null = null;
   private hoverChoice = -1;
   private keyboardFocus: KeyboardFocus | null = null;
+  /** Last-drawn exit label boxes, so the labels are themselves clickable targets. */
+  private exitCueHits: Array<{ hs: Hotspot; x: number; y: number; w: number; h: number }> = [];
+  private exitLabelBoxes: Array<{ x: number; y: number; w: number; h: number }> = [];
   /** Reveal: every hotspot outlined and named. Held with Q, or toggled by its button. */
   private revealHeld = false;
   private revealToggled = false;
@@ -1466,6 +1469,13 @@ export class Game {
 
     const hs = this.hotspotAt(x + this.cameraX, y);
     if (!hs) {
+      // The persistent exit labels are targets too, but only where no painted hotspot already
+      // sits under the pointer: a label must never steal a click from its own door.
+      const cue = this.exitCueHits.find((r) => x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h);
+      if (cue) {
+        this.onHotspotClick(cue.hs);
+        return;
+      }
       this.touchArmed = null;
       // Walk-off: floor clicked in the last few pixels beside an exit that meets this edge is
       // that exit's own click. Without this, a painted path running off the frame ends in a
@@ -3271,8 +3281,8 @@ export class Game {
         size: room.size, color: "#e8c98a", shadow: false,
       });
       if (objective) {
-        const goal = fitText(ctx, "Goal: " + objective, ROOM_PLATE.w - 32, Math.round(12.5 * scale), 9);
-        drawText(ctx, goal.text, ROOM_PLATE.x + 16, BAR.y + Math.round(50 * scale), {
+        const goal = fitText(ctx, "Goal: " + objective, ROOM_PLATE.w - 32, Math.round(15 * scale), 10);
+        drawText(ctx, goal.text, ROOM_PLATE.x + 16, BAR.y + Math.round(54 * scale), {
           size: goal.size, color: "#cfc2a3", shadow: false,
         });
       }
@@ -3389,27 +3399,34 @@ export class Game {
 
     const visible = this.visibleHotspots();
     const hovered = this.hoverHotspot ? visible.find((h) => h.id === this.hoverHotspot) : undefined;
-    // Every way out keeps a small, quiet chevron at its threshold. The one under the pointer —
-    // or the nearest once Fenn is within reach — is brighter. This is the persistent exit cue
-    // the usability study asked for; Q still outlines the whole scene.
+    this.exitCueHits = [];
+    this.exitLabelBoxes = [];
+    // Every way out keeps a named label at its threshold. The label is also a click target, so
+    // a player can click the words instead of hunting the painted door. The one under the
+    // pointer or nearest Fenn is brighter; Q still outlines the whole scene.
     for (const raw of visible) {
       if (!this.isExit(raw)) continue;
       const state = this.hotspotState(raw);
       const b = areaBox(state.area);
       const base = this.exitStand(state);
       const x = b.x + b.w / 2;
-      const y = Math.max(76, Math.min(SCENE_H - 26, base.y - 12));
+      const y = Math.max(120, Math.min(SCENE_H - 34, b.y + b.h / 2));
       const near = raw === hovered || Math.hypot(base.x - this.x, base.y - this.y) <= EXIT_CUE_RANGE;
       if (x < this.cameraX + 24 || x > this.cameraX + LOGICAL_W - 24) {
-        // The door/stairs are painted off the current camera: keep a screen-edge marker so the
-        // way out is never invisible just because Fenn is standing on the other side of it.
-        this.drawEdgeExit(ctx, x < this.cameraX ? "left" : "right", y, state.name, near ? 1 : 0.8);
+        const edge = x < this.cameraX ? "left" : "right";
+        const edgeX = edge === "left" ? this.cameraX + 34 : this.cameraX + LOGICAL_W - 34;
+        const angle = edge === "left" ? -Math.PI / 2 : Math.PI / 2;
+        this.drawExitChevron(ctx, edgeX, y, angle, near ? 1 : 0.8);
+        const labelX = edge === "left" ? this.cameraX + 150 : this.cameraX + LOGICAL_W - 150;
+        const rect = this.drawExitLabel(ctx, labelX, y, state.name, near ? 1 : 0.8);
+        if (rect) this.exitCueHits.push({ hs: raw, ...rect });
         continue;
       }
       const dx = base.x - this.x;
       const angle = Math.abs(dx) < 18 ? 0 : dx < 0 ? -Math.PI / 2 : Math.PI / 2;
-      this.drawExitChevron(ctx, x, y, angle, near ? 1 : 0.7);
-      this.drawExitLabel(ctx, x, y, state.name, near ? 1 : 0.6);
+      this.drawExitChevron(ctx, x, y, angle, near ? 1 : 0.75);
+      const rect = this.drawExitLabel(ctx, x, y, state.name, near ? 1 : 0.7);
+      if (rect) this.exitCueHits.push({ hs: raw, ...rect });
     }
   }
 
@@ -3418,34 +3435,35 @@ export class Game {
     return hs.stand ?? this.areaStand(hs.area);
   }
 
-  /** A pinned marker at the screen edge for a way out painted beyond the camera. */
-  private drawEdgeExit(ctx: CanvasRenderingContext2D, side: "left" | "right", y: number, name: string, strength: number): void {
-    const edge = side === "left" ? this.cameraX + 34 : this.cameraX + LOGICAL_W - 34;
-    const angle = side === "left" ? -Math.PI / 2 : Math.PI / 2;
-    this.drawExitChevron(ctx, edge, Math.max(120, Math.min(SCENE_H - 46, y)), angle, strength);
-    const labelX = side === "left" ? this.cameraX + 132 : this.cameraX + LOGICAL_W - 132;
-    this.drawExitLabel(ctx, labelX, Math.max(148, Math.min(SCENE_H - 46, y)), name, strength);
-  }
-
   /** A small dark label under a way out, so an exit reads as a named place, not scenery. */
-  private drawExitLabel(ctx: CanvasRenderingContext2D, x: number, y: number, name: string, strength: number): void {
-    if (y < 110 || y > SCENE_H - 34) return;
-    const size = Math.round(14 * this.textScale);
+  private drawExitLabel(ctx: CanvasRenderingContext2D, x: number, y: number, name: string, strength: number): { x: number; y: number; w: number; h: number } | null {
+    if (y < 120 || y > SCENE_H - 34) return null;
+    const size = Math.round(18 * this.textScale);
     ctx.save();
     ctx.font = `${size}px Georgia, "Times New Roman", serif`;
-    const text = fitText(ctx, name, 210, size, 11);
-    const w = ctx.measureText(text.text).width + 18;
+    const text = fitText(ctx, name, 280, size, 12);
+    const w = ctx.measureText(text.text).width + 22;
+    const h = size + 14;
     const bx = Math.max(this.cameraX + 8, Math.min(this.cameraX + LOGICAL_W - w - 8, x - w / 2));
-    const by = y - 34 - size;
-    ctx.fillStyle = `rgba(4,12,20,${0.5 + 0.28 * strength})`;
-    ctx.fillRect(bx, by, w, size + 12);
-    ctx.strokeStyle = `rgba(232,201,138,${0.18 + 0.5 * strength})`;
-    ctx.lineWidth = 1;
-    ctx.strokeRect(bx + 0.5, by + 0.5, w - 1, size + 11);
-    drawText(ctx, text.text, bx + w / 2, by + 5, {
-      size: text.size, color: "#f0dfb8", align: "center", shadow: false,
+    let by = y - 38 - size;
+    // Keep stacked exits (the dock has two at the right edge) from covering each other.
+    for (let guard = 0; guard < 8; guard++) {
+      const clash = this.exitLabelBoxes.some((r) =>
+        bx < r.x + r.w + 4 && bx + w + 4 > r.x && by < r.y + r.h + 4 && by + h + 4 > r.y);
+      if (!clash) break;
+      by += h + 6;
+    }
+    this.exitLabelBoxes.push({ x: bx, y: by, w, h });
+    ctx.fillStyle = `rgba(4,12,20,${0.64 + 0.22 * strength})`;
+    ctx.fillRect(bx, by, w, h);
+    ctx.strokeStyle = `rgba(232,201,138,${0.3 + 0.5 * strength})`;
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(bx + 0.75, by + 0.75, w - 1.5, h - 1.5);
+    drawText(ctx, text.text, bx + w / 2, by + 6, {
+      size: text.size, color: "#f6e7c2", align: "center", shadow: false,
     });
     ctx.restore();
+    return { x: bx - 8, y: by - 7, w: w + 16, h: h + 14 };
   }
 
   /** One small, soft chevron at a threshold; points toward the opening from Fenn's side. */
