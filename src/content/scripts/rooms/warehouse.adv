@@ -1,6 +1,7 @@
 room warehouse "The Boat Shed"
   bg bg_warehouse_restart_wide
   width 2560
+  backdrop "brightness(1.14) saturate(1.02)"
   music music_office
   grade "brightness(0.98) saturate(0.9)"
   # The boat shed as a full-bleed painting: the longboat slung from the roof beams in the

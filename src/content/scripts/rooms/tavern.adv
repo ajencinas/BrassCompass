@@ -1,6 +1,7 @@
 room tavern "The Salty Keel"
   bg bg_tavern_cinema_wide
   width 2560
+  backdrop "brightness(1.14) saturate(1.02)"
   music music_tavern
   ambience tavern
   grade "brightness(0.95) saturate(0.85)"

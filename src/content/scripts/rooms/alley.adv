@@ -1,6 +1,7 @@
 room alley "Wreckers' Lane"
   bg bg_alley_restart_wide
   width 2560
+  backdrop "brightness(1.14) saturate(1.02)"
   music music_dock
   grade "brightness(0.98) saturate(0.9)"
   # The harbour restart: a full-bleed painting of the lane between the warehouses, strict

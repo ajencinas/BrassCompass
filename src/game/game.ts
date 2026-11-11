@@ -3419,12 +3419,10 @@ export class Game {
 
   /** The painted threshold a pool should sit on: the stand's floor, kept within the opening. */
   private exitThreshold(hs: Hotspot): Pt {
+    // Anchor the cue to the painted opening, not to wherever the walk stand happens to be:
+    // a hatch, door or stair is at the bottom centre of its own painted area.
     const b = areaBox(hs.area);
-    const stand = this.exitStand(hs);
-    return {
-      x: Math.max(b.x + b.w * 0.15, Math.min(b.x + b.w * 0.85, stand.x)),
-      y: stand.y,
-    };
+    return { x: b.x + b.w / 2, y: b.y + b.h };
   }
 
   /** How the way out sounds: a door, stairs, a hatch, or the open air. */

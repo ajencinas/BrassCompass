@@ -1,6 +1,7 @@
 room dock "Dreadwater Harbour"
   bg bg_dock_cinema_wide
   width 2560
+  backdrop "brightness(1.14) saturate(1.02)"
   music music_dock
   grade "brightness(0.95) saturate(0.85)"
   ambience gulls
