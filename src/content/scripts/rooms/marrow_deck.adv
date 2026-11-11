@@ -1,29 +1,36 @@
 room marrow_deck "The Marrow — Deck"
-  # A side-on close-up of the Marrow's own area plate: same masts, rigging, rail and hatch,
-  # wet planks, cold fog sea and the one warm stern lamp. The lower third is the clear deck.
-  bg bg_marrow_deck_wide
+  # The painting's deck: the foremast and its ratlines at the left, the open cargo hatch with
+  # its cover thrown back amidships, and the helm steps, wheelhouse and stern lantern at the
+  # right. The lower third is one clear run of wet planks in front of the hatch.
+  bg bg_marrow_deck_v2_wide
   width 2560
   music music_sea
-  grade "saturate(0.85) brightness(0.9)"
+  grade "saturate(0.9) brightness(0.98)"
   ambience sea
-  perspective horizon 230 ref 875 height 330
-  walk (40,875) (70,710) (2480,710) (2540,875)
+  perspective horizon 250 ref 875 height 340
+  walk (40,878) (60,760) (180,720) (900,705) (1900,705) (2480,730) (2520,878)
   entry 900,810
-  arrive marrow_quarterdeck 2190,800
-  arrive below_decks 1080,780
-  arrive bow_fog 470,800
-  arrive crows_nest 560,800
+  arrive marrow_quarterdeck 2100,840
+  arrive below_decks 1080,800
+  arrive bow_fog 470,820
+  arrive crows_nest 560,820
   footsteps deck
-  motes glints (1410,385) (1650,385) (1650,500) (1415,500) count 18
+  # The hatch glow, the lit helm windows and the stern lantern are the painted lights.
+  light 1150,600 radius 220 lamp
+  light 1680,230 radius 170 lamp
+  light 2270,180 radius 140 lantern
+  water (40,300) (430,300) (430,430) (40,430) ripple 1.6
+  motes dust (950,560) (1450,560) (1450,700) (950,700) count 24
+  emit lapping at 250,600
   emit creak
 
   # Act II: the crew on deck, and Vex up at the helm. The Marrow was built for a
   # bigger crew than this; the empty deck is part of the mood.
   # Spread bow to stern: Quill forward by the crates, Hobb amidships at the hatch, Dorrit aft
   # at the foot of the helm steps. The three floor rows keep them from reading abreast.
-  sprite npc_quill_body at 700,790 size 1 flip idle speaker quill for quill grade "saturate(0.85) brightness(0.92)" if act 2 and not salvage_seen
-  sprite npc_dorrit_body at 1800,835 size 1 idle speaker dorrit for dorrit grade "saturate(0.85) sepia(0.08) brightness(0.9)" if act 2 and not salvage_seen
-  sprite npc_hobb_body at 1330,808 size 1 flip idle speaker hobb for hobb grade "saturate(0.85) brightness(0.9)" if act 2 and not salvage_seen
+  sprite npc_quill_body at 700,790 size 1 flip idle speaker quill for quill grade "saturate(0.9) brightness(0.98)" if act 2 and not salvage_seen
+  sprite npc_dorrit_body at 1800,835 size 1 idle speaker dorrit for dorrit grade "saturate(0.9) sepia(0.08) brightness(0.96)" if act 2 and not salvage_seen
+  sprite npc_hobb_body at 1330,808 size 1 flip idle speaker hobb for hobb grade "saturate(0.9) brightness(0.96)" if act 2 and not salvage_seen
 
   scene if act 2 and fog_tried and not hatch_hinted
     set hatch_hinted
@@ -48,23 +55,23 @@ room marrow_deck "The Marrow — Deck"
     say "Above us, the helm is turning. Vex is not waiting for me."
 
   hotspot rail "the sea"
-    area 560,300 600x160
-    stand 900,800
+    area 20,260 380x220
+    stand 470,820
     look "The sea, going gold at the edge. It looked bigger from the quay. Or I was smaller."
     talk "I say hello to the sea. It has heard better."
     use "The sea has nothing to say to a clerk with a compass."
 
   hotspot shrouds "the ladder to the crow's nest"
     area (210,0) (430,0) (430,410) (290,410)
-    stand 500,800
+    stand 500,820
     exit crows_nest
     look "The rope ladders up to the crow's nest. Quill's country."
     use "I would get two rungs up before Quill had me down by the collar."
     pickup "They are attached to the mast. That is the point of them."
 
   hotspot forward "the bow deck"
-    area 120,260 400x240
-    stand 450,800
+    area 40,480 280x200
+    stand 450,820
     look "The bow, and the fog past it. The deck narrows there, and the fog does not."
     open "Vex wants us aft until he has said his piece. The bow can wait."
     state if act 2 and fog_tried
@@ -77,29 +84,29 @@ room marrow_deck "The Marrow — Deck"
       open "I go forward. The deck narrows, and the fog comes to meet me."
 
   hotspot crates "the stores"
-    area 830,500 430x110
-    stand 900,780
-    look "Crates lashed by the rail. Salt beef, hard bread, and one crate Dorrit has marked HANDS OFF in chalk."
+    area 300,520 480x160
+    stand 700,810
+    look "Crates lashed by the rail. Salt beef, hard bread, and one crate Dorrit has claimed as his own."
     open "Nailed shut. Dorrit counts the nails."
     use "Dorrit is watching me. I put my hands where he can see them."
 
   hotspot hatch "the hatch to the crew deck"
-    area 940,600 320x110
-    stand 1080,780
-    look "The main hatch. A smell of tar and old rope comes up. Under it, something else: wet wood and old cargo."
-    open "The cover is on and barred. Vex says the hold is cargo."
+    area 900,480 560x220
+    stand 850,830
+    look "The main hatch, its cover thrown back. A smell of tar and old rope comes up. Under it, something else: wet wood and old cargo."
+    open "The cover is up. Vex says the hold is cargo."
     state if act 2 and salvage_seen
       exit below_decks sound hatch
-      look "The cover is loose. I have seen what is down there."
-      open "I lift the cover again. The dark has a shape now."
+      look "The cover is up. I have seen what is down there."
+      open "I go down the ladder again. The dark has a shape now."
     state if act 2 and fog_tried
       exit below_decks sound hatch
-      look "The cover is loose. Below, crates are stacked where the hammocks should be."
-      open "I lift the cover and go below. The ladder is steep, and the dark smells of old cargo."
+      look "The cover is up. Below, crates are stacked where the hammocks should be."
+      open "I go down the ladder. It is steep, and the dark smells of old cargo."
 
   hotspot stairs_up "the steps to the helm"
-    area 1900,420 530x300
-    stand 2050,800
+    area 1900,430 410x360
+    stand 2050,830
     exit marrow_quarterdeck sound stairs
     look "The steps up to the quarterdeck. Vex is at the top, not looking down."
     open "I go up."
@@ -128,7 +135,7 @@ room marrow_deck "The Marrow — Deck"
 
   hotspot dorrit "Dorrit"
     show if act 2 and not salvage_seen
-    area 1720,510 180x330
+    area 1700,510 180x330
     stand 1800,840
     look "Dorrit, in his apron, negotiating with a potato."
     talk "He does not look up. \"If you are going to stand there, hold this.\""

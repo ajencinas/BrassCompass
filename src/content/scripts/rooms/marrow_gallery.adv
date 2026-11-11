@@ -2,92 +2,95 @@
 # the wake, and Quill off watch. Opened from the captain's cabin (the cabin's doors are the way
 # back); Quill talks it out in dialogue/quill.adv at `gallery`.
 room marrow_gallery "The Marrow — Stern Gallery"
-  bg bg_gallery_wide
+  bg bg_gallery_v2_wide
   width 2560
   music music_sunset
   ambience sea
-  perspective horizon 255 ref 875 height 485
-  grade "sepia(0.14) saturate(1.04) brightness(1.02)"
-  walk (525,878) (548,806) (1890,806) (1905,878)
+  perspective horizon 255 ref 875 height 460
+  grade "sepia(0.08) saturate(1.0) brightness(0.98)"
+  # The painting's walk is the clear plank run from the cabin doors at the left to the little
+  # table at the right; the table itself is not walked into.
+  walk (100,878) (120,820) (1980,815) (2020,860) (2040,878)
   entry 640,842
   arrive marrow_cabin 640,842
   footsteps deck
-  light 2232,80 radius 110 lantern
-  light 196,211 radius 90 lamp
-  water (530,270) (2180,270) (2180,525) (1100,525) (1100,460) (940,460) (940,525) (530,525) ripple 1.8
-  motes glints (560,300) (2150,300) (2150,450) (560,450) count 45
-  emit lapping at 1500,620
+  # The cabin doorway is the only warm interior; the stern lantern answers it at the right.
+  light 2100,180 radius 140 lantern
+  light 110,500 radius 200 lamp
+  water (520,300) (2300,300) (2300,470) (520,470) ripple 1.4
+  motes glints (600,300) (2200,300) (2200,450) (600,450) count 35
+  emit lapping at 1500,600
   emit creak
 
   # Quill at the rail by the captain's table, half a row back and turned out to the sunset:
   # two depths and two facings, not a matched pair shoulder to shoulder.
-  sprite npc_quill_body at 1900,800 size 1 flip idle speaker quill for quill grade "saturate(0.92) brightness(0.96)" if act 2
+  sprite npc_quill_body at 1900,820 size 1 flip idle speaker quill for quill grade "saturate(0.95) brightness(0.98)" if act 2
 
   scene if act 2 and not gallery_arrived
     set gallery_arrived
     say "Sundown on the stern gallery. Quill is here, off watch, with the glass she does not need."
 
   hotspot doors "the cabin doors"
-    area 150,20 340x820
+    area 20,80 300x660
     stand 600,842
     exit marrow_cabin
     look "The doors back into the cabin, lamplight behind the glass. In there it is his ship. Out here it is only the sea."
 
   hotspot sun "the sunset"
-    area 1110,50 320x210
+    area 1300,150 300x160
     nowalk
     look "The sun is going into the sea with a lack of restraint that would embarrass a chart."
 
   hotspot wake "the wake"
-    area (1185,272) (1265,272) (1630,530) (640,530)
+    area (1200,300) (1260,300) (1650,620) (700,620)
     nowalk
     look "Our wake, ruled straight back to Dreadwater. The one line on this voyage I could draw myself."
 
   hotspot sea "the Shroud"
-    area (500,262) (1170,262) (630,530) (500,530)
+    area (450,300) (1150,300) (700,620) (450,620)
     nowalk
     look "The water between us and the island. Every colour there is, and none of it on my chart."
 
   hotspot islands "the islands"
-    area 1290,198 250x65
+    area 1300,230 250x60
     nowalk
     look "Islands going blue with distance, like ink drying. Not one of them with a name I know."
 
   hotspot gulls "gulls"
-    area 1570,0 620x135
+    area 1500,40 600x120
     nowalk
     look "Gulls, hanging off the stern without a wingbeat. I have drawn worse birds than that."
 
   hotspot fish "flying fish"
-    area 945,462 150x80
+    area 930,480 150x70
     nowalk
     look "A flying fish leaves the sea, glides fifty yards on fins never meant for it, and drops back in, astonished. I know the feeling."
 
   hotspot rail "the rail"
-    area 500,530 1480x272
-    stand 1180,812
+    area 430,540 1550x290
+    stand 1180,842
     look "The rail, turned and polished by years of a captain's elbows. There is a dent in it the size of a glass."
     push "I lean on it, like a sailor. The sea leans back, like the sea. I stop."
 
   hotspot table "the captain's table"
-    area 1975,590 290x290
-    nowalk
+    area 2050,560 300x300
+    stand 2000,830
     look "A bottle of rum and one glass. The glass is full and nobody is drinking it."
     pickup "It isn't mine to take. I get the feeling it isn't his either."
 
   hotspot lantern "the stern lantern"
-    area 2185,0 240x190
+    area 2050,70 100x180
     nowalk
     look "A brass lantern on a bracket, lit already, in case the sun changes its mind."
 
   hotspot carving "the carving"
-    area 2385,560 175x320
+    area 2280,580 280x300
     nowalk
     look "Gilt carving on the gallery corner: vines, a cherub, and a mermaid who looks tired of holding a pose."
 
   hotspot quill "Quill"
     show if act 2
-    area 1830,355 180x450
+    area 1805,380 200x470
     stand 1660,850
     look "Quill at the rail, off watch, with her spyglass and the whole sunset and no use for either."
     talk "She doesn't turn round. She moves the spyglass an inch along the rail, which I take as hello."

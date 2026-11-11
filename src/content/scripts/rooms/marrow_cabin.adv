@@ -1,22 +1,28 @@
 room marrow_cabin "The Marrow — Captain's Cabin"
-  bg bg_cabin_wide
+  bg bg_cabin_v2_wide
   width 2560
   music music_office
-  grade "saturate(0.85) brightness(0.9)"
+  grade "brightness(0.96) saturate(0.9)"
   perspective horizon 200 ref 875 height 430
-  # The painted floor is one deep plank run with the chart table in the middle; the measured
-  # scale curve was making a foreground figure nearly 640px tall, so the room uses the
-  # perspective fit (430 at the near edge) and keeps the cast inside the furniture's size.
-  walk (80,875) (140,700) (1800,700) (1840,820) (2380,820) (2420,875)
-  entry 2390,860
-  arrive marrow_quarterdeck 2390,860
-  arrive marrow_gallery 2100,845
-  # The chart table is the biggest painted object in the room; whoever walks behind it is
-  # hidden by its front apron instead of standing on top of the chart.
-  occluder floor 760 (770,600) (1760,548) (1760,760) (770,760)
+  # The painting's floor is one deep plank run: the forward door and its lantern at the left,
+  # the bunk and chest behind the walking band, the chart table amidships, and the stern
+  # windows with the gallery door standing open at the right. The walk crosses in front of
+  # the table, never behind it.
+  walk (100,875) (110,800) (350,790) (2200,790) (2400,840) (2420,875)
+  entry 260,840
+  arrive marrow_quarterdeck 260,840
+  arrive marrow_gallery 2100,840
+  # The chart table's front apron is the biggest painted object in the room; whoever walks
+  # behind it is hidden by the apron instead of standing on top of the chart.
+  occluder floor 780 (1080,560) (1700,550) (1700,790) (1080,790)
   footsteps deck
-  light 1160,45 radius 200 lantern
-  water (1915,240) (2325,240) (2325,690) (1915,690) ripple 1.5
+  # The hanging oil lamp over the chart, the lantern in the forward doorway, the warm gallery
+  # door, and cool dusk light from the stern windows.
+  light 1280,220 radius 240 lantern
+  light 230,540 radius 110 lantern
+  light 2100,380 radius 180 lamp colour "#ffc79a"
+  light 1700,300 radius 220 moon
+  water (2250,320) (2520,320) (2520,620) (2250,620) ripple 1.4
   emit creak
 
   # Act II: Vex's cabin is optional. The chart, the tidy ledger and the novel
@@ -29,31 +35,31 @@ room marrow_cabin "The Marrow — Captain's Cabin"
     say "Vex's cabin. The chart is out, the lamp is lit, and nobody is here to stop me."
 
   hotspot chart "the chart table"
-    area 940,310 800x260
-    stand 1760,805
-    look "Vex's chart of the Shroud. The edge is drawn in a careful hand, and the wrecks are marked in pencil."
-    use "A salvage list, tucked under the chart's edge. Ships, dates, cargo, prices. Neat as a shopman's book."
+    area 1100,380 620x220
+    stand 1750,840
+    look "Vex's chart of the Shroud. The coast is ruled in a careful hand; the wrecks are not marked yet."
+    use "A bundle of papers, tucked under the chart's edge. Ships, dates, cargo, prices. Neat as a shopman's book."
     open "The chart is pinned at the corners. Vex does not like it moved."
 
   hotspot shelf "the instrument shelf"
-    area 620,0 380x340
+    area 930,140 250x220
     nowalk
     look "A shelf of brass instruments, polished every morning. A telescope, dividers, and one thing that does nothing but look expensive."
     use "I do not touch another captain's instruments. That is how expensive things get broken."
 
   hotspot bunk "the bunk"
-    area 0,180 360x540
+    area 300,120 650x520
     nowalk
-    look "A bunk made with naval precision. Under the pillow, a novel called Vengeance, face down. The cover has a lady and a sword."
+    look "A bunk made with naval precision. Under the pillow, a novel, face down. The cover has a lady and a sword."
 
   hotspot windows "the stern windows"
-    area 1010,20 720x290
+    area 1300,150 700x420
     nowalk
     look "The wake, going back to a harbour I cannot see. Every reason I took this berth is in that white water."
 
   hotspot gallery "out to the stern gallery"
-    area 1900,30 480x660
-    stand 2100,845
+    area 1960,60 330x560
+    stand 2100,840
     look "Beyond the stern window, the captain's gallery, over the wake. Vex's. Nobody goes out uninvited."
     walk "Without an invitation, I would only be a clerk on a balcony, being looked at."
     open "Without an invitation, I would only be a clerk on a balcony, being looked at."
@@ -63,10 +69,10 @@ room marrow_cabin "The Marrow — Captain's Cabin"
       walk "Out onto the gallery, while the captain is busy."
 
   hotspot door_out "the door to the helm"
-    area 2430,140 130x620
-    stand 2390,860
+    area 80,80 320x640
+    stand 260,840
     exit marrow_quarterdeck
-    look "The door back out to the quarterdeck."
+    look "The door back out to the quarterdeck, lamplight on the sill."
 
   use compass on chart
     "The needle points past the edge Vex has drawn. It has no opinion about the pencil."

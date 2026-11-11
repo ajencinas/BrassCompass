@@ -1917,6 +1917,106 @@ MANIFEST = [
                 f"of the frame. {STYLE}",
       "resolution": BG_RES, "output_format": "png"}, "scenes/gallery_wide.webp"),
 
+    # ---------------- visual restart: the Marrow's four playable rooms ----------------
+    # Full-bleed cinematic plates for the ship's upper rooms. The art direction is stricter
+    # than the act-II backgrounds above: a real painting rather than a game backdrop, no
+    # painted signs or lettering anywhere, and every way out readable by light alone — a lit
+    # hatch and ladder, warm lamplight through an open cabin door, a stair rim-lit against the
+    # sky. Each keeps one continuous empty deck or floor band across the lower third so the
+    # cast has somewhere to stand. Each plate had two attempts; the Marrow deck also had one
+    # repair pass after its second hatch read as a raised box. The prompt beside each key is
+    # the one that produced the kept plate.
+    ("bg_marrow_deck_v2_wide", "image", BG_MODEL,
+     {"prompt": f"Full-bleed cinematic side-on painting of the main deck of the Marrow, a "
+                f"two-masted sailing ship, at cold fog dusk. Low camera at deck height, square "
+                f"to the deck, the wet tarred planks running horizontally across the frame. "
+                f"LEFT: the bow rail and the foremast with tarred ratlines and a rope ladder "
+                f"climbing into the fog; a cold grey-green sea and a pale dusk horizon beyond "
+                f"the rail. CENTRE: the mainmast; an open cargo hatch cut flush into the deck "
+                f"planks in the middle distance, its wooden cover thrown back on iron hinges, "
+                f"a black rectangular opening with a steep wooden ladder descending through it "
+                f"into warm amber lantern-light rising from below, the glow spilling forward "
+                f"across the boards; the near edge of the opening sits above the empty "
+                f"foreground band, so the lower third stays one continuous clear deck. A few "
+                f"unmarked lashed crates and coiled ropes are pushed back against the rail, "
+                f"clear of the floor. RIGHT: a short external wooden staircase with a rope "
+                f"handrail climbing to the open raised helm platform, its treads rim-lit by a "
+                f"warm stern lantern and the pale sky; the ship's wheel and brass binnacle "
+                f"silhouetted above it; the dark stern cabin with warm amber windows and a "
+                f"glowing brass stern lantern at the corner. The entire lower third is one "
+                f"continuous empty wet-plank deck from the left edge to the right edge; no "
+                f"hatch coaming or raised box cuts the walking lane, and no people, figures, "
+                f"crates, barrels, ropes or debris stand in it. The raised helm rail is "
+                f"completely empty: no statue, no pale object, no human silhouette, no "
+                f"figurehead, no mannequin. Plain unmarked timber, no plaques, no notice "
+                f"boards. Strong warm-cold contrast: cold fog and slate sea at the left, warm "
+                f"hatch and stern lamp at the right. Hand-painted oil illustration with visible "
+                f"brushwork, cinematic point-and-click adventure game art, volumetric dusk "
+                f"light, desaturated indigo and pewter palette, ultra-wide 21:9 composition. No "
+                f"text, no lettering, no writing, no labels, no signs, no signage, no placards, "
+                f"no nameplates, no numbers, no UI, no watermark, no logos, no frame. {STYLE}",
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/marrow_deck_v2_wide.webp"),
+
+    ("bg_quarterdeck_v2_wide", "image", BG_MODEL,
+     {"prompt": f"Full-bleed cinematic side-on painting of the Marrow's raised quarterdeck at "
+                f"cold fog dusk. Low camera at deck height, square to the rail. LEFT: an open "
+                f"companionway in the deck with steep wooden steps descending to the main deck, "
+                f"warm amber light rising from below and rimming every tread, a tarred rope "
+                f"handrail. CENTRE-LEFT: the ship's wheel on its pedestal and a brass binnacle, "
+                f"both painted against the pale sky. CENTRE-RIGHT: the turned-baluster rail, "
+                f"the cold pewter sea and the ship's white wake, thin drifting fog. RIGHT: the "
+                f"stern cabin bulkhead with an open plank door, warm amber lamplight spilling "
+                f"out across the boards and a glowing brass stern lantern beside it; dark "
+                f"carved timber panels, no figure carvings, no faces, no statues, no plaques. "
+                f"The entire lower third is one continuous empty wet-plank deck from the left "
+                f"edge to the right edge; no people, no figures, no crates, barrels, ropes or "
+                f"debris in that band. Cold slate and indigo sea and sky against warm amber "
+                f"pools of lamplight. Hand-painted oil illustration with visible brushwork, "
+                f"cinematic point-and-click adventure game art, volumetric dusk light, ultra-"
+                f"wide 21:9 composition. No text, no lettering, no writing, no labels, no "
+                f"signs, no signage, no placards, no nameplates, no numbers, no UI, no "
+                f"watermark, no logos, no frame. {STYLE}",
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/quarterdeck_v2_wide.webp"),
+
+    ("bg_cabin_v2_wide", "image", BG_MODEL,
+     {"prompt": f"Full-bleed cinematic side-on painting of the captain's stern cabin aboard the Marrow at dusk. "
+                f"Interior, low camera at eye level, looking along the cabin from the forward bulkhead to the "
+                f"stern. LEFT: a heavy plank door standing open onto the cold blue night of the quarterdeck, a "
+                f"warm amber lantern glowing in the passage beyond and spilling a long wedge of light across the "
+                f"floorboards. LEFT-CENTRE: a built-in bunk with a dark curtain, a pale pillow and a folded "
+                f"blanket, a sea chest beneath it, a small shelf of brass instruments above. CENTRE: a chart table "
+                f"with an unrolled blank sea chart, brass dividers, a dry inkpot and a low hanging oil lamp "
+                f"casting a warm pool. RIGHT: three tall stern windows with carved frames, the cold dusk sea and "
+                f"the white wake beyond; the right-hand window is a glazed door standing open onto the stern "
+                f"gallery with cool peach sunset light. Clear dark plank floor across the whole lower third; no "
+                f"people, no figures, no chairs, no clutter. Hand-painted oil illustration with visible brushwork, "
+                f"cinematic point-and-click adventure game art, warm lamp pools against cold blue dusk, ultra-wide "
+                f"21:9 composition, dark carved timber, tarred hull. No text, no lettering, no writing on the "
+                f"chart, no labels, no signs, no signage, no placards, no nameplates, no numbers, no plates, no "
+                f"UI, no watermark, no logos, no frame. hand-painted digital illustration, cinematic "
+                f"point-and-click adventure game art, rich atmospheric volumetric lighting, painterly brushwork, "
+                f"detailed, strong colour grading, wide 16:9 composition, no text, no UI, no watermark, no logos",
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/cabin_v2_wide.webp"),
+
+    ("bg_gallery_v2_wide", "image", BG_MODEL,
+     {"prompt": f"Full-bleed cinematic side-on painting of the Marrow's stern gallery at cold dusk sunset. Low "
+                f"camera at deck height. LEFT: the captain's cabin double doors standing open, warm amber "
+                f"lamplight pouring out across the wooden boards, a glimpse of the lit cabin. CENTRE: a low carved "
+                f"wooden rail with turned balusters running across the frame; beyond it the ship's long white wake "
+                f"trailing to a low amber sun under banks of grey-violet cloud, a cold teal sea, distant blue "
+                f"islands and thin fog, a few gulls. RIGHT: the carved gilt quarter-gallery corner with a glowing "
+                f"brass stern lantern on a bracket and a small round wooden table holding a dark unlabelled bottle "
+                f"and one glass. The entire lower third is one continuous empty warm-plank walkway from the left "
+                f"edge to the right edge; no people, no figures, no chairs, no debris. Hand-painted oil "
+                f"illustration with visible brushwork, cinematic point-and-click adventure game art, volumetric "
+                f"sunset light, warm highlights along the rail and cold violet-blue shadows in the sea, ultra-wide "
+                f"21:9 composition. No text, no lettering, no writing, no bottle label, no labels, no signs, no "
+                f"signage, no placards, no nameplates, no numbers, no UI, no watermark, no logos, no frame. "
+                f"hand-painted digital illustration, cinematic point-and-click adventure game art, rich "
+                f"atmospheric volumetric lighting, painterly brushwork, detailed, strong colour grading, wide 16:9 "
+                f"composition, no text, no UI, no watermark, no logos",
+      "resolution": "4704x2016 (21:9)", "output_format": "png"}, "scenes/gallery_v2_wide.webp"),
+
     ("npc_vane_rum", "image", BG_MODEL,
      {"prompt": "Full body figure of a weathered pirate captain, a woman in her fifties, long "
                 "dark coat with tarnished braid, tricorn hat, grey-streaked hair tied back, a "
