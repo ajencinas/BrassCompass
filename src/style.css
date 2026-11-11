@@ -83,71 +83,118 @@ html, body {
 /* `display: block` on the controls below would otherwise beat the hidden attribute. */
 .settings [hidden] { display: none !important; }
 /*
- * One scroller: the backdrop. The dialog grows to its content and is centred by auto margins,
- * which fall to zero (top-aligned, scrollable) when it is taller than the window.
+ * The pause card is an instrument panel, not a form: a brass compass in the corner, the
+ * setting's name and its control, and nothing explaining what a pause is.
  */
 .settings {
-  position: fixed; inset: 0; z-index: 30; display: grid; place-items: start center;
-  background: rgba(3, 8, 16, .88); padding: 12px; overflow: auto;
-  scrollbar-color: #6b5a3a #0d1822; scrollbar-width: thin;
+  position: fixed; inset: 0; z-index: 30; display: grid; place-items: center;
+  background: radial-gradient(ellipse at 50% 42%, rgba(7, 14, 21, .78), rgba(2, 4, 8, .94) 72%);
+  padding: 16px; overflow: auto; scrollbar-color: #6b5a3a #0d1822; scrollbar-width: thin;
   font-size: calc(16px * var(--text-scale, 1));
+  color: #e9e0cc;
 }
 .settings section {
-  width: min(940px, 100%); padding: 20px 26px 16px; background: #101d29;
-  border: 1px solid #9b7c46; box-shadow: 0 24px 80px #0009; margin: auto;
+  position: relative; width: min(900px, 100%); padding: 24px 30px 18px; margin: auto;
+  background:
+    radial-gradient(120% 90% at 84% 4%, rgba(201, 162, 74, .1), transparent 56%),
+    linear-gradient(163deg, #101b22 0%, #0a1218 58%, #090d11 100%);
+  border: 1px solid rgba(201, 162, 74, .42);
+  box-shadow: 0 30px 90px #000b, inset 0 0 0 1px rgba(232, 201, 138, .06), inset 0 0 90px rgba(0, 0, 0, .45);
+  overflow: hidden;
+}
+/* A chart rose, pressed faintly into the panel. */
+.settings section::before {
+  content: ""; position: absolute; right: -34px; bottom: -46px; width: 300px; height: 300px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='20' fill='none' stroke='%23e8c98a' stroke-width='.5'/%3E%3Ccircle cx='24' cy='24' r='15' fill='none' stroke='%23e8c98a' stroke-width='.35'/%3E%3Cpath d='M24 4 27 21l17 3-17 3-3 17-3-17-17-3 17-3Z' fill='%23e8c98a' opacity='.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-size: contain; opacity: .07; pointer-events: none;
 }
 .settings-head {
-  display: flex; align-items: center; justify-content: space-between; gap: 20px;
-  padding-bottom: 10px; border-bottom: 1px solid #2b3a44;
+  position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between;
+  gap: 20px; padding-bottom: 14px; border-bottom: 1px solid rgba(201, 162, 74, .22);
 }
-.settings-head > div { min-width: 0; }
-.settings-head .primary { width: auto; min-width: 13em; margin: 0; flex: none; }
+.settings-title { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.settings-mark { flex: none; width: 46px; height: 46px; color: #c9a24a; filter: drop-shadow(0 0 10px rgba(201, 162, 74, .28)); }
+.settings-mark svg { display: block; width: 100%; height: 100%; }
+.settings h1 { color: #f3e0b4; font: 400 1.72em/1.1 Georgia, serif; letter-spacing: .01em; margin: 0; }
+.settings-head .primary {
+  flex: none; width: auto; min-width: 10.5em; margin: 0; display: inline-flex; align-items: center;
+  justify-content: center; gap: 11px;
+}
+.resume-glyph {
+  flex: none; display: inline-block; width: 0; height: 0; margin-right: 2px;
+  border-left: 10px solid currentColor; border-top: 6px solid transparent; border-bottom: 6px solid transparent;
+}
 .settings-grid {
-  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 34px;
+  position: relative; z-index: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 44px; margin-top: 16px;
 }
 .settings .group { min-width: 0; }
 .settings h2 {
-  color: #c6a365; font: .8em system-ui, sans-serif; letter-spacing: .2em; text-transform: uppercase;
-  margin: 14px 0 2px;
+  display: flex; align-items: center; gap: 9px; color: #d9b877;
+  font: 600 .74em system-ui, sans-serif; letter-spacing: .22em; text-transform: uppercase;
+  margin: 0 0 7px; padding-bottom: 7px; border-bottom: 1px solid rgba(201, 162, 74, .16);
 }
+.group-icon { flex: none; width: 17px; height: 17px; color: #c9a24a; }
+.group-icon svg { display: block; width: 100%; height: 100%; }
 .settings select {
-  width: 100%; padding: 6px 8px; background: #1a3040; border: 1px solid #65726f; color: #f3e7cb;
-  font: 1em Georgia, serif;
+  width: 100%; padding: 7px 9px; background: #14232e; border: 1px solid rgba(201, 162, 74, .32);
+  color: #f3e7cb; font: 1em Georgia, serif; border-radius: 2px;
 }
 .settings select:disabled { color: #9aa7ad; border-style: dashed; cursor: not-allowed; }
 .settings select:focus-visible, .settings input:focus-visible, .settings summary:focus-visible {
-  outline: 2px solid #dfbf7d; outline-offset: 2px;
+  outline: 2px solid #ffe6a8; outline-offset: 2px;
 }
-.settings details { margin: 12px 0 2px; border-top: 1px solid #2b3a44; padding-top: 4px; }
-.settings summary { cursor: pointer; color: #f3e7cb; font: 1em Georgia, serif; padding: 6px 0; }
+.settings details { position: relative; z-index: 1; margin: 14px 0 0; border-top: 1px solid rgba(201, 162, 74, .2); padding-top: 4px; }
+.settings summary { cursor: pointer; color: #d9c9a4; font: .95em Georgia, serif; padding: 7px 0; }
 .settings dl.controls {
-  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 6px 16px;
-  margin: 8px 0 0; font: .9em/1.4 Georgia, serif;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); gap: 5px 18px;
+  margin: 6px 0 2px; font: .85em/1.45 Georgia, serif;
 }
-.settings dl.controls dt { color: #f3d99e; }
-.settings dl.controls dd { color: #d5dde2; margin: 0; }
-.settings h1 { color: #f3d99e; font-size: 1.65em; margin: 2px 0 4px; }
-.settings p, .settings small { color: #c9d2d8; line-height: 1.4; margin: 0; }
-.settings .eyebrow { color: #c6a365; font: .8em system-ui, sans-serif; letter-spacing: .2em; }
+.settings dl.controls dt { color: #e8c98a; }
+.settings dl.controls dd { color: #c3ccd2; margin: 0; }
+.settings p { color: #c9d2d8; line-height: 1.4; margin: 0; }
 .settings button {
-  display: block; width: 100%; padding: 8px 12px; margin: 7px 0;
-  background: #1a3040; border: 1px solid #65726f; color: #f3e7cb;
-  font: 1em Georgia, serif; cursor: pointer;
+  display: flex; width: 100%; align-items: center; gap: 9px; padding: 9px 12px; margin: 6px 0;
+  background: rgba(26, 48, 64, .55); border: 1px solid rgba(201, 162, 74, .3); color: #f3e7cb;
+  font: 1em Georgia, serif; cursor: pointer; border-radius: 2px; text-align: left;
 }
-.settings button:hover, .settings button:focus-visible { background: #304651; outline: 2px solid #dfbf7d; }
+.settings button[data-action]::before {
+  flex: none; width: 1.1em; color: #c9a24a; text-align: center; font: 1.05em/1 Georgia, serif;
+}
+.settings button[data-action="mute"]::before { content: "♪"; }
+.settings button[data-action="wait"]::before { content: "◷"; }
+.settings button[data-action="tips"]::before { content: "✦"; }
+.settings button[data-action="fullscreen"]::before { content: "⛶"; }
+.settings button[data-action="restart"]::before { content: "↺"; }
+.settings button[data-action="title"]::before { content: "⌂"; }
+.settings button:hover, .settings button:focus-visible {
+  background: #263d49; outline: 2px solid #ffe6a8; outline-offset: 2px;
+}
 .settings button.primary { background: #23404f; border-color: #b39457; }
-.settings button.danger { background: #4a1d14; border-color: #c98a6a; color: #ffe2cc; }
-.settings button.danger:hover, .settings button.danger:focus-visible { background: #6a2a1b; }
+.settings button.primary:hover, .settings button.primary:focus-visible { background: #2d4d5d; }
+.settings button.danger { background: #3a1c14; border-color: #a86a52; color: #ffe2cc; }
+.settings button.danger:hover, .settings button.danger:focus-visible { background: #56251a; outline-color: #ffb38f; }
 .settings label.row {
   display: grid; grid-template-columns: minmax(7.5em, auto) minmax(0, 1fr); align-items: center;
-  gap: 12px; margin: 8px 0; color: #e8e2d0; font-size: 1em;
+  gap: 12px; margin: 9px 0; color: #e8e2d0; font-size: 1em;
 }
-.settings input { width: 100%; accent-color: #d6b46c; }
-.settings .note { font: .85em/1.35 system-ui, sans-serif; color: #b9c6cd; margin: -2px 0 4px; }
-.settings .confirm { margin: 4px 0; padding: 8px 10px 2px; border: 1px solid #8a5a44; background: #1c1414; }
-.settings .confirm p { color: #ffd9b8; }
-.settings small { display: block; margin-top: 8px; font: .85em/1.5 system-ui, sans-serif; }
+.settings input[type="range"] { width: 100%; height: 18px; margin: 0; background: transparent; accent-color: #d6b46c; -webkit-appearance: none; appearance: none; }
+.settings input[type="range"]::-webkit-slider-runnable-track {
+  height: 3px; background: linear-gradient(90deg, #8a6a2f, #3a4038); border-radius: 2px;
+}
+.settings input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; width: 14px; height: 14px; margin-top: -6px; border-radius: 50%;
+  background: #e8c98a; border: 1px solid #513c1d; box-shadow: 0 0 8px rgba(232, 201, 138, .35);
+}
+.settings input[type="range"]::-moz-range-track { height: 3px; background: linear-gradient(90deg, #8a6a2f, #3a4038); border-radius: 2px; }
+.settings input[type="range"]::-moz-range-thumb {
+  width: 13px; height: 13px; border-radius: 50%; background: #e8c98a; border: 1px solid #513c1d;
+}
+.settings .note { font: .82em/1.4 system-ui, sans-serif; color: #b9c6cd; margin: -2px 0 5px; }
+.settings .confirm { margin: 4px 0 8px; padding: 10px 12px 4px; border: 1px solid rgba(168, 106, 82, .7); background: rgba(58, 28, 20, .45); }
+.settings .confirm p { color: #ffd9b8; margin-bottom: 2px; }
 @media (max-width: 760px) {
+  .settings { place-items: start center; }
   .settings-grid { grid-template-columns: minmax(0, 1fr); }
   .settings-head { flex-direction: column; align-items: stretch; }
   .settings-head .primary { width: 100%; }
@@ -175,208 +222,175 @@ body.reduced-motion .cinematic { transition-duration: .15s; }
   font: 14px Georgia, serif; pointer-events: none;
 }
 
-/* ---- casebook ---- */
-.casebook[hidden] { display: none; }
-.casebook {
-  position: fixed; inset: 0; z-index: 35; display: grid; place-items: center;
-  background: rgba(3, 8, 16, .9); padding: 20px; overflow: auto;
-  font-size: calc(16px * var(--text-scale, 1));
+/* ---- the journal: chart, history, recap and the ship's log share one piece of paper ---- */
+/*
+ * These pages are ink on aged paper, not a dark panel of instructions: a paper ground, a rust
+ * rule at the margin, wax and pencil marks. Explanations the player does not need ("what the log
+ * keeps", "J or Escape to close") are gone; the page's own content is what is left.
+ */
+.casebook[hidden], .recap[hidden], .deeds[hidden] { display: none; }
+.casebook, .recap, .deeds {
+  position: fixed; inset: 0; display: grid; place-items: center; padding: 22px; overflow: auto;
+  background: radial-gradient(ellipse at 50% 42%, rgba(5, 10, 14, .7), rgba(2, 4, 7, .93) 74%);
+  font-size: calc(16px * var(--text-scale, 1)); color: #2f2619;
+  scrollbar-color: #7b6136 #d9c8a2; scrollbar-width: thin;
 }
-.casebook section {
-  width: min(760px, 100%); max-height: min(84vh, 900px); display: flex; flex-direction: column;
-  background: #101d29; border: 1px solid #9b7c46; box-shadow: 0 24px 80px #0009;
+.casebook { z-index: 35; }
+.recap { z-index: 34; }
+.deeds { z-index: 45; }
+.casebook > section, .recap > section, .deeds > section {
+  position: relative; width: min(760px, 100%); max-height: min(86vh, 940px);
+  display: flex; flex-direction: column; color: #2f2619;
+  background:
+    radial-gradient(130% 72% at 12% 0%, rgba(255, 252, 238, .92), rgba(255, 252, 238, 0) 62%),
+    radial-gradient(90% 80% at 100% 100%, rgba(106, 76, 38, .18), transparent 60%),
+    repeating-linear-gradient(92deg, rgba(90, 60, 26, .032) 0 2px, rgba(90, 60, 26, 0) 2px 6px),
+    linear-gradient(160deg, #efe3c6, #e4d3ae 58%, #d9c59c);
+  border: 1px solid rgba(70, 50, 24, .62);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .78), inset 0 0 0 1px rgba(255, 255, 255, .38),
+    inset 0 0 70px rgba(106, 76, 38, .16);
 }
-.casebook header { padding: 28px 32px 16px; border-bottom: 1px solid #2b3a44; position: relative; }
-.casebook h1 { color: #f3d99e; font-size: 1.75em; margin: 8px 0 6px; }
-.casebook .lede { color: #9fb0bd; font-size: .94em; margin: 0; }
-.casebook .eyebrow { color: #c6a365; font: .7em system-ui, sans-serif; letter-spacing: .24em; margin: 0; }
+.casebook > section { width: min(780px, 100%); }
+.recap > section { width: min(700px, 100%); }
+.deeds > section { width: min(1040px, 100%); }
+.casebook header, .recap header, .deeds header {
+  position: relative; padding: 26px 32px 14px; border-bottom: 1px solid rgba(70, 50, 24, .26);
+}
+.casebook h1, .recap h1, .deeds h1 {
+  color: #2a2115; font: 400 1.7em/1.12 Georgia, serif; margin: 8px 0 5px; letter-spacing: .01em;
+}
+.casebook .eyebrow, .recap .eyebrow, .deeds .eyebrow {
+  margin: 0; color: #7c5a2f; font: 600 .67em system-ui, sans-serif; letter-spacing: .26em;
+  text-transform: uppercase;
+}
+/* The sentence explaining the page is not needed; the page itself says it. */
+.casebook .lede, .recap .lede, .deeds .lede, .history .lede { display: none; }
 .casebook-count {
-  position: absolute; right: 32px; top: 30px; margin: 0;
-  color: #7d8b95; font: .7em system-ui, sans-serif; letter-spacing: .16em; text-transform: uppercase;
+  position: absolute; right: 32px; top: 26px; margin: 0; color: #7b6440;
+  font: .68em system-ui, sans-serif; letter-spacing: .18em; text-transform: uppercase;
 }
-.casebook-body {
-  padding: 8px 32px 24px; overflow-y: auto; flex: 1;
-  scrollbar-color: #6b5a3a #0d1822; scrollbar-width: thin;
+.casebook-body, .recap-body, .deeds-body {
+  flex: 1; overflow-y: auto; padding: 14px 32px 20px;
+  scrollbar-color: #8a6a3c #dccdaa; scrollbar-width: thin; outline: none;
+}
+.casebook-body:focus-visible, .recap-body:focus-visible, .deeds-body:focus-visible {
+  outline: 2px solid #7a2f1f; outline-offset: -4px;
 }
 .casebook-body h2 {
-  color: #c6a365; font: .7em system-ui, sans-serif; letter-spacing: .24em; text-transform: uppercase;
-  margin: 24px 0 10px;
+  color: #7c5a2f; font: 600 .68em system-ui, sans-serif; letter-spacing: .24em; text-transform: uppercase;
+  margin: 22px 0 10px; padding-bottom: 5px; border-bottom: 1px solid rgba(70, 50, 24, .2);
 }
 .casebook-entry {
-  color: #dfe4e0; font: 1em/1.6 Georgia, serif; margin: 0 0 14px;
-  padding-left: 16px; border-left: 2px solid #2f4653;
+  color: #352b1c; font: 1.02em/1.62 Georgia, serif; margin: 0 0 14px;
+  padding-left: 16px; border-left: 2px solid rgba(124, 90, 47, .38);
 }
-.casebook-empty { color: #8b98a3; font: italic 1em Georgia, serif; }
-/* The NEXT block: a plan at the top of the notes, ruled in gold like the top-bar buttons. */
+.casebook-empty { color: #6d5b3f; font: italic 1.02em Georgia, serif; }
+/* The next step is an accessibility fallback now, not a plate at the top of the page. */
 .casebook-next {
-  margin: 6px 0 22px; padding: 14px 18px 16px;
-  border: 1px solid rgba(201, 162, 74, .5); border-left: 3px solid #c9a24a;
-  background: rgba(201, 162, 74, .07);
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap; border: 0;
 }
-.casebook-next .eyebrow { color: #e8c98a; margin: 0 0 6px; }
-.casebook-plan { color: #f5e9cd; font: 1.02em/1.55 Georgia, serif; margin: 0; }
-.casebook-where { color: #9fb0bd; font: .8em/1.4 system-ui, sans-serif; margin: 9px 0 0; }
-.casebook footer { padding: 16px 32px 24px; border-top: 1px solid #2b3a44; }
-.casebook button {
-  width: 100%; padding: 12px; background: #1a3040; border: 1px solid #65726f;
-  color: #f3e7cb; font: 1em Georgia, serif; cursor: pointer;
+.casebook-plan { font: inherit; margin: 0; }
+.casebook-where { font: inherit; margin: 0; }
+.casebook footer, .recap footer, .deeds footer {
+  padding: 14px 32px 20px; border-top: 1px solid rgba(70, 50, 24, .26);
 }
-.casebook button:hover, .casebook button:focus-visible { background: #304651; outline: 2px solid #dfbf7d; }
-.casebook footer small { display: block; margin-top: 12px; color: #a3b0b9; font: .82em system-ui, sans-serif; text-align: center; }
+.casebook footer small, .recap footer small, .deeds footer small, .casebook footer > small {
+  display: none;
+}
+.casebook button, .recap button, .deeds button {
+  width: 100%; padding: 10px 16px; background: rgba(255, 250, 235, .3);
+  border: 1px solid rgba(70, 50, 24, .55); color: #2f2619; font: 1em Georgia, serif;
+  cursor: pointer; border-radius: 2px;
+}
+.casebook button:hover, .recap button:hover, .deeds button:hover {
+  background: rgba(70, 50, 24, .12);
+}
+.casebook button:focus-visible, .recap button:focus-visible, .deeds button:focus-visible {
+  outline: 2px solid #7a2f1f; outline-offset: 2px;
+}
+/* ---- line history: the same paper, no introduction ---- */
+.history-body { list-style: none; margin: 0; padding: 8px 32px 20px; }
+.history-body li { margin-top: 14px; }
+.history-body strong { color: #7a2f1f; font-weight: bold; }
+.casebook-entry.history-choice {
+  border-left-color: #9d3a24; color: #3a3020; font-style: italic;
+}
 
-/* A short window needs the casebook's rows, not its furniture: keep the NEXT block in view
-   with some of the first note under it. */
-@media (max-height: 700px) {
-  .casebook header { padding: 16px 24px 10px; }
-  .casebook h1 { font-size: 1.4em; margin: 5px 0 3px; }
-  .casebook .lede { display: none; }
-  .casebook-body { padding: 6px 24px 16px; }
-  .casebook-next { margin-bottom: 16px; padding: 10px 14px 12px; }
-  .casebook footer { padding: 10px 24px 14px; }
-  .casebook footer small { margin-top: 6px; }
-}
-
-/* ---- continue recap ---- */
-/* Shares the casebook's frame, a shade under it: the casebook can open over the card. */
-.recap[hidden] { display: none; }
-.recap {
-  position: fixed; inset: 0; z-index: 34; display: grid; place-items: center;
-  background: rgba(3, 8, 16, .9); padding: 20px; overflow: auto;
-  font-size: calc(16px * var(--text-scale, 1));
-}
-.recap section {
-  width: min(720px, 100%); max-height: min(88vh, 900px); display: flex; flex-direction: column;
-  background: #101d29; border: 1px solid #9b7c46; box-shadow: 0 24px 80px #0009;
-}
-.recap header { padding: 30px 34px 18px; border-bottom: 1px solid #2b3a44; }
-.recap h1 { color: #f3d99e; font-size: 1.7em; margin: 10px 0 8px; }
-.recap .eyebrow { color: #c6a365; font: .7em system-ui, sans-serif; letter-spacing: .24em; margin: 0; }
-.recap-when { color: #9fb0bd; font: .94em Georgia, serif; margin: 0; }
-.recap-body {
-  padding: 20px 34px 24px; overflow-y: auto; flex: 1;
-  scrollbar-color: #6b5a3a #0d1822; scrollbar-width: thin;
-}
+/* ---- continue recap: the page left open on the chart table ---- */
+.recap-when { color: #6d5b3f; font: .92em Georgia, serif; margin: 0; }
+.recap-body { padding: 18px 34px 22px; }
 .recap-body p { margin: 0 0 14px; }
 .recap-body p:last-child { margin-bottom: 0; }
-.recap-where { color: #dfe4e0; font: 1.05em/1.5 Georgia, serif; }
+.recap-where { color: #2f2619; font: 1.08em/1.55 Georgia, serif; }
 .recap-doing {
-  color: #f3d99e; font: 1em/1.55 Georgia, serif;
-  padding-left: 16px; border-left: 2px solid #c6a365;
+  color: #3a2c1c; font: 1em/1.6 Georgia, serif; padding-left: 16px;
+  border-left: 3px solid #8c3a26;
 }
-.recap-doing.recap-opening { color: #c9d7de; font-style: italic; border-left-color: #65726f; }
-.recap-knows { color: #9fb0bd; font: .9em/1.5 Georgia, serif; margin-bottom: 8px; }
-.recap-notes { list-style: none; margin: 0 0 16px; }
+.recap-doing.recap-opening { color: #4c4433; font-style: italic; border-left-color: rgba(124, 90, 47, .45); }
+.recap-knows { color: #6d5b3f; font: .86em/1.5 system-ui, sans-serif; letter-spacing: .04em; margin-bottom: 8px; }
+.recap-notes { list-style: none; margin: 0 0 16px; padding: 0; }
 .recap-notes li {
-  color: #c9d7de; font: .95em/1.55 Georgia, serif;
-  margin: 0 0 8px; padding-left: 16px; border-left: 2px solid #2f4653;
+  color: #3a3020; font: .97em/1.58 Georgia, serif; margin: 0 0 9px; padding-left: 16px;
+  border-left: 2px solid rgba(124, 90, 47, .38);
 }
-.recap-carrying { color: #b8c4cc; font: .95em/1.5 Georgia, serif; }
-.recap-talking { color: #c6a365; font: italic .95em/1.5 Georgia, serif; }
-.recap-waiting { color: #e0b98a; font: 1em/1.5 Georgia, serif; }
-.recap footer { padding: 16px 34px 22px; border-top: 1px solid #2b3a44; }
+.recap-carrying { color: #5b4b31; font: .95em/1.5 Georgia, serif; }
+.recap-talking { color: #8c3a26; font: italic .95em/1.5 Georgia, serif; }
+.recap-waiting { color: #8c3a26; font: 1em/1.5 Georgia, serif; }
 .recap-answers { display: flex; gap: 10px; flex-wrap: wrap; }
-.recap button {
-  flex: 1 1 160px; padding: 12px 14px; background: #1a3040; border: 1px solid #65726f;
-  color: #f3e7cb; font: 1em Georgia, serif; cursor: pointer;
+.recap button { flex: 1 1 150px; width: auto; }
+.recap button.primary {
+  background: #3a2c1c; border-color: #241a10; color: #f6e9c9;
 }
-.recap button.primary { background: #2c3a2c; border-color: #c9a24a; color: #fff3cf; }
-.recap button:hover, .recap button:focus-visible { background: #304651; outline: 2px solid #dfbf7d; }
-.recap button.primary:hover, .recap button.primary:focus-visible { background: #3c4d33; }
-.recap footer small { display: block; margin-top: 12px; color: #a3b0b9; font: .82em system-ui, sans-serif; text-align: center; }
-/* A short window is still a window: the card gives up its air so the voyage's facts fit. */
-@media (max-height: 620px) {
-  .recap { padding: 8px; }
-  .recap section { max-height: calc(100vh - 16px); }
-  .recap header { padding: 16px 24px 10px; }
-  .recap h1 { font-size: 1.4em; margin: 6px 0 4px; }
-  .recap-body { padding: 12px 24px 14px; }
-  .recap-body p { margin-bottom: 10px; }
-  .recap-notes { margin-bottom: 12px; }
-  .recap footer { padding: 10px 24px 12px; }
-  .recap button { padding: 8px 12px; }
-  .recap footer small { margin-top: 8px; }
-}
+.recap button.primary:hover, .recap button.primary:focus-visible { background: #513d25; outline-color: #7a2f1f; }
 
-
-/* ---- line history (shares the casebook's frame) ---- */
-.history-body { list-style: none; margin: 0; }
-.history-body li { margin-top: 14px; }
-.history-body strong { color: #f3d99e; font-weight: bold; }
-.history-choice { border-left-color: #c9a24a; color: #c9d7de; font-style: italic; }
-
-/* ---- deeds: the unfiled column after the ending card ---- */
-.deeds[hidden] { display: none; }
-.deeds {
-  position: fixed; inset: 0; z-index: 45; display: grid; place-items: center;
-  background: rgba(3, 8, 16, .94); padding: 20px; overflow: auto;
-  font-size: calc(16px * var(--text-scale, 1));
-}
-.deeds section {
-  width: min(1040px, 100%); max-height: min(88vh, 940px); display: flex; flex-direction: column;
-  background: #0e1a25; border: 1px solid #9b7c46; box-shadow: 0 24px 80px #0009;
-}
-.deeds header { padding: 26px 32px 14px; border-bottom: 1px solid #2b3a44; position: relative; }
-.deeds h1 { color: #f3d99e; font-size: 1.7em; margin: 7px 0 5px; }
-.deeds .lede { color: #9fb0bd; font-size: .94em; margin: 0; }
-.deeds .eyebrow { color: #c6a365; font: .7em system-ui, sans-serif; letter-spacing: .24em; margin: 0; }
-.deeds-body {
-  padding: 18px 28px 8px; overflow-y: auto; flex: 1;
-  scrollbar-color: #6b5a3a #0d1822; scrollbar-width: thin; outline: none;
-}
-.deeds-body:focus-visible { outline: 2px solid #dfbf7d; outline-offset: -2px; }
+/* ---- the ship's log: two columns of ink, a red stamp, a brass-ruled bookend ---- */
 .deeds-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 34px; }
 .deeds-column h2 {
   display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
-  color: #c6a365; font: .72em system-ui, sans-serif; letter-spacing: .24em; text-transform: uppercase;
-  margin: 0 0 12px; padding-bottom: 7px; border-bottom: 1px solid #2b3a44;
+  color: #7c5a2f; font: 600 .7em system-ui, sans-serif; letter-spacing: .24em; text-transform: uppercase;
+  margin: 0 0 12px; padding-bottom: 7px; border-bottom: 1px solid rgba(70, 50, 24, .28);
 }
 .deeds-column ol { list-style: none; margin: 0; padding: 0; }
-.deed { padding: 0 0 14px; margin: 0 0 14px; border-bottom: 1px solid rgba(43, 58, 68, .55); }
+.deed { padding: 0 0 14px; margin: 0 0 14px; border-bottom: 1px solid rgba(70, 50, 24, .18); }
 .deed:last-child { border-bottom: 0; }
 .deed-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-.deed-label { color: #eee7d6; font: 1.02em/1.35 Georgia, serif; margin: 0; }
-.deed-line { color: #b9c5cc; font: .9em/1.5 Georgia, serif; margin: 6px 0 0; }
-.deed-where { color: #93a2ad; font: .84em/1.45 system-ui, sans-serif; margin: 6px 0 0; }
-.deed.unfiled .deed-label { color: #c3ccd2; }
+.deed-label { color: #2f2619; font: 1.04em/1.35 Georgia, serif; margin: 0; }
+.deed-line { color: #40351f; font: .92em/1.55 Georgia, serif; margin: 6px 0 0; }
+.deed-where { color: #6d5b3f; font: .84em/1.5 Georgia, serif; margin: 6px 0 0; }
+.deed.unfiled .deed-label { color: #4c4433; }
 .deed-stamp {
-  flex: none; padding: 2px 7px; transform: rotate(-5deg);
-  border: 1.5px solid #c9a24a; color: #e8c98a;
-  font: .6em system-ui, sans-serif; letter-spacing: .18em;
+  flex: none; padding: 2px 7px; transform: rotate(-6deg); border: 1.5px solid #8c3a26;
+  color: #8c3a26; font: 600 .6em system-ui, sans-serif; letter-spacing: .18em;
+  border-radius: 2px; opacity: .85;
 }
 .deeds-bookend {
-  margin: 0 28px; padding: 12px 0 10px; border-top: 1px solid rgba(201, 162, 74, .45);
-  color: #e8c98a; font: 1.05em/1.5 Georgia, serif; letter-spacing: .06em; text-align: center;
+  margin: 0 28px; padding: 12px 0 10px; border-top: 1px solid rgba(124, 90, 47, .5);
+  color: #5b3f22; font: 1.04em/1.5 Georgia, serif; letter-spacing: .07em; text-align: center;
 }
-.deeds footer { padding: 10px 32px 20px; border-top: 1px solid #2b3a44; }
 .deeds-tally {
-  margin: 0 0 8px; color: #e8c98a; font: .78em system-ui, sans-serif;
-  letter-spacing: .18em; text-transform: uppercase; text-align: center;
+  margin: 0 0 8px; color: #6d5b3f; font: .74em system-ui, sans-serif;
+  letter-spacing: .2em; text-transform: uppercase; text-align: center;
 }
-.deeds button {
-  width: 100%; padding: 11px; background: #1a3040; border: 1px solid #65726f;
-  color: #f3e7cb; font: 1em Georgia, serif; cursor: pointer;
-}
-.deeds button:hover, .deeds button:focus-visible { background: #304651; outline: 2px solid #dfbf7d; }
-.deeds footer small { display: block; margin-top: 10px; color: #a3b0b9; font: .8em system-ui, sans-serif; text-align: center; }
+.deeds button { width: 100%; }
+.deeds footer { padding: 10px 32px 18px; }
 @media (max-width: 760px) {
   .deeds-columns { grid-template-columns: minmax(0, 1fr); gap: 0; }
-  .deeds header, .deeds-body, .deeds footer { padding-left: 20px; padding-right: 20px; }
+  .deeds header, .deeds-body, .deeds footer, .casebook header, .casebook footer, .recap header, .recap footer {
+    padding-left: 20px; padding-right: 20px;
+  }
   .deeds-bookend { margin: 0 20px; }
-  .deeds h1 { font-size: 1.4em; }
+  .deeds h1, .casebook h1, .recap h1 { font-size: 1.4em; }
 }
-/* A short window (a small laptop, the 800x600 test browser) needs the room for entries. */
+/* A short window needs the room for the words. */
 @media (max-height: 700px) {
-  .deeds header { padding: 14px 24px 10px; }
-  .deeds h1 { font-size: 1.35em; margin: 4px 0 2px; }
-  .deeds .lede { display: none; }
-  .deeds-body { padding-top: 8px; }
+  .casebook header, .recap header, .deeds header { padding-top: 14px; padding-bottom: 10px; }
+  .casebook h1, .recap h1, .deeds h1 { font-size: 1.35em; margin: 4px 0 2px; }
+  .casebook-body, .recap-body, .deeds-body { padding-top: 8px; }
   .deeds-bookend { padding: 7px 0 6px; font-size: .95em; }
-  .deeds footer { padding: 6px 24px 10px; }
+  .deeds footer, .casebook footer, .recap footer { padding-top: 8px; padding-bottom: 12px; }
   .deeds-tally { margin-bottom: 5px; }
-  .deeds button { padding: 8px; }
-  .deeds footer small { margin-top: 5px; }
 }
-
 
 /* ---- screen-reader only, until asked for ---- */
 .sr-only {
@@ -413,69 +427,170 @@ body.reduced-motion .cinematic { transition-duration: .15s; }
   .cinematic { transition-duration: .15s; }
 }
 
-/* ---- the atlas: island chart -> area -> room ---- */
+/* ---- the atlas: a painted chart, lit places, fog, and one breathing compass ---- */
 .atlas[hidden] { display: none; }
 .atlas {
-  position: fixed; inset: 0; z-index: 70; display: grid; place-items: center;
-  background: #020609; padding: 2vh 2vw;
+  position: fixed; inset: 0; z-index: 70; background: #020609; overflow: hidden;
+  font-size: calc(16px * var(--text-scale, 1));
 }
-.atlas-frame {
-  width: min(1500px, 96vw); max-height: 94vh; display: flex; flex-direction: column;
-  border: 1px solid #6d5a35; background: #071219;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, .8), inset 0 0 0 1px rgba(232, 201, 138, .12);
+.atlas-frame { position: absolute; inset: 0; }
+/* The dark under the chart, so the letterbox bars feel like deep water rather than a page edge. */
+.atlas-wash {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(120% 100% at 50% 45%, rgba(15, 27, 35, .8), rgba(2, 5, 8, .98) 72%),
+    #020609;
 }
-.atlas-main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; min-height: 0; flex: 1; }
-.atlas-view { display: flex; flex-direction: column; min-width: 0; background: #04090c; }
-.atlas-head { padding: 16px 22px 12px; background: #071219; border-bottom: 1px solid rgba(232, 201, 138, .16); }
-.atlas-head .eyebrow { margin: 0; color: #c6a365; font: .68em system-ui, sans-serif; letter-spacing: .26em; }
-.atlas-head h1 { margin: 5px 0 3px; color: #f3d99e; font: 1.9em Georgia, serif; letter-spacing: .02em; }
-.atlas-head .lede { margin: 0; max-width: 70ch; color: #b9c7d0; font: .9em/1.4 Georgia, serif; }
-.atlas-stage { position: relative; flex: 1; min-height: 0; background: #04090c; }
-.atlas-image { display: block; width: 100%; height: 100%; max-height: 64vh; object-fit: contain; background: #04090c; }
+.atlas-frame::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 2;
+  background:
+    radial-gradient(120% 90% at 50% 48%, transparent 52%, rgba(0, 0, 0, .55) 100%),
+    linear-gradient(0deg, rgba(2, 5, 8, .5), transparent 22%, transparent 78%, rgba(2, 5, 8, .5));
+}
+/* The name is the dialog's accessible title; the chart itself is the label a sighted player reads. */
+.atlas-head {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+.atlas-stage {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: 100vw; height: min(100vh, calc(100vw * 880 / 1920)); z-index: 1;
+  background-color: #04090c;
+}
+.atlas-stage.island {
+  width: min(100vw, calc(100vh * 16 / 9)); height: min(100vh, calc(100vw * 9 / 16));
+}
+.atlas-chart { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
 .atlas-markers { position: absolute; inset: 0; }
 .atlas-marker {
-  position: absolute; transform: translate(-50%, -50%); width: 30px; height: 30px;
-  border-radius: 50%; border: 2px solid #e8c98a; background: rgba(6, 14, 18, .82);
-  color: #f6e7c4; font: 600 .82em/1 system-ui, sans-serif; cursor: pointer;
-  box-shadow: 0 0 0 3px rgba(232, 201, 138, .18), 0 2px 10px rgba(0, 0, 0, .6);
-  transition: transform .12s ease, background .12s ease;
+  position: absolute; transform: translate(-50%, -50%); width: 46px; height: 46px; padding: 0;
+  border: 0; background: none; color: #f6e3b6; cursor: pointer; border-radius: 50%;
+  -webkit-tap-highlight-color: transparent; outline: none;
 }
-.atlas-marker:hover, .atlas-marker:focus-visible { transform: translate(-50%, -50%) scale(1.18); background: #263c46; outline: none; }
-.atlas-marker.here { border-color: #9fe0b0; color: #0b1a12; background: #9fe0b0; animation: atlas-pulse 1.8s ease-in-out infinite; }
-.atlas-marker.locked { border-color: #7b8b95; color: #b9c7d0; background: rgba(6, 14, 18, .55); box-shadow: none; opacity: .6; }
-@keyframes atlas-pulse { 0%, 100% { box-shadow: 0 0 0 3px rgba(159, 224, 176, .3), 0 0 14px rgba(159, 224, 176, .6); } 50% { box-shadow: 0 0 0 9px rgba(159, 224, 176, .05), 0 0 22px rgba(159, 224, 176, .85); } }
+.atlas-glow {
+  position: absolute; left: 50%; top: 50%; width: 62px; height: 62px; transform: translate(-50%, -50%);
+  border-radius: 50%; pointer-events: none; transition: opacity .18s ease, width .18s ease, height .18s ease;
+  background: radial-gradient(circle, rgba(255, 224, 160, .35), rgba(255, 224, 160, 0) 68%);
+  filter: blur(2px);
+}
+.atlas-glyph {
+  position: absolute; left: 50%; top: 50%; width: 11px; height: 11px;
+  transform: translate(-50%, -50%); background: currentColor;
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  filter: drop-shadow(0 0 7px rgba(255, 220, 150, .95));
+  transition: transform .16s ease;
+}
+.atlas-marker:hover, .atlas-marker:focus-visible { color: #fff8e4; }
+.atlas-marker:hover .atlas-glyph, .atlas-marker:focus-visible .atlas-glyph { transform: translate(-50%, -50%) scale(1.35); }
+.atlas-marker:hover .atlas-glow, .atlas-marker:focus-visible .atlas-glow {
+  width: 78px; height: 78px; background: radial-gradient(circle, rgba(255, 228, 170, .5), rgba(255, 228, 170, 0) 68%);
+}
+/* A place not yet found: under fog, a colder and blurrier light. */
+.atlas-marker.locked { color: #c3d1d7; opacity: .78; }
+.atlas-marker.locked .atlas-glow {
+  width: 104px; height: 104px; filter: blur(9px);
+  background: radial-gradient(circle, rgba(186, 205, 213, .4), rgba(186, 205, 213, 0) 70%);
+}
+.atlas-marker.locked .atlas-glyph {
+  width: 14px; height: 14px;
+  filter: blur(.5px) drop-shadow(0 0 11px rgba(186, 208, 218, .8));
+}
+.atlas-marker.locked:hover, .atlas-marker.locked:focus-visible { color: #f2f8fa; opacity: 1; }
+/* A place already known: a steady warm light. */
+.atlas-marker.known { color: #f3dfae; }
+/* The place Fenn stands in: a small compass, breathing. */
+.atlas-marker.here { color: #ffe6a8; }
+.atlas-marker.here .atlas-glow {
+  width: 96px; height: 96px;
+  background: radial-gradient(circle, rgba(255, 224, 150, .3), rgba(255, 224, 150, 0) 70%);
+  animation: atlas-breath 2.8s ease-in-out infinite;
+}
+.atlas-marker.here .atlas-glyph {
+  width: 27px; height: 27px; background: none; clip-path: none; border-radius: 50%;
+  border: 1px solid rgba(255, 230, 168, .9); filter: none;
+  box-shadow: 0 0 12px rgba(255, 220, 150, .55), inset 0 0 8px rgba(255, 220, 150, .25);
+  animation: atlas-pulse 2.8s ease-in-out infinite;
+}
+.atlas-marker.here .atlas-glyph::before {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 2px; height: 27px;
+  transform: translate(-50%, -50%) rotate(38deg);
+  background: linear-gradient(180deg, #ffe6a8 0 50%, #b5452e 50% 100%);
+}
+.atlas-marker.here .atlas-glyph::after {
+  content: ""; position: absolute; inset: 7px; border-radius: 50%;
+  border: 1px solid rgba(255, 230, 168, .28);
+}
+@keyframes atlas-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(255, 220, 150, .4), inset 0 0 8px rgba(255, 220, 150, .2); }
+  50% { box-shadow: 0 0 22px rgba(255, 220, 150, .8), inset 0 0 12px rgba(255, 220, 150, .4); }
+}
+@keyframes atlas-breath {
+  0%, 100% { opacity: .55; }
+  50% { opacity: 1; }
+}
+/* A click on fog shivers the mark: the only refusal that needs no sentence. */
+@keyframes atlas-deny {
+  0%, 100% { transform: translate(-50%, -50%); }
+  25% { transform: translate(-58%, -50%); }
+  70% { transform: translate(-42%, -50%); }
+}
+.atlas-marker.denied { animation: atlas-deny .4s ease; }
+/* The name, a slip of paper that only exists while a mark is under the hand or the keys. */
+.atlas-tag {
+  position: absolute; left: 50%; bottom: calc(100% + 12px); transform: translate(-50%, 5px);
+  padding: 5px 11px 4px; white-space: nowrap; pointer-events: none; opacity: 0;
+  background: linear-gradient(180deg, rgba(22, 17, 11, .95), rgba(9, 8, 6, .97));
+  border: 1px solid rgba(232, 201, 138, .55); color: #f6e6c2;
+  font: 11px/1.2 system-ui, sans-serif; letter-spacing: .16em; text-transform: uppercase;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, .6); transition: opacity .14s ease, transform .14s ease;
+}
+.atlas-marker:hover .atlas-tag, .atlas-marker:focus-visible .atlas-tag, .atlas-marker:focus .atlas-tag {
+  opacity: 1; transform: translate(-50%, 0);
+}
+/* The keyboard's cursor: a gold ring that cannot be missed on any part of the painting. */
+.atlas-marker:focus-visible {
+  outline: 2px solid #ffe6a8; outline-offset: 3px;
+  background: rgba(255, 230, 168, .08);
+}
+.atlas-marker.selected {
+  outline: 2px solid #ffe6a8; outline-offset: 3px;
+  background: rgba(255, 230, 168, .07);
+}
+.atlas-marker.selected .atlas-tag { opacity: 1; transform: translate(-50%, 0); }
+/* Close and back are glyphs in brass rings, the only furniture over the picture. */
+.atlas-back, .atlas-close {
+  position: absolute; top: max(18px, 3vh); z-index: 4; width: 44px; height: 44px; padding: 0;
+  display: grid; place-items: center; border-radius: 50%; cursor: pointer;
+  border: 1px solid rgba(232, 201, 138, .55); background: rgba(5, 10, 14, .68);
+  color: #f0dfb6; font: 20px/1 Georgia, serif;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .55), inset 0 0 12px rgba(232, 201, 138, .08);
+  transition: background .15s ease, color .15s ease;
+}
+.atlas-back { left: max(18px, 3vw); }
+.atlas-close { right: max(18px, 3vw); font-size: 17px; }
+.atlas-back:hover, .atlas-close:hover { background: rgba(232, 201, 138, .18); color: #fff8e4; }
+.atlas-back:focus-visible, .atlas-close:focus-visible { outline: 3px solid #ffe6a8; outline-offset: 3px; }
+.atlas-back[hidden] { display: none; }
+/* The places as a list, for a screen reader (and for the tests that drive the chart): not a key. */
 .atlas-key {
-  border-left: 1px solid rgba(232, 201, 138, .18); background: #08131a; padding: 16px 15px;
-  overflow: auto; max-height: 74vh;
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap; border: 0;
 }
-.atlas-key-title { margin: 0 0 4px; color: #c6a365; font: .68em system-ui, sans-serif; letter-spacing: .24em; }
-.atlas-list { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 3px; }
+.atlas-list { list-style: none; margin: 0; padding: 0; }
 .atlas-row {
-  display: flex; gap: 9px; width: 100%; text-align: left; align-items: flex-start;
-  background: none; border: 1px solid transparent; padding: 7px 6px; color: #dbd2bd;
-  cursor: pointer; font: inherit;
+  display: block; width: 100%; padding: 0; border: 0; background: none; color: inherit;
+  font: inherit; text-align: left;
 }
-.atlas-row:hover, .atlas-row:focus-visible { border-color: rgba(232, 201, 138, .5); background: rgba(232, 201, 138, .06); outline: none; }
-.atlas-num {
-  flex: 0 0 22px; width: 22px; height: 22px; border-radius: 50%; border: 1px solid #6d5a35;
-  display: grid; place-items: center; color: #e8c98a; font: 600 .72em system-ui, sans-serif;
+.atlas-row-name { display: block; }
+.atlas-row-note { display: block; }
+.atlas-note {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap; border: 0;
 }
-.atlas-row-text { min-width: 0; }
-.atlas-row-name { display: block; color: #f0e3c6; font: .88em/1.2 system-ui, sans-serif; }
-.atlas-row-note { display: block; color: #8fa1ab; font: .74em/1.3 Georgia, serif; margin-top: 2px; }
-.atlas-row.here .atlas-row-name { color: #b6f0c4; }
-.atlas-row.locked { opacity: .55; }
-.atlas-note { margin: 12px 2px 0; padding: 7px 9px; border-left: 3px solid #c6a365; background: rgba(232, 201, 138, .07); color: #f0e3c6; font: .82em/1.35 Georgia, serif; }
-.atlas-note:empty { display: none; }
-.atlas-foot { display: flex; align-items: center; gap: 18px; padding: 10px 16px; background: #071219; border-top: 1px solid rgba(232, 201, 138, .18); }
-.atlas-foot button { background: #17272f; color: #e8dcc0; border: 1px solid #6d5a35; padding: 7px 14px; font: .86em system-ui, sans-serif; cursor: pointer; }
-.atlas-foot button:hover, .atlas-foot button:focus-visible { background: #263c46; outline: 2px solid #dfbf7d; }
-.atlas-foot button[hidden] { display: none; }
-.atlas-foot small { color: #93a4af; font: .78em system-ui, sans-serif; margin-left: auto; }
-@media (max-width: 900px) {
-  .atlas-main { grid-template-columns: minmax(0, 1fr); }
-  .atlas-key { border-left: 0; border-top: 1px solid rgba(232, 201, 138, .18); max-height: 30vh; }
-  .atlas-image { max-height: 48vh; }
+@media (prefers-reduced-motion: reduce) {
+  .atlas-marker.here .atlas-glow, .atlas-marker.here .atlas-glyph { animation: none; }
+  .atlas-marker.denied { animation: none; }
+  .atlas-glow, .atlas-glyph, .atlas-tag { transition: none; }
 }
 
 /* ---- the area card: a short establishing view before each act's rooms ---- */
@@ -510,36 +625,3 @@ body.reduced-motion .cinematic { transition-duration: .15s; }
   .area-card-text { left: 6vw; max-width: 80vw; }
   .area-card-text h1 { font-size: 2em; }
 }
-
-.atlas-close {
-  margin-left: auto; padding: 8px 18px; border: 1px solid #c6a365; border-radius: 3px;
-  background: rgba(8, 18, 28, .9); color: #f3d99e; font: 600 13px system-ui, sans-serif;
-  letter-spacing: .08em; cursor: pointer;
-}
-.atlas-close:hover, .atlas-close:focus-visible { background: #c6a365; color: #071018; }
-.atlas-legend { margin: 10px 0 0; color: #8fa0aa; font: 11px/1.4 system-ui, sans-serif; }
-.atlas-row:focus-visible, .atlas-marker:focus-visible, .atlas-back:focus-visible {
-  outline: 2px solid #ffe6a8; outline-offset: 3px;
-}
-
-.atlas-foot small { font-size: 15px; color: #d6c6a2; }
-.atlas-legend { font-size: 13px !important; }
-.atlas-row-note { font-size: .82em !important; }
-
-/* Focus is the keyboard cursor: make it unmistakable, not just a browser ring. */
-.atlas-row:focus, .atlas-row:focus-visible {
-  outline: 3px solid #ffe6a8; outline-offset: 2px;
-  background: rgba(232, 201, 138, .14) !important;
-}
-.atlas-row:focus .atlas-row-name, .atlas-row:focus-visible .atlas-row-name { color: #fff3cf; }
-.atlas-marker:focus, .atlas-marker:focus-visible {
-  outline: 3px solid #ffe6a8; outline-offset: 3px;
-  box-shadow: 0 0 0 7px rgba(255, 230, 168, .22);
-}
-.atlas-close:focus, .atlas-close:focus-visible, .atlas-back:focus, .atlas-back:focus-visible {
-  outline: 3px solid #ffe6a8; outline-offset: 2px;
-}
-
-.atlas-marker.selected { outline: 3px solid #ffe6a8 !important; outline-offset: 4px; box-shadow: 0 0 0 8px rgba(255,230,168,.18) !important; }
-.atlas-row.selected { outline: 3px solid #ffe6a8 !important; outline-offset: 2px; background: rgba(232,201,138,.14) !important; }
-.atlas-row.selected .atlas-row-name { color: #fff3cf; }

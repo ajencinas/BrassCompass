@@ -4,7 +4,7 @@ import { effectiveTextSpeed, type Prefs, type TextScale, type TextSpeed } from "
 
 export interface SettingsActions {
   resume: () => void; restart: () => void; title: () => void;
-  /** Resume, then show a tip / open the line history: the keys the footer promises. */
+  /** Resume, then show a tip / open the line history. */
   tip: () => void; history: () => void;
   mute: () => void;
   volume: (value: number) => void;
@@ -42,6 +42,32 @@ export const CONTROLS: [string, string][] = [
   ["Touch: long-press", "Look at (like right-click)"],
 ];
 
+/** The mark in the corner: a compass, the game's own signature on an instrument panel. */
+function compassMark(): string {
+  return `<svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+    <circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".85"/>
+    <circle cx="24" cy="24" r="15.5" fill="none" stroke="currentColor" stroke-width=".8" opacity=".45"/>
+    <path d="M24 8.5 27 21l12.5 3L27 27l-3 12.5L21 27 8.5 24 21 21Z" fill="currentColor" opacity=".92"/>
+    <circle cx="24" cy="24" r="2.2" fill="#0b1422"/>
+  </svg>`;
+}
+
+/** Small line icons for the four groups. */
+function groupIcon(kind: "sound" | "text" | "display" | "voyage"): string {
+  const body = {
+    sound: `<path d="M4 9h4l5-4v14l-5-4H4Z" fill="currentColor" opacity=".9"/>
+      <path d="M16.5 8.5a5.5 5.5 0 0 1 0 7M19 6a9 9 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>`,
+    text: `<path d="M5 4.5h9.5L19 9v10.5H5Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+      <path d="M14 4.5V9h4.5M8 12.5h8M8 15.5h6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>`,
+    display: `<circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.2 5.2l2.1 2.1M16.7 16.7l2.1 2.1M18.8 5.2l-2.1 2.1M7.3 16.7l-2.1 2.1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>`,
+    voyage: `<circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+      <circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="1.3"/>
+      <path d="M12 3.5v5.9M12 14.6v5.9M3.5 12h5.9M14.6 12h5.9M6 6l3.2 3.2M14.8 14.8 18 18M18 6l-3.2 3.2M9.2 14.8 6 18" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>`,
+  }[kind];
+  return `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">${body}</svg>`;
+}
+
 /** A confirmation armed this recently is a double-click or a bounce, not a decision. */
 const CONFIRM_GRACE_MS = 400;
 
@@ -56,22 +82,22 @@ export class Settings {
     const controls = CONTROLS.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("");
     this.panel.innerHTML = `<section role="dialog" aria-modal="true" aria-labelledby="pause-heading">
       <header class="settings-head">
-        <div>
-          <p class="eyebrow">THE BRASS COMPASS</p><h1 id="pause-heading">Voyage paused</h1>
-          <p>Progress saves automatically as you explore.</p>
+        <div class="settings-title">
+          <span class="settings-mark">${compassMark()}</span>
+          <h1 id="pause-heading">Voyage paused</h1>
         </div>
-        <button data-action="resume" class="primary">Resume voyage</button>
+        <button data-action="resume" class="primary"><span class="resume-glyph" aria-hidden="true"></span>Resume</button>
       </header>
       <div class="settings-grid">
         <div class="group">
-          <h2>Sound</h2>
+          <h2><span class="group-icon">${groupIcon("sound")}</span>Sound</h2>
           <button data-action="mute"></button>
           <label class="row"><span>Master volume</span><input data-volume="master" type="range" min="0" max="1" step="0.05"></label>
           <label class="row"><span>Music</span><input data-volume="music" type="range" min="0" max="1" step="0.05"></label>
           <label class="row"><span>Effects</span><input data-volume="sfx" type="range" min="0" max="1" step="0.05"></label>
         </div>
         <div class="group">
-          <h2>Text</h2>
+          <h2><span class="group-icon">${groupIcon("text")}</span>Text</h2>
           <label class="row"><span>Text speed</span><select data-pref="textSpeed" aria-describedby="speed-note">
             <option value="slow">Slow</option><option value="normal">Normal</option>
             <option value="fast">Fast</option><option value="instant">Instant</option>
@@ -85,25 +111,24 @@ export class Settings {
           <button data-action="tips" aria-pressed="false"></button>
         </div>
         <div class="group">
-          <h2>Display</h2>
+          <h2><span class="group-icon">${groupIcon("display")}</span>Display</h2>
           <label class="row"><span>Reduced motion</span><select data-pref="reducedMotion">
             <option value="auto">Follow system</option><option value="on">On</option><option value="off">Off</option>
           </select></label>
           <button data-action="fullscreen" aria-pressed="false"></button>
         </div>
         <div class="group">
-          <h2>Voyage</h2>
-          <button data-action="restart">Restart voyage</button>
+          <h2><span class="group-icon">${groupIcon("voyage")}</span>Voyage</h2>
+          <button data-action="restart"></button>
           <div class="confirm" role="group" aria-labelledby="restart-question" hidden>
-            <p id="restart-question">Restart? This erases the voyage you're on.</p>
+            <p id="restart-question">Begin again?</p>
             <button data-action="keep">Keep my voyage</button>
-            <button data-action="erase" class="danger">Erase it and restart</button>
+            <button data-action="erase" class="danger">Erase this voyage</button>
           </div>
-          <button data-action="title">Return to title</button>
+          <button data-action="title"></button>
         </div>
       </div>
       <details><summary>Controls</summary><dl class="controls">${controls}</dl></details>
-      <small>Escape to resume · H for a tip · L for line history</small>
     </section>`;
     document.body.append(this.panel);
     this.panel.addEventListener("click", (event) => {
@@ -165,7 +190,7 @@ export class Settings {
         if (this.armedAt !== null) this.keepVoyage(); else this.actions.resume();
         return;
       }
-      // The footer's promises. Not in a select, where letters pick an option.
+      // Not in a select, where letters pick an option.
       const typing = (event.target as HTMLElement).tagName === "SELECT";
       if (!typing && (event.key === "h" || event.key === "H")) { event.preventDefault(); this.actions.tip(); return; }
       if (!typing && (event.key === "l" || event.key === "L")) { event.preventDefault(); this.actions.history(); return; }
@@ -212,7 +237,10 @@ export class Settings {
     const audio = this.actions.audio();
     const prefs = this.actions.prefs();
     const reduced = this.actions.reduced();
-    this.button("mute").textContent = audio.muted ? "Sound: off — enable" : "Sound: on — mute";
+    const mute = this.button("mute");
+    // The state is the label; the full sentence is only for a screen reader.
+    mute.textContent = audio.muted ? "Sound off" : "Sound on";
+    mute.setAttribute("aria-label", audio.muted ? "Sound is off. Enable sound." : "Sound is on. Mute sound.");
     const vol = (k: string) => this.panel.querySelector<HTMLInputElement>(`input[data-volume="${k}"]`)!;
     vol("master").value = String(audio.volume);
     vol("music").value = String(audio.musicVolume);
@@ -232,15 +260,20 @@ export class Settings {
       b.textContent = on ? yes : no;
       b.setAttribute("aria-pressed", String(on));
     };
-    toggle("wait", prefs.waitForClick,
-      "Wait for click: on — lines stay until you click", "Wait for click: off — lines move on by themselves");
-    toggle("tips", this.actions.tips(),
-      "Tip mode: on — next step always shown", "Tip mode: off — show the next step");
+    toggle("wait", prefs.waitForClick, "Wait for click: on", "Wait for click: off");
+    toggle("tips", this.actions.tips(), "Tips: on", "Tips: off");
+    this.button("tips").setAttribute("aria-label",
+      this.actions.tips() ? "Tips are on. Turn tips off." : "Tips are off. Turn tips on.");
+    this.button("wait").setAttribute("aria-label",
+      prefs.waitForClick ? "Wait for click is on. Let lines move on their own." : "Wait for click is off. Keep lines until clicked.");
     const full = Boolean(document.fullscreenElement ?? (document as { webkitFullscreenElement?: Element }).webkitFullscreenElement);
     const canFull = Boolean(document.documentElement.requestFullscreen ??
       (document.documentElement as { webkitRequestFullscreen?: unknown }).webkitRequestFullscreen);
-    toggle("fullscreen", full, "Fullscreen: on — leave", "Fullscreen: off — enter");
+    toggle("fullscreen", full, "Fullscreen: on", "Fullscreen: off");
+    this.button("fullscreen").setAttribute("aria-label", full ? "Leave fullscreen" : "Enter fullscreen");
     this.button("fullscreen").hidden = !canFull;
+    this.button("restart").textContent = "Restart voyage";
+    this.button("title").textContent = "Return to title";
   }
   /** Put focus back in the dialog (it wandered off to the page). */
   focus(): void {

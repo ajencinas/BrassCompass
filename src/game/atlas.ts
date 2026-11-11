@@ -6,8 +6,11 @@
  * then a place inside it. Only places already visited can be travelled to, so the map is a way
  * of seeing the world, not a way of skipping it.
  *
- * Laid out like a chart: the painting on the left, a numbered key on the right. The key avoids
- * the label collisions that make maps of nine places unreadable.
+ * Laid out as a painted chart: the picture fills the screen and the places are marks of light on
+ * it. A visited place burns; a place not yet found is under fog; the place Fenn stands in is a
+ * small breathing compass. Names are not written on the chart — they appear on a slip of paper
+ * only when a mark is hovered or focused. The numbered column and the legend are gone; the same
+ * places remain as an invisible list for screen readers and for the tests that drive them.
  */
 
 export interface AtlasRoom {
@@ -16,7 +19,7 @@ export interface AtlasRoom {
   /** Position in the area painting, 0..1. */
   x: number;
   y: number;
-  /** One line for the key. */
+  /** One line for the hidden list. */
   note?: string;
 }
 
@@ -133,13 +136,10 @@ interface AtlasHandlers {
 
 export class Atlas {
   private overlay = document.createElement("div");
-  private image = document.createElement("img");
+  private chart = document.createElement("canvas");
   private stage = document.createElement("div");
   private markers = document.createElement("div");
-  private eyebrow = document.createElement("p");
   private heading = document.createElement("h1");
-  private lede = document.createElement("p");
-  private keyTitle = document.createElement("p");
   private list = document.createElement("ol");
   private note = document.createElement("p");
   private back = document.createElement("button");
@@ -155,45 +155,34 @@ export class Atlas {
     this.overlay.hidden = true;
     this.overlay.innerHTML = `
       <section class="atlas-frame" role="dialog" aria-modal="true" aria-labelledby="atlas-heading">
-        <div class="atlas-main">
-          <div class="atlas-view">
-            <header class="atlas-head">
-              <p class="eyebrow"></p>
-              <h1 id="atlas-heading"></h1>
-              <p class="lede"></p>
-            </header>
-            <div class="atlas-stage">
-              <img class="atlas-image" alt="" />
-              <div class="atlas-markers"></div>
-            </div>
-          </div>
-          <aside class="atlas-key">
-            <p class="atlas-key-title">KEY</p>
-            <ol class="atlas-list"></ol>
-            <p class="atlas-note" aria-live="polite"></p>
-            <p class="atlas-legend">Bright: visited · Dim: not yet found · Fog: beyond</p>
-          </aside>
+        <div class="atlas-wash" aria-hidden="true"></div>
+        <header class="atlas-head">
+          <h1 id="atlas-heading"></h1>
+        </header>
+        <div class="atlas-stage">
+          <canvas class="atlas-chart" role="img" aria-label=""></canvas>
+          <div class="atlas-markers"></div>
         </div>
-        <footer class="atlas-foot">
-          <button class="atlas-back" type="button">← The island</button>
-          <small>Click a place to travel · ↑ ↓ + Enter · Esc or Close</small>
-          <button class="atlas-close" type="button">Close</button>
-        </footer>
+        <aside class="atlas-key" aria-label="Places on the chart">
+          <ol class="atlas-list"></ol>
+        </aside>
+        <p class="atlas-note" aria-live="polite"></p>
+        <button class="atlas-back" type="button" aria-label="Back to the island" title="Back to the island"><span aria-hidden="true">←</span></button>
+        <button class="atlas-close" type="button" aria-label="Close the chart" title="Close the chart"><span aria-hidden="true">✕</span></button>
       </section>`;
     document.body.append(this.overlay);
 
-    this.image = this.overlay.querySelector(".atlas-image")!;
+    this.chart = this.overlay.querySelector(".atlas-chart")!;
     this.stage = this.overlay.querySelector(".atlas-stage")!;
     this.markers = this.overlay.querySelector(".atlas-markers")!;
-    this.eyebrow = this.overlay.querySelector(".atlas-head .eyebrow")!;
     this.heading = this.overlay.querySelector(".atlas-head h1")!;
-    this.lede = this.overlay.querySelector(".atlas-head .lede")!;
-    this.keyTitle = this.overlay.querySelector(".atlas-key-title")!;
     this.list = this.overlay.querySelector(".atlas-list")!;
     this.note = this.overlay.querySelector(".atlas-note")!;
     this.back = this.overlay.querySelector(".atlas-back")!;
     this.closeBtn = this.overlay.querySelector(".atlas-close")!;
 
+    // A window resize re-lays-out the stage; the chart is redrawn to fill it.
+    window.addEventListener("resize", () => { if (this.open) this.drawChart(); });
     this.back.addEventListener("click", () => this.goIsland());
     this.closeBtn.addEventListener("click", () => this.hide());
     // A click on the dark chart table outside the panel closes it, like every other page.
@@ -208,19 +197,26 @@ export class Atlas {
         else this.hide();
         return;
       }
-      if (event.key === "Tab" || event.key === "ArrowDown" || event.key === "ArrowUp" ||
-          event.key === "ArrowRight" || event.key === "ArrowLeft") {
-        const stops = [...this.overlay.querySelectorAll<HTMLElement>("button")]
+      const dir = event.key === "ArrowDown" || event.key === "ArrowRight" || (event.key === "Tab" && !event.shiftKey)
+        ? 1
+        : event.key === "ArrowUp" || event.key === "ArrowLeft" || (event.key === "Tab" && event.shiftKey) ? -1 : 0;
+      if (!dir) return;
+      const all = [...this.overlay.querySelectorAll<HTMLElement>("button")]
+        .filter((b) => !b.hidden && b.tabIndex >= 0);
+      // Tab walks the whole dialog, screen-reader list included. The arrows walk the marks the
+      // eye can see on the chart, so keyboard focus never seems to vanish onto a hidden row.
+      const stops = event.key === "Tab"
+        ? all
+        : [...this.overlay.querySelectorAll<HTMLElement>(".atlas-marker, .atlas-back, .atlas-close")]
           .filter((b) => !b.hidden && b.offsetParent !== null);
-        if (!stops.length) return;
-        const at = stops.indexOf(document.activeElement as HTMLElement);
-        const back = event.shiftKey || event.key === "ArrowUp" || event.key === "ArrowLeft";
-        const next = at < 0 ? (back ? stops.length - 1 : 0) : (at + (back ? -1 : 1) + stops.length) % stops.length;
-        event.preventDefault();
-        this.overlay.querySelectorAll(".selected").forEach((el) => el.classList.remove("selected"));
-        stops[next]?.classList.add("selected");
-        stops[next]?.focus();
-      }
+      const use = stops.length ? stops : all;
+      if (!use.length) return;
+      const at = use.indexOf(document.activeElement as HTMLElement);
+      const next = at < 0 ? (dir < 0 ? use.length - 1 : 0) : (at + dir + use.length) % use.length;
+      event.preventDefault();
+      this.overlay.querySelectorAll(".selected").forEach((el) => el.classList.remove("selected"));
+      use[next]?.classList.add("selected");
+      use[next]?.focus();
     });
   }
 
@@ -265,15 +261,12 @@ export class Atlas {
     this.stage.classList.toggle("island", !area);
 
     if (!area) {
-      this.image.src = atlasImageUrl("bg_island_map");
-      this.image.alt = "Fenn's chart of Dreadwater Isle";
-      this.eyebrow.textContent = "FENN'S CHART";
+      const url = atlasImageUrl("bg_island_map");
+      this.paintChart(url, "Fenn's chart of Dreadwater Isle");
       this.heading.textContent = "Dreadwater Isle";
-      this.lede.textContent = "The harbour, the town, the ship, and the fog. Where I have been, and where I have not.";
-      this.keyTitle.textContent = "THE ISLAND";
       this.back.hidden = true;
       const currentArea = areaOfRoom(this.state.room ?? "");
-      ATLAS.forEach((a, i) => {
+      ATLAS.forEach((a) => {
         const locked = a.act > this.state.act;
         const here = a.id === currentArea?.id;
         const label = `${a.name}${locked ? " — beyond the fog" : here ? " — you are here" : ""}`;
@@ -284,8 +277,8 @@ export class Atlas {
           }
           this.goArea(a.id);
         };
-        this.marker(i + 1, a.x, a.y, { klass: here ? "here" : locked ? "locked" : "", label, onPick: pick });
-        this.row(i + 1, a.name, here ? "You are here." : locked ? "Beyond the fog. Not yet." : `Act ${a.act}`, {
+        this.marker(a.x, a.y, { klass: here ? "here" : locked ? "locked" : "", label, tag: a.name, onPick: pick });
+        this.row(a.name, here ? "You are here." : locked ? "Beyond the fog. Not yet." : `Act ${a.act}`, {
           klass: here ? "here" : locked ? "locked" : "",
           label,
           onPick: pick,
@@ -295,14 +288,11 @@ export class Atlas {
       return;
     }
 
-    this.image.src = atlasImageUrl(area.image);
-    this.image.alt = `${area.name} on Dreadwater Isle`;
-    this.eyebrow.textContent = `ACT ${area.act} · DREADWATER ISLE`;
+    const url = atlasImageUrl(area.image);
+    this.paintChart(url, `${area.name} on Dreadwater Isle`);
     this.heading.textContent = area.name;
-    this.lede.textContent = area.blurb;
-    this.keyTitle.textContent = area.name.toUpperCase();
     this.back.hidden = false;
-    area.rooms.forEach((room, i) => {
+    area.rooms.forEach((room) => {
       const here = room.id === this.state.room;
       const known = here || this.state.visited(room.id);
       const klass = here ? "here" : known ? "known" : "locked";
@@ -323,36 +313,106 @@ export class Atlas {
         this.hide();
         this.handlers.onTravel(room.id);
       };
-      this.marker(i + 1, room.x, room.y, { klass, label, onPick: pick });
-      this.row(i + 1, room.name, here ? "You are here." : room.note ?? "", { klass, label, onPick: pick });
+      this.marker(room.x, room.y, { klass, label, tag: room.name, onPick: pick });
+      this.row(room.name, here ? "You are here." : room.note ?? "", { klass, label, onPick: pick });
     });
     this.focusFirst();
   }
 
-  private marker(n: number, x: number, y: number, opts: { klass: string; label: string; onPick: () => void }): void {
+  /**
+   * The chart itself is painted onto a canvas that fills the stage. A full-window <img> of the
+   * same painting stalls this Chrome's screenshot path; the canvas also keeps the chart crisp
+   * at every window size and gives the markers a stable box to stand on.
+   */
+  private chartUrl = "";
+  private art: HTMLImageElement | null = null;
+
+  private paintChart(url: string, label: string): void {
+    this.chart.setAttribute("aria-label", label);
+    if (url !== this.chartUrl) {
+      this.chartUrl = url;
+      this.art = null;
+      const art = new Image();
+      art.decoding = "async";
+      art.onload = () => {
+        if (this.chartUrl !== url) return;
+        this.art = art;
+        this.drawChart();
+      };
+      art.src = url;
+    }
+    this.drawChart();
+  }
+
+  private drawChart(): void {
+    const w = this.stage.clientWidth, h = this.stage.clientHeight;
+    if (!w || !h) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const cw = Math.max(1, Math.round(w * dpr)), ch = Math.max(1, Math.round(h * dpr));
+    if (this.chart.width !== cw) this.chart.width = cw;
+    if (this.chart.height !== ch) this.chart.height = ch;
+    const ctx = this.chart.getContext("2d");
+    if (!ctx) return;
+    ctx.setTransform(cw / w, 0, 0, ch / h, 0, 0);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    ctx.fillStyle = "#04090c";
+    ctx.fillRect(0, 0, w, h);
+    const art = this.art;
+    if (!art || !art.width || !art.height) return;
+    const k = Math.min(w / art.width, h / art.height);
+    const dw = art.width * k, dh = art.height * k;
+    ctx.drawImage(art, (w - dw) / 2, (h - dh) / 2, dw, dh);
+  }
+
+  private marker(x: number, y: number, opts: { klass: string; label: string; tag: string; onPick: () => void }): void {
     const b = document.createElement("button");
     b.type = "button";
     b.className = `atlas-marker ${opts.klass}`;
     b.style.left = `${x * 100}%`;
     b.style.top = `${y * 100}%`;
     b.setAttribute("aria-label", opts.label);
-    b.textContent = String(n);
-    b.addEventListener("click", opts.onPick);
+    b.title = opts.tag;
+    const glow = document.createElement("span");
+    glow.className = "atlas-glow";
+    glow.setAttribute("aria-hidden", "true");
+    const glyph = document.createElement("span");
+    glyph.className = "atlas-glyph";
+    glyph.setAttribute("aria-hidden", "true");
+    const tag = document.createElement("span");
+    tag.className = "atlas-tag";
+    tag.setAttribute("aria-hidden", "true");
+    tag.textContent = opts.tag;
+    b.append(glow, glyph, tag);
+    b.addEventListener("click", () => {
+      opts.onPick();
+      // Fog does not open: the mark shivers, so a click on it is plainly answered.
+      if (opts.klass.includes("locked")) {
+        b.classList.remove("denied");
+        void b.offsetWidth;
+        b.classList.add("denied");
+        window.setTimeout(() => b.classList.remove("denied"), 620);
+      }
+    });
     b.addEventListener("focus", () => {
       b.classList.add("selected");
-      this.note.textContent = `Selected: ${opts.label}. Enter to open.`;
+      this.note.textContent = `Selected: ${opts.tag}. Enter to open.`;
     });
     b.addEventListener("blur", () => b.classList.remove("selected"));
     this.markers.append(b);
   }
 
-  private row(n: number, name: string, note: string, opts: { klass: string; label: string; onPick: () => void }): void {
+  /** The same place, as a row in the list only a screen reader (or a test) reads. */
+  private row(name: string, note: string, opts: { klass: string; label: string; onPick: () => void }): void {
     const li = document.createElement("li");
     const b = document.createElement("button");
     b.type = "button";
     b.className = `atlas-row ${opts.klass}`;
+    // The list mirrors the marks for a screen reader; Tab stays on the marks a sighted player
+    // can see, so keyboard focus never vanishes into the hidden list.
+    b.tabIndex = -1;
     b.setAttribute("aria-label", opts.label);
-    b.innerHTML = `<span class="atlas-num">${n}</span><span class="atlas-row-text"><span class="atlas-row-name">${escapeHtml(name)}</span><span class="atlas-row-note">${escapeHtml(note)}</span></span>`;
+    b.innerHTML = `<span class="atlas-row-name">${escapeHtml(name)}</span><span class="atlas-row-note">${escapeHtml(note)}</span>`;
     b.addEventListener("click", opts.onPick);
     b.addEventListener("focus", () => {
       b.classList.add("selected");

@@ -1,6 +1,9 @@
 /**
  * The title screen. Pure rendering plus the button layout, which the hit-test also uses — so
  * the two can never drift apart.
+ *
+ * A full-bleed chart of Dreadwater Isle, the lettering over it, and one strong way in. No legend,
+ * no tally, no instructions: the painting, the name of the game, and the compass.
  */
 
 import { LOGICAL_W, LOGICAL_H } from "../engine/view";
@@ -19,29 +22,28 @@ export interface TitleButton {
   y: number;
 }
 
-export const TITLE_BUTTON = { width: 400, height: 62, left: 760, right: 1160 };
+/** The hit box shared by every answer: wide enough for the compass plate and for a quiet line. */
+export const TITLE_BUTTON = { width: 520, height: 68, left: 700, right: 1220 };
 
-const FIRST_Y = 670;
-const STEP = 88;
+const FIRST_Y = 796;
+const STEP = 82;
 /** How far below "Keep my voyage" the destructive answer sits: clear of any button above it. */
-const CONFIRM_DROP = 120;
+const CONFIRM_DROP = 104;
 
 /**
  * Buttons top to bottom. With a save, Continue comes first (it is what a returning player
  * wants, and what Enter does); Chapter select (walk any scene, nothing saved) once the voyage
  * has been finished, or always on the dev server.
  *
- * `confirmNew` replaces the menu with the question New Voyage asks over a save. "Keep my voyage"
- * takes New Voyage's place, under the pointer that just chose it, and "Yes — start anew" sits
- * well below: a second click, a double-click or an impatient re-click lands on the safe answer.
- *
- * `saveLabel` is Continue's second line: what the save would carry on into. The button is the same
- * size with or without it, so the layout never moves between a save and no save.
+ * `confirmNew` replaces the menu with the question a new voyage asks over a save. "Keep my
+ * voyage" takes the new voyage's place, under the pointer that just chose it, and "Begin anew"
+ * sits well below: a second click, a double-click or an impatient re-click lands on the safe
+ * answer.
  */
 export function titleButtons(hasSave: boolean, chapters: boolean, confirmNew = false, saveLabel: string | null = null): TitleButton[] {
   const list: { id: TitleId; label: string; sub?: string }[] = [
     ...(hasSave ? [{ id: "continue" as const, label: "Continue", sub: saveLabel ?? undefined }] : []),
-    { id: "start", label: "New Voyage" },
+    { id: "start", label: "Begin" },
     ...(chapters ? [{ id: "explore" as const, label: "Chapter select" }] : []),
   ];
   const menu = list.map((b, i) => ({ ...b, y: FIRST_Y + i * STEP }));
@@ -49,7 +51,7 @@ export function titleButtons(hasSave: boolean, chapters: boolean, confirmNew = f
   const at = menu.find((b) => b.id === "start")!.y;
   return [
     { id: "keep", label: "Keep my voyage", y: at },
-    { id: "confirm", label: "Yes — start anew", y: at + CONFIRM_DROP },
+    { id: "confirm", label: "Begin anew", y: at + CONFIRM_DROP },
   ];
 }
 
@@ -61,14 +63,14 @@ export function defaultTitleButton(buttons: TitleButton[]): TitleId {
 
 /** Whether a point is on the button whose top edge is `top`. */
 export function hitTitleButton(top: number, x: number, y: number): boolean {
-  return x > TITLE_BUTTON.left && x < TITLE_BUTTON.right && y > top - 10 && y < top + 68;
+  return x > TITLE_BUTTON.left && x < TITLE_BUTTON.right && y > top - 8 && y < top + TITLE_BUTTON.height + 8;
 }
 
 export interface TitleView {
   bg?: HTMLImageElement;
   buttons: TitleButton[];
   focus: TitleId | null;
-  /** The Adventure Editor is a dev-server feature; don't advertise it in a build. */
+  /** The Adventure Editor is a dev-server feature; kept for the caller, never advertised. */
   dev: boolean;
   /** New Voyage is waiting for its confirmation. */
   confirmNew?: boolean;
@@ -78,14 +80,11 @@ export interface TitleView {
   time?: number;
   /** Reduced motion: no drift, no glint, no swinging needle. */
   reduced?: boolean;
-  /** The player's text scale: the title's chrome (tagline, buttons, help) grows with it. */
+  /** The player's text scale: the buttons grow with it. */
   scale?: number;
   /** The focus marker's last move: from which button top (null: it was nowhere), and when. */
   needle?: { fromY: number | null; since: number };
-  /**
-   * The casebook's collection, set under the menu: deeds entered across voyages, out of all the
-   * deeds this build knows. Hidden while the new-voyage question has the menu's place.
-   */
+  /** Kept for the caller: no count is drawn on the title any more. */
   casebook?: { filed: number; total: number } | null;
   /**
    * Drawn over the painting, inside its drift, so whatever it adds (the harbour's own lights,
@@ -100,9 +99,10 @@ function wash(ctx: CanvasRenderingContext2D): CanvasGradient {
   let g = washes.get(ctx);
   if (!g) {
     g = ctx.createLinearGradient(0, 0, 0, LOGICAL_H);
-    g.addColorStop(0, "rgba(3,5,12,0.72)");
-    g.addColorStop(0.45, "rgba(3,5,12,0.35)");
-    g.addColorStop(1, "rgba(3,5,12,0.88)");
+    g.addColorStop(0, "rgba(3,5,12,0.66)");
+    g.addColorStop(0.42, "rgba(3,5,12,0.18)");
+    g.addColorStop(0.72, "rgba(3,5,12,0.42)");
+    g.addColorStop(1, "rgba(3,5,12,0.9)");
     washes.set(ctx, g);
   }
   return g;
@@ -115,7 +115,7 @@ const GLINT_EVERY = 9;
 const GLINT_TAKES = 1.5;
 
 /** The lettering, drawn once into its own canvas so a glint can be laid over just the letters. */
-const LETTERS = { x: LOGICAL_W / 2 - 600, y: 280, w: 1200, h: 240 };
+const LETTERS = { x: LOGICAL_W / 2 - 600, y: 258, w: 1200, h: 250 };
 let letters: HTMLCanvasElement | null = null;
 let glintScratch: HTMLCanvasElement | null = null;
 let band: HTMLCanvasElement | null = null;
@@ -126,8 +126,8 @@ function lettering(): HTMLCanvasElement | null {
   c.height = LETTERS.h;
   const g = c.getContext("2d");
   if (!g) return null;
-  drawText(g, "THE BRASS", LETTERS.w / 2, 300 - LETTERS.y, { size: 96, color: "#e8c98a", align: "center", weight: "bold" });
-  drawText(g, "COMPASS", LETTERS.w / 2, 400 - LETTERS.y, { size: 96, color: "#e8c98a", align: "center", weight: "bold" });
+  drawText(g, "THE BRASS", LETTERS.w / 2, 286 - LETTERS.y, { size: 96, color: "#e8c98a", align: "center", weight: "bold" });
+  drawText(g, "COMPASS", LETTERS.w / 2, 386 - LETTERS.y, { size: 96, color: "#e8c98a", align: "center", weight: "bold" });
   letters = c;
   return c;
 }
@@ -152,8 +152,8 @@ function glintBand(): HTMLCanvasElement | null {
 function drawLettering(ctx: CanvasRenderingContext2D, t: number, still: boolean): void {
   const art = lettering();
   if (!art) {
-    drawText(ctx, "THE BRASS", LOGICAL_W / 2, 300, { size: 96, color: "#e8c98a", align: "center", weight: "bold" });
-    drawText(ctx, "COMPASS", LOGICAL_W / 2, 400, { size: 96, color: "#e8c98a", align: "center", weight: "bold" });
+    drawText(ctx, "THE BRASS", LOGICAL_W / 2, 286, { size: 96, color: "#e8c98a", align: "center", weight: "bold" });
+    drawText(ctx, "COMPASS", LOGICAL_W / 2, 386, { size: 96, color: "#e8c98a", align: "center", weight: "bold" });
     return;
   }
   ctx.drawImage(art, LETTERS.x, LETTERS.y);
@@ -183,6 +183,84 @@ function drawLettering(ctx: CanvasRenderingContext2D, t: number, still: boolean)
   ctx.restore();
 }
 
+// ---------------------------------------------------------------- ornaments
+
+/** A letter-spaced line, centred on `cx`. Used only for the title's small tagline. */
+function drawSpaced(ctx: CanvasRenderingContext2D, text: string, cx: number, y: number, size: number,
+  color: string, tracking: number, weight = "normal"): number {
+  ctx.save();
+  ctx.font = `${weight} ${size}px Georgia, "Times New Roman", serif`;
+  const widths = [...text].map((ch) => ctx.measureText(ch).width);
+  const total = widths.reduce((sum, w) => sum + w, 0) + tracking * Math.max(0, text.length - 1);
+  let x = cx - total / 2;
+  ctx.textAlign = "left";
+  ctx.textBaseline = "top";
+  ctx.fillStyle = color;
+  [...text].forEach((ch, i) => {
+    ctx.fillText(ch, x, y);
+    x += widths[i] + tracking;
+  });
+  ctx.restore();
+  return total;
+}
+
+/** A four-point compass star, the small mark beside a quiet answer. */
+function drawStar(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, color: string): void {
+  ctx.save();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  for (let i = 0; i < 8; i++) {
+    const a = (i * Math.PI) / 4 - Math.PI / 2;
+    const rr = i % 2 ? r * 0.34 : r;
+    const px = x + Math.cos(a) * rr, py = y + Math.sin(a) * rr;
+    if (i) ctx.lineTo(px, py); else ctx.moveTo(px, py);
+  }
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+
+/** The compass rose: a ring, eight points, a dark heart. */
+function drawRose(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number, rot: number,
+  color = "#e8c98a", alpha = 1): void {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.globalAlpha = alpha;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.stroke();
+  ctx.globalAlpha = alpha * 0.5;
+  ctx.beginPath(); ctx.arc(0, 0, r * 0.74, 0, Math.PI * 2); ctx.stroke();
+  ctx.globalAlpha = alpha;
+  ctx.rotate(rot);
+  for (let i = 0; i < 8; i++) {
+    ctx.rotate(Math.PI / 4);
+    const long = i % 2 === 0;
+    ctx.fillStyle = long ? color : "rgba(232,201,138,0.45)";
+    ctx.beginPath();
+    ctx.moveTo(0, -r * 0.9);
+    ctx.lineTo(r * 0.1, -r * 0.16);
+    ctx.lineTo(0, 0);
+    ctx.lineTo(-r * 0.1, -r * 0.16);
+    ctx.closePath();
+    ctx.fill();
+    if (long) {
+      // The south-running half, in the old chart's red.
+      ctx.fillStyle = "rgba(181,69,46,0.72)";
+      ctx.beginPath();
+      ctx.moveTo(0, r * 0.9);
+      ctx.lineTo(r * 0.1, r * 0.16);
+      ctx.lineTo(0, 0);
+      ctx.lineTo(-r * 0.1, r * 0.16);
+      ctx.closePath();
+      ctx.fill();
+    }
+  }
+  ctx.fillStyle = "#0b1422";
+  ctx.beginPath(); ctx.arc(0, 0, r * 0.12, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+}
+
 /**
  * The focus marker: a small compass whose needle points at the button Enter would press. When
  * focus moves it travels there and swings, settling like a real needle.
@@ -195,24 +273,26 @@ function drawNeedle(ctx: CanvasRenderingContext2D, view: TitleView, t: number, s
   const tau = Math.max(0, t - since);
   const travel = still ? 1 : 1 - Math.pow(1 - Math.min(1, tau / 0.28), 3);
   const y = from + (target.y - from) * travel + TITLE_BUTTON.height / 2;
-  const swing = still ? 0 : 0.6 * Math.exp(-4.2 * tau) * Math.cos(13 * tau);
-  const x = TITLE_BUTTON.left - 40;
+  const swing = still ? 0 : 0.55 * Math.exp(-4.2 * tau) * Math.cos(13 * tau);
+  const x = TITLE_BUTTON.left - 38;
   ctx.save();
   ctx.translate(x, y);
-  ctx.fillStyle = "rgba(10,16,28,0.75)";
-  ctx.beginPath(); ctx.arc(0, 0, 19, 0, Math.PI * 2); ctx.fill();
-  ctx.strokeStyle = "rgba(232,201,138,0.85)";
-  ctx.lineWidth = 1.5;
+  ctx.fillStyle = "rgba(8,13,22,0.72)";
+  ctx.beginPath(); ctx.arc(0, 0, 16, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = "rgba(232,201,138,0.8)";
+  ctx.lineWidth = 1.2;
   ctx.stroke();
   ctx.rotate(swing);
   ctx.fillStyle = "#e8c98a";
-  ctx.beginPath(); ctx.moveTo(16, 0); ctx.lineTo(0, -5.5); ctx.lineTo(0, 5.5); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(13, 0); ctx.lineTo(0, -4.4); ctx.lineTo(0, 4.4); ctx.closePath(); ctx.fill();
   ctx.fillStyle = "#b5452e";
-  ctx.beginPath(); ctx.moveTo(-14, 0); ctx.lineTo(0, -5.5); ctx.lineTo(0, 5.5); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(-11, 0); ctx.lineTo(0, -4.4); ctx.lineTo(0, 4.4); ctx.closePath(); ctx.fill();
   ctx.fillStyle = "#0b1422";
-  ctx.beginPath(); ctx.arc(0, 0, 2.6, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(0, 0, 2.2, 0, Math.PI * 2); ctx.fill();
   ctx.restore();
 }
+
+// ---------------------------------------------------------------- screen
 
 export function drawTitle(ctx: CanvasRenderingContext2D, view: TitleView): void {
   const t = view.time ?? 1e3;
@@ -240,39 +320,23 @@ export function drawTitle(ctx: CanvasRenderingContext2D, view: TitleView): void 
   ctx.fillStyle = wash(ctx);
   ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
 
+  // A single ornament above the name, turning with the picture.
+  drawRose(ctx, LOGICAL_W / 2, 196, 27, still ? 0 : t * 0.07, "#e8c98a", 0.8);
+
   drawLettering(ctx, t, still);
-  const tagline = fitText(ctx, "a tale of Dreadwater Isle", 1600, Math.round(26 * scale), 16);
-  drawText(ctx, tagline.text, LOGICAL_W / 2, 530, {
-    size: tagline.size, color: "rgba(200,215,235,0.75)", align: "center", weight: "normal",
-  });
 
   if (view.confirmNew) drawConfirmCard(ctx, view);
-  for (const b of view.buttons) drawButton(ctx, b.label, b.y, view.focus === b.id, b.id === "confirm", b.sub, scale);
-  drawNeedle(ctx, view, t, still);
-
-  // next-level: casebook — under the menu, a promise that the optional layer is remembered.
-  // The tally keeps every voyage, not just this one.
-  if (view.casebook && !view.confirmNew && view.buttons.length) {
-    const last = view.buttons[view.buttons.length - 1];
-    const y = Math.min(956, last.y + TITLE_BUTTON.height + 20);
-    const tally = fitText(ctx, `Ship's log: ${view.casebook.filed} of ${view.casebook.total} entries`,
-      1600, Math.round(20 * scale), 14);
-    drawText(ctx, tally.text, LOGICAL_W / 2, y, {
-      size: tally.size, color: "#c3b08a", align: "center",
-    });
+  for (const b of view.buttons) {
+    if (b.id === "confirm") {
+      // The dangerous answer is quiet, underlined, and well below the safe one.
+      drawQuietButton(ctx, b.label, b.y, view.focus === b.id, scale, true);
+    } else if (b.id === defaultTitleButton(view.buttons) || b.id === "keep") {
+      drawCompassButton(ctx, b, t, view.focus === b.id, still, scale);
+    } else {
+      drawQuietButton(ctx, b.label, b.y, view.focus === b.id, scale, false, b.sub);
+    }
   }
-
-  const help = fitText(ctx, "Click to act  ·  Tab / arrows + Enter  ·  right-click to look  ·  hold Q for exits and props",
-    1840, Math.round(20 * scale), 14);
-  drawText(ctx, help.text, LOGICAL_W / 2, 982, {
-    size: help.size, color: "#dbe3ee", align: "center",
-  });
-  const dev = view.dev ? "    ·    F2 — Adventure Editor" : "";
-  const keys = fitText(ctx, `Tab / arrows, Enter — keyboard    ·    H — tip    ·    Escape — settings    ·    M — mute${dev}`,
-    1840, Math.round(20 * scale), 14);
-  drawText(ctx, keys.text, LOGICAL_W / 2, 1018, {
-    size: keys.size, color: "#c9d3e0", align: "center",
-  });
+  drawNeedle(ctx, view, t, still);
 
   if (t < FADE_UP) {
     // Up from black. Nothing waits on it: the buttons work from the first frame.
@@ -282,53 +346,121 @@ export function drawTitle(ctx: CanvasRenderingContext2D, view: TitleView): void 
   }
 }
 
+/**
+ * The one strong way in: a brass compass plate, the label to its right, a slow rose turning in
+ * the dark glass. The sub-label (Continue's act) sits under the name, so the layout never moves.
+ */
+function drawCompassButton(ctx: CanvasRenderingContext2D, b: TitleButton, t: number, focus: boolean,
+  still: boolean, scale: number): void {
+  const w = TITLE_BUTTON.width, h = TITLE_BUTTON.height;
+  const x = LOGICAL_W / 2 - w / 2, y = b.y;
+  const grad = ctx.createLinearGradient(0, y, 0, y + h);
+  grad.addColorStop(0, focus ? "rgba(47,39,25,0.92)" : "rgba(17,26,38,0.86)");
+  grad.addColorStop(1, focus ? "rgba(25,20,13,0.94)" : "rgba(6,10,18,0.92)");
+  ctx.fillStyle = grad;
+  ctx.fillRect(x, y, w, h);
+  ctx.strokeStyle = focus ? "rgba(255,226,160,0.95)" : "rgba(201,162,74,0.55)";
+  ctx.lineWidth = focus ? 2 : 1.2;
+  ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
+  if (focus) {
+    // Corner ticks: the focus ring reads from across the room, without a box around the box.
+    ctx.strokeStyle = "#ffe6a8";
+    ctx.lineWidth = 2;
+    const k = 16;
+    for (const [cx, cy, dx, dy] of [[x, y, 1, 1], [x + w, y, -1, 1], [x, y + h, 1, -1], [x + w, y + h, -1, -1]]) {
+      ctx.beginPath();
+      ctx.moveTo(cx + dx * 2, cy + dy * 2 + dy * k);
+      ctx.lineTo(cx + dx * 2, cy + dy * 2);
+      ctx.lineTo(cx + dx * 2 + dx * k, cy + dy * 2);
+      ctx.stroke();
+    }
+  }
+  // The glass: a rose in a square of its own, divided by a hairline.
+  drawRose(ctx, x + 38, y + h / 2, 21, still ? 0 : t * 0.16, focus ? "#ffe6a8" : "#d9b877", 0.95);
+  ctx.strokeStyle = focus ? "rgba(255,230,168,0.45)" : "rgba(201,162,74,0.28)";
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(x + 76, y + 12); ctx.lineTo(x + 76, y + h - 12); ctx.stroke();
+
+  const label = fitText(ctx, b.label.toUpperCase(), w - 124, Math.round(25 * scale), 16, "bold");
+  const sub = b.sub ? fitText(ctx, b.sub, w - 124, Math.round(15 * scale), 11) : null;
+  const cx = x + 76 + (w - 76) / 2;
+  const labelY = y + (sub ? 13 : Math.round((h - label.size) / 2) - 1);
+  drawSpaced(ctx, label.text, cx, labelY, label.size, focus ? "#fff6e0" : "#ecd8ab", 4.5, "bold");
+  if (sub) {
+    drawText(ctx, sub.text, cx, y + h - sub.size - 13, {
+      size: sub.size, color: focus ? "#e8d6ae" : "#a99a7a", align: "center", shadow: false,
+    });
+  }
+}
+
+/** Continue's quiet neighbours: a line of type, a diamond when it has the focus. */
+function drawQuietButton(ctx: CanvasRenderingContext2D, label: string, top: number, focus: boolean,
+  scale: number, danger = false, sub?: string): void {
+  const fitted = fitText(ctx, label.toUpperCase(), TITLE_BUTTON.width - 40, Math.round(18 * scale), 13);
+  const cx = LOGICAL_W / 2;
+  const y = top + (TITLE_BUTTON.height - fitted.size) / 2;
+  const color = danger
+    ? (focus ? "#ffcbb4" : "#d09a83")
+    : focus ? "#fff6e0" : "#d8cbb0";
+  const glow = focus ? "rgba(255,230,168,0.95)" : "rgba(216,203,176,0.55)";
+  if (focus) {
+    drawStar(ctx, cx - fitted.text.length * 4.6 - 34, top + TITLE_BUTTON.height / 2, 6, glow);
+    drawStar(ctx, cx + fitted.text.length * 4.6 + 34, top + TITLE_BUTTON.height / 2, 6, glow);
+  }
+  drawSpaced(ctx, fitted.text, cx, y, fitted.size, color, 4.2);
+  if (danger) {
+    ctx.save();
+    ctx.strokeStyle = "rgba(208,154,131,0.55)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    const w = fitted.text.length * (fitted.size * 0.62);
+    ctx.moveTo(cx - w / 2, y + fitted.size + 8);
+    ctx.lineTo(cx + w / 2, y + fitted.size + 8);
+    ctx.stroke();
+    ctx.restore();
+  }
+  if (sub) {
+    drawText(ctx, sub, cx, top + TITLE_BUTTON.height + 2, {
+      size: Math.round(14 * scale), color: "#a99a7a", align: "center", shadow: false,
+    });
+  }
+  if (focus) {
+    ctx.save();
+    ctx.strokeStyle = "rgba(255,230,168,0.8)";
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(cx - TITLE_BUTTON.width / 2 + 90, top, TITLE_BUTTON.width - 180, TITLE_BUTTON.height);
+    ctx.restore();
+  }
+}
+
 /** The question, set on a card that frames both answers. */
 function drawConfirmCard(ctx: CanvasRenderingContext2D, view: TitleView): void {
   const keep = view.buttons.find((b) => b.id === "keep");
   const confirm = view.buttons.find((b) => b.id === "confirm");
   if (!keep || !confirm) return;
-  // The card widens and its type grows with the scale, but its top edge stays below the painted
-  // lettering and its answers keep their own, fixed, hit boxes. The three lines are stacked by
-  // their real heights so a larger size can never run them into each other or into the buttons.
+  // The card widens and its type grows with the scale, but its answers keep their fixed hit boxes.
   const scale = Math.max(1, view.scale ?? 1);
-  const top = keep.y - 158, bottom = confirm.y + TITLE_BUTTON.height + 22;
+  const top = keep.y - 150, bottom = confirm.y + TITLE_BUTTON.height + 20;
   const w = Math.round(760 * scale);
-  ctx.fillStyle = "rgba(14,9,10,0.9)";
-  ctx.fillRect(LOGICAL_W / 2 - w / 2, top, w, bottom - top);
-  ctx.strokeStyle = "rgba(255,190,150,0.55)";
-  ctx.lineWidth = 1.5;
-  ctx.strokeRect(LOGICAL_W / 2 - w / 2 + 1, top + 1, w - 2, bottom - top - 2);
-  const heading = fitText(ctx, "Start a new voyage?", w - 40, Math.min(32 * scale, 46), 20, "bold");
-  const headingY = top + Math.round(26 - 16 * (scale - 1));
-  drawText(ctx, heading.text, LOGICAL_W / 2, headingY, {
+  const x = LOGICAL_W / 2 - w / 2;
+  ctx.save();
+  const grad = ctx.createLinearGradient(0, top, 0, bottom);
+  grad.addColorStop(0, "rgba(16,11,10,0.93)");
+  grad.addColorStop(1, "rgba(9,7,7,0.96)");
+  ctx.fillStyle = grad;
+  ctx.fillRect(x, top, w, bottom - top);
+  ctx.strokeStyle = "rgba(201,162,74,0.5)";
+  ctx.lineWidth = 1.2;
+  ctx.strokeRect(x + 0.5, top + 0.5, w - 1, bottom - top - 1);
+  drawRose(ctx, LOGICAL_W / 2, top + 40, 16, 0, "#c9a24a", 0.6);
+  const heading = fitText(ctx, "Begin again?", w - 60, Math.round(30 * scale), 22, "bold");
+  drawText(ctx, heading.text, LOGICAL_W / 2, top + 72, {
     size: heading.size, color: "#ffd9b8", align: "center", weight: "bold", shadow: false,
   });
   const what = view.saveLabel ? `your saved voyage (${view.saveLabel})` : "your saved voyage";
-  const body = fitText(ctx, `This replaces ${what}.`, w - 40, Math.min(22 * scale, 32), 15);
-  const bodyY = Math.max(headingY + heading.size + 12, top + Math.round(76 + 8 * (scale - 1)));
-  drawText(ctx, body.text, LOGICAL_W / 2, bodyY, {
-    size: body.size, color: "#f0dccb", align: "center", shadow: false,
+  const body = fitText(ctx, `This replaces ${what}.`, w - 60, Math.round(20 * scale), 15);
+  drawText(ctx, body.text, LOGICAL_W / 2, top + 118, {
+    size: body.size, color: "#e6d3bf", align: "center", shadow: false,
   });
-  const hint = fitText(ctx, "Escape keeps it.", w - 40, Math.min(20 * scale, 28), 14);
-  const hintY = Math.max(bodyY + body.size + 10, top + Math.round(108 + 30 * (scale - 1)));
-  drawText(ctx, hint.text, LOGICAL_W / 2, hintY, {
-    size: hint.size, color: "#c9b8aa", align: "center", shadow: false,
-  });
-}
-
-function drawButton(ctx: CanvasRenderingContext2D, label: string, y: number, hover: boolean, warn = false, sub?: string, scale = 1): void {
-  const w = TITLE_BUTTON.width, h = TITLE_BUTTON.height, x = LOGICAL_W / 2 - w / 2;
-  ctx.fillStyle = warn ? (hover ? "rgba(150,52,26,0.9)" : "rgba(96,34,18,0.78)") : hover ? "rgba(232,201,138,0.18)" : "rgba(10,16,28,0.55)";
-  ctx.fillRect(x, y, w, h);
-  ctx.strokeStyle = warn ? "rgba(255,190,150,0.95)" : hover ? "rgba(232,201,138,0.9)" : "rgba(201,162,74,0.45)";
-  ctx.lineWidth = hover ? 2 : 1.5;
-  ctx.strokeRect(x + 1, y + 1, w - 2, h - 2);
-  // A sub-label shares the button rather than making it taller: the layout is the same either way.
-  const fitted = fitText(ctx, label, w - 30, Math.round(26 * scale), 17, "bold");
-  drawText(ctx, fitted.text, LOGICAL_W / 2, y + (sub ? 9 : 17) - Math.round((fitted.size - 26) / 2), {
-    size: fitted.size, color: hover ? "#fff6e0" : "#d9c9a4", align: "center", weight: "bold",
-  });
-  if (sub) drawText(ctx, sub, LOGICAL_W / 2, y + 39, {
-    size: 16, color: hover ? "#e8d6ae" : "#a99a7a", align: "center",
-  });
+  ctx.restore();
 }
