@@ -167,3 +167,9 @@ if (process.argv.includes("--json")) {
     for (const f of row.findings.filter((x) => x.level === "info")) console.log(`${row.room}: ${f.msg}`);
   }
 }
+
+// The Vite dev server used to load the TypeScript content keeps the process alive on its own:
+// without this the audit prints its report and then sits there, and `npm run test:all` never
+// gets past it.
+await vite.close();
+process.exit(errors ? 1 : 0);

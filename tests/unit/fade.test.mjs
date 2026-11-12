@@ -5,7 +5,7 @@ import { loader } from "../../tools/adv-lib.mjs";
 
 const vite = await loader();
 after(() => vite.close());
-const { fadeEase, exitCardCrop, entryFadeBand, drawFade } = await vite.load("/src/game/fade.ts");
+const { fadeEase, thresholdCrop, cropScreenPoint, entryFadeBand, drawFade } = await vite.load("/src/game/fade.ts");
 
 const near = (actual, expected, message, eps = 1e-6) =>
   assert.ok(Math.abs(actual - expected) < eps, `${message}: ${actual} vs ${expected}`);
@@ -58,31 +58,36 @@ test("the curtain's easing is smoothstep, with exact ends and midpoint", () => {
   }
 });
 
-test("the threshold close-up is centered, clamped and pushed in as the curtain falls", () => {
-  const crop = exitCardCrop(CARD, 0);
-  assert.deepEqual([crop.sw, crop.sh], [250, 125]);
-  near(crop.sx, 75, "the crop is centered on the threshold");
-  near(crop.sy, 87.5, "the crop is centered on the threshold");
-  near(crop.dw, 2289.6, "it covers the frame");
-  near(crop.dh, 1144.8);
-  near(crop.dx, -184.8, "and overhangs both sides");
-  near(crop.dy, -32.4);
-  assert.ok(exitCardCrop(CARD, 1).dw > crop.dw, "the close-up creeps in with the fade");
+test("the passage crop is the frame the player saw, pushed in toward the door", () => {
+  // The screen is showing plate x 320..2240 of a 2560 × 880 painting; the door is at 1200,300.
+  const wide = {
+    image: { id: "room painting" }, imageW: 2560, imageH: 880,
+    x: 1200, y: 300, w: 200, h: 400,
+    viewW: 1920, viewH: 880,
+  };
+  const start = thresholdCrop(wide, 1);
+  assert.deepEqual([start.sx, start.sy, start.sw, start.sh], [340, 0, 1920, 880],
+    "at 1:1 the crop is the screen's own window, settled on the door");
+  assert.deepEqual([start.dx, start.dy, start.dw, start.dh], [0, 0, 1920, 880],
+    "and it is drawn 1:1 over the scene, so nothing jumps and nothing blurs");
 
-  // A threshold at the painting's edge cannot show any black outside it.
-  const edge = exitCardCrop({ ...CARD, x: 0, y: 0 }, 0);
+  const pushed = thresholdCrop(wide, 1.34);
+  assert.ok(pushed.sw < start.sw && pushed.sh < start.sh, "the crop pushes in as the camera travels");
+  near(pushed.sx + pushed.sw / 2, 1300, "and its centre is on the door");
+  assert.deepEqual([pushed.dw, pushed.dh], [1920, 880], "it still fills the scene exactly");
+
+  // A door at the painting's edge cannot push its crop outside the plate.
+  const edge = thresholdCrop({ ...wide, x: 0, y: 0, w: 40, h: 40 }, 1.34);
   near(edge.sx, 0, "left edge clamps");
   near(edge.sy, 0, "top edge clamps");
-  const far = exitCardCrop({ ...CARD, x: 900, y: 400 }, 0);
-  near(far.sx, 750, "right edge clamps");
-  near(far.sy, 375, "bottom edge clamps");
+  const far = thresholdCrop({ ...wide, x: 2480, y: 780, w: 60, h: 60 }, 1.34);
+  near(far.sx, wide.imageW - far.sw, "right edge clamps");
+  near(far.sy, wide.imageH - far.sh, "bottom edge clamps");
 
-  // A painting smaller than the close-up still has a drawable source rectangle.
-  const tiny = exitCardCrop({ ...CARD, imageW: 10, imageH: 10 }, 0);
-  near(tiny.sx, 0);
-  near(tiny.sy, 0);
-  near(tiny.sw, 10);
-  near(tiny.sh, 10);
+  // The doorway's own light stays on the doorway as the camera moves.
+  const at = cropScreenPoint(pushed, 1300, 500);
+  near(at.x, 960, "the door is in the middle of the travelling crop");
+  near(at.y, 440);
 });
 
 test("the entry wash reads the exit side: direction and which end is black", () => {
@@ -126,25 +131,6 @@ test("a clear screen paints nothing and full black paints once", () => {
   ]);
 });
 
-test("the threshold card waits for the dark and yields to an entry reveal", () => {
-  const early = recorder();
-  drawFade(early, { fade: 0.2, reduced: false, entry: null, card: CARD });
-  assert.equal(early.calls.some((call) => call.op === "drawImage"), false, "not before the dark");
-
-  const ctx = recorder();
-  drawFade(ctx, { fade: 0.5, reduced: false, entry: null, card: CARD });
-  const drew = ctx.calls.find((call) => call.op === "drawImage");
-  assert.ok(drew, "the threshold is shown under the curtain");
-  const crop = exitCardCrop(CARD, fadeEase(0.5));
-  assert.deepEqual(drew.args.slice(1), [crop.sx, crop.sy, crop.sw, crop.sh, crop.dx, crop.dy, crop.dw, crop.dh]);
-  assert.equal(drew.args[0], CARD.image);
-  assert.ok(ctx.calls.some((call) => call.op === "radial"), "the warm light is laid over it");
-
-  const entry = recorder();
-  drawFade(entry, { fade: 0.5, reduced: false, entry: "left", card: CARD });
-  assert.equal(entry.calls.some((call) => call.op === "drawImage"), false, "an entry has its own reveal");
-});
-
 test("the entry reveal is a directional wash, and reduced motion keeps a flat fade", () => {
   const ctx = recorder();
   drawFade(ctx, { fade: 0.5, reduced: false, entry: "right", card: null });
@@ -167,13 +153,7 @@ test("the entry reveal is a directional wash, and reduced motion keeps a flat fa
   });
 });
 
-test("the threshold card and the loading cue centre on the visible scene (a phone's crop)", () => {
-  const CARD = { image: {}, imageW: 2560, imageH: 1080, x: 1200, y: 300, w: 200, h: 400 };
-  const base = exitCardCrop(CARD, 0.5);
-  const moved = exitCardCrop(CARD, 0.5, 700, 440);
-  near(moved.dx - base.dx, 700 - 960, "the card shifts horizontally to the visible middle");
-  near(moved.dy - base.dy, 440 - 540, "and vertically to the 880-high canvas's middle");
-
+test("the loading cue centres on the visible scene (a phone's crop)", () => {
   const cue = recorder();
   Object.assign(cue, {
     beginPath() {}, fill() {},

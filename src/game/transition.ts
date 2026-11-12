@@ -1,16 +1,23 @@
 /**
- * Exit-following transitions. Going through a way out, the view leans a little toward it as the
- * curtain falls; in the next room it starts a touch close and settles back as the curtain lifts,
- * so a door reads as a door and not a cut. The view only ever scales up (k >= 1) about a point,
- * so no edge of the painting shows. Reduced motion: a plain fade.
+ * Exit-following transitions. Going through a way out, the whole view walks into it as the curtain
+ * falls: the scene — painting, people, props, lamps — pushes in on the threshold, so the cut is
+ * one continuous camera move rather than a cut to a magnified crop of the background alone. In the
+ * next room the view starts a touch close and settles back as the curtain lifts, so a door reads
+ * as a door and not a cut. The view only ever scales up (k >= 1) about a point, so no edge of the
+ * painting shows, and the push is exactly where the passage shot picks the plate up. Reduced
+ * motion: a plain fade.
  */
 
 import { LOGICAL_W, SCENE_H } from "../engine/view";
 import type { Pt } from "../engine/walkbox";
 import type { ExitSide } from "./connect";
 
-/** How far the view leans toward the way out at full black. */
-const LEAN = 0.06;
+/**
+ * How far the view pushes toward the way out by the time it is black. It has to be a real move,
+ * not a hint: this is the only thing between the player and the cut, and the passage shot starts
+ * from where it leaves the painting (see `Connector`).
+ */
+const LEAN = 0.34;
 /** How close the new room starts before it settles. */
 const SETTLE = 0.035;
 

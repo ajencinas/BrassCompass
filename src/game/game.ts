@@ -58,7 +58,7 @@ import { brassInset } from "./plate";
 import { Transition } from "./transition";
 import { Connector } from "./connector";
 import { FrameLoop } from "./frame";
-import { drawFade, LOADING_CUE_AFTER, ROOM_WAIT_CAP, type ExitCardSource } from "./fade";
+import { drawFade, LOADING_CUE_AFTER, ROOM_WAIT_CAP, type PassagePlate } from "./fade";
 import {
   entrySideFor, linkOf, passageOf,
   type ExitLink, type ExitSide, type PassageKind,
@@ -291,7 +291,18 @@ const EXIT_POINTER_RANGE = 120;
 /** Fenn this close to a threshold has arrived: its chevron is gone by HIDE and full by SHOW. */
 const EXIT_CHEVRON_HIDE_R = 55;
 const EXIT_CHEVRON_SHOW_R = 120;
-interface ExitChevron { x: number; y: number; angle: number; strength: number; edge: boolean; floor: number }
+/**
+ * The chevron is a small glyph floating over a threshold, often a little above the painted
+ * opening rather than inside it. A click near it is a click on the way out, so it carries a hit
+ * radius of its own instead of relying on the hotspot underneath.
+ */
+const EXIT_CHEVRON_HIT = 36;
+const EXIT_CHEVRON_HIT_TOUCH = 52;
+interface ExitChevron {
+  x: number; y: number; angle: number; strength: number; edge: boolean; floor: number;
+  /** The way out it stands for, so the cue can be clicked like the door it marks. */
+  hs: Hotspot;
+}
 /** A read line lingers this long, then its box fades away over NARRATION_FADE seconds. */
 const NARRATION_LINGER = 2.5;
 const NARRATION_FADE = 0.6;
@@ -987,7 +998,7 @@ export class Game {
     // This curtain has no door to lean toward and no side to be revealed from: forget any
     // wipe left over from the last door arrival, and any threshold card that never opened.
     this.transition.leave(null);
-    this.exitCard = null;
+    this.passagePlate = null;
   }
 
   // ------------------------------------------------------------ input
@@ -1544,7 +1555,9 @@ export class Game {
       return;
     }
 
-    const hs = y < SCENE_H ? this.hotspotAt(x + this.cameraX, y) : null;
+    // An arrow over a threshold is live too: hovering it turns the pointer into the way out's
+    // own arrow and lights the cue, so the small glyph never reads as scenery.
+    const hs = y < SCENE_H ? this.exitChevronAt(x, y) ?? this.hotspotAt(x + this.cameraX, y) : null;
     this.hoverHotspot = hs?.id ?? null;
     this.cueHover(hs ? `hotspot:${hs.id}` : null);
   }
@@ -1907,6 +1920,16 @@ export class Game {
     }
 
     if (y >= SCENE_H) return;
+
+    // The chevron over a threshold is the way out itself. Walking the arrow is walking the door:
+    // the same click, the same walk to the stand, the same passage through. Checked before the
+    // hotspot under it, because the glyph often floats just above the painted opening.
+    const chevron = this.exitChevronAt(x, y);
+    if (chevron) {
+      this.clearTouchArm();
+      this.onHotspotClick(chevron, clicks);
+      return;
+    }
 
     // A finger is not a pixel: a small painted thing still gets a 24 CSS-pixel halo to be
     // tapped in, without changing what a mouse hits.
@@ -2399,13 +2422,15 @@ export class Game {
     const b = areaBox(hs.area);
     const image = this.assets.img(this.room.bg);
     if (image) {
-      // The threshold card is a close-up of the room's own painting held under the fade. It
-      // must wear the same `backdrop` grade as the plate behind it, or a brightened room snaps
-      // back to its raw exposure as the door opens. `plate()` is that grade, baked once.
+      // The plate the passage shot travels through, and the painting rectangle the player was
+      // looking at when they took the way out. It must wear the same `backdrop` grade as the
+      // plate behind the scene, or a brightened room snaps back to its raw exposure as the
+      // door opens. `plate()` is that grade, baked once.
       const plate = this.ambient.plate() ?? image;
-      this.exitCard = {
+      this.passagePlate = {
         image: plate, imageW: image.naturalWidth, imageH: image.naturalHeight,
         x: b.x, y: b.y, w: b.w, h: b.h,
+        viewW: LOGICAL_W, viewH: SCENE_H,
       };
     }
     // The cue belongs to the room this exit leads to. A `go` may run later, out of the queue,
@@ -3112,7 +3137,7 @@ export class Game {
       const id = this.pendingRoom;
       if (this.pendingPassage) {
         if (!this.connector.active) {
-          this.connector.begin(this.pendingPassage.kind, this.pendingPassage.side, this.room.id, id);
+          this.connector.begin(this.pendingPassage.kind, this.pendingPassage.side, this.room.id, id, this.passagePlate);
         }
         if (this.connector.update(dt)) {
           this.connector.end();
@@ -3290,7 +3315,9 @@ export class Game {
     const hit = hitTestPanel(x, y, this.panelModel());
     if (hit?.kind === "verb") this.hoverVerb = hit.id;
     else if (hit?.kind === "item") this.hoverItem = hit.id;
-    else if (!hit && y < SCENE_H) this.hoverHotspot = this.hotspotAt(x + this.cameraX, y)?.id ?? null;
+    else if (!hit && y < SCENE_H) {
+      this.hoverHotspot = (this.exitChevronAt(x, y) ?? this.hotspotAt(x + this.cameraX, y))?.id ?? null;
+    }
     // The scene moved out from under a still pointer: start the hover cue clean, so coming
     // back to the same thing is a new arrival rather than a suppressed repeat.
     if (!this.hoverVerb && !this.hoverItem && !this.hoverHotspot) this.hoverCueKey = null;
@@ -3403,7 +3430,7 @@ export class Game {
     this.pendingRoom = null;
     this.pendingPassage = null;
     this.loadRoom(id);
-    this.exitCard = null;
+    this.passagePlate = null;
     this.transition.arrive(
       { x: this.x, y: this.y - this.personHeight(this.y) * 0.5 },
       this.pendingEntry,
@@ -3413,7 +3440,7 @@ export class Game {
   }
   private pendingRoom: string | null = null;
   /** The painted threshold the player is passing through, held during the curtain (fade.ts). */
-  private exitCard: ExitCardSource | null = null;
+  private passagePlate: PassagePlate | null = null;
 
   // ------------------------------------------------------------ save
 
@@ -3807,7 +3834,7 @@ export class Game {
     this.pendingPassage = null;
     this.pendingEntry = null;
     this.exitLinks.clear();
-    this.exitCard = null;
+    this.passagePlate = null;
     this.connector.end();
     // A first-entry pulse belongs to the room it was started in, not to whatever comes next.
     this.exitIntro = 0;
@@ -4729,12 +4756,28 @@ export class Game {
         Math.hypot(threshold.x - this.x, threshold.y - this.y) <= EXIT_CUE_RANGE;
       // Two thresholds that share a screen spot (the dock stair foot) get one cue, not a pile.
       if (!near && out.some((p) => Math.hypot(p.x - x, p.y - y) < 70)) continue;
-      out.push({ x, y, angle, strength: (near ? 1 : 0.72) * arrived, edge: pinned, floor: threshold.y });
+      out.push({ x, y, angle, strength: (near ? 1 : 0.72) * arrived, edge: pinned, floor: threshold.y, hs: raw });
     }
     return out;
   }
   /** Top of the narration lower-third as last drawn, so cues can keep out from under it. */
   private narrationTop: number | null = null;
+
+  /**
+   * The way out whose chevron is under a screen point, if any. Small glyph, generous target: a
+   * click that lands on (or just beside) an arrow is a click on that door, so it walks Fenn over
+   * and takes it. Hover uses the same test, which is how the pointer learns the arrow is live.
+   */
+  private exitChevronAt(x: number, y: number): Hotspot | null {
+    if (y >= SCENE_H) return null;
+    const r = this.touch ? EXIT_CHEVRON_HIT_TOUCH : EXIT_CHEVRON_HIT;
+    let best: Hotspot | null = null, bestD = r;
+    for (const c of this.exitChevrons()) {
+      const d = Math.hypot(c.x - x, c.y - y);
+      if (d <= bestD) { bestD = d; best = c.hs; }
+    }
+    return best;
+  }
 
   /** One small, soft chevron with a dark contour so it survives a bright plate. */
   private drawChevronAt(ctx: CanvasRenderingContext2D, x: number, y: number, angle: number, strength = 1, edge = false): void {
@@ -5741,12 +5784,15 @@ export class Game {
     else if (id === "explore") this.startExplore();
   }
 
-  /** The scene curtain and its threshold card (fade.ts); the passage shot owns itself. */
+  /**
+   * The scene curtain (fade.ts). The push toward the door is the scene's own transform (see
+   * `Transition`), and the passage shot owns itself; the curtain only fades.
+   */
   private renderFade(ctx: CanvasRenderingContext2D): void {
     // A cut with no shared threshold gets the short passage shot at full black.
     if (this.connector.active) {
       const vis = this.view.visible;
-      this.connector.draw(ctx, this.reduced, this.view.logicalHeight, vis.x + vis.w / 2);
+      this.connector.draw(ctx, this.reduced, vis.x + vis.w / 2);
       return;
     }
     const vis = this.view.visible;
@@ -5755,7 +5801,6 @@ export class Game {
       fade: this.fade,
       reduced: this.reduced,
       entry: this.transition.entrySide(),
-      card: this.exitCard,
       waited: this.roomWait,
     });
   }

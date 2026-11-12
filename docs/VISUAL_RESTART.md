@@ -78,6 +78,27 @@ key panel beside them is the only place a name appears.
 The original `island_map` and `area_*` plates stay in the manifest for the archived acts, the
 ending art and the old story. Images are gitignored: they live in the shared asset folder.
 
+## Moving between rooms
+
+A cut between two paintings is part of the art direction, not a technical step. One language:
+
+- **The arrow.** Every way out carries one small chevron in the plate's own warm light; it is
+  clickable like the door underneath it, and clicking it walks Fenn to the threshold and through.
+  No sign, no name, no hotspot box.
+- **The push.** Walking through a threshold pushes the whole scene — painting, people, props,
+  lamps — into the opening as the curtain falls (`Transition.LEAN`). It is a camera move, not a
+  cut to a magnified crop: an NPC must not vanish when the door opens.
+- **The gap.** Cuts to a genuinely different place (a boat crossing, the town steps, the walk
+  forward along the deck) hold the painting and keep travelling through it in the dark, sliding
+  the way the player is going, while the doorway's light falls behind (`Connector`). The passage
+  is made of the room's own plate: never a second art style, never drawn geometry.
+- **The arrival.** The next painting is revealed from the opposite side of the exit — leave right,
+  arrive from the left — so the two rooms continue one movement. Reduced motion replaces all of
+  it with a plain fade.
+
+`tools/shoot-transition.mjs <room> <hotspot>` captures every 50 ms of a cut as a contact sheet, so
+a passage can be looked at frame by frame instead of argued about.
+
 ## Regenerating
 
 Prompts and crop live in `tools/generate.py` (`RESTART_STYLE`, the `visual restart` block of

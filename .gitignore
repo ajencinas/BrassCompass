@@ -26,6 +26,9 @@ __pycache__/
 .DS_Store
 .genraw/
 reference/screens/cal/
+# Passage contact sheets from tools/shoot-transition.mjs (scratch, heavy).
+reference/screens/passage/
+reference/screens/passage2/
 # Private travel/personal files (removed from HEAD; see RELEASE_CHECKLIST for history purge)
 travel-map/
 reference/travel-map/
