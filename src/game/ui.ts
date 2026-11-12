@@ -341,80 +341,16 @@ function drawVerbs(ctx: CanvasRenderingContext2D, model: PanelModel): void {
       ctx.strokeRect(r.x + 3, r.y + 3, r.w - 6, r.h - 6);
     }
 
-    const color = focused || active || suggested ? COLORS.verbActive : hover ? COLORS.verbHover : COLORS.verb;
-    // The verb rail is glyphs, not a word matrix. The word appears only while the pointer or
-    // keyboard is on a cell, so the resting screen is pure painting.
-    const labelH = hover || focused ? Math.round(14 * model.scale) : 0;
-    drawVerbGlyph(ctx, v.id, r.x + r.w / 2, r.y + r.h / 2 - labelH / 2, Math.round(22 * model.scale), color);
-    if (labelH) {
-      drawText(ctx, v.label, r.x + r.w / 2, r.y + r.h - labelH - 5, {
-        size: labelH, color, align: "center", shadow: false,
-      });
-    }
+    const weight = active ? "bold" : "normal";
+    const size = fitSize(ctx, v.label, r.w - 20, Math.round(21 * model.scale), 18, weight);
+    drawText(ctx, v.label, r.x + (model.scale > 1 ? r.w / 2 : 14), r.y + Math.round((r.h - size) / 2) - 1, {
+      size,
+      color: focused || active || suggested ? COLORS.verbActive : hover ? COLORS.verbHover : COLORS.verb,
+      weight,
+      align: model.scale > 1 ? "center" : "left",
+      shadow: false,
+    });
   });
-}
-
-/** Tiny line glyphs for the twelve verbs; no words at rest. */
-function drawVerbGlyph(ctx: CanvasRenderingContext2D, id: string, x: number, y: number, s: number, color: string): void {
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.strokeStyle = color;
-  ctx.fillStyle = color;
-  ctx.lineWidth = 2;
-  ctx.lineCap = "round";
-  ctx.lineJoin = "round";
-  const door = (open: boolean): void => {
-    ctx.strokeRect(-s * 0.45, -s * 0.75, s * 0.9, s * 1.5);
-    if (open) {
-      ctx.beginPath(); ctx.moveTo(-s * 0.45, -s * 0.75); ctx.lineTo(s * 0.05, -s * 0.45);
-      ctx.lineTo(s * 0.05, s * 0.45); ctx.lineTo(-s * 0.45, s * 0.75); ctx.stroke();
-    } else {
-      ctx.beginPath(); ctx.moveTo(-s * 0.25, -s * 0.25); ctx.lineTo(s * 0.25, s * 0.25);
-      ctx.moveTo(s * 0.25, -s * 0.25); ctx.lineTo(-s * 0.25, s * 0.25); ctx.stroke();
-    }
-  };
-  const arrow = (dir: number): void => {
-    ctx.beginPath(); ctx.moveTo(-dir * s * 0.6, 0); ctx.lineTo(dir * s * 0.55, 0);
-    ctx.moveTo(dir * s * 0.2, -s * 0.3); ctx.lineTo(dir * s * 0.55, 0); ctx.lineTo(dir * s * 0.2, s * 0.3); ctx.stroke();
-  };
-  switch (id) {
-    case "open": door(true); break;
-    case "close": door(false); break;
-    case "push": ctx.strokeRect(s * 0.35, -s * 0.65, s * 0.12, s * 1.3); arrow(1); break;
-    case "pull": ctx.strokeRect(s * 0.35, -s * 0.65, s * 0.12, s * 1.3); arrow(-1); break;
-    case "walk":
-      ctx.beginPath(); ctx.moveTo(-s * 0.5, s * 0.4); ctx.lineTo(-s * 0.15, -s * 0.4);
-      ctx.moveTo(s * 0.05, s * 0.4); ctx.lineTo(s * 0.4, -s * 0.4); ctx.stroke(); break;
-    case "pickup":
-      ctx.beginPath(); ctx.moveTo(-s * 0.5, s * 0.25); ctx.lineTo(-s * 0.5, -s * 0.35);
-      ctx.lineTo(-s * 0.15, -s * 0.35); ctx.lineTo(-s * 0.15, -s * 0.1);
-      ctx.lineTo(s * 0.15, -s * 0.1); ctx.lineTo(s * 0.15, -s * 0.35);
-      ctx.lineTo(s * 0.5, -s * 0.35); ctx.lineTo(s * 0.5, s * 0.55); ctx.stroke(); break;
-    case "talk":
-      ctx.beginPath(); ctx.roundRect(-s * 0.65, -s * 0.55, s * 1.3, s * 0.9, s * 0.18);
-      ctx.stroke(); ctx.beginPath(); ctx.moveTo(-s * 0.15, s * 0.35); ctx.lineTo(-s * 0.3, s * 0.7);
-      ctx.lineTo(s * 0.05, s * 0.35); ctx.stroke(); break;
-    case "give":
-      ctx.strokeRect(-s * 0.6, -s * 0.25, s * 0.7, s * 0.6); ctx.beginPath();
-      ctx.moveTo(s * 0.1, -s * 0.55); ctx.lineTo(s * 0.55, -s * 0.55); ctx.lineTo(s * 0.55, s * 0.55); ctx.stroke(); break;
-    case "use":
-      ctx.beginPath(); ctx.arc(0, 0, s * 0.28, 0, Math.PI * 2); ctx.stroke();
-      for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; ctx.beginPath();
-        ctx.moveTo(Math.cos(a) * s * 0.36, Math.sin(a) * s * 0.36);
-        ctx.lineTo(Math.cos(a) * s * 0.6, Math.sin(a) * s * 0.6); ctx.stroke(); }
-      break;
-    case "look":
-      ctx.beginPath(); ctx.ellipse(0, 0, s * 0.65, s * 0.36, 0, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath(); ctx.arc(0, 0, s * 0.16, 0, Math.PI * 2); ctx.fill(); break;
-    case "turnon":
-      ctx.beginPath(); ctx.moveTo(0, -s * 0.6); ctx.bezierCurveTo(s * 0.45, -s * 0.1, s * 0.3, s * 0.55, 0, s * 0.6);
-      ctx.bezierCurveTo(-s * 0.3, s * 0.55, -s * 0.45, -s * 0.1, 0, -s * 0.6); ctx.stroke(); break;
-    case "turnoff":
-      ctx.beginPath(); ctx.moveTo(0, -s * 0.6); ctx.bezierCurveTo(s * 0.45, -s * 0.1, s * 0.3, s * 0.55, 0, s * 0.6);
-      ctx.bezierCurveTo(-s * 0.3, s * 0.55, -s * 0.45, -s * 0.1, 0, -s * 0.6); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(-s * 0.55, s * 0.55); ctx.lineTo(s * 0.55, -s * 0.55); ctx.stroke(); break;
-  }
-  ctx.restore();
 }
 
 /** The narration, as a cinematic lower-third: no box, just darkness gathering under the line. */

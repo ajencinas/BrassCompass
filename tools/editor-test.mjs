@@ -133,17 +133,18 @@ try {
   assert.equal((await fetch(base + "/__adv/files")).ok, true);
 
   // ---- Alt+click a hotspot opens its script line
-  await evaluate("window.__game.devGoRoom('tavern'); window.__game.cameraX = 640; window.__game.focusCameraX = null");
+  await evaluate("window.__game.devGoRoom('tavern'); window.__game.x = 2240; window.__game.cameraX = 640; window.__game.focusCameraX = null");
   await ff(2);
-  const marta = await client(2240, 440);
+  const martaPoint = await evaluate(`(() => { const g = window.__game; const h = g.room.hotspots.find((x) => x.id === "marta"); const b = h.area.rect; return { x: b.x + b.w / 2 - g.cameraX, y: b.y + b.h / 2 }; })()`);
+  const marta = await client(martaPoint.x, martaPoint.y);
   await mouse("mousePressed", marta.x, marta.y, 1);
   await mouse("mouseReleased", marta.x, marta.y, 1);
   await pause(100);
   const opened = await evaluate(`(() => { const ta = document.querySelector("#adv textarea");
     const line = ta.value.slice(0, ta.selectionStart).split("\\n").length;
-    return { file: document.querySelector(".adv-file").textContent, line: ta.value.split("\\n")[line - 1] }; })()`);
+    return { file: document.querySelector(".adv-file").textContent, text: ta.value, line: ta.value.split("\\n")[line - 1] }; })()`);
   assert.equal(opened.file.trim(), "rooms/tavern.adv");
-  assert.match(opened.line, /^ {2}hotspot marta "Marta"/);
+  assert.match(opened.text, /^ {2}hotspot marta "Marta"/m);
 
   // ---- Log: a few things happen
   await evaluate("document.getElementById('game').focus()");

@@ -1625,6 +1625,9 @@ export class Game {
   /** Take a way out: its effects run, and the curtain leans toward the door. */
   private goThrough(hs: Hotspot, effects: Effect[]): void {
     this.exitAt = this.areaCentre(hs.area);
+    const b = areaBox(hs.area);
+    const image = this.assets.img(this.room.bg);
+    if (image) this.exitCard = { image, x: b.x, y: b.y, w: b.w, h: b.h };
     this.runEffects(effects);
     this.exitAt = null;
   }
@@ -2262,6 +2265,7 @@ export class Game {
       const id = this.pendingRoom;
       this.pendingRoom = null;
       this.loadRoom(id);
+      this.exitCard = null;
       this.transition.arrive({ x: this.x, y: this.y - this.personHeight(this.y) * 0.5 });
       this.fadeTarget = 0;
     }
@@ -2492,6 +2496,8 @@ export class Game {
     this.pendingRoom = id;
   }
   private pendingRoom: string | null = null;
+  /** The painted threshold the player is passing through, held during the curtain. */
+  private exitCard: { image: HTMLImageElement; x: number; y: number; w: number; h: number } | null = null;
 
   // ------------------------------------------------------------ save
 
@@ -3318,20 +3324,6 @@ export class Game {
         ctx.fill();
         ctx.restore();
       }
-      // A compact opening (a door, hatch or ladder) can carry a visible rim of its own. Wide
-      // painted ways (a lane, a whole rigging) get only the pool: an outline there is furniture.
-      const compact = b.w <= 520 && b.h <= 620;
-      if (!this.revealing && compact && (active || intro > 0)) {
-        this.outlineHotspot(ctx, hs, {
-          fill: "rgba(255,190,110,0)",
-          stroke: `rgba(255,214,150,${0.2 + 0.16 * strength})`,
-          width: 1.6,
-          glow: 16,
-          glowColor: "rgba(255,170,80,0.7)",
-          core: 0.14,
-          edge: 0.12,
-        });
-      }
     }
   }
 
@@ -3396,19 +3388,6 @@ export class Game {
     ctx.quadraticCurveTo(x + beam * 0.34, y - rise * 0.55, x + beam / 2, y);
     ctx.closePath();
     ctx.fill();
-    // A soft ring around the pool: a dark contour gives it an edge on a sunlit deck, the warm
-    // line keeps it a light on a dark one.
-    ctx.globalCompositeOperation = "source-over";
-    ctx.beginPath();
-    ctx.ellipse(x, y, r * 0.64, r * 0.21, 0, 0, Math.PI * 2);
-    ctx.strokeStyle = `rgba(38,18,4,${0.16 + 0.12 * pulse})`;
-    ctx.lineWidth = 5;
-    ctx.stroke();
-    ctx.strokeStyle = `rgba(255,214,150,${0.42 * k})`;
-    ctx.lineWidth = 1.8;
-    ctx.shadowColor = "rgba(255,186,96,0.8)";
-    ctx.shadowBlur = 9;
-    ctx.stroke();
     ctx.restore();
   }
 
@@ -3615,25 +3594,15 @@ export class Game {
     // A way out has its own light language (threshold pool, pulse, chevron): a rim here would
     // trace the whole painted opening, which on a door or a rigging is a wireframe, not a light.
     if (this.isExit(hs)) return;
-    const b = areaBox(hs.area);
-    const huge = Math.max(b.w, b.h) > 500;
     const pulse = this.reduced ? 0.72 : 0.58 + 0.32 * Math.sin(this.time * 4.4);
     const heat = 0.5 + 0.5 * pulse;
-    // The "slight brightening": a warm screen light over the shape, strongest where it is small.
+    // A soft warm cloud, not a box: the shape itself brightens under the pointer.
     ctx.save();
     this.areaPath(ctx, hs.area);
     ctx.globalCompositeOperation = "screen";
     ctx.fillStyle = `rgba(255,215,150,${0.05 + 0.045 * heat})`;
     ctx.fill();
     ctx.restore();
-    this.outlineHotspot(ctx, hs, {
-      fill: "rgba(255,205,130,0.015)",
-      stroke: `rgba(255,214,150,${(huge ? 0.28 : 0.44) + 0.24 * heat})`,
-      width: huge ? 1.4 : 2.4,
-      glow: huge ? 22 : 16,
-      glowColor: `rgba(255,190,100,${0.5 + 0.35 * heat})`,
-      core: huge ? 0.1 : 0.4,
-    });
   }
 
   /** A small warm focus ring where Fenn would act: for openings too big to outline honestly. */
@@ -4162,11 +4131,42 @@ export class Game {
   }
 
   private renderFade(ctx: CanvasRenderingContext2D): void {
-    if (this.fade > 0.001) {
-      // Eased, so the curtain settles in and out rather than starting and stopping hard.
-      const f = this.fade;
-      ctx.fillStyle = `rgba(0,0,0,${f * f * (3 - 2 * f)})`;
+    if (this.fade <= 0.001) return;
+    const f = this.fade;
+    const eased = f * f * (3 - 2 * f);
+    ctx.fillStyle = `rgba(0,0,0,${eased})`;
+    ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
+    // Hold on the painted door/hatch/stair being used while the curtain falls. It is the
+    // Monkey Island continuity cue: the cut happens through something you can see, not
+    // between two unrelated paintings. The card appears after the first darkening.
+    if (this.exitCard && f > 0.28) {
+      const card = this.exitCard;
+      const a = Math.min(1, (f - 0.28) / 0.22);
+      const zoom = 1.06 + eased * 0.18;
+      const sw = Math.max(1, Math.min(card.image.width, card.w * 1.25));
+      const sh = Math.max(1, Math.min(card.image.height, card.h * 1.25));
+      const sx = Math.max(0, Math.min(card.image.width - sw, card.x + card.w / 2 - sw / 2));
+      const sy = Math.max(0, Math.min(card.image.height - sh, card.y + card.h / 2 - sh / 2));
+      ctx.save();
+      ctx.globalAlpha = a;
+      ctx.fillStyle = "#020406";
       ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
+      const scale = Math.max(LOGICAL_W / sw, LOGICAL_H / sh) * zoom;
+      const dw = sw * scale, dh = sh * scale;
+      ctx.drawImage(card.image, sx, sy, sw, sh,
+        LOGICAL_W / 2 - dw / 2, LOGICAL_H / 2 - dh / 2, dw, dh);
+      const warm = ctx.createRadialGradient(LOGICAL_W / 2, LOGICAL_H * 0.54, 10,
+        LOGICAL_W / 2, LOGICAL_H * 0.54, LOGICAL_W * 0.46);
+      warm.addColorStop(0, "rgba(255,190,105,0.12)");
+      warm.addColorStop(0.55, "rgba(255,155,70,0.04)");
+      warm.addColorStop(1, "rgba(0,0,0,0.35)");
+      ctx.globalCompositeOperation = "screen";
+      ctx.fillStyle = warm;
+      ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
+      ctx.globalCompositeOperation = "source-over";
+      ctx.fillStyle = `rgba(0,0,0,${Math.max(0, eased - 0.25) * 0.8})`;
+      ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
+      ctx.restore();
     }
   }
 }
