@@ -773,3 +773,8 @@ body.mobile .cinematic-skip { min-width: 44px; min-height: 44px; padding: 12px 1
 body.mobile .cinematic-text { min-height: 44px; }
 body.mobile .area-card-text { left: 6vw; max-width: 84vw; }
 body.mobile .area-card-text h1 { font-size: 2em; }
+
+/* The mobile scene stays wordless like the desktop painting: the act/room names are available
+   to the screen reader through the canvas label, not printed over the HUD. */
+body.mobile .m-context .m-where,
+body.mobile .m-context .m-room-name { display: none; }
