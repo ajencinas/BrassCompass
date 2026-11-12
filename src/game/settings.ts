@@ -2,6 +2,7 @@
 
 import { effectiveTextSpeed, type Prefs, type TextScale, type TextSpeed } from "./prefs";
 import { CONTROLS } from "./controls";
+import { restoreFocus } from "./focus";
 
 export interface SettingsActions {
   resume: () => void; restart: () => void; title: () => void;
@@ -272,6 +273,6 @@ export class Settings {
     this.sync(); this.panel.hidden = false; this.button("resume").focus();
   }
   hide(): void {
-    this.panel.hidden = true; this.previousFocus?.focus();
+    this.panel.hidden = true; restoreFocus(this.previousFocus);
   }
 }

@@ -5,6 +5,8 @@
  * It is not saved: it is a reading aid, not a record of the voyage (that is the casebook).
  */
 
+import { restoreFocus } from "./focus";
+
 export interface HistoryLine {
   speaker: string;
   text: string;
@@ -102,7 +104,7 @@ export class History {
   hide(): void {
     if (!this.open) return;
     this.overlay.hidden = true;
-    this.previousFocus?.focus();
+    restoreFocus(this.previousFocus);
     this.onDismiss();
   }
 }

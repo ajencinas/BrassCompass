@@ -103,7 +103,9 @@ html, body {
 #fatal {
   position: fixed;
   inset: 0;
-  z-index: 20;
+  /* Above every page the game can be showing (settings 30, journal 35, film 40, atlas 70):
+     a failure is never hidden behind an overlay that happened to be open when it hit. */
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;

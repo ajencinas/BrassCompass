@@ -13,6 +13,7 @@
  */
 
 import type { CaseNote } from "./casebook";
+import { restoreFocus } from "./focus";
 import type { SaveData } from "./save";
 
 /** What the card needs from the game: names, the act it is in, and the three ways out. */
@@ -221,7 +222,7 @@ export class Recap {
     if (!this.open) return;
     this.overlay.hidden = true;
     this.unlisten();
-    this.previousFocus?.focus();
+    restoreFocus(this.previousFocus);
   }
 
   private back(): void {

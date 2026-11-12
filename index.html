@@ -20,13 +20,13 @@
         <div class="boot-bar"><i id="bootbar"></i></div>
       </div>
     </div>
-    <div id="bootfail" role="alert" hidden>
+    <div id="bootfail" role="alertdialog" aria-modal="true" aria-labelledby="bootfail-title" aria-describedby="bootfail-detail bootfail-hint" hidden>
       <div class="bootfail-inner">
         <div class="boot-title">THE BRASS COMPASS</div>
-        <p class="bootfail-heading">The harbour is still in fog.</p>
+        <p id="bootfail-title" class="bootfail-heading">The harbour is still in fog.</p>
         <p id="bootfail-detail" class="bootfail-detail">The first room's art could not be loaded.</p>
         <button id="bootfail-retry" type="button" class="bootfail-retry">Try again</button>
-        <p class="bootfail-hint">Check your connection, then reload. If it keeps happening, the game's files may be incomplete.</p>
+        <p id="bootfail-hint" class="bootfail-hint">Check your connection, then reload. If it keeps happening, the game's files may be incomplete.</p>
       </div>
     </div>
     <script type="module" src="./src/main.ts"></script>

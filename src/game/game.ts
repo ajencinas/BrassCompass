@@ -67,6 +67,7 @@ import {
 } from "./mobile";
 import { FirstWatch, readLessons, writeLessons, LESSONS, LESSON_KEY, type LessonId } from "./onboarding";
 import { SHORTCUTS } from "./controls";
+import { restoreFocus } from "./focus";
 
 /**
  * The top bar is icon-only and quiet: small square plates, right-aligned, with no words on the
@@ -611,6 +612,20 @@ export class Game {
     this.syncA11yControls();
   }
 
+  /**
+   * The screen-reader toolbar mirrors the in-play top bar. On the title and after the ending
+   * there is no game behind it: hide it so Tab leaves the canvas for the browser instead of
+   * landing on controls that would do nothing there.
+   */
+  private syncA11yVisibility(): void {
+    const c = this.a11y;
+    if (!c) return;
+    const hide = this.title || this.won;
+    if (hide === c.root.hidden) return;
+    if (hide && c.root.contains(document.activeElement)) restoreFocus(null);
+    c.root.hidden = hide;
+  }
+
   /** Keep the DOM controls' labels and state in step with the canvas's. */
   private syncA11yControls(): void {
     const c = this.a11y;
@@ -759,6 +774,10 @@ export class Game {
       this.mobileUI = new MobileUI(this.mobileBridge());
       this.mobileUI.sync(this.mobileState());
     }
+    // A desktop game is operated from the canvas; give it real DOM focus so a screen reader has
+    // a focused control and Tab's edge hand-off (below) starts from the game, not <body>. On a
+    // phone the touch chrome is real DOM: Tab is left to the browser there instead.
+    if (!this.mobile) this.view.canvas.focus({ preventScroll: true });
     requestAnimationFrame((t) => this.frame(t));
   }
 
@@ -822,6 +841,9 @@ export class Game {
   private frameFailures = 0;
   /** The repeated-failure overlay is up; the loop still runs, but skips update/render. */
   private fatal = false;
+  /** What had focus before the failure dialog took it, and what was made inert behind it. */
+  private fatalPreviousFocus: HTMLElement | null = null;
+  private fatalInert: { el: HTMLElement; inert: boolean }[] = [];
 
   /**
    * A failure path after the frame loop has thrown three times in a row. The loop keeps
@@ -833,6 +855,7 @@ export class Game {
     if (this.fatal) return;
     this.fatal = true;
     this.frameFailures = 0;
+    this.fatalPreviousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     try { this.announce("The game hit a problem. Choose Try again, or reload the page."); } catch { /* DOM gone */ }
     if (typeof document === "undefined") return;
     const el = document.createElement("div");
@@ -840,28 +863,57 @@ export class Game {
     el.setAttribute("role", "alertdialog");
     el.setAttribute("aria-modal", "true");
     el.setAttribute("aria-labelledby", "fatal-title");
-    // Keep stray keys out of the frozen game behind the dialog.
-    el.addEventListener("keydown", (event) => event.stopPropagation());
+    el.setAttribute("aria-describedby", "fatal-detail");
     const detail = error instanceof Error && error.message ? escapeHtml(error.message) : "";
     el.innerHTML = `
       <div class="fatal-inner">
         <h1 id="fatal-title">The game hit a problem</h1>
-        <p>Something failed three frames running${detail ? `: ${detail}` : ""}.</p>
-        <p>The voyage is still in the log. Try again, or reload the page to rebuild it from your save.</p>
+        <p id="fatal-detail">Something failed three frames running${detail ? `: ${detail}` : ""}.
+          The voyage is still in the log. Try again, or reload the page to rebuild it from your save.</p>
         <div class="fatal-actions">
           <button type="button" id="fatal-retry">Try again</button>
           <button type="button" id="fatal-reload">Reload page</button>
         </div>
       </div>`;
-    document.body.append(el);
-    el.querySelector<HTMLButtonElement>("#fatal-retry")?.addEventListener("click", () => {
+    // The frozen game behind the dialog must not answer keys or take focus. The live region is
+    // left out: it is where the dialog's announcement and the recovery notice go.
+    for (const child of Array.from(document.body.children)) {
+      if (!(child instanceof HTMLElement) || child === el || child.id === "sr") continue;
+      this.fatalInert.push({ el: child, inert: child.inert });
+      child.inert = true;
+    }
+    const retry = (): void => {
       el.remove();
       this.fatal = false;
       this.frameFailures = 0;
       // The clock is deliberately reset, so a giant `dt` from time spent in the dialog cannot
       // itself throw the first frame back into the fault.
       this.lastT = 0;
+      for (const { el: child, inert } of this.fatalInert) child.inert = inert;
+      this.fatalInert = [];
+      restoreFocus(this.fatalPreviousFocus);
+      this.fatalPreviousFocus = null;
+      this.announce("The game is running again.");
+    };
+    el.addEventListener("keydown", (event) => {
+      event.stopPropagation();
+      if (event.key === "Escape") {
+        event.preventDefault();
+        retry();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      // A modal alert: Tab stays on its two answers, never on the inert game behind.
+      const buttons = [...el.querySelectorAll<HTMLButtonElement>("button")];
+      const at = buttons.indexOf(document.activeElement as HTMLButtonElement);
+      const next = buttons.length
+        ? (at + (event.shiftKey ? -1 : 1) + buttons.length) % buttons.length
+        : -1;
+      event.preventDefault();
+      if (next >= 0) buttons[next].focus();
     });
+    document.body.append(el);
+    el.querySelector<HTMLButtonElement>("#fatal-retry")?.addEventListener("click", retry);
     el.querySelector<HTMLButtonElement>("#fatal-reload")?.addEventListener("click", () => location.reload());
     el.querySelector<HTMLButtonElement>("#fatal-retry")?.focus();
   }
@@ -898,6 +950,15 @@ export class Game {
     // The touch chrome is real DOM too: a focused verb, satchel or title button owns Enter,
     // Space and Tab; the canvas's shortcuts must not fire a second action behind it.
     if (this.mobileUI && k !== "Escape" && event.target instanceof Node && this.mobileUI.contains(event.target)) return;
+    // On a phone every control is a real DOM button. Leave Tab to the browser so it can walk
+    // the touch chrome, the overlays and the page: the old canvas focus groups trapped it.
+    if (this.mobile && k === "Tab") return;
+    // Tab from <body> is also the browser's: it has to be able to land on the canvas first
+    // (and, after the canvas's focus cycle, on real page controls). A modal overlay holds its
+    // own focus and handles its own Tab, so this only applies while nothing is covering play.
+    if (k === "Tab" && event.target === document.body && !this.paused && !this.cinematic.active &&
+      !this.casebook.open && !this.history.open && !this.deeds.open && !this.recap.open &&
+      !this.atlas.open) return;
     // A modifier on its own, an F-key or a media key means nothing here, and must not skip a line.
     if (!actionKey(k)) return;
     // Any key the game takes counts as use: the icon bar wakes for it. A touch's first tap on
@@ -969,7 +1030,8 @@ export class Game {
     }
     if (k.toLowerCase() === "m") { this.audio.toggleMute(); return; }
     if (this.inputLocked()) {
-      if (k === "Enter" || k === " " || k === "Tab" || k.startsWith("Arrow")) event.preventDefault();
+      // Tab is never held: even mid-fade it must be able to leave the canvas for real controls.
+      if (k === "Enter" || k === " " || k.startsWith("Arrow")) event.preventDefault();
       return;
     }
     if (k.toLowerCase() === "a" && !this.title && !this.won && !this.cinematic.active) {
@@ -1054,8 +1116,11 @@ export class Game {
       return;
     }
     if (k === "Tab") {
+      // At either end of the scene/verb/satchel cycle, let the browser take Tab onward to the
+      // real DOM controls (the screen-reader toolbar or browser chrome). preventDefault here
+      // used to make the canvas a keyboard trap.
+      if (!this.moveFocus(event.shiftKey ? -1 : 1)) return;
       event.preventDefault();
-      this.moveFocus(event.shiftKey ? -1 : 1);
     } else if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(k)) {
       event.preventDefault();
       this.moveFocusGrid(k);
@@ -1084,12 +1149,14 @@ export class Game {
     if ((k === "c" || k === "C") && this.hasSave) this.titleActivate("continue");
     else if ((k === "e" || k === "E") && this.chaptersUnlocked()) this.titleActivate("explore");
     else if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Tab"].includes(k)) {
-      event.preventDefault();
       const delta = k === "ArrowUp" || k === "ArrowLeft" || (k === "Tab" && event.shiftKey) ? -1 : 1;
-      // Nothing focused: the first press lands on what Enter would do.
+      // Nothing focused: the first press lands on what Enter would do. From the last answer
+      // (or before the first) Tab is the browser's: a menu must not trap the keyboard either.
+      if (focus >= 0 && (focus + delta < 0 || focus + delta >= buttons.length)) return;
+      event.preventDefault();
       const next = focus < 0
         ? buttons.find((b) => b.id === defaultTitleButton(buttons)) ?? buttons[0]
-        : buttons[(focus + delta + buttons.length) % buttons.length];
+        : buttons[focus + delta];
       this.setTitleFocus(next.id);
       this.announce(`${next.label}, button ${buttons.indexOf(next) + 1} of ${buttons.length}`);
     } else if (k === "Enter" || k === " ") {
@@ -1136,19 +1203,24 @@ export class Game {
     this.announceFocus();
   }
 
-  /** Tab: the next group (Shift+Tab: the previous), back where focus last was in it. */
-  private moveFocus(delta: number): void {
+  /**
+   * Tab: the next group (Shift+Tab: the previous), back where focus last was in it. Returns
+   * false at either end of the cycle, so the caller can let the browser move focus out of the
+   * canvas instead of wrapping forever.
+   */
+  private moveFocus(delta: number): boolean {
     const groups = FOCUS_GROUPS.filter((g) => this.groupIds(g).length > 0);
-    if (!groups.length) return;
+    if (!groups.length) return false;
     const at = this.focusValid() ? groups.indexOf(this.keyboardFocus!.kind) : -1;
-    const group = at < 0
-      ? (delta < 0 ? groups[groups.length - 1] : groups[0])
-      : groups[(at + delta + groups.length) % groups.length];
+    const index = at < 0 ? (delta < 0 ? groups.length - 1 : 0) : at + delta;
+    if (index < 0 || index >= groups.length) return false;
+    const group = groups[index];
     const ids = this.groupIds(group);
     const remembered = this.focusMemory[group];
     const id = remembered && ids.includes(remembered) ? remembered
       : group === "hotspot" ? this.nearestHotspot() ?? ids[0] : ids[0];
     this.setFocus({ kind: group, id } as KeyboardFocus);
+    return true;
   }
 
   /** The thing on screen closest to Fenn: where a player's eye already is. */
@@ -1937,8 +2009,16 @@ export class Game {
         const at = this.exploreRooms().findIndex((r) => r.id === id);
         if (at >= 0) this.exploreGo(at);
       },
-      openRooms: () => { if (this.explore) this.roomMenu = true; },
-      closeRooms: () => { this.roomMenu = false; },
+      openRooms: () => {
+        if (!this.explore || this.roomMenu) return;
+        this.roomMenu = true;
+        this.announce("Chapter select.");
+      },
+      closeRooms: () => {
+        if (!this.roomMenu) return;
+        this.roomMenu = false;
+        this.announce("Chapter select closed.");
+      },
       state: () => this.mobileState(),
     };
   }
@@ -2761,6 +2841,7 @@ export class Game {
 
   private update(dt: number): void {
     this.tick++;
+    this.syncA11yVisibility();
     // The icon bar is quiet chrome: it stays up for a few seconds after use, then settles to a
     // low alpha until the pointer or a key wakes it. Its hit boxes never move or go away.
     this.idle = Math.min(this.idle + dt, 600);
@@ -4780,15 +4861,24 @@ export class Game {
     const layout = this.roomMenuLayout();
     const count = layout.entries.length;
     if (!count) return false;
-    event.preventDefault();
     const focus = Math.max(0, Math.min(count - 1, this.roomMenuFocus));
-    if (k === "Escape") { this.roomMenu = false; this.announce("Chapter select closed."); return true; }
+    if (k === "Escape") {
+      event.preventDefault();
+      this.roomMenu = false;
+      this.announce("Chapter select closed.");
+      return true;
+    }
     if (k === "Tab") {
       const delta = event.shiftKey ? -1 : 1;
-      this.roomMenuFocus = (focus + delta + count) % count;
+      const next = focus + delta;
+      // The ends of the chart are the way out: let Tab continue to the browser's controls.
+      if (next < 0 || next >= count) return true;
+      event.preventDefault();
+      this.roomMenuFocus = next;
       this.announceSceneFocus();
       return true;
     }
+    event.preventDefault();
     if (k === "Enter" || k === " ") { this.exploreGo(focus); return true; }
     if (k !== "ArrowUp" && k !== "ArrowDown" && k !== "ArrowLeft" && k !== "ArrowRight") return true;
     // Columns are acts; arrows move like the chart is read, not just along a single list.

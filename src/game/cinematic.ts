@@ -1,4 +1,5 @@
 import { assetUrl } from "../content/assets";
+import { restoreFocus } from "./focus";
 
 /**
  * The words baked into each video's pixels. Sighted players read them off the frame; everyone
@@ -72,6 +73,8 @@ export class CinematicPlayer {
   /** Keys down right now, and those that were already down when this cinematic began. */
   private held = new Set<string>();
   private heldAtStart = new Set<string>();
+  /** What had focus before the overlay took it, so the game gets its keyboard back after. */
+  private previousFocus: HTMLElement | null = null;
 
   constructor(private audio: () => CinematicAudio) {
     this.overlay.className = "cinematic";
@@ -191,6 +194,7 @@ export class CinematicPlayer {
       if (this.video.readyState >= 1) startCue();
     }
     const fresh = this.overlay.hidden;
+    if (fresh) this.previousFocus = document.activeElement as HTMLElement | null;
     this.overlay.inert = false;
     this.overlay.hidden = false;
     // From nothing, fade in from transparent. Straight on from another cinematic the overlay is
@@ -231,6 +235,9 @@ export class CinematicPlayer {
     this.overlay.hidden = true;
     this.video.removeAttribute("src");
     this.video.load();
+    // The skip button is gone with the overlay; hand focus back to the game (or to whatever
+    // took it while the film was ending) instead of leaving a screen reader on <body>.
+    if (document.activeElement === document.body) restoreFocus(this.previousFocus);
   }
 
   /** The overlay's fade, as the stylesheet has it (shorter under reduced motion). */
