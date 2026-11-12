@@ -1,6 +1,7 @@
 room salt_camp "The Castaway Camp"
   bg bg_salt_camp_v2b_wide
   width 2560
+  backdrop "saturate(0.82) brightness(0.90) sepia(0.04)"
   music music_fog
   # The plate is the camp at night already: a cold blue-grey salt sheen with two warm lamps.
   # The crew takes the same cold, flattened grade, so nobody reads as a warm cut-out.

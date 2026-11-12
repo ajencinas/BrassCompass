@@ -4,6 +4,7 @@
 room crows_nest "The Marrow — Crow's Nest"
   bg bg_crows_nest_restart_wide
   width 2560
+  backdrop "brightness(0.68) saturate(0.72) contrast(1.05)"
   music music_fog
   ambience wind
   grade "sepia(0.08) saturate(1.02) brightness(0.98)"
