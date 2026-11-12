@@ -509,13 +509,33 @@ try {
   await until(() => evaluate('document.querySelector(".m-dialogue").hidden'), "the conversation to close");
   await waitFocus("a.classList.contains('m-bag')", "focus back on the bag after the conversation");
 
-  // Returning to the title from the pause menu focuses the title's first answer.
+  // The chosen text size reaches the touch chrome, not just the canvas and the page overlays.
+  await key("Escape");
+  await until(() => evaluate('!document.querySelector(".settings").hidden'), "phone pause dialog for text size");
+  await evaluate(`(() => { const s = document.querySelector('select[data-pref="textScale"]');
+    s.value = "1.5"; s.dispatchEvent(new Event("change", { bubbles: true })); return true; })()`);
+  await pause(200);
+  assert.equal(await evaluate('document.documentElement.style.getPropertyValue("--text-scale")'), "1.5",
+    "the phone's chosen text size is recorded");
+  await key("Escape");
+  await until(() => evaluate('document.querySelector(".settings").hidden'), "phone settings after text size");
+  await pause(150);
+  assert.equal(await evaluate('getComputedStyle(document.querySelector(".m-bag")).fontSize'), "22.5px",
+    "the touch HUD follows the chosen text size");
+  assert.equal(await evaluate("document.documentElement.scrollWidth <= innerWidth + 1 && document.body.scrollWidth <= innerWidth + 1"), true,
+    "the phone still has no horizontal overflow at 150% text");
+  assert.equal(await evaluate('document.querySelector(".m-bag").getBoundingClientRect().height >= 44'), true,
+    "the bag stays a touch target at 150% text");
+
+  // Returning to the title from the pause menu focuses the recommended answer and keeps the size.
   await key("Escape");
   await until(() => evaluate('!document.querySelector(".settings").hidden'), "phone pause dialog for title");
   await evaluate('document.querySelector(".settings [data-action=\\"title\\"]").click()');
   await until(() => game("g.title"), "the title after returning");
   await waitFocus("Boolean(a.dataset.title)", "focus on a title button");
   assert.match(await sr(), /Title screen\./, "the returned title is announced");
+  assert.equal(await evaluate('getComputedStyle(document.querySelector(".m-title-button")).fontSize'), "22.5px",
+    "the phone title follows the chosen text size");
 
   assert.deepEqual(runtimeErrors, [], `page exceptions: ${runtimeErrors.join("; ")}`);
   console.log("a11y browser test passed: desktop focus/tab/overlays/save error, boot and frame failures, reduced motion/text size, phone keyboard + focus");
