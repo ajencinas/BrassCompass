@@ -86,12 +86,12 @@ room alley "Wreckers' Lane"
 
   # The broad green sliding door under the green glass lamp: Vex's counting house, green light
   # spilling across the cobbles at the widest point of the lane.
-  hotspot counting_door "the counting house door"
-    area 1300,240 300x400
-    stand 1430,844
+  hotspot counting_door "the counting house window"
+    area 1450,220 380x420
+    stand 1600,844
     exit counting_house
-    look "A broad green warehouse door with a lamp above it. The paint is newer than the rest of the lane. Vex's counting house."
-    open "I go up the lane to Vex's warehouse."
+    look "A tall green-painted window with a lamp above it. The paint is newer than the rest of the lane. Vex's counting house."
+    open "The sill is low enough. I get a knee on it and climb into Vex's counting house."
 
   # The shipwright's lit door at the right edge, with the broad rope-and-oar window beside it.
   hotspot chandlery_door "the shipwright's door"
