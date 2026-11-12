@@ -1065,3 +1065,37 @@ body.mobile .m-rooms .m-drawer-head {
 
 /* Long dialogue at 150% landscape text scrolls inside its band instead of being clipped. */
 body.mobile .m-dialogue-inner { overflow-y: auto; }
+
+/* On a phone the chart's painted strip is too small to read or tap. Use the same place list the
+   screen reader already gets, as a full-height touch list instead. */
+body.mobile .atlas-stage { display: none; }
+body.mobile .atlas-key {
+  position: absolute;
+  inset: 86px 12px 86px;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  clip: auto;
+  clip-path: none;
+  white-space: normal;
+  z-index: 5;
+  background: rgba(5, 13, 22, 0.82);
+  border: 1px solid rgba(201, 162, 74, 0.35);
+}
+body.mobile .atlas-row {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 0;
+  border-bottom: 1px solid rgba(201, 162, 74, 0.2);
+  color: #f3e3bd;
+  font: 16px/1.3 Georgia, serif;
+  text-align: left;
+}
+body.mobile .atlas-row.locked { color: #9aa6ae; }
+body.mobile .atlas-row-name { display: block; }
+body.mobile .atlas-row-note { display: block; margin-top: 2px; color: #c9a24a; font: 12px/1.25 system-ui, sans-serif; }
+body.mobile .atlas-row:focus-visible { outline: 2px solid #ffe6a8; outline-offset: -4px; }

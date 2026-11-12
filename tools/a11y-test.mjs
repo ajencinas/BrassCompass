@@ -554,7 +554,7 @@ try {
   await focus('[data-bar="map"]');
   await key("Enter");
   await until(() => game("g.atlas.open"), "phone atlas");
-  await waitFocus("a.classList.contains('atlas-marker')", "focus on an atlas place");
+  await waitFocus("a.classList.contains('atlas-marker') || a.classList.contains('atlas-row')", "focus on an atlas place");
   await key("Escape");
   await until(() => game("!g.atlas.open"), "phone atlas to close");
   await waitFocus("a.dataset.bar === 'map'", "focus on Map after the atlas");

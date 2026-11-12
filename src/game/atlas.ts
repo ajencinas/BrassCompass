@@ -436,7 +436,10 @@ export class Atlas {
   }
 
   private focusFirst(): void {
-    const first = this.overlay.querySelector<HTMLElement>(".atlas-marker") ?? this.back;
+    const mobile = document.body.classList.contains("mobile");
+    const first = (mobile
+      ? this.overlay.querySelector<HTMLElement>(".atlas-row")
+      : this.overlay.querySelector<HTMLElement>(".atlas-marker")) ?? this.back;
     if (!first) return;
     this.overlay.querySelectorAll(".selected").forEach((el) => el.classList.remove("selected"));
     first.classList.add("selected");

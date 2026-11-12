@@ -834,3 +834,8 @@ body.high-contrast .deeds button:focus-visible {
   color: #f3e3bd;
   font: 12px/1.2 system-ui, sans-serif;
 }
+
+
+/* Settings must shrink inside a 320px phone at 200% text. */
+.settings section { min-width: 0; }
+.settings-grid > *, .reading > *, .settings select { min-width: 0; max-width: 100%; }
