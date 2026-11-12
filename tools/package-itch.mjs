@@ -175,7 +175,7 @@ Fenn comes back to Dreadwater Isle three months after his father sailed into the
 harbour is half empty, the only captain still sailing wants a price, and the fog keeps every
 ship it takes.
 
-A family-friendly point-and-click adventure in four acts: 24 painted rooms, twelve verbs, and
+A family-friendly point-and-click adventure in four acts: 25 painted rooms, twelve verbs, and
 one inherited brass compass that has never once pointed north.
 
 HOW TO PLAY
@@ -191,8 +191,8 @@ HOW TO PLAY
 SAVING
   Progress saves automatically. Continue on the title screen picks up where you left off.
 
-  Best in a current Chrome, Firefox, Edge or Safari, desktop or laptop. A keyboard helps
-  the game's accessibility features; a mouse or trackpad is required.
+  Best in a current Chrome, Firefox, Edge or Safari, desktop or laptop. Fully playable by
+  keyboard, mouse, touch or gamepad.
 
 CREDITS AND LICENCE
   See CREDITS.md and LICENSE, both beside this file. Copyright (c) 2026. All rights reserved.

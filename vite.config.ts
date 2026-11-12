@@ -158,6 +158,22 @@ export default defineConfig({
   // URLs are resolved against it too — see `assetUrl` in src/content/assets.ts.
   base: "./",
   plugins: [advScripts(), activePublicAssets()],
+  // Bind to loopback here as well as in the npm scripts: relying on the flags alone means an
+  // `npx vite` run (an IDE task, a script, a habit) would serve the editor endpoint on the
+  // network. A fixed port with `strictPort` also keeps the tests' ports from drifting.
+  server: {
+    host: "127.0.0.1",
+    port: 5173,
+    strictPort: true,
+    // Cross-site reads are already refused by the /__adv middleware's own checks.
+    cors: false,
+  },
+  preview: {
+    host: "127.0.0.1",
+    port: 4173,
+    strictPort: true,
+    cors: false,
+  },
   build: {
     // The active-art plugin above is the only thing that writes public files into dist.
     copyPublicDir: false,
