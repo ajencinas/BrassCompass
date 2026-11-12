@@ -10,7 +10,7 @@
  *   music tracks → track gain → musicBus (Music slider) → musicDuck → master (Master, mute)
  *   interface sounds and one-shots → sfxBus (Effects slider) ──────→ master
  *   footsteps → stepPan → sfxBus
- *   the room: ambience bed, place sounds, gulls → envBus → sfxBus
+ *   the room: ambience bed, room tone, place sounds, gulls → envBus → sfxBus
  *   score cues → cueBus (Music slider, before the duck) ─────────→ master
  *   master → limiter (≈ -2 dB ceiling) → speakers
  *
@@ -29,16 +29,23 @@
 import type { Assets } from "./assets";
 import {
   STEPS, TICK, PAGE, SATCHEL, HATCH, POP, HISS, LAP, DRIP, CREAK, STAMP, BELL, PLACE, GULLS, LEVEL,
+  HOVER, ADVANCE, CHOICE, THRESHOLD, SAVE, ERROR,
   compassMotif, actBreakCue, NOTE_STINGER, motifNotes,
   renderSound, stepMix, emitterMix,
   type Design, type Surface, type EmitterSound, type DoorKind,
 } from "./foley";
+import {
+  ROOM_TONES, ROOM_TONE_FADE_IN, ROOM_TONE_FADE_OUT,
+  type RoomToneKind,
+} from "./roomtone";
 
 type AmbienceKind = "sea" | "wind" | "tavern";
 
 /** What a room asks of the audio: its bed (or gulls), its floor, and the sounds that belong to it. */
 export interface RoomSound {
   ambience?: AmbienceKind | "gulls";
+  /** A quiet indoor bed under the room; omit it outdoors. */
+  roomTone?: RoomToneKind;
   /** Defaults to wood. */
   footsteps?: Surface;
   /** Placed at `at` (world coordinates), or everywhere in the room when it is omitted. */
@@ -109,7 +116,7 @@ const TALK_DIP = 0.75, TALK_DOWN = 0.4, TALK_UP = 0.8;
  * a regenerated bed with a different shape falls back to the element's own loop rather than
  * being cut in the middle. Re-measure by the same method if the beds are ever regenerated.
  */
-const BED_LOOP_END: Record<string, { duration: number; end: number }> = {
+export const BED_LOOP_END: Record<string, { duration: number; end: number }> = {
   "dock.mp3": { duration: 48.0, end: 44.7 },
   "fog.mp3": { duration: 44.0, end: 39.3 },
   "office.mp3": { duration: 36.0, end: 28.5 },
@@ -123,7 +130,7 @@ const BED_LOOP_END: Record<string, { duration: number; end: number }> = {
  * one timeout aimed at the measured end, not polled every 80 ms: a 48 s bed woke the main
  * thread ~600 times to discover nothing had happened.
  */
-const LOOP_GUARD_MS = 60;
+export const LOOP_GUARD_MS = 60;
 
 /**
  * Bus calibration. The seven beds measure around -18 dBFS mean, while the synthesised effects
@@ -132,15 +139,27 @@ const LOOP_GUARD_MS = 60;
  * the effects bus so a click, a step and the bed sit in the same range; the user sliders stay
  * meaningful (1.0 is this calibrated level). The master limiter below catches summed peaks.
  */
-const MUSIC_TRIM = 0.18;   // about -15 dB
-const SFX_TRIM = 1.8;      // about +5 dB
+export const MUSIC_TRIM = 0.18;   // about -15 dB
+export const SFX_TRIM = 1.8;      // about +5 dB
 
 /** A gentle master limiter: nothing should clip when a cue, a bell and the room sum. */
-const LIMITER = { threshold: -2, knee: 0, ratio: 20, attack: 0.002, release: 0.18 };
+export const LIMITER = { threshold: -2, knee: 0, ratio: 20, attack: 0.002, release: 0.18 };
+
+/**
+ * Two saves inside this window are one gesture — a choice, the room change behind it, and the
+ * autosave that follows — so the confirmation speaks once, not three times.
+ */
+export const SAVE_CUE_GAP_MS = 10000;
 
 /** Each foley sound and how many variants of it to render. */
 const BANKS = {
   tick: { design: TICK, variants: 3 },
+  hover: { design: HOVER, variants: 3 },
+  advance: { design: ADVANCE, variants: 3 },
+  choice: { design: CHOICE, variants: 2 },
+  threshold: { design: THRESHOLD, variants: 2 },
+  save: { design: SAVE, variants: 2 },
+  error: { design: ERROR, variants: 2 },
   page: { design: PAGE, variants: 3 },
   satchel: { design: SATCHEL, variants: 3 },
   hatch: { design: HATCH, variants: 2 },
@@ -166,8 +185,9 @@ type Bank = keyof typeof BANKS;
 /** What each place sound plays, so a room's sounds can be made before it is shown. */
 const VOICE_BANKS: Record<EmitterSound, Bank[]> = { crackle: ["pop", "hiss"], lapping: ["lap"], drip: ["drip"], creak: ["creak"] };
 /** Made in idle time once audio is unlocked, so the first click or page turn never waits. */
-const WARM: Bank[] = ["tick", "page", "satchel", "hatch", "stamp", "bell", "step:wood",
-  "note", "motif:1", "motif:2", "motif:3", "motif:4"];
+const WARM: Bank[] = ["tick", "hover", "advance", "choice", "threshold", "page", "satchel",
+  "hatch", "stamp", "bell", "step:wood", "note", "save", "error",
+  "motif:1", "motif:2", "motif:3", "motif:4"];
 
 /** Run `fn` when the main thread is idle (or soon, where there is no idle callback). */
 function idle(fn: () => void): void {
@@ -216,8 +236,13 @@ export class AudioEngine {
   /** A looping environmental bed: sea, wind or a room full of people. */
   private ambience: Ambience | null = null;
   private ambienceKind: AmbienceKind | null = null;
+  /** A quiet indoor bed, crossfaded from room to room; null outdoors. */
+  private roomTone: Ambience | null = null;
+  private roomToneKind: RoomToneKind | null = null;
   private bedBuffer: AudioBuffer | null = null;
   private noiseBuffers = new Map<number, AudioBuffer>();
+  /** When the last save cue sounded (performance.now), so a burst of saves speaks once. */
+  private savedAt = -Infinity;
 
   /** Rendered foley: a few variants of each sound, made the first time it is played. */
   private banks = new Map<string, AudioBuffer[]>();
@@ -275,7 +300,7 @@ export class AudioEngine {
     // Muted, the room's sounds stop being scheduled at all; they pick up again on unmute.
     for (const v of this.voices) {
       if (this.muted) this.disarm(v);
-      else this.arm(v);
+      else this.armVoice(v);
     }
     return this.muted;
   }
@@ -374,6 +399,13 @@ export class AudioEngine {
       this.ambienceKind = null;
       this.setAmbience(kind);
     }
+    // The same for the room tone: the title's harbour has none, but a room entered before the
+    // first gesture (a scripted opening) gets its air as soon as the gesture arrives.
+    if (this.roomToneKind && !this.roomTone) {
+      const kind = this.roomToneKind;
+      this.roomToneKind = null;
+      this.setRoomTone(kind);
+    }
     if (this.current?.paused) void this.current.play().catch(() => {});
     if (this.current) this.watchLoop(this.current);
   }
@@ -392,7 +424,7 @@ export class AudioEngine {
     if (this.ctx && this.ctx.state !== "running") void this.ctx.resume().catch(() => {});
     if (this.current?.paused) void this.current.play().catch(() => {});
     if (this.current) this.watchLoop(this.current);
-    for (const v of this.voices) this.arm(v);
+    for (const v of this.voices) this.armVoice(v);
   }
 
   // ---------------------------------------------------------------- music
@@ -676,6 +708,7 @@ export class AudioEngine {
     this.surface = room.footsteps && STEPS[room.footsteps] ? room.footsteps : "wood";
     // Rooms change under a black fade: the moment to make anything this one needs.
     if (this.ctx) this.bank(`step:${this.surface}`);
+    this.setRoomTone(room.roomTone ?? null);
     this.setAmbience(room.ambience && room.ambience !== "gulls" ? room.ambience : null);
     const key = JSON.stringify([room.ambience === "gulls", room.emitters ?? []]);
     if (key === this.placeKey) return;
@@ -707,7 +740,7 @@ export class AudioEngine {
       const voice: Voice = { kind: spec.kind, at, out, pan, mix, timer: null };
       this.voices.push(voice);
       if (spec.kind !== "gulls") for (const name of VOICE_BANKS[spec.kind]) this.bank(name);
-      this.arm(voice, true);
+      this.armVoice(voice, true);
     }
   }
 
@@ -731,7 +764,7 @@ export class AudioEngine {
   }
 
   /** Schedule a voice's next event, unless audio is suspended, muted or not yet unlocked. */
-  private arm(v: Voice, first = false): void {
+  private armVoice(v: Voice, first = false): void {
     if (v.timer !== null || !this.ctx || this.hidden || this.muted) return;
     let wait: number;
     if (v.kind === "gulls") {
@@ -746,7 +779,7 @@ export class AudioEngine {
       v.timer = null;
       if (!this.voices.includes(v)) return;
       this.fire(v);
-      this.arm(v);
+      this.armVoice(v);
     }, wait * 1000);
   }
 
@@ -831,7 +864,7 @@ export class AudioEngine {
     const ctx = this.ctx;
     if (!ctx) return;
 
-    if (this.ambience) this.stopAmbience(this.ambience);
+    if (this.ambience) this.stopBed(this.ambience);
     this.ambience = null;
     if (!kind) return;
 
@@ -884,16 +917,79 @@ export class AudioEngine {
     }
   }
 
-  private stopAmbience(amb: Ambience): void {
+  /**
+   * Start, change or stop the very quiet air of an interior. The exact same crossfaded noise
+   * loop as the ambience, filtered to the room's own voice; a change of room fades the old air
+   * out while the new one comes up, so a door never cuts the soundscape in half.
+   */
+  setRoomTone(kind: RoomToneKind | null): void {
+    if (this.roomToneKind === kind) return;
+    this.roomToneKind = kind;
+
+    const ctx = this.ctx;
+    if (!ctx) return;
+
+    if (this.roomTone) this.stopBed(this.roomTone, ROOM_TONE_FADE_OUT);
+    this.roomTone = null;
+    if (!kind) return;
+    const spec = ROOM_TONES[kind];
+    if (!spec) return;
+
+    const src = ctx.createBufferSource();
+    src.buffer = this.bed(ctx);
+    src.loop = true;
+    // A different starting point each time, so the same room heard twice does not breathe alike.
+    const offset = Math.random() * src.buffer.duration;
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = spec.filter.type;
+    filter.frequency.value = spec.filter.frequency;
+    if (spec.filter.q !== undefined) filter.Q.value = spec.filter.q;
+    const swell = ctx.createGain();   // base level, modulated by the slow LFO
+    swell.gain.value = spec.level;
+    const out = ctx.createGain();     // fade in and out
+
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    lfo.frequency.value = spec.lfo.hz;
+    lfoGain.gain.value = spec.level * spec.lfo.depth;
+    lfo.connect(lfoGain).connect(swell.gain);
+
+    const now = ctx.currentTime;
+    out.gain.setValueAtTime(0, now);
+    out.gain.linearRampToValueAtTime(1, now + ROOM_TONE_FADE_IN);
+
+    src.connect(filter).connect(swell).connect(out)
+      .connect(this.envBus ?? this.sfxBus ?? this.master ?? ctx.destination);
+    const nodes: AudioNode[] = [src, filter, swell, lfo, lfoGain, out];
+    if (spec.air) {
+      // A whisper of the room's upper air: paper, rope, glass. It does not swell with the body.
+      const air = ctx.createBiquadFilter();
+      air.type = "bandpass";
+      air.frequency.value = spec.air.frequency;
+      air.Q.value = spec.air.q;
+      const airGain = ctx.createGain();
+      airGain.gain.value = spec.level * spec.air.level;
+      src.connect(air).connect(airGain).connect(out);
+      nodes.push(air, airGain);
+    }
+
+    lfo.start(now);
+    src.start(now, offset);
+    this.roomTone = { src, lfo, out, nodes, timer: null };
+  }
+
+  /** Let a bed go: fade it over `fade` seconds, then free every node once it is inaudible. */
+  private stopBed(amb: Ambience, fade = 0.4): void {
     const ctx = this.ctx!;
     if (amb.timer !== null) window.clearTimeout(amb.timer);
     amb.timer = null;
     const t = ctx.currentTime;
     amb.out.gain.cancelScheduledValues(t);
     amb.out.gain.setValueAtTime(amb.out.gain.value, t);
-    amb.out.gain.setTargetAtTime(0, t, 0.4);
+    amb.out.gain.setTargetAtTime(0, t, fade);
     // Stop on the audio clock once the fade is inaudible (~6 time constants), then free the graph.
-    const end = t + 2.5;
+    const end = t + Math.max(2.5, fade * 6);
     amb.src.onended = () => { for (const n of amb.nodes) { try { n.disconnect(); } catch { /* done */ } } };
     try { amb.src.stop(end); } catch { /* already stopped */ }
     try { amb.lfo.stop(end); } catch { /* already stopped */ }
@@ -1075,6 +1171,57 @@ export class AudioEngine {
   /** The interface click: a soft wooden tick. The most-heard sound in the game. */
   click(): void {
     this.sound("tick", LEVEL.tick, { rate: 0.97 + Math.random() * 0.06 });
+  }
+
+  // ---------------------------------------------------------------- interaction cues
+
+  /** A pointer has arrived on something: the smallest tick, far under the click. */
+  hover(): void {
+    this.sound("hover", LEVEL.hover, { rate: 0.97 + Math.random() * 0.06 });
+  }
+
+  /** A first tap on a thing (touch has no hover) has armed it: a touch firmer than a hover. */
+  arm(): void {
+    this.sound("hover", LEVEL.arm, { rate: 0.82 + Math.random() * 0.05 });
+  }
+
+  /** A line of dialogue has been read and let go: a soft breath, not a page turn. */
+  advance(): void {
+    this.sound("advance", LEVEL.advance, { rate: 0.96 + Math.random() * 0.06 });
+  }
+
+  /** A dialogue choice has been taken: two quiet bars, distinct from the interface click. */
+  choice(): void {
+    this.sound("choice", LEVEL.choice, { rate: 0.98 + Math.random() * 0.03 });
+  }
+
+  /**
+   * The chart opens or closes: the casebook's paper at a larger scale, with one low note under
+   * it. The open is the bigger gesture; the close is quicker and lower.
+   */
+  chart(open: boolean): void {
+    this.sound("page", open ? LEVEL.chartOpen : LEVEL.chartClose, { rate: open ? 0.86 : 1.16 });
+    if (open) this.tone(196, 0.5, "sine", LEVEL.chartTone, 146, { attack: 0.05 });
+    else this.tone(146, 0.32, "sine", LEVEL.chartTone * 0.7, 110, { attack: 0.03 });
+  }
+
+  /** A way out crossed: the room's air changing under the door's own sound, over the curtain. */
+  threshold(): void {
+    this.sound("threshold", LEVEL.threshold, { rate: 0.96 + Math.random() * 0.05 });
+  }
+
+  /** A save was written: a page settling and two low bars that say "kept". Rate-limited. */
+  saved(): void {
+    if (this.hidden) return;   // a save on pagehide is for the notebook, not the room
+    const now = performance.now();
+    if (now - this.savedAt < SAVE_CUE_GAP_MS) return;
+    this.savedAt = now;
+    this.sound("save", LEVEL.save, { rate: 0.98 + Math.random() * 0.03 });
+  }
+
+  /** A refusal or a failed save: low, short and muted — never a buzzer over the scene. */
+  error(): void {
+    this.sound("error", LEVEL.error, { rate: 0.97 + Math.random() * 0.04 });
   }
 
   /**

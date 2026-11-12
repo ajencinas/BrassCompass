@@ -76,6 +76,8 @@ import {
 } from "./mobile";
 import { FirstWatch, readLessons, writeLessons, LESSONS, LESSON_KEY, type LessonId } from "./onboarding";
 import { SHORTCUTS } from "./controls";
+import { roomToneFor } from "./soundscape";
+import { cuePlays } from "../engine/roomtone";
 
 /**
  * The top bar is icon-only and quiet: small square plates, right-aligned, with no words on the
@@ -322,6 +324,8 @@ export class Game {
   private hoverItem: string | null = null;
   private hoverHotspot: string | null = null;
   private hoverChoice = -1;
+  /** What the last hover cue named, so crossing a scene ticks once per thing, not per pixel. */
+  private hoverCueKey: string | null = null;
   private keyboardFocus: KeyboardFocus | null = null;
   /** Reveal: every hotspot outlined in light. Held with Q, or toggled by its button. */
   private revealHeld = false;
@@ -519,7 +523,7 @@ export class Game {
       back: () => { this.audio.page(); this.announce("Back at the title. Set sail when you're ready."); },
     });
     this.history = new History(() => this.audio.page());
-    this.atlas = new Atlas({ onTravel: (room) => this.travelTo(room), onDismiss: () => this.audio.page() });
+    this.atlas = new Atlas({ onTravel: (room) => this.travelTo(room), onDismiss: () => this.audio.chart(false) });
     // next-level: casebook — after the closing card: the voyage's deeds, then home.
     this.deeds = new DeedsPage(() => this.leaveDeeds());
     // The harbour under the title: the dock's lanterns and moving water, inside the drift.
@@ -758,7 +762,9 @@ export class Game {
       this.onClick(x, y, button, info.clicks);
     });
     this.input.onMove((x, y, _b, info) => {
-      if (info.kind === "mouse" && !this.mobile) this.touch = false;
+      // A touch emits a move before its tap: knowing it is touch now keeps that move from
+      // sounding a hover cue just before the arm cue that belongs to the gesture.
+      this.touch = info.kind !== "mouse" || this.mobile;
       this.onMove(x, y);
     });
     this.input.onKey((k, event) => this.onKey(k, event));
@@ -973,6 +979,7 @@ export class Game {
         event.preventDefault();
         const delta = k === "ArrowUp" || k === "ArrowLeft" ? -1 : 1;
         this.hoverChoice = (this.hoverChoice + delta + choices.length) % choices.length;
+        this.cueHover(`choice:${this.hoverChoice}`);
         const c = choices[this.hoverChoice];
         this.announce(`${this.hoverChoice + 1} of ${choices.length}: ${sentenceEnd(c.text)}${c.seen ? " Asked before." : ""}`);
       } else if (k === "Enter" || k === " ") {
@@ -1069,6 +1076,7 @@ export class Game {
     this.keyboardFocus = focus;
     this.focusMemory[focus.kind] = focus.id;
     this.hoverHotspot = null;
+    this.cueHover(`focus:${focus.kind}:${focus.id}`);
     this.syncKeyboardCamera();
     this.announceFocus();
   }
@@ -1292,6 +1300,7 @@ export class Game {
       const layout = this.roomMenuLayout();
       const i = layout.rects.findIndex((r) => insideBox(x, y, r));
       if (i >= 0) this.roomMenuFocus = i;
+      this.cueHover(i >= 0 ? `menu:${i}` : null);
       return;
     }
 
@@ -1299,6 +1308,7 @@ export class Game {
       const m = this.dialogueModel();
       const i = dialogueHit(x, y, m);
       this.hoverChoice = i ?? -1;
+      this.cueHover(i === null ? null : `choice:${i}`);
       return;
     }
 
@@ -1306,11 +1316,30 @@ export class Game {
     if (hit) {
       if (hit.kind === "verb") this.hoverVerb = hit.id;
       else if (hit.kind === "item") { this.hoverItem = hit.id; this.fx.seen(hit.id); }
+      this.cueHover("id" in hit ? `${hit.kind}:${hit.id}` : `panel:${hit.kind}`);
       return;
     }
 
     const hs = y < SCENE_H ? this.hotspotAt(x + this.cameraX, y) : null;
     this.hoverHotspot = hs?.id ?? null;
+    this.cueHover(hs ? `hotspot:${hs.id}` : null);
+  }
+
+  /**
+   * A new thing under the pointer or the keyboard focus: one very quiet tick, once. The same
+   * thing again is silent, so a hand crossing a scene (or a camera sliding under a still
+   * pointer) never chatters. Reduced motion leaves the hover cue out; touch has `arm` instead.
+   */
+  private cueHover(key: string | null): void {
+    if (key === this.hoverCueKey) return;
+    this.hoverCueKey = key;
+    if (!key || this.touch || !cuePlays("hover", this.reduced)) return;
+    // The screen may be changing hands under the pointer: no hover feedback over a pause menu,
+    // a chart, a conversation's overlay, a cutscene or a curtain.
+    if (this.paused || this.cinematic.active || this.won || this.areaCardBusy || this.curtain ||
+        this.pendingRoom !== null || this.fade > 0.5 || this.atlas.open || this.casebook.open ||
+        this.history.open || this.deeds.open) return;
+    this.audio.hover();
   }
 
   /** next-level: a11y — which top-bar button a point is on, in the same layout it is drawn with. */
@@ -1386,7 +1415,7 @@ export class Game {
     // settle instead; nothing is cancelled or lost.
     if (this.areaCardBusy || this.pendingRoom !== null || this.curtain || this.fade > 0) return;
     if (this.path.length > 0 || this.onArrive || this.walkGoal || this.running) return;
-    this.audio.page();
+    this.audio.chart(true);
     this.atlas.show({
       act: this.act,
       room: this.room?.id ?? null,
@@ -1505,6 +1534,7 @@ export class Game {
       // A finger has no hover. The first tap names the plate and the second does its work, the
       // same two-tap grammar a touch player already uses on the scene.
       if (this.touch && this.touchBarArmed !== bar) {
+        this.audio.arm();
         this.touchBarArmed = bar;
         this.barLabel = { id: bar, left: 3.2 };
         this.idle = 0;
@@ -1681,6 +1711,7 @@ export class Game {
 
   /** Show what a first tap on `hs` would do, and wait for a separate confirmation. */
   private armTouch(hs: Hotspot): void {
+    this.audio.arm();
     this.hoverHotspot = hs.id;
     this.hoverDirty = false;
     this.touchArmed = hs.id;
@@ -2543,7 +2574,7 @@ export class Game {
     const chosen = vis[displayIndex];
     if (!chosen) return;
     const choice = node.choices[chosen.index];
-    this.audio.click();
+    this.audio.choice();
     this.trace?.({ kind: "choice", tree: tree.id, choice });
     this.history.add({ speaker: characterOf("fenn").name, text: choice.text, choice: true });
 
@@ -2568,6 +2599,7 @@ export class Game {
     }
     // Choices that are all hidden leave nothing to wait for: treat the node as an ending.
     if (this.visibleChoices().length) return;
+    this.audio.advance();
     const tree = this.dialogue.tree;
     if (node.next && node.next !== "END" && tree.nodes[node.next]) {
       this.enterNode(tree, node.next);
@@ -2907,6 +2939,9 @@ export class Game {
     if (hit?.kind === "verb") this.hoverVerb = hit.id;
     else if (hit?.kind === "item") this.hoverItem = hit.id;
     else if (!hit && y < SCENE_H) this.hoverHotspot = this.hotspotAt(x + this.cameraX, y)?.id ?? null;
+    // The scene moved out from under a still pointer: start the hover cue clean, so coming
+    // back to the same thing is a new arrival rather than a suppressed repeat.
+    if (!this.hoverVerb && !this.hoverItem && !this.hoverHotspot) this.hoverCueKey = null;
   }
 
   // ------------------------------------------------------------ rooms
@@ -2945,12 +2980,16 @@ export class Game {
     this.sentence = { verb: null, a: null, b: null };
     this.keyboardFocus = null;
     this.hoverHotspot = null;
+    this.hoverCueKey = null;
     this.clearTouchArm();
     this.walkGoal = null;
     this.running = false;
     if (!this.title) this.announce(`${room.name}.`);
     if (room.music) this.audio.playMusic(room.music);
-    this.audio.setRoom({ ambience: room.ambience, footsteps: room.footsteps, emitters: room.emitters });
+    this.audio.setRoom({
+      ambience: room.ambience, roomTone: roomToneFor(room.id) ?? undefined,
+      footsteps: room.footsteps, emitters: room.emitters,
+    });
     this.persist();
     // The title only borrows the harbour's painting, music and ambience as a backdrop. Its
     // arrival scene belongs to the voyage: running it here would set `dock_landed`, speak the
@@ -2982,6 +3021,8 @@ export class Game {
     this.onArrive = null;
     this.persist();
     this.audio.door(sound);
+    // The air changing under the door's own sound; a plain walk out in the open has no threshold.
+    if (sound !== "none" && cuePlays("threshold", this.reduced)) this.audio.threshold();
     // Fetch the next room's art while the curtain falls.
     const next = ROOMS[id];
     if (next) void this.assets.ensure(roomImageKeys(next));
@@ -3056,6 +3097,7 @@ export class Game {
     if (writeSave(data)) {
       this.hasSave = true;
       this.saveBroken = false;
+      this.audio.saved();
     } else {
       // Quota or blocked storage. Say so once, in character, rather than losing the voyage quietly.
       if (!this.saveBroken) {
@@ -3111,6 +3153,7 @@ export class Game {
 
   /** Put a save problem up in its banner; it's in the log (L) and read out too. */
   private showSaveNotice(text: string, sticky = false): void {
+    this.audio.error();
     this.saveNotice = { text, left: sticky ? 1e9 : Math.max(SAVE_NOTICE_MIN, (2 * text.length) / READ_CPS) };
     this.history.add({ speaker: characterOf("fenn").name, text });
     this.announce(text);
@@ -4866,6 +4909,7 @@ export class Game {
     const on = buttons.find((b) => b.id === this.titleFocus) ?? buttons.find((b) => b.id === defaultTitleButton(buttons));
     this.needle = { fromY: on?.y ?? null, since: this.titleClock };
     this.titleFocus = id;
+    this.cueHover(id ? `title:${id}` : null);
   }
   /** Show the title, with focus on what Enter would do: Continue when there's a voyage. */
   private enterTitle(): void {
