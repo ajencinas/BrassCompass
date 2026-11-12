@@ -143,6 +143,24 @@ def main() -> int:
             total_b += b
             total_a += a
 
+    # A regenerated side walk strip can come back at a different figure scale than the
+    # front/back strip, even though both are the same 1100 px canvas. Match the side cells to the
+    # front/back median after the shrink, so the source sheets agree about how tall Fenn is.
+    side_walk = ASSETS / "characters" / "elias_walk_v2_painted_v2.png"
+    vertical_walk = ASSETS / "characters" / "elias_walk_vertical_painted.png"
+    if not args.dry_run and side_walk.exists() and vertical_walk.exists():
+        print("Walk scale:")
+        subprocess.run(
+            [
+                sys.executable,
+                str(ROOT / "tools" / "normalize_walk_sheet.py"),
+                str(side_walk),
+                "--frames", "6",
+                "--match", str(vertical_walk),
+            ],
+            check=True,
+        )
+
     if not args.no_video and shutil.which("ffmpeg"):
         print("Video:")
         for path in sorted((ASSETS / "video").glob("*.mp4")):
