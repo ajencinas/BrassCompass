@@ -278,6 +278,53 @@ export const PAGE: Design = (r) => [
   { src: "noise", filter: { type: "lowpass", f: 1100 }, at: between(r, 0.12, 0.15), attack: 0.008, decay: 0.035, amp: 0.4 },
 ];
 
+/**
+ * A pointer arriving on something: the smallest dry tick the synth can make. It must be
+ * quieter than the click and half as long, so a hand crossing a scene does not chatter.
+ */
+export const HOVER: Design = (r) => [
+  { src: "noise", filter: { type: "bandpass", f: between(r, 1200, 1600), q: 3 }, attack: 0.001, decay: 0.012, amp: 0.8 },
+  { src: "sine", f: between(r, 1800, 2200), attack: 0.0008, decay: 0.008, amp: 0.25 },
+];
+
+/** A line of dialogue read and let go: one soft breath, not a page turn. */
+export const ADVANCE: Design = (r) => [
+  { src: "noise", filter: { type: "bandpass", f: between(r, 620, 820), q: 0.8 }, attack: 0.012, decay: 0.045, amp: 1 },
+  { src: "sine", f: between(r, 240, 280), f2: 210, glide: 0.04, attack: 0.004, decay: 0.04, amp: 0.25 },
+];
+
+/** A choice taken: two small struck bars a fifth apart, left to die quickly. */
+export const CHOICE: Design = (r) => {
+  const root = between(r, 388, 396);   // a hand on a bar, never the same strike twice
+  return [
+    { src: "sine", f: root, attack: 0.006, decay: 0.09, amp: 0.8 },
+    { src: "sine", f: root * 1.4983, at: 0.07, attack: 0.006, decay: 0.11, amp: 0.55 },
+  ];
+};
+
+/**
+ * A way out crossed: the low air of one room giving way to the next, under the door's own
+ * sound. Long enough to sit across the curtain, quiet enough to be felt rather than heard.
+ */
+export const THRESHOLD: Design = (r) => [
+  { src: "noise", filter: { type: "lowpass", f: between(r, 260, 340) }, attack: 0.3, hold: 0.12, decay: 0.24, amp: 1 },
+  { src: "sine", f: between(r, 62, 72), f2: between(r, 42, 48), glide: 0.35, attack: 0.24, hold: 0.1, decay: 0.22, amp: 0.4 },
+];
+
+/** A save written: the page settling and two low bars that say "kept", under the line. */
+export const SAVE: Design = (r) => [
+  { src: "noise", filter: { type: "bandpass", f: between(r, 1900, 2300), q: 0.8 }, attack: 0.02, decay: 0.05, amp: 0.35 },
+  { src: "sine", f: 261.63, attack: 0.012, decay: 0.12, amp: 0.5 },
+  { src: "sine", f: 392, at: 0.09, attack: 0.012, decay: 0.14, amp: 0.28 },
+];
+
+/** A refusal or a failed save: two low notes a semitone apart, soft and short — not a buzzer. */
+export const ERROR: Design = (r) => [
+  { src: "sine", f: between(r, 132, 142), f2: 108, glide: 0.04, attack: 0.003, decay: 0.09, amp: 0.7 },
+  { src: "noise", filter: { type: "lowpass", f: 420 }, attack: 0.002, decay: 0.05, amp: 0.35 },
+  { src: "sine", f: between(r, 125, 135), f2: 100, glide: 0.04, at: 0.09, attack: 0.003, decay: 0.1, amp: 0.55 },
+];
+
 /** Something going into the satchel: canvas and leather rustling, then it settles. */
 export const SATCHEL: Design = (r) => [
   { src: "noise", filter: { type: "bandpass", f: between(r, 900, 1100), q: 0.6 }, attack: 0.05, decay: 0.07, amp: 0.6 },
@@ -293,6 +340,15 @@ export const SATCHEL: Design = (r) => [
  */
 export const LEVEL = {
   tick: 0.085, page: 0.05, satchel: 0.05, hatch: 0.1, stairs: 0.07, stamp: 0.11, bell: 0.09,
+  /**
+   * The interaction cues. A hover is the quietest thing the game says — 14 dB under the click,
+   * and shorter; arming one on a touch is a touch firmer. Dialogue advances are a breath, a
+   * choice is two soft bars, and the chart is the page plus one low note. The threshold swell
+   * sits under the door's own knock, and a save confirms itself without ever ringing out.
+   */
+  hover: 0.018, arm: 0.026, advance: 0.022, choice: 0.034,
+  chartOpen: 0.05, chartClose: 0.033, chartTone: 0.02,
+  threshold: 0.045, save: 0.026, error: 0.045,
   /**
    * The compass motif and the note-filed stinger are quiet, dialogue-level sounds. The motif's
    * peak sits 10 dB under the interface tick's — the loudest routine one-shot, and this game's
