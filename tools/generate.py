@@ -3631,6 +3631,44 @@ for _name, _model, _payload, _rel in FRESH_CHARACTER_JOBS:
     MANIFEST.append((_name, "image", _model, _payload, _rel))
 
 
+# ---------------- inventory icons: bold silhouettes for the 64 px chip ----------------
+# Four live icons were thin, dark or semantically muddy at chip size: the ledger, the brass
+# nameplate drawn as a book, the crowbar and the spyglass. They are repainted with the same
+# object, light and palette but thicker forms and one dominant shape, so the inventory reads at
+# a glance. No lettering is allowed anywhere: the chart's coastline and the nameplate's anchor
+# carry the meaning, not words.
+ICON_REPAINTS = [
+    ("item_chart_painted", "props/items/chart_painted.png",
+     icon("A single folded sea chart on heavy cream parchment, partly unrolled and tilted "
+          "slightly, a bold dark-brown ink coastline with three small islands drawn across it, a "
+          "simple painted compass rose in one corner, a torn edge and a red wax seal at one side, "
+          "the paper curling at the corners, the chart filling most of the frame; thick simple "
+          "painted shapes, a strong pale silhouette against the background",
+          "the chart is blank of lettering: no words, no numbers, no place names, no labels, no "
+          "printed text of any kind")),
+    ("item_nameplate_painted", "props/items/nameplate_painted.png",
+     icon("A single weathered rectangular brass ship's nameplate with rounded corners, a raised "
+          "blank cartouche in the middle and a small embossed anchor emblem below it, green "
+          "verdigris in the recessed border, four rivet holes, salt-stained and worn, tilted "
+          "slightly toward the viewer; thick solid metal, one strong rectangular silhouette",
+          "the plate is blank: no engraved words, no letters, no numbers, no labels, no text of "
+          "any kind")),
+    ("item_crowbar_painted", "props/items/crowbar_painted.png",
+     icon("A single heavy old iron crowbar lying diagonally from lower left to upper right, a "
+          "thick curved split claw at the upper end and a broad flat chisel tip at the lower end, "
+          "worn red paint chipped back to dark iron, rust in the pits; the bar is thick and "
+          "chunky, not a thin line, with one clear hooked silhouette")),
+    ("item_spyglass_painted", "props/items/spyglass_painted.png",
+     icon("A single brass spyglass with three thick draw tubes extended, lying diagonally from "
+          "lower left to upper right, a broad dark leather grip band and a large bright glass "
+          "lens at the wide end, worn polished brass; thick chunky forms, simplified, no thin "
+          "wire details, one strong tapered silhouette")),
+]
+
+for _name, _rel, _payload in ICON_REPAINTS:
+    MANIFEST.append((_name, "image", BG_MODEL, _payload, _rel))
+
+
 def load_cache():
     if os.path.exists(CACHE):
         with open(CACHE) as f:
