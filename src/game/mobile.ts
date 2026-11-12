@@ -503,7 +503,9 @@ export class MobileUI {
   /** Move focus onto the control the new screen is built around. */
   private focusScreen(screen: MobileState["screen"]): void {
     if (screen === "title") {
-      const button = this.titleButtons.querySelector<HTMLButtonElement>("button:not([disabled])");
+      // Land on the recommended answer (Continue, Keep, Begin), as the canvas title does.
+      const button = this.titleButtons.querySelector<HTMLButtonElement>("button.m-primary:not([disabled])")
+        ?? this.titleButtons.querySelector<HTMLButtonElement>("button:not([disabled])");
       if (this.isShowing(this.title)) button?.focus({ preventScroll: true });
       return;
     }

@@ -608,6 +608,7 @@ export class Game {
     const previous = make("Previous inventory page", () => this.turnPage(-1), "PageUp");
     const next = make("Next inventory page", () => this.turnPage(1), "PageDown");
     document.body.append(root);
+    root.hidden = this.title || this.won;
     this.a11y = { root, reveal, tip, previous, next };
     this.syncA11yControls();
   }

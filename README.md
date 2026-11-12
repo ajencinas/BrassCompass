@@ -394,6 +394,14 @@ kept by hand). Set `CHROME_BIN` if Chromium is installed under another name.
 The test requires Node 22+ (the game itself supports Node 18+). It uses Chrome DevTools Protocol
 directly, so it adds no package dependency.
 
+`npm run test:a11y` drives the keyboard and screen-reader paths in the same headless browser:
+Tab/Shift+Tab hand-off out of the canvas at the ends of the title and play focus cycles, focus
+inside and back out of settings/the chart/history/the atlas, the phone viewport's real Chapter
+select, satchel, conversation, settings and atlas buttons, live-region text for the title,
+Chapter select, save errors and failures, a boot failure and its recovery, a forced repeated
+frame failure, and the reduced-motion and text-size settings. It needs the same shared art shelf
+as the other browser tests.
+
 `npm run test:fuzz` (about a minute; not part of `test:fast`) is the state-machine fuzzer's
 regression suite (`tools/fuzz/regression.mjs`): every hotspot with every verb and act item in a
 sample of rooms with the game's invariants checked after each, the whole of Act II's state space
