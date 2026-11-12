@@ -9,6 +9,7 @@
  */
 
 import { escapeHtml } from "./atlas";
+import { restoreFocus } from "./focus";
 
 /** The render loop's target: 60 frames a second, however fast the display refreshes. */
 export const FRAME_MS = 1000 / 60;
@@ -131,28 +132,58 @@ export interface FrameFailureHooks {
 export function showFrameFailure(error: unknown, hooks: FrameFailureHooks): void {
   try { hooks.announce("The game hit a problem. Choose Try again, or reload the page."); } catch { /* DOM gone */ }
   if (typeof document === "undefined") return;
+  const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  const inert: { el: HTMLElement; was: boolean }[] = [];
   const el = document.createElement("div");
   el.id = "fatal";
   el.setAttribute("role", "alertdialog");
   el.setAttribute("aria-modal", "true");
   el.setAttribute("aria-labelledby", "fatal-title");
-  // Keep stray keys out of the frozen game behind the dialog.
-  el.addEventListener("keydown", (event) => event.stopPropagation());
+  el.setAttribute("aria-describedby", "fatal-detail");
   const detail = error instanceof Error && error.message ? escapeHtml(error.message) : "";
   el.innerHTML = `
     <div class="fatal-inner">
       <h1 id="fatal-title">The game hit a problem</h1>
-      <p>Something failed three frames running${detail ? `: ${detail}` : ""}.</p>
-      <p>The voyage is still in the log. Try again, or reload the page to rebuild it from your save.</p>
+      <p id="fatal-detail">Something failed three frames running${detail ? `: ${detail}` : ""}.
+        The voyage is still in the log. Try again, or reload the page to rebuild it from your save.</p>
       <div class="fatal-actions">
         <button type="button" id="fatal-retry">Try again</button>
         <button type="button" id="fatal-reload">Reload page</button>
       </div>
     </div>`;
+  // The frozen game behind the dialog must not answer keys or take focus. The live region is
+  // left out: it is where the dialog's announcement and the recovery notice go.
+  for (const child of Array.from(document.body.children)) {
+    if (!(child instanceof HTMLElement) || child === el || child.id === "sr") continue;
+    inert.push({ el: child, was: child.inert });
+    child.inert = true;
+  }
+  const close = (): void => {
+    el.remove();
+    for (const { el: child, was } of inert) child.inert = was;
+    restoreFocus(previous);
+  };
+  el.addEventListener("keydown", (event) => {
+    event.stopPropagation();
+    if (event.key === "Escape") {
+      event.preventDefault();
+      close();
+      hooks.retry();
+      try { hooks.announce("The game is running again."); } catch { /* DOM gone */ }
+      return;
+    }
+    if (event.key !== "Tab") return;
+    const buttons = [...el.querySelectorAll<HTMLButtonElement>("button")];
+    const at = buttons.indexOf(document.activeElement as HTMLButtonElement);
+    const next = buttons.length ? (at + (event.shiftKey ? -1 : 1) + buttons.length) % buttons.length : -1;
+    event.preventDefault();
+    if (next >= 0) buttons[next].focus();
+  });
   document.body.append(el);
   el.querySelector<HTMLButtonElement>("#fatal-retry")?.addEventListener("click", () => {
-    el.remove();
+    close();
     hooks.retry();
+    try { hooks.announce("The game is running again."); } catch { /* DOM gone */ }
   });
   el.querySelector<HTMLButtonElement>("#fatal-reload")?.addEventListener("click", () => location.reload());
   el.querySelector<HTMLButtonElement>("#fatal-retry")?.focus();

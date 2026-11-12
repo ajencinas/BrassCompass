@@ -6,6 +6,8 @@
  * that scrolling, selection and screen readers work without reimplementing them.
  */
 
+import { restoreFocus } from "./focus";
+
 export interface CaseNote {
   id: string;
   text: string;
@@ -144,7 +146,7 @@ export class Casebook {
   hide(): void {
     if (!this.open) return;
     this.overlay.hidden = true;
-    this.previousFocus?.focus();
+    restoreFocus(this.previousFocus);
     this.onDismiss();
   }
 }

@@ -157,6 +157,14 @@ export class MobileUI {
   private roomList: HTMLElement;
 
   private drawerOpen = false;
+  /** The last screen state sync saw, so a real screen change can move focus once. */
+  private lastScreen: MobileState["screen"] | null = null;
+  /** The chapter-select sheet was up on the previous sync. */
+  private roomsWereOpen = false;
+  /** What had focus before a conversation took it, so the play screen gets it back. */
+  private dialogueReturnFocus: HTMLElement | null = null;
+  /** The title was built once already; a later rebuild is a menu change worth focusing. */
+  private titleBuilt = false;
   private itemKey = "";
   private choiceKey = "";
   private titleKey = "";
@@ -373,10 +381,32 @@ export class MobileUI {
   }
 
   private setDrawer(open: boolean): void {
+    const was = this.drawerOpen;
     this.drawerOpen = open;
     this.drawers.hidden = !open;
     this.bag.setAttribute("aria-expanded", String(open));
     if (open) this.renderItems(this.bridge.state());
+    // The satchel is a real drawer: opening it puts the keyboard on the first thing inside,
+    // and closing it returns to the bag that opened it, not to <body>.
+    if (open && !was) {
+      const first = this.items.querySelector<HTMLButtonElement>(".m-item")
+        ?? this.q<HTMLButtonElement>(".m-drawer-close");
+      first?.focus({ preventScroll: true });
+    } else if (!open && was && this.drawers.contains(document.activeElement)) {
+      if (this.isShowing(this.bag)) this.bag.focus({ preventScroll: true });
+      else this.focusGame();
+    }
+  }
+
+  /** Whether an element is actually rendered (its ancestors are not hidden). */
+  private isShowing(el: HTMLElement | null): boolean {
+    return Boolean(el && !el.hidden && el.getClientRects().length > 0);
+  }
+
+  /** Put the keyboard back on the canvas. */
+  private focusGame(): void {
+    const canvas = document.getElementById("game");
+    canvas?.focus({ preventScroll: true });
   }
 
   /** Update the DOM from the game's plain state. Cheap enough to call ten times a second. */
@@ -443,6 +473,58 @@ export class MobileUI {
 
     this.syncVerbs(state);
     if (this.drawerOpen) this.renderItems(state);
+
+    // A sheet or a screen that replaced another one moves focus with it: a real DOM button that
+    // has just been put away (or shown) must not leave the keyboard on <body>.
+    const screenChanged = this.lastScreen !== null && this.lastScreen !== state.screen;
+    this.lastScreen = state.screen;
+    const roomsOpen = state.screen === "play" && Boolean(state.roomMenu?.open);
+    if (roomsOpen && !this.roomsWereOpen) this.focusRooms();
+    else if (!roomsOpen && this.roomsWereOpen && !screenChanged) this.focusAfterRooms();
+    this.roomsWereOpen = roomsOpen;
+    if (screenChanged) this.focusScreen(state.screen);
+  }
+
+  /** Focus the first scene of the chapter-select sheet (or its Done button if it is empty). */
+  private focusRooms(): void {
+    const first = this.roomList.querySelector<HTMLButtonElement>(".m-room")
+      ?? this.q<HTMLButtonElement>(".m-rooms-close");
+    first.focus({ preventScroll: true });
+  }
+
+  /** The sheet closed: back to the button that opens it, or to the scene if focus had left. */
+  private focusAfterRooms(): void {
+    const active = document.activeElement;
+    if (!this.rooms.contains(active) && active !== document.body) return;
+    if (this.isShowing(this.scenes)) this.scenes.focus({ preventScroll: true });
+    else this.focusGame();
+  }
+
+  /** Move focus onto the control the new screen is built around. */
+  private focusScreen(screen: MobileState["screen"]): void {
+    if (screen === "title") {
+      // Land on the recommended answer (Continue, Keep, Begin), as the canvas title does.
+      const button = this.titleButtons.querySelector<HTMLButtonElement>("button.m-primary:not([disabled])")
+        ?? this.titleButtons.querySelector<HTMLButtonElement>("button:not([disabled])");
+      if (this.isShowing(this.title)) button?.focus({ preventScroll: true });
+      return;
+    }
+    if (screen === "dialogue") {
+      this.dialogueReturnFocus = document.activeElement instanceof HTMLElement
+        ? document.activeElement : null;
+      this.dialogueText.focus({ preventScroll: true });
+      return;
+    }
+    if (screen === "ending") {
+      this.q<HTMLButtonElement>(".m-ending-continue").focus({ preventScroll: true });
+      return;
+    }
+    if (screen === "play" && !this.roomsWereOpen) {
+      const back = this.dialogueReturnFocus;
+      this.dialogueReturnFocus = null;
+      if (back && this.isShowing(back)) back.focus({ preventScroll: true });
+      else this.focusGame();
+    }
   }
 
   private syncTopBar(state: MobileState): void {
@@ -458,6 +540,8 @@ export class MobileUI {
     const key = state.title.buttons.map((b) => `${b.id}|${b.label}|${b.sub ?? ""}|${b.kind}|${b.disabled ? 1 : 0}`).join("§");
     if (key === this.titleKey) return;
     this.titleKey = key;
+    const rebuild = this.titleBuilt;
+    this.titleBuilt = true;
     this.titleButtons.replaceChildren();
     for (const b of state.title.buttons) {
       const button = document.createElement("button");
@@ -476,6 +560,12 @@ export class MobileUI {
         button.append(sub);
       }
       this.titleButtons.append(button);
+    }
+    // A confirmation or a finished voyage changed the menu under the keyboard: land on its
+    // recommended answer instead of losing focus with the buttons that were replaced.
+    if (rebuild && state.screen === "title" && this.isShowing(this.title)) {
+      const primary = this.titleButtons.querySelector<HTMLButtonElement>(".m-primary");
+      (primary ?? this.titleButtons.querySelector<HTMLButtonElement>("button"))?.focus({ preventScroll: true });
     }
   }
 
@@ -502,6 +592,7 @@ export class MobileUI {
     const key = d.choices.map((c) => `${c.text}|${c.seen ? 1 : 0}`).join("§");
     if (key !== this.choiceKey) {
       this.choiceKey = key;
+      const hadFocus = this.choices.contains(document.activeElement);
       this.choices.replaceChildren();
       d.choices.forEach((choice, i) => {
         const button = document.createElement("button");
@@ -511,6 +602,10 @@ export class MobileUI {
         button.textContent = choice.text;
         this.choices.append(button);
       });
+      if (hadFocus) {
+        const first = this.choices.querySelector<HTMLButtonElement>(".m-choice");
+        (first ?? this.dialogueText).focus({ preventScroll: true });
+      }
     }
     this.dialogueContinue.hidden = !d.canAdvance || d.choices.length > 0;
   }

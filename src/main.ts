@@ -46,14 +46,27 @@ function showBootFailure(missing: string[]): void {
   window.setTimeout(() => boot?.remove(), 700);
   const panel = document.getElementById("bootfail");
   const detail = document.getElementById("bootfail-detail");
-  if (detail) {
-    detail.textContent = missing.length
-      ? `The first room's art could not be loaded (${missing.join(", ")}).`
-      : "The first room's art could not be loaded.";
+  const detailText = missing.length
+    ? `The first room's art could not be loaded (${missing.join(", ")}).`
+    : "The first room's art could not be loaded.";
+  if (detail) detail.textContent = detailText;
+  // There is no game behind the alert: take the dead canvas out of the tab order and the
+  // accessibility tree, so Tab cannot land on controls that will never answer.
+  const stage = document.getElementById("stage");
+  if (stage) {
+    stage.inert = true;
+    stage.setAttribute("aria-hidden", "true");
   }
+  const canvas = document.getElementById("game") as HTMLCanvasElement | null;
+  if (canvas) canvas.tabIndex = -1;
   if (panel) {
     panel.hidden = false;
     (document.getElementById("bootfail-retry") as HTMLButtonElement | null)?.focus();
+  }
+  // The alertdialog names the failure for a screen reader; the live region also says what to do.
+  const live = document.getElementById("sr");
+  if (live) {
+    live.textContent = `The harbour is still in fog. ${detailText} Choose Try again, or check your connection and reload the page.`;
   }
 }
 

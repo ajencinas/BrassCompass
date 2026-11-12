@@ -12,6 +12,7 @@
  */
 
 import { DEEDS, DEED_TOTAL, type Deed } from "../content/deeds";
+import { restoreFocus } from "./focus";
 
 export const DEEDS_KEY = "brasscompass.deeds.v1";
 /** The last line of the voyage, and the bookend under both columns. */
@@ -195,7 +196,7 @@ export class DeedsPage {
   hide(): void {
     if (!this.open) return;
     this.overlay.hidden = true;
-    this.previousFocus?.focus();
+    restoreFocus(this.previousFocus);
     this.onDismiss();
   }
 }

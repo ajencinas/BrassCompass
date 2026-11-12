@@ -13,6 +13,8 @@
  * places remain as an invisible list for screen readers and for the tests that drive them.
  */
 
+import { restoreFocus } from "./focus";
+
 export interface AtlasRoom {
   id: string;
   name: string;
@@ -240,7 +242,7 @@ export class Atlas {
   hide(): void {
     if (this.overlay.hidden) return;
     this.overlay.hidden = true;
-    this.previousFocus?.focus();
+    restoreFocus(this.previousFocus);
     this.handlers.onDismiss();
   }
 

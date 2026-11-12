@@ -27,7 +27,8 @@
     "postbuild": "node tools/audit-assets.mjs --dist",
     "test:assets": "node tools/audit-assets.mjs",
     "test:mobile": "node tools/mobile-test.mjs",
-    "test:audio": "node tools/audio-test.mjs"
+    "test:audio": "node tools/audio-test.mjs",
+    "test:a11y": "node tools/a11y-test.mjs"
   },
   "devDependencies": {
     "typescript": "^5.6.0",
