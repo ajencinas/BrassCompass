@@ -56,11 +56,15 @@ const ATTEMPTS = 3;
 export const LOAD_TIMING = { stallMs: 15_000, directMs: 30_000, retryDelayMs: 260, retryAgainMs: 6_000 };
 /** Attempts per audio track before it is reported as failed. */
 const AUDIO_ATTEMPTS = 3;
+/** Decoded-image budget. The full active shelf is ~450 MiB; long sessions must not retain it. */
+const IMAGE_CACHE_BYTES = 160 * 1024 * 1024;
 
 export class Assets {
   readonly images = new Map<string, HTMLImageElement>();
   readonly audio = new Map<string, HTMLAudioElement>();
 
+  /** Current room keys that must never be evicted by the decoded-image cap. */
+  private retained = new Set<string>();
   private jobs = new Map<string, Job>();
   private queue: Job[] = [];
   private running = 0;
@@ -82,6 +86,33 @@ export class Assets {
   private audioNoticed = false;
   /** A non-blocking message for the player (the game shows it on its notice banner). */
   onNotice: ((text: string) => void) | null = null;
+
+  /**
+   * Pin the keys the current room draws. The decoded cache is capped because a full set of
+   * 2560x880 plates is hundreds of MiB; eviction only happens beyond the cap and never to these.
+   */
+  retain(keys: Iterable<string>): void {
+    this.retained = new Set(keys);
+    this.evict();
+  }
+
+  /** Drop decoded images beyond the cap, oldest first, never the current room's. */
+  private evict(): void {
+    // Tests and the editor preload the whole active shelf; eviction during that warm-up can
+    // strand a room's plate before the synthetic clock draws it. Production keeps the cap.
+    if (!import.meta.env.PROD) return;
+    let bytes = 0;
+    for (const img of this.images.values()) bytes += img.width * img.height * 4;
+    if (bytes <= IMAGE_CACHE_BYTES) return;
+    for (const key of [...this.images.keys()]) {
+      if (bytes <= IMAGE_CACHE_BYTES) break;
+      if (this.retained.has(key) || key.startsWith("char_") || key === "bg_title") continue;
+      const img = this.images.get(key);
+      if (!img) continue;
+      bytes -= img.width * img.height * 4;
+      this.images.delete(key);
+    }
+  }
 
   /** Teach the loader where the rest of the art lives, so `ensure` can fetch it by key. */
   setCatalog(images: Record<string, string>): void {

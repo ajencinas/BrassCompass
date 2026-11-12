@@ -1779,6 +1779,12 @@ export class Game {
       if (!this.mobile) this.roomMenuClick(x, y);
       return;
     }
+    // The walking strip is the visible way back to Chapter select, so let the pointer use it.
+    if (this.explore && !this.roomMenu && x >= 470 && x <= 1080 && y >= BAR.y && y <= BAR.y + BAR.h) {
+      this.roomMenu = true;
+      this.focusCurrentScene();
+      return;
+    }
     this.audio.unlock();
     this.lastInput = "pointer";
     this.idle = 0;
@@ -3313,6 +3319,7 @@ export class Game {
     // down until they arrive (roomReady), and the loader retries a flaky image before falling
     // back, so a slow or missing plate cannot leave the room black.
     void this.assets.ensure(roomImageKeys(room));
+    this.assets.retain(roomImageKeys(room));
     // Arrive at the door we came through; saved positions may predate a floor change.
     const start = clampToFloor(pos ?? (from ? room.arrive?.[from] : undefined) ?? room.entry, room.walk);
     this.x = start.x;
@@ -5441,9 +5448,9 @@ export class Game {
   }
 
   private renderExplore(ctx: CanvasRenderingContext2D): void {
-    // Chapter select is chrome too: its banner and headings follow the scale,
-    // fitted so the fixed plates (and the top bar beside them) are never overflowed.
-    const scale = this.textScale;
+    // Chapter select is chrome too. Its fixed chart rows cannot absorb 200% type without
+    // colliding, so cap this one screen's type at 120% rather than overlap headings and columns.
+    const scale = Math.min(this.textScale, 1.2);
     if (!this.roomMenu) {
       // A quiet plate under the top bar while a scene is walked: the way back to the list.
       ctx.fillStyle = "rgba(4,10,18,0.88)";
