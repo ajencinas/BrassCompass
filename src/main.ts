@@ -26,13 +26,13 @@ function withBase(urls: Record<string, string>): Record<string, string> {
  * queued every non-boot image — ~86 MB before the manifest was pruned — while a slow connection
  * sat on the title, and a room could arrive without its plate.
  */
-const BOOT = new Set([
-  "bg_title", "bg_dock_cinema_wide",
-  "char_elias", "char_walk_v2", "char_walk_vertical",
-]);
+const BOOT = new Set(["bg_title"]);
+const FIRST_ROOM_ART = [
+  "bg_dock_cinema_wide", "char_elias", "char_walk_v2", "char_walk_vertical",
+];
 /** The tracks worth fetching at boot: the title's and the first room's. The rest load on demand. */
 const EAGER_AUDIO = ["music_dock"];
-const ESSENTIAL = ["bg_title", "bg_dock_cinema_wide", "char_elias"];
+const ESSENTIAL = ["bg_title"];
 
 function pick(keep: boolean): Record<string, string> {
   return Object.fromEntries(Object.entries(IMAGES).filter(([k]) => BOOT.has(k) === keep));
@@ -142,6 +142,8 @@ async function boot(): Promise<void> {
   const game = new Game(view, input, assets, audio);
   assets.onNotice = (text) => game.notify(text);
   game.start();
+  // Let the title paint before streaming the first room; Begin/Continue hold the room curtain.
+  void assets.ensure(FIRST_ROOM_ART);
 
   // Dev/test helpers. Tests drive the clock synchronously (__ff), so they cannot wait for a
   // room's lazy art mid-loop; __prefetchAll lets the harness load the whole manifest first.
