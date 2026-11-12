@@ -6,6 +6,7 @@ Reads MANIFEST, calls RunComfy, post-processes, writes to public/assets/.
 Every job is cached by a hash of (model_id, payload) so re-running never
 re-bills a successful generation.
 """
+import base64
 import hashlib
 import json
 import os
@@ -490,6 +491,48 @@ def post_painted_walk_sheet(raw_bytes, out_path, frames=6, rear_frames=0):
     return sheet.size
 
 
+def replace_walk_frame(out_path, target, source, frames=6):
+    """Replace one cell of a packed walk strip with another cell of the same character.
+
+    Image-to-image repaints a strip as a whole; it will not reliably redraw one bad cell while
+    leaving the other five alone. Once the strip is packed, the nearest same-character cell is
+    copied over the bad one and scaled to its figure height, so the cycle keeps one body size and
+    one shared baseline. Numbers are 1-based.
+    """
+    import numpy as np
+    from PIL import Image
+
+    im = Image.open(out_path).convert("RGBA")
+    cw = im.width // frames
+    cells = [im.crop((i * cw, 0, (i + 1) * cw, im.height)) for i in range(frames)]
+
+    def bounds(cell):
+        ys, xs = np.where(np.asarray(cell)[:, :, 3] > 16)
+        if not len(ys):
+            raise RuntimeError(f"walk cell has no opaque figure: {out_path}")
+        return int(xs.min()), int(ys.min()), int(xs.max()), int(ys.max())
+
+    tx0, ty0, tx1, ty1 = bounds(cells[target - 1])
+    sx0, sy0, sx1, sy1 = bounds(cells[source - 1])
+    fig = cells[source - 1].crop((sx0, sy0, sx1 + 1, sy1 + 1))
+    target_h = ty1 - ty0 + 1
+    scale = target_h / fig.height
+    fig = fig.resize(
+        (max(1, round(fig.width * scale)), target_h), Image.LANCZOS, reducing_gap=3.0
+    )
+
+    fixed = Image.new("RGBA", (cw, im.height), (0, 0, 0, 0))
+    px = (tx0 + tx1 + 1) // 2 - fig.width // 2
+    fixed.alpha_composite(fig, (px, ty1 - fig.height + 1))
+    cells[target - 1] = fixed
+
+    sheet = Image.new("RGBA", im.size, (0, 0, 0, 0))
+    for i, cell in enumerate(cells):
+        sheet.alpha_composite(cell, (i * cw, 0))
+    sheet.save(out_path)
+    print(f"       walk frame {target} replaced with frame {source} (same character, shared baseline)")
+
+
 def post_audio(raw_bytes, out_path, max_seconds=None):
     """Normalise to OGG mono-friendly mp3 and trim to a loop length."""
     import subprocess, tempfile
@@ -589,6 +632,13 @@ CHAR_KEYS = {
 PAINTED_BODY_KEYS = {
     f"npc_{cid}_body_painted" for cid in ("vex", "quill", "hobb", "dorrit", "marta")
 }
+# The image-to-image repaint pass also produces keyed sprites (not portraits); postprocess must
+# cut them out rather than centre-cropping them like a dialogue painting.
+PAINTED_BODY_KEYS |= {
+    "npc_nib_body_painted",
+    "npc_weather_body_painted",
+    "npc_quill_body_painted_v2",
+}
 
 # Fenn's repaint: he is the one figure always on screen in front of the painterly plates, so his
 # sprite is painted to the plates' finish rather than drawn as flat anime. The same person, the
@@ -605,6 +655,11 @@ PAINTED_CHAR_KEYS = {
     "char_elias_painted", "char_walk_v2_painted", "char_walk_vertical_painted",
 }
 PAINTED_WALK_KEYS = {"char_walk_v2_painted", "char_walk_vertical_painted"}
+# The repainted side strip replaces the cell with the wrong figure; it is packed by the same
+# painted-sheet pass so its feet share one baseline. Diffusion would not leave the first cell
+# alone on prompt alone, so the nearest same-character cell is transplanted after packing.
+PAINTED_WALK_KEYS.add("char_walk_v2_painted_v2")
+WALK_FRAME_FIXES = {"char_walk_v2_painted_v2": (1, 2)}  # target frame -> source frame, 1-based
 
 FENN = ("Fenn, a young cartographer's apprentice in his early twenties: short dark curly hair, a "
         "navy blue long coat with brass buttons, a white shirt, brown leather boots, a worn leather "
@@ -3424,6 +3479,158 @@ for _cid, (_desc, _pose, _extra) in PAINTED_BODIES_V2.items():
                      f"characters/{_cid}_body_painted_v2.png"))
 
 
+# ---------------- repaint pass: correct the drawing, change the finish ----------------
+# A handful of studies are correctly drawn but finished in the wrong language: Nib and the
+# Weather man are still manga/vector art, Quill's portrait is half-rendered, and Vex's portrait
+# reads as a 3D render. Their poses, costumes and framing are right, so they are repainted from
+# the existing study with Seedream's image-to-image model instead of drawn again from a prompt.
+# The reference is sent inline as a data URI (the pipeline has no separate upload step); RGBA
+# sprites are flattened onto the same magenta the keyer expects. The old files stay on disk and
+# the live manifest keys are repointed at these outputs.
+EDIT_MODEL = "bytedance/seedream-5/lite/edit"
+
+REPAINT_STYLE = (
+    "Repaint the reference as a traditional oil painting on primed canvas, in exactly the same "
+    "hand as the game's painted night plates: loaded, visibly brushed strokes across the face, "
+    "hair, hands and cloth; scumbled half-tones and broken colour; occasional palette-knife "
+    "smears; simplified planes of light and shadow; soft lost-and-found edges. Keep the same "
+    "person, the same pose, the same costume, the same framing and the same background "
+    "composition. Warm amber lantern key from one side and cold blue-grey rim light along the "
+    "opposite edge, deep coloured indigo shadow, rich muted earthy colour, filmic grade. Not a "
+    "photograph, not photorealistic, not a 3D render, not CGI, no plastic or airbrushed skin, no "
+    "smooth airbrushed gradients, not anime, not manga, no cel shading, no black line art or "
+    "comic outlines, no glossy highlights, no text, no lettering, no watermark."
+)
+REPAINT_BODY_FRAME = (
+    "The whole figure from the top of the head to the soles of both feet stays inside the frame. "
+    "The background is flat solid magenta (#FF00FF) everywhere around the figure, including "
+    "between the legs and under the feet; no shadow, no ground, no floor, no props, no border, "
+    "no frame, no text."
+)
+
+REPAINT_JOBS = [
+    ("npc_quill_painted", "characters/quill.png", "characters/quill_painted.png",
+     {"prompt": (
+         "Repaint this exact head-and-shoulders study of Quill, keeping her pose, her cropped "
+         "black hair, the knotted red neckerchief, the navy-and-white striped sailor's shirt and "
+         "the small brass compass on a cord. She is a young ship's lookout in her early twenties, "
+         "sun-browned and wiry, with a sharp amused half-smile. Paint a real young woman's face "
+         "from life: ordinary small eyes, no glossy cartoon eyes, no heavy eyeliner, defined jaw "
+         "and ordinary cheekbones, skin built from loose brushstrokes. Modest and fully dressed, "
+         "no pin-up pose, no cleavage. " + REPAINT_STYLE),
+      "resolution": "1728x2304 (3:4)", "output_format": "png"}),
+    ("npc_quill_body_painted_v2", "characters/quill_body_painted.png",
+     "characters/quill_body_painted_v2.png",
+     {"prompt": (
+         "Repaint this exact full-body figure of Quill, keeping the same relaxed three-quarter "
+         "stance, arms at her sides, and the same clothes: cropped black hair under a knotted red "
+         "neckerchief, a navy-and-white striped sailor's shirt, rolled grey canvas trousers, bare "
+         "feet, a small brass compass on a cord. She is a young ship's lookout in her early "
+         "twenties, slim and sun-browned. Paint a real young woman's face and real anatomy from "
+         "life, with ordinary small eyes: no anime face, no glossy cartoon eyes, no heavy "
+         "eyeliner, no pin-up pose. Both bare feet are planted and fully visible. " +
+         REPAINT_BODY_FRAME + " " + REPAINT_STYLE),
+      "resolution": "1728x2304 (3:4)", "output_format": "png"}),
+    # Vex's portrait is the one figure in the cast who still reads as a 3D render. Same captain,
+    # same scar, same braided collar; the brush has to be visible on the skin.
+    ("npc_vex_painted", "characters/vex.png", "characters/vex_painted.png",
+     {"prompt": (
+         "Repaint this exact character portrait as a traditional oil painting on canvas, keeping "
+         "the same man, the same head-and-shoulders framing, the same three-quarter pose and the "
+         "same dark background. He is Captain Vex: a sharp, vain, dangerously charming pirate "
+         "captain in his mid-forties, dark hair greying at the temples, a neatly trimmed dark "
+         "beard, a thin old cutlass scar across one cheekbone, a navy captain's coat with "
+         "tarnished gold braid on the high collar, an amused half-smile that does not reach his "
+         "eyes. Paint him with loaded, visible brushstrokes across the face, hair and coat; "
+         "simplified painterly planes of light and shadow; scumbled half-tones and broken colour; "
+         "soft lost-and-found edges. Warm amber lantern key from one side, cold blue-grey rim "
+         "light from the other, deep coloured indigo shadow. Rich muted colours, filmic grade. "
+         "Not a photograph, not photorealistic, not a 3D render, not CGI, no plastic or "
+         "airbrushed skin, not anime, not manga, no cel shading, no black line art, no comic "
+         "outlines, no glossy highlights, no text, no lettering, no watermark."),
+      "resolution": "1728x2304 (3:4)", "output_format": "png"}),
+    # Fenn's side walk sheet: the first cell is a different woman, and the whole strip came back
+    # 16% shorter than the front/back strip. Repaint the sheet as one man and re-pack it.
+    ("char_walk_v2_painted_v2", "characters/elias_walk_v2_painted.png",
+     "characters/elias_walk_v2_painted_v2.png",
+     {"prompt": (
+         "Repaint this exact six-frame walk strip. All six frames show the same young man: Fenn, "
+         "a cartographer's apprentice in his early twenties with short dark curly hair, a navy "
+         "blue long coat with brass buttons, a white shirt, brown leather boots and a worn "
+         "leather satchel slung across his body. The first frame currently shows a different "
+         "person; replace it with the same young man as the other five frames, in the same "
+         "left-foot-forward contact pose, facing right. Keep all six frames the same height and "
+         "the same side view, in one horizontal row, evenly spaced on a shared floor line, each "
+         "full body from hair to boots. The background is flat solid magenta (#FF00FF) everywhere "
+         "around the figures, with no shadows, no ground, no props, no labels, no text, no "
+         "borders. " + REPAINT_STYLE),
+      "resolution": "3136x1344 (21:9)", "output_format": "png"}),
+]
+
+for _name, _ref, _rel, _payload in REPAINT_JOBS:
+    MANIFEST.append((_name, "image", EDIT_MODEL, _payload, _rel, _ref))
+
+
+# The three figures whose existing drawing is too far from the cast to salvage by repainting:
+# Nib's portrait and body are manga line-art, and the Weather man is flat vector art. They are
+# painted fresh from a firm description instead of from the old study, because image-to-image
+# keeps the proportions and line language that made them outliers.
+NIB_PORTRAIT_PROMPT = (
+    "Hand-painted adventure game dialogue portrait, head and shoulders, of Nib, a bored office "
+    "clerk of seventeen: a thin, pale, slightly sallow adolescent boy with a narrow bony face, a "
+    "sharp chin, a thin neck and hunched shoulders, lank mousy-brown hair cut short and flat and "
+    "tucked behind his ears, a green celluloid eyeshade pushed up on his forehead, a grey "
+    "waistcoat a size too big over a white shirt with ink-stained cuffs and black sleeve garters, "
+    "a pen behind one ear, heavy-lidded half-closed eyes, an utterly uninterested expression. "
+    "Painted from life in the manner of a traditional oil portrait: visible loaded brushstrokes "
+    "across the face, hair and cloth; simplified painterly planes of light and shadow; scumbled "
+    "half-tones; soft lost-and-found edges. A real adolescent boy's face with ordinary small "
+    "eyes and adult proportions, not androgynous, not a bishounen, not pretty, no long hair, no "
+    "oversized irises, no eyelashes drawn as lines, no smooth anime skin. Warm amber lantern key "
+    "from one side, cold blue-grey rim light on the other, deep indigo shadow, rich muted earthy "
+    "colour, dark neutral background of loose painted strokes. Not a photograph, not "
+    "photorealistic, not a 3D render, not CGI, not anime, not manga, no cel shading, no black "
+    "line art, no comic outlines, no glossy highlights, no text, no lettering, no watermark."
+)
+
+FRESH_CHARACTER_JOBS = [
+    ("npc_nib_painted", BG_MODEL,
+     {"prompt": NIB_PORTRAIT_PROMPT,
+      "resolution": "1728x2304 (3:4)", "output_format": "png"},
+     "characters/nib_painted.png"),
+    ("npc_nib_body_painted", BG_MODEL,
+     painted_body_v2(
+         "Nib, a bored office clerk of seventeen: thin, pale and slightly stooped, a narrow bony "
+         "face with a sharp chin, lank mousy-brown hair cut short and flat and tucked behind his "
+         "ears, a green celluloid eyeshade pushed up on his forehead, a grey waistcoat a size too "
+         "big over a white shirt with ink-stained cuffs and black sleeve garters, a pen behind "
+         "one ear, dark trousers and worn black shoes; a real adolescent boy with narrow "
+         "shoulders and thin wrists, not a child and not an adult",
+         "standing slouched with his hands hanging at his sides, a loose pen in one hand, side "
+         "three-quarter view to the left, bored and closed off",
+         "His face is a real teenage boy's face with ordinary small adult-sized eyes, not manga, "
+         "not a bishounen, not a girl; no oversized irises, no eyelashes drawn as lines, no "
+         "smooth cel-shaded skin, no flat fills; the brush must be seen on the face and the "
+         "fabric."),
+     "characters/nib_body_painted.png"),
+    ("npc_weather_body_painted", BG_MODEL,
+     painted_body_v2(
+         "a Weather man, a burly, neatly groomed henchman in his thirties: clean-shaven, short "
+         "combed hair under a black bowler hat, a buttoned grey wool coat with the collar turned "
+         "down, a bright yellow armband on one sleeve, a polite blank expression, holding a large "
+         "scuffed wooden cargo crate in both arms",
+         "standing squarely in side three-quarter view to the left, the crate held against his "
+         "chest, both boots planted",
+         "The crate and the yellow armband are part of the figure and must stay. Paint the coat "
+         "as heavy wet wool with real folds and weight and the crate as sea-worn timber, not flat "
+         "vector shapes or cel-shaded panels; no clean vector edges, no evenly filled shapes."),
+     "characters/weather_body_painted.png"),
+]
+
+for _name, _model, _payload, _rel in FRESH_CHARACTER_JOBS:
+    MANIFEST.append((_name, "image", _model, _payload, _rel))
+
+
 def load_cache():
     if os.path.exists(CACHE):
         with open(CACHE) as f:
@@ -3484,6 +3691,29 @@ def output_url(kind, res):
     return url
 
 
+def reference_uri(rel):
+    """An existing study as an inline data URI for the image-to-image model.
+
+    The API accepts image URIs and has no separate upload step in this pipeline, so the bytes are
+    sent in the request. Sprites are flattened onto the flat magenta the keyer expects; a
+    transparent PNG sent as-is would ask the model to preserve alpha it cannot reproduce.
+    """
+    from PIL import Image
+
+    path = os.path.join(ASSETS, rel)
+    im = Image.open(path)
+    if im.mode in ("RGBA", "LA") or "transparency" in im.info:
+        im = im.convert("RGBA")
+        flat = Image.new("RGB", im.size, (255, 0, 255))
+        flat.paste(im, mask=im.getchannel("A"))
+        im = flat
+    else:
+        im = im.convert("RGB")
+    buf = BytesIO()
+    im.save(buf, "PNG")
+    return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode()
+
+
 def postprocess(name, kind, rel, payload, raw, out_path):
     if kind == "image":
         if name in FULL_PLATES or name in TITLE_PLATES:
@@ -3498,6 +3728,9 @@ def postprocess(name, kind, rel, payload, raw, out_path):
             post_sprite(raw, out_path)
         elif name in PAINTED_WALK_KEYS:
             post_painted_walk_sheet(raw, out_path, rear_frames=3 if name == "char_walk_vertical_painted" else 0)
+            fix = WALK_FRAME_FIXES.get(name)
+            if fix:
+                replace_walk_frame(out_path, *fix)
         elif name == "char_elias_painted_v2":
             post_painted_idle(raw, out_path)
         elif "walk" in rel:
@@ -3527,7 +3760,12 @@ def main(only=None):
     total = 0.0
     failures = []
     reprocess = bool(os.environ.get("REPROCESS"))
-    for name, kind, model, payload, rel in MANIFEST:
+    for entry in MANIFEST:
+        name, kind, model, payload, rel = entry[:5]
+        # Image-to-image jobs carry a sixth field: the existing study to repaint. The reference
+        # bytes are part of the cache signature, so changing the study invalidates the job even
+        # when the prompt has not moved.
+        ref = entry[5] if len(entry) > 5 else None
         if only and name not in only:
             continue
         if name in RETIRED and not only:
@@ -3539,8 +3777,12 @@ def main(only=None):
         elif name in PAINTED_CHAR_KEYS:
             payload = dict(payload)
             payload["prompt"] = payload["prompt"] + ", " + PAINTED_FIGURE
+        ref_sig = ""
+        if ref:
+            with open(os.path.join(ASSETS, ref), "rb") as f:
+                ref_sig = hashlib.sha256(f.read()).hexdigest()[:16]
         sig = hashlib.sha256(
-            json.dumps([model, payload], sort_keys=True).encode()
+            json.dumps([model, payload, ref_sig], sort_keys=True).encode()
         ).hexdigest()[:16]
 
         entry = cache.get(name, {})
@@ -3576,8 +3818,11 @@ def main(only=None):
                     rid = pending.get("request_id") if pending else None
                     if rid:
                         print(f"       resuming job {rid}")
+                    call_payload = dict(payload)
+                    if ref:
+                        call_payload["image"] = [reference_uri(ref)]
                     try:
-                        res = run(model, payload, request_id=rid, on_submit=remember)
+                        res = run(model, call_payload, request_id=rid, on_submit=remember)
                     except ApiError as e:
                         # A failed/cancelled/unknown job cannot be resumed: forget
                         # it so the next run submits afresh. Transient errors and

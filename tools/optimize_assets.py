@@ -34,7 +34,13 @@ ASSETS = ROOT / "public" / "assets"
 BACKUP = ROOT / ".asset-originals"
 
 # Sheets drawn as horizontal strips: their width must stay divisible by the frame count.
-SHEET_FRAMES = {"elias_walk_v2.png": 6, "elias_walk_vertical.png": 6}
+SHEET_FRAMES = {
+    "elias_walk_v2.png": 6,
+    "elias_walk_vertical.png": 6,
+    "elias_walk_v2_painted.png": 6,
+    "elias_walk_vertical_painted.png": 6,
+    "elias_walk_v2_painted_v2.png": 6,
+}
 
 
 def backup(path: Path) -> Path:
