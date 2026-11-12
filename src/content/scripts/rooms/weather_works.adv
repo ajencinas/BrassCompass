@@ -14,7 +14,7 @@ room weather_works "The Lighthouse"
   footsteps stone
   # Every light sits on a painted source: the great lamp, the brazier, the lamp post that marks
   # the way down, and the small lantern over the keeper's open door.
-  light 1855,90 radius 240 lantern
+  light 1865,95 radius 240 lantern
   light 270,640 radius 95 fire
   light 90,205 radius 130 lantern
   light 520,540 radius 70 lantern
