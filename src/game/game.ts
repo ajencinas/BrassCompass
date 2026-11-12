@@ -1,4 +1,11 @@
-/** Game — state machine, interaction model, dialogue runtime and rendering. */
+/**
+ * Game — state machine, interaction model, dialogue runtime and rendering.
+ *
+ * Two pieces of the screen's mechanics are standalone modules with explicit inputs: the 60 fps
+ * frame loop, its clock and failure recovery (frame.ts), and the scene curtain, its threshold
+ * card and the arriving-room wash (fade.ts). `Game` delegates to them; their public shapes are
+ * the only coupling.
+ */
 
 import { LOGICAL_W, LOGICAL_H, SCENE_H, type View } from "../engine/view";
 import type { Input } from "../engine/input";
@@ -47,6 +54,8 @@ import { drawTitle, titleButtons, hitTitleButton, defaultTitleButton, type Title
 import { drawFigure, drawSprite, drawShadow } from "./figures";
 import { Transition } from "./transition";
 import { Connector } from "./connector";
+import { FrameLoop } from "./frame";
+import { drawFade, type ExitCardSource } from "./fade";
 import {
   entrySideFor, linkOf, passageOf,
   type ExitLink, type ExitSide, type PassageKind,
@@ -241,8 +250,6 @@ const NARRATION_LINGER = 2.5;
 const NARRATION_FADE = 0.6;
 /** Running is this much quicker than walking (double-click the floor). */
 const RUN_FACTOR = 2.2;
-/** The render loop's target: 60 frames a second, however fast the display refreshes. */
-const FRAME_MS = 1000 / 60;
 /** Effects that hand the screen to something else; nothing after one in a list runs. */
 const TERMINAL: ReadonlySet<Effect["k"]> = new Set(["go", "talk", "act", "win"]);
 /**
@@ -518,6 +525,11 @@ export class Game {
     // The harbour under the title: the dock's lanterns and moving water, inside the drift.
     // The title is the island chart now; the old harbour-water decoration belongs to the dock plate.
     this.titleDecor = null;
+    // Timing, scheduling and failure recovery live in frame.ts; the game lends it one callback.
+    this.loop = new FrameLoop({
+      step: (dt, t) => this.step(t, dt),
+      announce: (text) => this.announce(text),
+    });
   }
   /** Tip mode keeps the current tip on screen. Remembered per browser, separate from saves. */
   private tipMode = false;
@@ -713,6 +725,9 @@ export class Game {
 
   // ------------------------------------------------------------ lifecycle
 
+  /** The 60 fps animation loop: timing, scheduling and failure recovery (see frame.ts). */
+  private loop: FrameLoop;
+
   start(): void {
     try {
       this.hasSave = hasAnySave();
@@ -759,39 +774,11 @@ export class Game {
       this.mobileUI = new MobileUI(this.mobileBridge());
       this.mobileUI.sync(this.mobileState());
     }
-    requestAnimationFrame((t) => this.frame(t));
+    this.loop.start();
   }
 
-  private frame(t: number): void {
-    // The next frame is scheduled in `finally`: one bad update or render must never stop the
-    // clock forever. A failure that repeats is surfaced as a recoverable overlay instead of a
-    // silent freeze.
-    try {
-      if (this.fatal) return;
-      this.step(t);
-      this.frameFailures = 0;
-    } catch (error) {
-      this.frameFailures++;
-      console.error("The Brass Compass: frame failed", error);
-      if (this.frameFailures >= 3) this.showFrameFailure(error);
-    } finally {
-      requestAnimationFrame((tt) => this.frame(tt));
-    }
-  }
-
-  private step(t: number): void {
-    // Target 60 fps even on a 120/144 Hz panel. The elapsed time since the last rendered
-    // frame is accumulated, so skipped callbacks do not slow the game clock down.
-    const elapsed = this.lastT ? t - this.lastT : 0;
-    this.lastT = t;
-    this.frameAccum += elapsed;
-    this.pendingDt += elapsed;
-    // A 1 ms tolerance keeps a 60 Hz panel's jitter from skipping alternate frames.
-    if (this.frameAccum < FRAME_MS - 1) return;
-    // Keep at most one frame of backlog: a throttled tab should not spiral to catch up.
-    this.frameAccum = Math.min(this.frameAccum - FRAME_MS, FRAME_MS);
-    const dt = Math.min(0.05, this.pendingDt / 1000);
-    this.pendingDt = 0;
+  /** One due frame: advance the game clock, the touch HUD and the canvas. */
+  private step(t: number, dt: number): void {
     if (!this.paused) this.time += dt;
     this.update(dt);
     // The touch HUD only needs to match the game about ten times a second; the scene keeps 60.
@@ -812,59 +799,9 @@ export class Game {
       this.drawnH = this.view.canvas.height;
     }
   }
-  private lastT = 0;
-  private frameAccum = 0;
-  private pendingDt = 0;
   private drawnAt = -1e9;
   private drawnW = 0;
   private drawnH = 0;
-  /** Consecutive frame exceptions since the last clean frame. */
-  private frameFailures = 0;
-  /** The repeated-failure overlay is up; the loop still runs, but skips update/render. */
-  private fatal = false;
-
-  /**
-   * A failure path after the frame loop has thrown three times in a row. The loop keeps
-   * scheduling frames (so a one-off fault recovers on its own if the player closes this), and
-   * the overlay offers the two honest recoveries: try again, or reload and rebuild from the
-   * save. Nothing in the voyage is written or erased here.
-   */
-  private showFrameFailure(error: unknown): void {
-    if (this.fatal) return;
-    this.fatal = true;
-    this.frameFailures = 0;
-    try { this.announce("The game hit a problem. Choose Try again, or reload the page."); } catch { /* DOM gone */ }
-    if (typeof document === "undefined") return;
-    const el = document.createElement("div");
-    el.id = "fatal";
-    el.setAttribute("role", "alertdialog");
-    el.setAttribute("aria-modal", "true");
-    el.setAttribute("aria-labelledby", "fatal-title");
-    // Keep stray keys out of the frozen game behind the dialog.
-    el.addEventListener("keydown", (event) => event.stopPropagation());
-    const detail = error instanceof Error && error.message ? escapeHtml(error.message) : "";
-    el.innerHTML = `
-      <div class="fatal-inner">
-        <h1 id="fatal-title">The game hit a problem</h1>
-        <p>Something failed three frames running${detail ? `: ${detail}` : ""}.</p>
-        <p>The voyage is still in the log. Try again, or reload the page to rebuild it from your save.</p>
-        <div class="fatal-actions">
-          <button type="button" id="fatal-retry">Try again</button>
-          <button type="button" id="fatal-reload">Reload page</button>
-        </div>
-      </div>`;
-    document.body.append(el);
-    el.querySelector<HTMLButtonElement>("#fatal-retry")?.addEventListener("click", () => {
-      el.remove();
-      this.fatal = false;
-      this.frameFailures = 0;
-      // The clock is deliberately reset, so a giant `dt` from time spent in the dialog cannot
-      // itself throw the first frame back into the fault.
-      this.lastT = 0;
-    });
-    el.querySelector<HTMLButtonElement>("#fatal-reload")?.addEventListener("click", () => location.reload());
-    el.querySelector<HTMLButtonElement>("#fatal-retry")?.focus();
-  }
 
   /** Fade to black, do `then` there, and fade back up: a change of scene without a hard cut. */
   private behindCurtain(then: () => void): void {
@@ -3079,13 +3016,8 @@ export class Game {
     this.fadeTarget = 0;
   }
   private pendingRoom: string | null = null;
-  /** The painted threshold the player is passing through, held during the curtain. */
-  private exitCard: {
-    image: CanvasImageSource;
-    /** The painting's own pixel size, for clamping the close-up crop. */
-    imageW: number; imageH: number;
-    x: number; y: number; w: number; h: number;
-  } | null = null;
+  /** The painted threshold the player is passing through, held during the curtain (fade.ts). */
+  private exitCard: ExitCardSource | null = null;
 
   // ------------------------------------------------------------ save
 
@@ -5058,89 +4990,18 @@ export class Game {
     else if (id === "explore") this.startExplore();
   }
 
+  /** The scene curtain and its threshold card (fade.ts); the passage shot owns itself. */
   private renderFade(ctx: CanvasRenderingContext2D): void {
     // A cut with no shared threshold gets the short passage shot at full black.
     if (this.connector.active) {
       this.connector.draw(ctx, this.reduced);
       return;
     }
-    if (this.fade <= 0.001) return;
-    const f = this.fade;
-    const eased = f * f * (3 - 2 * f);
-    const entry = this.transition.entrySide();
-    if (entry && !this.reduced) this.renderEntryFade(ctx, eased, entry);
-    else {
-      ctx.fillStyle = `rgba(0,0,0,${eased})`;
-      ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
-    }
-    // Hold on the painted door/hatch/stair being used while the curtain falls. It is the
-    // painted-threshold continuity cue: the cut happens through something you can see, not
-    // between two unrelated paintings. The card appears after the first darkening.
-    if (this.exitCard && f > 0.28 && !entry) {
-      const card = this.exitCard;
-      const a = Math.min(1, (f - 0.28) / 0.22);
-      const zoom = 1.06 + eased * 0.18;
-      const sw = Math.max(1, Math.min(card.imageW, card.w * 1.25));
-      const sh = Math.max(1, Math.min(card.imageH, card.h * 1.25));
-      const sx = Math.max(0, Math.min(card.imageW - sw, card.x + card.w / 2 - sw / 2));
-      const sy = Math.max(0, Math.min(card.imageH - sh, card.y + card.h / 2 - sh / 2));
-      ctx.save();
-      ctx.globalAlpha = a;
-      ctx.fillStyle = "#020406";
-      ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
-      const scale = Math.max(LOGICAL_W / sw, LOGICAL_H / sh) * zoom;
-      const dw = sw * scale, dh = sh * scale;
-      ctx.drawImage(card.image, sx, sy, sw, sh,
-        LOGICAL_W / 2 - dw / 2, LOGICAL_H / 2 - dh / 2, dw, dh);
-      const warm = ctx.createRadialGradient(LOGICAL_W / 2, LOGICAL_H * 0.54, 10,
-        LOGICAL_W / 2, LOGICAL_H * 0.54, LOGICAL_W * 0.46);
-      warm.addColorStop(0, "rgba(255,190,105,0.12)");
-      warm.addColorStop(0.55, "rgba(255,155,70,0.04)");
-      warm.addColorStop(1, "rgba(0,0,0,0.35)");
-      ctx.globalCompositeOperation = "screen";
-      ctx.fillStyle = warm;
-      ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
-      ctx.globalCompositeOperation = "source-over";
-      ctx.fillStyle = `rgba(0,0,0,${Math.max(0, eased - 0.25) * 0.8})`;
-      ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
-      ctx.restore();
-    }
-  }
-
-  /**
-   * The arriving room is revealed from the side the way out points at: leave left, enter from
-   * the right; go up a stair, come up from below. The black is a soft directional wash rather
-   * than a hard wipe, so the painting arrives under a moving edge of darkness. It changes only
-   * the reveal, never Fenn's landing point, so story entries and walkable ground are untouched.
-   */
-  private renderEntryFade(ctx: CanvasRenderingContext2D, eased: number, side: ExitSide): void {
-    if (eased >= 0.999) {
-      ctx.fillStyle = "#000";
-      ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
-      return;
-    }
-    const horizontal = side === "left" || side === "right";
-    const dim = horizontal ? LOGICAL_W : LOGICAL_H;
-    const band = dim * 0.22;
-    const fromFarEnd = side === "right" || side === "below";
-    const edge = fromFarEnd ? dim * eased : dim * (1 - eased);
-    const a = Math.max(0, Math.min(1, (edge - band) / dim));
-    const b = Math.max(0.0001, Math.min(1, edge / dim));
-    const g = horizontal
-      ? ctx.createLinearGradient(0, 0, LOGICAL_W, 0)
-      : ctx.createLinearGradient(0, 0, 0, LOGICAL_H);
-    if (fromFarEnd) {
-      g.addColorStop(0, `rgba(0,0,0,${eased})`);
-      g.addColorStop(a, `rgba(0,0,0,${eased})`);
-      g.addColorStop(Math.min(1, b + 0.0001), "rgba(0,0,0,0)");
-      g.addColorStop(1, "rgba(0,0,0,0)");
-    } else {
-      g.addColorStop(0, "rgba(0,0,0,0)");
-      g.addColorStop(a, "rgba(0,0,0,0)");
-      g.addColorStop(Math.min(1, b + 0.0001), `rgba(0,0,0,${eased})`);
-      g.addColorStop(1, `rgba(0,0,0,${eased})`);
-    }
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
+    drawFade(ctx, {
+      fade: this.fade,
+      reduced: this.reduced,
+      entry: this.transition.entrySide(),
+      card: this.exitCard,
+    });
   }
 }

@@ -213,7 +213,8 @@ castaway camp lead to Elias and the three rules; the reef gate leads aboard the 
 ```
 src/
   engine/          framework-agnostic: view scaling, input, assets, audio, text, pathfinding
-  game/            the game itself: state machine, verbs, sentence model, UI, dialogue runtime
+  game/            the game itself: state machine, verbs, sentence model, UI, dialogue runtime;
+                   frame.ts is the 60 fps loop and failure recovery, fade.ts the scene curtain
   content/         scripts/*.adv (rooms, dialogue, items, tips, acts) + characters, assets;
                    old-scripts/ is the archived previous story and is never loaded
   adv/             the .adv script compiler (and the serializer used by the tools)
