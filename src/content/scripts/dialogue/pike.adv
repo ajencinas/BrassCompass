@@ -74,9 +74,9 @@ dialogue pike
   node caught3 pike "I would rather not. He has a wooden spoon and strong opinions."
     > "Then stay out of the Salty Keel." -> END
 
-  node aside pike "You are not a wrecker. You are a clerk in a wet coat."
-    > "I'm the clerk who knows Vex." if met_vex -> rudder
-    > "I'm the clerk who is asking nicely." -> nice
+  node aside pike "You are not a wrecker. You are a cartographer in a wet coat."
+    > "I'm the cartographer who knows Vex." if met_vex -> rudder
+    > "I'm the cartographer who is asking nicely." -> nice
     > "Goodbye." -> bye
   node nice pike "Nicely is not a category. Come back with a category."
     > "Goodbye." -> bye

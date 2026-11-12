@@ -12,7 +12,10 @@ export interface Prefs {
    * once whatever this says (see `effectiveTextSpeed`); the choice comes back when it's off.
    */
   textSpeed: TextSpeed | null;
-  /** Lines that something else is waiting on stay up until a click or key. */
+  /**
+   * Lines that something else is waiting on stay up until the player clicks, presses a key or
+   * taps. On by default: reading pace is the player's, not a fixed number of seconds.
+   */
   waitForClick: boolean;
   /** UI text scale the player chose; null fits the screen (see `autoTextScale`). */
   textScale: TextScale | null;
@@ -23,9 +26,11 @@ export interface Prefs {
 const KEY = "brasscompass.prefs.v1";
 /**
  * Stored with the prefs. Version 1 always wrote a text scale, so its 100% may only have been the
- * default; from version 2 a stored 100% was chosen, and automatic is stored as null.
+ * default; from version 2 a stored 100% was chosen, and automatic is stored as null. Version 3
+ * changed the reading default: lines wait for the player unless the player chose otherwise, so
+ * a `false` written by an older version is the old default, not a choice.
  */
-const PREFS_VERSION = 2;
+const PREFS_VERSION = 3;
 /** Set once the voyage has been finished; unlocks Chapter select. Survives a new voyage. */
 export const COMPLETED_KEY = "brasscompass.completed";
 
@@ -36,15 +41,18 @@ export const TEXT_SCALES: TextScale[] = [1, 1.25, 1.5];
 export const NARRATION_CPS: Record<TextSpeed, number> = { slow: 34, normal: 62, fast: 120, instant: Infinity };
 export const DIALOGUE_CPS: Record<TextSpeed, number> = { slow: 38, normal: 70, fast: 135, instant: Infinity };
 
-const DEFAULTS: Prefs = { textSpeed: null, waitForClick: false, textScale: null, reducedMotion: null };
+const DEFAULTS: Prefs = { textSpeed: null, waitForClick: true, textScale: null, reducedMotion: null };
 
 export function loadPrefs(): Prefs {
   try {
     const raw = JSON.parse(localStorage.getItem(KEY) || "{}") as Partial<Prefs> & { v?: number };
     const scale = TEXT_SCALES.includes(raw.textScale as TextScale) ? raw.textScale as TextScale : null;
+    const version = typeof raw.v === "number" ? raw.v : 1;
     return {
       textSpeed: TEXT_SPEEDS.includes(raw.textSpeed as TextSpeed) ? raw.textSpeed as TextSpeed : null,
-      waitForClick: raw.waitForClick === true,
+      // Version 3: a new voyage waits for the player by default. A version-3 `false` is a real
+      // choice; an older `false` was the shipped default, so it joins the new default.
+      waitForClick: version >= 3 ? raw.waitForClick !== false : true,
       // An old 100% is the old default, not a choice: let it fit the screen.
       textScale: raw.v === PREFS_VERSION || scale !== 1 ? scale : null,
       reducedMotion: typeof raw.reducedMotion === "boolean" ? raw.reducedMotion : null,

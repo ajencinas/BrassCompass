@@ -3,17 +3,24 @@
 
 item compass "Elias's compass"
   look "My father's compass. Brass, scratched, and it points at the fog instead of north."
-  # Act I states mirror the tip ladder: the needle points at the next step.
-  state if act 1 and vex_deal and dorrit_cleared and quill_compass and rook_story and hobb_joined
+  # Act I states mirror the tip ladder: the needle points at the next step. Quill counts only
+  # once she has joined, not merely once her compass is in hand.
+  state if act 1 and vex_deal and dorrit_cleared and quill_compass and seen:quill.join and rook_story and hobb_joined
     look "The needle points at the harbour mouth. Everyone else is ready."
   state if act 1 and vex_deal and dorrit_cleared and quill_compass and rook_story and not hobb_joined
     look "The needle points at the shipwright's. A ship without a carpenter stays in port."
+  state if act 1 and vex_deal and dorrit_cleared and quill_compass and not rook_story and weather_works_store
+    look "The needle points at the Salty Keel. Rook's log is in my coat, and Rook is still there."
   state if act 1 and vex_deal and dorrit_cleared and quill_compass and not rook_story
     look "The needle points up at the lighthouse. Rook's log is up there."
+  state if act 1 and vex_deal and dorrit_cleared and quill_compass and not seen:quill.join
+    look "The needle points at the shipwright's. Quill still has to take her compass."
   state if act 1 and rudder_back and not dorrit_cleared
     look "The needle points at the Salty Keel. Dorrit is still waiting for the good news."
   state if act 1 and rudder_back and dorrit_cleared and not vex_deal
     look "The needle points at Vex's warehouse. It trusts him about as far as I do."
+  state if act 1 and met_vex and not rudder_back and seen:dorrit.confess
+    look "The needle points at Pike's shed. The man behind the crates has already talked."
   state if act 1 and met_vex and not rudder_back
     look "The needle swings toward Wreckers' Lane, and the boat shed behind it."
   # Act II: the needle mirrors the ladder again, and in the fog it stops pretending.
@@ -31,15 +38,16 @@ item compass "Elias's compass"
     look "The needle points at Vex. It has stopped trusting the weather."
   state if act 2
     look "The needle points at the quarterdeck, where Vex is steering us to the edge of the Shroud."
-  # Act IV: one last road, and it runs across the Grey Lantern's deck.
-  state if act 4 and name_spoken
-    look "The needle points down at the deck. Mordant is standing there, and the needle has stopped running."
-  state if act 4 and bell_cut and lantern_doused and not name_spoken
-    look "The needle points at the captain's cabin. A name is the last thing to find."
-  state if act 4 and bell_cut and not lantern_doused
-    look "The needle points up into the rigging. The great lantern is still burning."
+  # Act IV: one last road, and it runs from the deck to the captain's cabin. The three holds
+  # take their order from the deck (bell, light, name), whatever order the player tries.
   state if act 4 and not bell_cut
     look "The needle points at the bell. It rings when the ship rolls, and no one is pulling it."
+  state if act 4 and not lantern_doused
+    look "The needle points up into the rigging. The great lantern is still burning."
+  state if act 4 and not name_spoken
+    look "The needle points down through the deck, at the desk in the captain's cabin. The name is the last thing to set down."
+  state if act 4
+    look "The needle points down at the captain's cabin. Mordant is standing there, and the needle has stopped running."
 
 item spyglass "Quill's spyglass"
   look "Quill's spyglass. She says she doesn't need it. She cleans it every morning."
@@ -83,14 +91,14 @@ item chart "Elias's chart"
     look "My father's chart of the Shroud, with the fog's edge drawn in Rook's hand."
 
 item nameplate "Mordant's nameplate"
-  look "Brass, green with salt: GREY LANTERN — M. MORDANT, MASTER."
-  # Act III: the plate comes off the wreck before anyone knows what the name is for.
+  look "A brass plate from the Grey Lantern's bow, green with salt: GREY LANTERN — M. MORDANT, MASTER."
+  # Act III: the plate comes off a grey bow timber jammed in the wreck, before anyone knows what the name is for.
   state if act 3 and rule_name
     name "Mordant's nameplate"
     look "The name on the plate is the one Elias says the Lantern cannot take. MORDANT."
   state if act 3
     name "the nameplate"
-    look "A brass plate off the wreck. GREY LANTERN — M. MORDANT, MASTER. I cannot place the captain."
+    look "A brass plate from the Grey Lantern's bow, lodged in the wreck. GREY LANTERN — M. MORDANT, MASTER. I cannot place the captain."
   # Act IV: the name on the plate is the whole of the last hold.
   state if act 4 and name_spoken
     look "The name on the plate has been said aloud. It is only brass again."

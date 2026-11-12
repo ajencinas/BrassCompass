@@ -58,21 +58,22 @@ room salt_camp "The Castaway Camp"
   hotspot tents "the tents"
     area 1120,340 700x320
     nowalk
-    look "A row of tents, patched with sailcloth. The doors are tied shut from the outside."
+    look "A row of tents, patched with sailcloth. The doors are tied shut from the outside, with a sailor's knot. Someone tied them on the way out."
     talk "I call out. The tents do not answer."
 
   hotspot washing "the washing"
     area 1580,370 450x150
     nowalk
-    look "Shirts on a line, stiff with salt. Somebody washed them for men who did not come back."
+    look "Shirts on a line, stiff with salt. Somebody washed them for men who did not come back. The pegs are still in."
 
   hotspot hut "the store hut"
     area 1840,110 580x650
     stand 2000,850
-    look "A stout hut with a barred window and a padlock. The camp's store, or its gaol."
+    look "A stout hut with a barred window and a padlock. A ship's slate is nailed beside the door. One line is still legible: THE BELL CALLED. WE WENT."
+      note camp_slate "The camp's slate says the bell called and they went. The tents were tied shut from the outside."
     open "The padlock is new. The hut is not. It does not open for me."
-    talk "I knock. The sound goes in and does not come back."
-    use "I rattle the padlock. It holds. Nothing inside answers."
+    talk "I knock. The slate by the door has already answered."
+    use "The padlock is new. The crowbar would open it. The slate has told me enough."
 
   hotspot pallet "the pallet"
     area 1240,590 180x100
@@ -158,10 +159,10 @@ room salt_camp "The Castaway Camp"
     stand 2280,848
     look "Vex, standing apart from the tents with his coat pulled round him. He has not sat down."
     talk "He sees me coming and does not look away. That is new."
-      say "He says: \"I saw him. After the Arcadia went down. He was on the reef, waving.\""
-    state if seen:elias.marrow
-      talk "He knows what I am going to ask."
-        say "\"I turned my light away,\" Vex says. \"I told myself it was the wind.\""
+      say "He says: \"You have heard it by now. I am not going to dress it up.\""
+    state if seen:vex.saw_elias
+      talk "He knows I have heard the rest."
+        say "\"I have said my part,\" Vex says. \"I am not going to say it better.\""
         say "Then he looks like Vex again, and asks me about the bell."
 
   use compass on elias
@@ -169,4 +170,4 @@ room salt_camp "The Castaway Camp"
   use compass on quill
     "She holds it up. \"Still the fog,\" she says. She does not sound sorry."
   use crowbar on hut
-    "The padlock is new. The crowbar would open it. I decide I do not want to know."
+    "The padlock is new. The crowbar would open it. I leave the lock alone."

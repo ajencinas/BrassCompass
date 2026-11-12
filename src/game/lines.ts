@@ -147,7 +147,7 @@ export function defaultLine(verb: VerbId, t: Target, seed: string, act = 0): str
     case "use": return pick([
       `I can't see how to use ${n} on its own.`,
       `I fiddle with ${n}. It's patient with me, which is worse.`,
-      `${N} doesn't do anything by itself. Neither did I, for three years.`,
+      `${N} doesn't do anything by itself. Neither did I, before this voyage.`,
       `I'd need a reason, or at least something to use it with.`,
       ...(sailor ? [`I've crossed a reef by compass, and I still can't see what ${n} is for.`] : []),
     ], verb + seed);

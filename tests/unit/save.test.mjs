@@ -6,7 +6,12 @@ import { loader } from "../../tools/adv-lib.mjs";
 const vite = await loader();
 after(() => vite.close());
 const save = await vite.load("/src/game/save.ts");
-const { normalizeSave, readSave, writeSave, migrateOldSave, flagsForRestart, hasAnySave, takeOldSave, SAVE_KEY, SAVE_VERSION } = save;
+const {
+  normalizeSave, readSave, writeSave, migrateOldSave, flagsForRestart, hasAnySave, takeOldSave,
+  archiveSave, archivedSaves, stashCurrentSave, hasStashedSave, restoreStashedSave,
+  withoutEndingFlags, ENDING_FLAGS,
+  SAVE_KEY, SAVE_VERSION, ARCHIVE_KEY, PREVIOUS_KEY,
+} = save;
 
 const known = {
   room: (id) => id === "dock" || id === "tavern",
@@ -108,10 +113,11 @@ test("a saved queue can only end the act the save is in, and only the last act's
   assert.deepEqual(queue(1, { k: "act", n: 9 }), [say]);
   assert.deepEqual(queue(1, { k: "act", n: 2 }), [say]);
   assert.deepEqual(queue(3, { k: "act", n: 3 }), [say, { k: "act", n: 3 }]);
-  // The ending card belongs to the last act.
+  // A saved ending is never run on Continue: the final choice must be made again, this time
+  // with no ending flag left over from the first attempt.
   assert.deepEqual(queue(1, { k: "win" }), [say]);
   assert.deepEqual(queue(3, { k: "win" }), [say]);
-  assert.deepEqual(queue(4, { k: "win" }), [say, { k: "win" }]);
+  assert.deepEqual(queue(4, { k: "win" }), [say]);
   // A save whose own act is unknown starts the first act; its queued ending goes with it.
   assert.deepEqual(normalizeSave({ ...good(), act: 9, queue: [say, { k: "act", n: 9 }] }, known).queue, [say]);
 });
@@ -212,4 +218,129 @@ test("a saved queue is brought up to date: renamed items and nodes mapped, vanis
     { k: "talk", tree: "quill" },
     { k: "go", room: "tavern" },
   ]);
+});
+
+test("a save is before the final choice: ending flags never survive a read or a migration", () => {
+  // Both choices had leaked into old saves; whichever the player picks next must not show the
+  // other ending's lines too. The branch markers go with them, or the tip ladder still thinks
+  // the last choice has been made.
+  const leaked = {
+    ...good(),
+    flags: {
+      met_marta: true, ending_fog_lifts: true, ending_long_way: true,
+      curse_broken: true, escaped_fog: true, "seen:deck": true,
+    },
+  };
+  assert.deepEqual(normalizeSave(leaked, known).flags, { met_marta: true, "seen:deck": true });
+  // The old story's names are stripped too, and the current names after a rename map.
+  assert.deepEqual(normalizeSave({ ...good(), flags: { ending_pirate: true, met_marta: true } }, known).flags,
+    { met_marta: true });
+  // An old-shape save is migrated first, then cleared.
+  assert.deepEqual(normalizeSave({ ...leaked, version: 3 }, known).flags, { met_marta: true, "seen:deck": true });
+  // The helper is pure and keeps every ordinary flag.
+  const flags = { aff: 14, "looked:dock.crate": true, ending_long_way: true, curse_broken: true };
+  assert.deepEqual(withoutEndingFlags(flags), { aff: 14, "looked:dock.crate": true });
+  assert.deepEqual(withoutEndingFlags(flags, ENDING_FLAGS), { aff: 14, "looked:dock.crate": true, curse_broken: true });
+  assert.equal(flags.ending_long_way, true, "the live flags are not mutated");
+});
+
+test("schema versions: older shapes migrate, newer shapes are never coerced", () => {
+  // A v3 save is upgraded to the current shape but keeps everything else.
+  const old = { ...good(), version: 3, flags: { met_marta: true, ending_fog_lifts: true } };
+  const d = normalizeSave(old, known);
+  assert.equal(d.version, SAVE_VERSION);
+  assert.deepEqual(d.flags, { met_marta: true });
+  // A shape this build does not know is not a corrupt file and must not be loaded as one.
+  assert.equal(normalizeSave({ ...good(), version: SAVE_VERSION + 1 }, known), null);
+  localStorage.setItem(SAVE_KEY, JSON.stringify({ ...old, version: 3, unknownField: { keep: true } }));
+  const r = readSave(known);
+  assert.equal(r.migratedFrom, 3);
+  assert.equal(r.data.version, SAVE_VERSION);
+  assert.equal(r.future, undefined);
+  localStorage.setItem(SAVE_KEY, JSON.stringify({ ...good(), version: SAVE_VERSION + 1 }));
+  const future = readSave(known);
+  assert.equal(future.data, null);
+  assert.equal(future.corrupt, false);
+  assert.equal(future.future, true);
+  assert.equal(future.futureVersion, SAVE_VERSION + 1);
+  assert.notEqual(future.raw, null);
+});
+
+test("archived pages are kept whole (not duplicated) and capped", () => {
+  const raw = JSON.stringify({ ...good(), version: 3, unknownField: "keep me" });
+  assert.equal(archiveSave(raw, "migrated", SAVE_KEY, 3), true);
+  assert.equal(archiveSave(raw, "migrated", SAVE_KEY, 3), true, "re-reading does not duplicate it");
+  let pages = archivedSaves();
+  assert.equal(pages.length, 1);
+  assert.equal(pages[0].reason, "migrated");
+  assert.equal(pages[0].key, SAVE_KEY);
+  assert.equal(pages[0].version, 3);
+  assert.equal(pages[0].raw, raw, "the whole page, unknown data included");
+  for (let i = 0; i < 8; i++) archiveSave(`raw-${i}`, "old-key", "brasscompass.save.v2", 2);
+  pages = archivedSaves();
+  assert.equal(pages.length, save.MAX_ARCHIVED);
+  assert.equal(pages.at(-1).raw, "raw-7");
+  assert.equal(localStorage.getItem(ARCHIVE_KEY) !== null, true);
+});
+
+test("pre-v4 keys are archived before they leave storage", () => {
+  localStorage.setItem("brasscompass.save.v3", '{"act":2,"flags":{"quill_helped":true}}');
+  assert.equal(hasAnySave(), true);
+  assert.match(takeOldSave(), /quill_helped/);
+  assert.equal(localStorage.getItem("brasscompass.save.v3"), null);
+  assert.equal(hasAnySave(), false);
+  const [page] = archivedSaves();
+  assert.equal(page.reason, "old-key");
+  assert.equal(page.key, "brasscompass.save.v3");
+  assert.equal(page.version, 1);
+  assert.match(page.raw, /quill_helped/);
+});
+
+test("a replaced voyage is stashed and can be taken up once", () => {
+  assert.equal(stashCurrentSave(), false, "nothing to stash");
+  assert.equal(hasStashedSave(), false);
+  assert.equal(writeSave(good()), true);
+  assert.equal(stashCurrentSave(), true);
+  assert.equal(hasStashedSave(), true);
+  assert.equal(localStorage.getItem(PREVIOUS_KEY), localStorage.getItem(SAVE_KEY));
+  // A new voyage overwrites the live key, but not the stash.
+  localStorage.setItem(SAVE_KEY, JSON.stringify({ ...good(), act: 1, room: "tavern" }));
+  assert.deepEqual(readSave(known).data, { ...good(), act: 1, room: "tavern" });
+  assert.equal(restoreStashedSave(), true);
+  assert.equal(hasStashedSave(), false);
+  assert.deepEqual(readSave(known).data, good(), "the whole old voyage came back");
+  assert.equal(restoreStashedSave(), false, "one undo, not a stack");
+});
+
+test("stashing a second voyage archives the older undo page instead of dropping it", () => {
+  assert.equal(writeSave(good()), true);
+  const first = localStorage.getItem(SAVE_KEY);
+  assert.equal(stashCurrentSave(), true);
+  assert.equal(localStorage.getItem(PREVIOUS_KEY), first);
+  assert.equal(writeSave({ ...good(), act: 1, room: "tavern" }), true);
+  const second = localStorage.getItem(SAVE_KEY);
+  assert.equal(stashCurrentSave(), true);
+  assert.equal(localStorage.getItem(PREVIOUS_KEY), second);
+  const archived = archivedSaves();
+  assert.equal(archived.some((page) => page.raw === first && page.key === PREVIOUS_KEY), true,
+    "the older undo page is still recoverable from the archive");
+});
+
+test("room and flag rename maps are applied before validation", () => {
+  const custom = {
+    ...known,
+    renamedRooms: { old_harbour: "dock" },
+    renamedFlags: { old_met: "met_marta" },
+    endingFlags: new Set(["ending_fog_lifts"]),
+  };
+  const d = normalizeSave({
+    ...good(), room: "old_harbour",
+    flags: { old_met: true, ending_fog_lifts: true, kept: 1 },
+  }, custom);
+  assert.equal(d.room, "dock");
+  assert.deepEqual(d.flags, { met_marta: true, kept: 1 });
+  // An unknown room is still rejected: a rename map is not a licence to load anything.
+  assert.equal(normalizeSave({ ...good(), room: "atlantis" }, custom), null);
+  // Without the map the old room is unknown, so a save naming it is refused rather than wiped.
+  assert.equal(normalizeSave({ ...good(), room: "old_harbour" }, known), null);
 });

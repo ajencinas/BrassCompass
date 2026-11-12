@@ -12,6 +12,10 @@
  *   footsteps → stepPan → sfxBus
  *   the room: ambience bed, place sounds, gulls → envBus → sfxBus
  *   score cues → cueBus (Music slider, before the duck) ─────────→ master
+ *   master → limiter (≈ -2 dB ceiling) → speakers
+ *
+ * The two buses carry a fixed calibration trim (MUSIC_TRIM / SFX_TRIM) so the generated beds
+ * and the synthesised effects sit in the same range before the player's sliders.
  *
  * `musicDuck` and `envBus` are the only levels the game moves by itself: a cinematic pulls the
  * music and the room down under the video's own soundtrack (or part-way down, under a cue,
@@ -114,8 +118,25 @@ const BED_LOOP_END: Record<string, { duration: number; end: number }> = {
   "sunset.mp3": { duration: 48.2, end: 47.9 },
   "tavern.mp3": { duration: 40.0, end: 38.2 },
 };
-/** How often a playing bed is checked against its loop point; seconds. */
-const LOOP_CHECK = 0.08;
+/**
+ * The smallest gap before re-checking a playing bed's loop point. The loop is scheduled with
+ * one timeout aimed at the measured end, not polled every 80 ms: a 48 s bed woke the main
+ * thread ~600 times to discover nothing had happened.
+ */
+const LOOP_GUARD_MS = 60;
+
+/**
+ * Bus calibration. The seven beds measure around -18 dBFS mean, while the synthesised effects
+ * peak at 0.03-0.11 (-30 to -19 dBFS): music sat roughly 25-30 dB above effects, which made
+ * the interface, footsteps and room sounds inaudible under it. Trim the music bus and lift
+ * the effects bus so a click, a step and the bed sit in the same range; the user sliders stay
+ * meaningful (1.0 is this calibrated level). The master limiter below catches summed peaks.
+ */
+const MUSIC_TRIM = 0.18;   // about -15 dB
+const SFX_TRIM = 1.8;      // about +5 dB
+
+/** A gentle master limiter: nothing should clip when a cue, a bell and the room sum. */
+const LIMITER = { threshold: -2, knee: 0, ratio: 20, attack: 0.002, release: 0.18 };
 
 /** Each foley sound and how many variants of it to render. */
 const BANKS = {
@@ -171,6 +192,7 @@ export class AudioEngine {
   muted = false;
 
   private master: GainNode | null = null;
+  private limiter: DynamicsCompressorNode | null = null;
   private musicBus: GainNode | null = null;
   private sfxBus: GainNode | null = null;
   /** After the Music slider: the cinematic duck times the conversation dip. */
@@ -268,7 +290,9 @@ export class AudioEngine {
       g.cancelScheduledValues(this.ctx.currentTime);
       g.setTargetAtTime(this.level, this.ctx.currentTime, 0.015);
       for (const [bus, v] of [
-        [this.musicBus, this.musicVolume], [this.sfxBus, this.sfxVolume], [this.cueBus, this.musicVolume],
+        [this.musicBus, this.musicVolume * MUSIC_TRIM],
+        [this.sfxBus, this.sfxVolume * SFX_TRIM],
+        [this.cueBus, this.musicVolume * MUSIC_TRIM],
       ] as const) {
         if (!bus) continue;
         bus.gain.cancelScheduledValues(this.ctx.currentTime);
@@ -286,7 +310,7 @@ export class AudioEngine {
   /** Before the context exists a track may be playing unrouted (autoplay allowed): use .volume. */
   private syncUnrouted(): void {
     if (this.current && !this.trackGain.get(this.current)) {
-      this.current.volume = this.level * this.musicVolume * this.musicDuckLevel();
+      this.current.volume = this.level * this.musicVolume * MUSIC_TRIM * this.musicDuckLevel();
     }
   }
 
@@ -304,20 +328,28 @@ export class AudioEngine {
         this.ctx = context;
         this.master = context.createGain();
         this.master.gain.value = this.level;
-        this.master.connect(context.destination);
+        // Master -> limiter -> speakers. Mute is still the master gain, so it silences the
+        // limiter's input and everything upstream of it.
+        this.limiter = context.createDynamicsCompressor();
+        this.limiter.threshold.value = LIMITER.threshold;
+        this.limiter.knee.value = LIMITER.knee;
+        this.limiter.ratio.value = LIMITER.ratio;
+        this.limiter.attack.value = LIMITER.attack;
+        this.limiter.release.value = LIMITER.release;
+        this.master.connect(this.limiter).connect(context.destination);
         this.musicDuck = context.createGain();
         this.musicDuck.gain.value = this.musicDuckLevel();
         this.musicDuck.connect(this.master);
         this.musicBus = context.createGain();
-        this.musicBus.gain.value = this.musicVolume;
+        this.musicBus.gain.value = this.musicVolume * MUSIC_TRIM;
         this.musicBus.connect(this.musicDuck);
         this.sfxBus = context.createGain();
-        this.sfxBus.gain.value = this.sfxVolume;
+        this.sfxBus.gain.value = this.sfxVolume * SFX_TRIM;
         this.sfxBus.connect(this.master);
         // The score shares the Music slider, but not the cinematic duck: the cue is what the
         // duck is making room for. Mute is still the master, so it covers this bus too.
         this.cueBus = context.createGain();
-        this.cueBus.gain.value = this.musicVolume;
+        this.cueBus.gain.value = this.musicVolume * MUSIC_TRIM;
         this.cueBus.connect(this.master);
         this.envBus = context.createGain();
         this.envBus.gain.value = this.ducked ? this.duckLevel : 1;
@@ -343,6 +375,7 @@ export class AudioEngine {
       this.setAmbience(kind);
     }
     if (this.current?.paused) void this.current.play().catch(() => {});
+    if (this.current) this.watchLoop(this.current);
   }
 
   /** Tab hidden: stop the clock and the music so nothing plays (or piles up) in the background. */
@@ -358,6 +391,7 @@ export class AudioEngine {
     this.hidden = false;
     if (this.ctx && this.ctx.state !== "running") void this.ctx.resume().catch(() => {});
     if (this.current?.paused) void this.current.play().catch(() => {});
+    if (this.current) this.watchLoop(this.current);
     for (const v of this.voices) this.arm(v);
   }
 
@@ -410,19 +444,40 @@ export class AudioEngine {
    */
   private watchLoop(el: HTMLAudioElement): void {
     this.unwatchLoop(el);
+    let waitingForMetadata = false;
+    const schedule = (waitMs: number): void => {
+      const timer = window.setTimeout(() => {
+        this.loopTimers.delete(el);
+        check();
+      }, Math.max(LOOP_GUARD_MS, waitMs));
+      this.loopTimers.set(el, timer);
+    };
     const check = (): void => {
-      if (this.hidden) return;   // suspended: on resume the next tick picks the loop up
+      // Suspended/hidden or no longer the current bed: nothing to do. Resume re-arms this.
+      if (this.hidden || this.current !== el) return;
       const end = this.bedEnd(el);
       if (end === null) {
-        el.loop = true;   // unmeasured: today's behaviour
+        el.loop = true;   // unmeasured: keep the element's own loop
         if (el.ended) this.restartBed(el);
+        // `play()` can precede metadata; look once more when the duration is known.
+        if (!waitingForMetadata && !Number.isFinite(el.duration)) {
+          waitingForMetadata = true;
+          el.addEventListener("loadedmetadata", () => {
+            if (this.current === el) this.watchLoop(el);
+          }, { once: true });
+        }
         return;
       }
       el.loop = false;
-      if (el.ended || (!el.paused && el.currentTime >= end)) this.restartBed(el);
+      if (el.ended || (!el.paused && el.currentTime >= end)) {
+        this.restartBed(el);
+        schedule(LOOP_GUARD_MS);
+        return;
+      }
+      // One timer aimed at the musical end, rather than an 80 ms poll for the whole bed.
+      schedule((end - el.currentTime) * 1000 + 30);
     };
     check();
-    this.loopTimers.set(el, window.setInterval(check, LOOP_CHECK * 1000));
   }
 
   private restartBed(el: HTMLAudioElement): void {
@@ -432,7 +487,7 @@ export class AudioEngine {
 
   private unwatchLoop(el: HTMLAudioElement): void {
     const timer = this.loopTimers.get(el);
-    if (timer !== undefined) window.clearInterval(timer);
+    if (timer !== undefined) window.clearTimeout(timer);
     this.loopTimers.delete(el);
   }
 
@@ -470,7 +525,7 @@ export class AudioEngine {
 
     const gNext = this.route(next);
     if (gNext) this.ramp(gNext.gain, 1, fadeMs);
-    else next.volume = this.level * this.musicVolume * this.musicDuckLevel();   // no context yet: nothing to crossfade against
+    else next.volume = this.level * this.musicVolume * MUSIC_TRIM * this.musicDuckLevel();   // no context yet: nothing to crossfade against
     if (!this.hidden) void next.play().catch(() => { /* autoplay still blocked; retried on unlock */ });
 
     if (old) {

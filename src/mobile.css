@@ -1,0 +1,775 @@
+/*
+ * The touch layout.
+ *
+ * Everything here is scoped to `body.mobile`, which main.ts adds only on a touch-first device
+ * with a phone-sized viewport. Desktop keeps the painted 1920x1080 chrome, untouched.
+ *
+ * The canvas is the scene: on a phone it is fitted to the width of a 1920x880 stage, so its
+ * hotspots are still recognisable, while every control a finger has to hit is real DOM at a
+ * real 44 CSS pixels. Brass, ink and dark glass carry the same visual language as the game.
+ */
+
+/* The loading screen owns the first second, above any touch chrome. */
+body.mobile #boot { z-index: 120; }
+
+body.mobile {
+  overflow: hidden;
+  overscroll-behavior: none;
+  background: #05070f;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---- scene stage ---------------------------------------------------------- */
+
+body.mobile #stage {
+  position: fixed;
+  z-index: 1;
+  top: calc(env(safe-area-inset-top, 0px) + 52px);
+  left: 0;
+  width: 100vw;
+  height: auto;
+  aspect-ratio: 1920 / 880;
+  display: block;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 40%, #101a2e 0%, #05070f 70%);
+}
+
+/* In landscape the scene is the full width of the screen and the chrome floats over it. */
+body.mobile.m-landscape:not(.m-full) #stage {
+  top: 0;
+}
+
+/* Title, cold open and ending are full 16:9 paintings, not the playfield crop. */
+body.mobile.m-full #stage {
+  top: 0;
+  aspect-ratio: 1920 / 1080;
+}
+
+body.mobile.m-full.m-landscape #stage {
+  left: 50%;
+  width: min(100vw, calc(100dvh * 16 / 9));
+  transform: translateX(-50%);
+}
+
+body.mobile #game {
+  width: 100% !important;
+  height: 100% !important;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+/* ---- top bar -------------------------------------------------------------- */
+
+body.mobile .m-top {
+  position: fixed;
+  z-index: 22;
+  top: env(safe-area-inset-top, 0px);
+  left: 0;
+  right: 0;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 8px;
+  pointer-events: none;
+}
+
+body.mobile .m-top[hidden],
+body.mobile .m-top button[hidden],
+body.mobile .m-hud[hidden],
+body.mobile .m-title[hidden],
+body.mobile .m-prologue[hidden],
+body.mobile .m-dialogue[hidden],
+body.mobile .m-ending[hidden],
+body.mobile .m-drawer[hidden],
+body.mobile .m-rooms[hidden],
+body.mobile .m-items-empty[hidden],
+body.mobile .m-pager[hidden],
+body.mobile .m-action[hidden],
+body.mobile .m-cancel[hidden],
+body.mobile .m-clear[hidden],
+body.mobile .m-prologue-skip[hidden],
+body.mobile .m-dialogue-continue[hidden] {
+  display: none !important;
+}
+
+body.mobile.m-landscape .m-top {
+  justify-content: flex-end;
+  padding-right: calc(10px + env(safe-area-inset-right, 0px));
+  background: linear-gradient(180deg, rgba(3, 6, 12, 0.72), rgba(3, 6, 12, 0));
+}
+
+body.mobile:not(.m-landscape) .m-top {
+  background: linear-gradient(180deg, rgba(3, 6, 12, 0.55), rgba(3, 6, 12, 0));
+}
+
+.m-icon {
+  pointer-events: auto;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(232, 201, 138, 0.26);
+  border-radius: 4px;
+  background: rgba(6, 14, 22, 0.82);
+  color: #e8c98a;
+  font: 20px/1 Georgia, "Times New Roman", serif;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.m-icon:active, .m-icon.on {
+  background: rgba(201, 162, 74, 0.2);
+  border-color: rgba(232, 201, 138, 0.9);
+  color: #fff3cf;
+}
+.m-icon:focus-visible {
+  outline: 2px solid #ffe6a8;
+  outline-offset: 2px;
+}
+
+/* ---- the touch HUD -------------------------------------------------------- */
+
+body.mobile .m-hud {
+  position: fixed;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  top: calc(env(safe-area-inset-top, 0px) + 52px + 45.8333vw);
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 0px));
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(46, 39, 26, 0.22), transparent 60%),
+    linear-gradient(180deg, rgba(7, 12, 18, 0.98), rgba(3, 6, 11, 0.99));
+  border-top: 1px solid rgba(201, 162, 74, 0.42);
+  overflow: hidden;
+}
+
+body.mobile.m-landscape .m-hud {
+  top: auto;
+  bottom: 0;
+  max-height: 58vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "context context"
+    "verbs bag";
+  align-items: stretch;
+  gap: 6px;
+  padding: 6px 10px calc(6px + env(safe-area-inset-bottom, 0px));
+  padding-left: calc(10px + env(safe-area-inset-left, 0px));
+  padding-right: calc(10px + env(safe-area-inset-right, 0px));
+  background:
+    linear-gradient(180deg, rgba(4, 7, 13, 0.18), rgba(4, 7, 13, 0.96) 24%),
+    radial-gradient(120% 70% at 50% 100%, rgba(46, 39, 26, 0.22), transparent 60%);
+  border-top: 1px solid rgba(201, 162, 74, 0.32);
+}
+body.mobile.m-landscape .m-context { grid-area: context; }
+body.mobile.m-landscape .m-verbs { grid-area: verbs; min-width: 0; }
+body.mobile.m-landscape .m-bag-row { grid-area: bag; }
+
+body.mobile.m-full .m-hud {
+  display: none !important;
+}
+
+.m-context {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 10px 12px;
+  border: 1px solid rgba(201, 162, 74, 0.22);
+  border-radius: 3px;
+  background:
+    radial-gradient(120% 120% at 8% 0%, rgba(255, 252, 238, 0.04), transparent 55%),
+    rgba(8, 13, 20, 0.72);
+  scrollbar-color: #6b5a3a #0d1822;
+  scrollbar-width: thin;
+}
+
+body.mobile.m-landscape .m-context {
+  flex: 0 1 auto;
+  max-height: 24vh;
+  padding: 7px 10px;
+}
+/* Armed: the confirmation plate is the one thing that must never be below the fold. */
+body.mobile.m-landscape .m-context.is-armed {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 8px;
+  max-height: none;
+  padding: 4px;
+}
+body.mobile.m-landscape .m-context.is-armed .m-where,
+body.mobile.m-landscape .m-context.is-armed .m-room-name,
+body.mobile.m-landscape .m-context.is-armed .m-narration,
+body.mobile.m-landscape .m-context.is-armed .m-line {
+  display: none;
+}
+body.mobile.m-landscape .m-context.is-armed .m-action {
+  flex: 1 1 auto;
+  margin-top: 0;
+  min-height: 56px;
+}
+body.mobile.m-landscape .m-context.is-armed .m-cancel {
+  flex: none;
+  min-width: 88px;
+  margin-top: 0;
+}
+body.mobile.m-landscape .m-bag { min-width: 128px; }
+body.mobile.m-landscape .m-bag-row .m-clear { min-width: 64px; }
+body.mobile.m-landscape .m-context.is-idle { display: none; }
+body.mobile.m-landscape .m-room-name { font-size: 19px; margin-bottom: 4px; }
+
+/* Portrait has room to spare: the words sit on the dark, not in an empty box. */
+body.mobile:not(.m-landscape) .m-context {
+  padding: 4px 2px 8px;
+  border: 0;
+  background: none;
+}
+/* Armed: the confirmation plate outranks a long narration, so it cannot be scrolled away. */
+body.mobile:not(.m-landscape) .m-context.is-armed .m-action,
+body.mobile:not(.m-landscape) .m-context.is-armed .m-cancel { order: 1; }
+body.mobile:not(.m-landscape) .m-context.is-armed .m-narration,
+body.mobile:not(.m-landscape) .m-context.is-armed .m-line { order: 2; }
+body.mobile:not(.m-landscape) .m-context.is-idle::after {
+  content: "";
+  display: block;
+  width: 118px;
+  height: 118px;
+  margin: 26px auto 0;
+  opacity: 0.11;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='20' fill='none' stroke='%23e8c98a' stroke-width='.6'/%3E%3Ccircle cx='24' cy='24' r='14' fill='none' stroke='%23e8c98a' stroke-width='.4'/%3E%3Cpath d='M24 4 27 21l17 3-17 3-3 17-3-17-17-3 17-3Z' fill='%23e8c98a'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.m-where {
+  margin: 0 0 5px;
+  color: #c9a24a;
+  font: 600 10px/1.2 system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.m-where:empty { display: none; }
+
+.m-room-name {
+  margin: 0 0 8px;
+  color: #f0e3c6;
+  font: 400 24px/1.12 Georgia, "Times New Roman", serif;
+  letter-spacing: 0.01em;
+}
+
+.m-narration {
+  margin: 0;
+  color: #e8e2d0;
+  font: 17px/1.5 Georgia, "Times New Roman", serif;
+  overflow-wrap: anywhere;
+}
+.m-narration:empty { display: none; }
+
+.m-line {
+  margin: 6px 0 0;
+  color: #7fd6d0;
+  font: 600 16px/1.35 Georgia, "Times New Roman", serif;
+  overflow-wrap: anywhere;
+}
+.m-line:empty { display: none; }
+
+.m-action {
+  width: 100%;
+  min-height: 56px;
+  margin-top: 10px;
+  padding: 9px 13px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 3px;
+  border: 1px solid rgba(232, 201, 138, 0.8);
+  border-radius: 3px;
+  background:
+    linear-gradient(180deg, rgba(201, 162, 74, 0.22), rgba(201, 162, 74, 0.08));
+  color: #f8ebc9;
+  font: 600 17px/1.25 Georgia, "Times New Roman", serif;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.m-action:active {
+  background: rgba(232, 201, 138, 0.3);
+  border-color: #fff3cf;
+}
+.m-action:focus-visible { outline: 2px solid #ffe6a8; outline-offset: 2px; }
+.m-action-hint {
+  color: #d8be8a;
+  font: 600 10px/1.2 system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.m-quiet {
+  min-height: 44px;
+  padding: 6px 14px;
+  border: 1px solid rgba(201, 162, 74, 0.3);
+  border-radius: 3px;
+  background: rgba(26, 48, 64, 0.4);
+  color: #e9e0cc;
+  font: 14px/1.2 Georgia, "Times New Roman", serif;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.m-quiet:active { background: rgba(201, 162, 74, 0.18); }
+.m-quiet:focus-visible { outline: 2px solid #ffe6a8; outline-offset: 2px; }
+
+.m-cancel { margin-top: 8px; align-self: flex-start; }
+
+.m-verbs {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+.m-verbs button {
+  min-height: 44px;
+  padding: 4px 2px;
+  border: 1px solid rgba(140, 166, 179, 0.2);
+  border-radius: 2px;
+  background: rgba(130, 160, 180, 0.07);
+  color: #93a3bb;
+  font: 13px/1.15 Georgia, "Times New Roman", serif;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.m-verbs button.active {
+  border-color: rgba(232, 201, 138, 0.75);
+  background: rgba(201, 162, 74, 0.18);
+  color: #f3e0b4;
+}
+.m-verbs button.suggested {
+  border-color: rgba(232, 201, 138, 0.55);
+  background: rgba(232, 201, 138, 0.1);
+  color: #f3e0b4;
+}
+.m-verbs button:active { background: rgba(232, 201, 138, 0.22); }
+.m-verbs button:focus-visible { outline: 2px solid #ffe6a8; outline-offset: 1px; }
+
+body.mobile.m-landscape .m-verbs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+body.mobile.m-landscape .m-verbs::-webkit-scrollbar { display: none; }
+body.mobile.m-landscape .m-verbs button {
+  flex: 0 0 auto;
+  min-width: 84px;
+  padding: 4px 8px;
+}
+
+.m-bag-row {
+  flex: none;
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+.m-bag {
+  flex: 1 1 auto;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 6px 12px;
+  border: 1px solid rgba(201, 162, 74, 0.45);
+  border-radius: 3px;
+  background:
+    linear-gradient(180deg, rgba(50, 36, 23, 0.92), rgba(26, 18, 12, 0.94));
+  color: #f3e7cb;
+  font: 15px/1.2 Georgia, "Times New Roman", serif;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.m-bag:active, .m-bag[aria-expanded="true"] {
+  border-color: rgba(232, 201, 138, 0.9);
+  background: linear-gradient(180deg, rgba(74, 53, 31, 0.95), rgba(40, 28, 18, 0.96));
+}
+.m-bag:focus-visible { outline: 2px solid #ffe6a8; outline-offset: 2px; }
+.m-bag-glyph { color: #d9b877; font-size: 17px; }
+.m-bag-count {
+  min-width: 1.5em;
+  color: #d9b877;
+  font: 600 12px/1 system-ui, -apple-system, sans-serif;
+}
+.m-bag-count:empty { display: none; }
+
+/* ---- title ---------------------------------------------------------------- */
+
+body.mobile .m-title {
+  position: fixed;
+  z-index: 25;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 18px calc(7vh + env(safe-area-inset-bottom, 0px));
+  pointer-events: none;
+}
+body.mobile.m-landscape .m-title-eyebrow { display: none; }
+body.mobile.m-landscape .m-title {
+  padding-bottom: calc(5vh + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(180deg, rgba(2, 4, 9, 0) 38%, rgba(2, 4, 9, 0.55) 70%, rgba(2, 4, 9, 0.8));
+}
+.m-title-inner {
+  width: min(420px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: auto;
+}
+.m-title-eyebrow {
+  margin: 0 0 4px;
+  color: #c9a24a;
+  font: 600 10px/1.2 system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.26em;
+  text-align: center;
+  text-transform: uppercase;
+}
+.m-title-buttons { display: flex; flex-direction: column; gap: 8px; }
+.m-title-button {
+  width: 100%;
+  min-height: 52px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 7px 14px;
+  border: 1px solid rgba(201, 162, 74, 0.5);
+  border-radius: 3px;
+  background: linear-gradient(180deg, rgba(17, 26, 38, 0.94), rgba(6, 10, 18, 0.96));
+  color: #ecd8ab;
+  font: 600 15px/1.2 Georgia, "Times New Roman", serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.m-title-button .m-title-label { display: block; }
+.m-title-button .m-title-sub {
+  color: #a99a7a;
+  font: 11px/1.2 system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: none;
+}
+.m-title-button.m-primary {
+  border-color: rgba(232, 201, 138, 0.85);
+  background: linear-gradient(180deg, rgba(47, 39, 25, 0.95), rgba(25, 20, 13, 0.96));
+  color: #fff3cf;
+}
+.m-title-button.m-danger {
+  border-color: rgba(168, 106, 82, 0.8);
+  background: rgba(58, 28, 20, 0.9);
+  color: #ffd9b8;
+}
+.m-title-button:active { background: rgba(201, 162, 74, 0.24); }
+.m-title-button:focus-visible { outline: 2px solid #ffe6a8; outline-offset: 2px; }
+.m-title-button[disabled] { opacity: 0.45; cursor: default; }
+
+/* ---- cold open ------------------------------------------------------------ */
+
+body.mobile .m-prologue {
+  position: fixed;
+  z-index: 24;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  padding: 0 14px calc(16px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(180deg, rgba(2, 4, 9, 0) 0%, rgba(2, 4, 9, 0.82) 34%, rgba(2, 4, 9, 0.96));
+  pointer-events: none;
+}
+body.mobile.m-landscape .m-prologue { background: linear-gradient(180deg, rgba(2, 4, 9, 0) 0%, rgba(2, 4, 9, 0.86) 42%); }
+.m-prologue-inner {
+  width: min(620px, 100%);
+  pointer-events: auto;
+  padding: 12px 14px;
+  border-top: 1px solid rgba(201, 162, 74, 0.4);
+}
+.m-prologue-speaker {
+  margin: 0 0 4px;
+  color: #d4b064;
+  font: 600 10px/1.2 system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.m-prologue-text {
+  margin: 0 0 12px;
+  color: #d8cfb8;
+  font: 17px/1.5 Georgia, "Times New Roman", serif;
+  min-height: 3em;
+}
+.m-prologue-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.m-primary {
+  min-height: 48px;
+  padding: 9px 16px;
+  border: 1px solid rgba(232, 201, 138, 0.8);
+  border-radius: 3px;
+  background: linear-gradient(180deg, rgba(201, 162, 74, 0.24), rgba(201, 162, 74, 0.09));
+  color: #f8ebc9;
+  font: 600 15px/1.2 Georgia, "Times New Roman", serif;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.m-primary:active { background: rgba(232, 201, 138, 0.32); }
+.m-primary:focus-visible { outline: 2px solid #ffe6a8; outline-offset: 2px; }
+.m-primary[disabled] { opacity: 0.45; cursor: default; }
+
+/* ---- conversations -------------------------------------------------------- */
+
+body.mobile .m-dialogue {
+  position: fixed;
+  z-index: 26;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: linear-gradient(180deg, rgba(2, 4, 9, 0) 24%, rgba(2, 4, 9, 0.55) 50%, rgba(2, 4, 9, 0.95) 76%);
+}
+.m-dialogue-inner {
+  width: 100%;
+  max-height: 78vh;
+  max-height: 78dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 12px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid rgba(232, 201, 138, 0.35);
+  background: linear-gradient(180deg, rgba(3, 6, 12, 0.72), rgba(2, 4, 9, 0.98));
+  scrollbar-color: #6b5a3a #0d1822;
+  scrollbar-width: thin;
+}
+body.mobile.m-landscape .m-dialogue-inner { max-height: 88vh; max-height: 88dvh; padding-top: 8px; }
+/* In portrait the conversation starts at the scene's foot, not at the screen's. */
+body.mobile:not(.m-landscape) .m-dialogue {
+  top: calc(env(safe-area-inset-top, 0px) + 52px + 45.8333vw);
+  align-items: stretch;
+  background: linear-gradient(180deg, rgba(2, 4, 9, 0.92), rgba(2, 4, 9, 0.99) 22%);
+}
+body.mobile:not(.m-landscape) .m-dialogue-inner {
+  max-height: none;
+  flex: 1 1 auto;
+  border-top: 0;
+  background: none;
+}
+.m-speaker {
+  margin: 0 0 5px;
+  color: #edce91;
+  font: 600 11px/1.2 system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.m-dialogue-text {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  margin: 0;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: #f0e7d6;
+  font: 17px/1.5 Georgia, "Times New Roman", serif;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.m-dialogue-text:focus-visible { outline: 2px solid #ffe6a8; outline-offset: 3px; }
+.m-choices { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.m-choice {
+  width: 100%;
+  min-height: 48px;
+  padding: 9px 12px;
+  border: 1px solid rgba(232, 201, 138, 0.2);
+  border-radius: 2px;
+  background: rgba(232, 201, 138, 0.06);
+  color: #e3d8c2;
+  font: 16px/1.35 Georgia, "Times New Roman", serif;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.m-choice.seen { color: #a9a79a; }
+.m-choice:active { background: rgba(232, 201, 138, 0.16); }
+.m-choice:focus-visible { outline: 2px solid #ffe6a8; outline-offset: 2px; }
+.m-dialogue-continue { width: 100%; margin-top: 8px; }
+
+/* ---- ending --------------------------------------------------------------- */
+
+body.mobile .m-ending {
+  position: fixed;
+  z-index: 26;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  padding: 0 16px calc(18px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(180deg, rgba(2, 4, 9, 0) 0%, rgba(2, 4, 9, 0.7) 48%, rgba(2, 4, 9, 0.92));
+}
+.m-ending-inner { width: min(460px, 100%); display: flex; flex-direction: column; gap: 8px; }
+.m-ending-page {
+  margin: 0;
+  color: #c9a24a;
+  font: 600 10px/1.2 system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.22em;
+  text-align: center;
+  text-transform: uppercase;
+}
+.m-ending-continue { width: 100%; }
+
+/* ---- satchel drawer ------------------------------------------------------- */
+
+body.mobile .m-drawer,
+body.mobile .m-rooms {
+  position: fixed;
+  z-index: 28;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 78vh;
+  max-height: 78dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 10px 12px calc(12px + env(safe-area-inset-bottom, 0px));
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(46, 39, 26, 0.24), transparent 60%),
+    linear-gradient(180deg, rgba(10, 16, 24, 0.99), rgba(4, 7, 12, 0.99));
+  border-top: 1px solid rgba(201, 162, 74, 0.6);
+  box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.75);
+  scrollbar-color: #6b5a3a #0d1822;
+  scrollbar-width: thin;
+}
+.m-drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.m-drawer-head h2 {
+  margin: 0;
+  color: #f3e0b4;
+  font: 400 20px/1.1 Georgia, "Times New Roman", serif;
+}
+.m-items { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+body.mobile.m-landscape .m-items { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.m-item {
+  min-height: 52px;
+  padding: 8px 10px;
+  border: 1px solid rgba(201, 162, 74, 0.35);
+  border-radius: 3px;
+  background: linear-gradient(180deg, rgba(48, 34, 21, 0.9), rgba(23, 16, 11, 0.94));
+  color: #f0e3c6;
+  font: 14px/1.25 Georgia, "Times New Roman", serif;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.m-item.selected {
+  border-color: rgba(232, 201, 138, 0.9);
+  box-shadow: inset 3px 0 0 #c9a24a;
+}
+.m-item:active { background: rgba(74, 53, 31, 0.95); }
+.m-item:focus-visible { outline: 2px solid #ffe6a8; outline-offset: 2px; }
+.m-items-empty { margin: 4px 0; color: #8f8a7e; font: italic 15px/1.4 Georgia, serif; }
+.m-pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 10px;
+}
+.m-pager-label { color: #c9a24a; font: 600 12px/1 system-ui, -apple-system, sans-serif; letter-spacing: 0.16em; }
+
+/* ---- scene list ----------------------------------------------------------- */
+
+.m-room-list { display: flex; flex-direction: column; gap: 6px; }
+.m-room {
+  min-height: 48px;
+  padding: 9px 12px;
+  border: 1px solid rgba(201, 162, 74, 0.35);
+  border-radius: 3px;
+  background: rgba(10, 16, 28, 0.8);
+  color: #e6d7b8;
+  font: 15px/1.25 Georgia, "Times New Roman", serif;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.m-room:active { background: rgba(232, 201, 138, 0.18); }
+.m-room:focus-visible { outline: 2px solid #ffe6a8; outline-offset: 2px; }
+
+/* While a modal (pause, chart, map, film) has the screen, stop the HUD taking taps behind it. */
+#mobile-ui.is-blocked .m-top,
+#mobile-ui.is-blocked .m-hud {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* ---- the game's existing overlays, at finger size ------------------------- */
+
+body.mobile .settings {
+  padding: 8px;
+  place-items: start center;
+}
+body.mobile .settings section { padding: 18px 16px 14px; }
+body.mobile .settings button,
+body.mobile .settings select,
+body.mobile .settings summary {
+  min-height: 44px;
+}
+body.mobile .settings input[type="range"] { height: 44px; }
+body.mobile .settings-grid { gap: 14px; }
+body.mobile .settings dl.controls { grid-template-columns: minmax(0, 1fr); gap: 2px 0; }
+body.mobile .settings dl.controls dd { margin-bottom: 6px; }
+
+body.mobile .casebook,
+body.mobile .recap,
+body.mobile .deeds {
+  padding: 10px;
+  font-size: 16px;
+}
+body.mobile .casebook > section,
+body.mobile .recap > section,
+body.mobile .deeds > section { max-height: 94dvh; }
+body.mobile .casebook header,
+body.mobile .recap header,
+body.mobile .deeds header { padding: 14px 18px 10px; }
+body.mobile .casebook-body,
+body.mobile .recap-body,
+body.mobile .deeds-body { padding: 10px 18px 14px; }
+body.mobile .casebook footer,
+body.mobile .recap footer,
+body.mobile .deeds footer { padding: 10px 18px 14px; }
+body.mobile .casebook button,
+body.mobile .recap button,
+body.mobile .deeds button { min-height: 44px; }
+body.mobile .casebook h1,
+body.mobile .recap h1,
+body.mobile .deeds h1 { font-size: 1.4em; }
+
+body.mobile .atlas-back,
+body.mobile .atlas-close { width: 44px; height: 44px; }
+body.mobile .atlas-marker { width: 48px; height: 48px; }
+body.mobile .cinematic-skip { min-width: 44px; min-height: 44px; padding: 12px 16px; }
+body.mobile .cinematic-text { min-height: 44px; }
+body.mobile .area-card-text { left: 6vw; max-width: 84vw; }
+body.mobile .area-card-text h1 { font-size: 2em; }

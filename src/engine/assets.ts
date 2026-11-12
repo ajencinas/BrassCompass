@@ -9,6 +9,11 @@
  *
  * Audio never blocks: an <audio> element is usable as soon as it exists (it buffers on play),
  * and iOS won't fetch media before a user gesture anyway.
+ *
+ * Nothing else is loaded at boot. The title, the first room and the cold open are fetched by
+ * `load`; every later room asks for its own plate, sprites and portraits with `ensure`, and an
+ * image failure is retried a few times before a painted fallback (for backgrounds) is put in
+ * its place. A failed background therefore cannot leave a room black or hold the curtain.
  */
 
 export interface AssetManifest {
@@ -31,7 +36,13 @@ interface Job {
 }
 
 /** Simultaneous image downloads. Enough to fill the pipe, few enough that order matters. */
-const CONCURRENCY = 5;
+const CONCURRENCY = 4;
+/** Attempts per image, then a fallback for backgrounds. */
+const ATTEMPTS = 3;
+/** Give a single image request this long before abandoning the attempt. */
+const IMAGE_TIMEOUT_MS = 15_000;
+/** Backoff between attempts; a flaky connection gets a second and a third chance. */
+const RETRY_DELAY_MS = 260;
 
 export class Assets {
   readonly images = new Map<string, HTMLImageElement>();
@@ -42,9 +53,25 @@ export class Assets {
   private running = 0;
   private sheetFrames = new Map<string, number>();
   private failed = new Set<string>();
+  /** Every URL the game may ask for later, not just what this boot needs. */
+  private catalog = new Map<string, string>();
+  private fallback: Promise<HTMLImageElement | null> | null = null;
+
+  /** Teach the loader where the rest of the art lives, so `ensure` can fetch it by key. */
+  setCatalog(images: Record<string, string>): void {
+    for (const [key, url] of Object.entries(images)) this.catalog.set(key, url);
+  }
+
+  /** Whether any of these keys failed after retries (a boot screen can name the reason). */
+  hasFailed(keys: Iterable<string>): boolean {
+    for (const key of keys) if (this.failed.has(key)) return true;
+    return false;
+  }
 
   async load(manifest: AssetManifest, onProgress: (p: number) => void, opts: LoadOptions = {}): Promise<void> {
     for (const [k, n] of Object.entries(opts.frames ?? {})) this.sheetFrames.set(k, n);
+
+    this.setCatalog(manifest.images);
 
     for (const [key, url] of Object.entries(manifest.audio)) {
       if (this.audio.has(key)) continue;
@@ -76,6 +103,24 @@ export class Assets {
     }
     this.pump();
     await Promise.all(mine);
+  }
+
+  /**
+   * Fetch only the keys a room (or an ending card) actually needs. Nothing else is scheduled:
+   * the next room's art is asked for when the player goes through its door, not at boot.
+   * Deduplicates against loaded, failed and already-queued keys, so calling it every entry is
+   * cheap. Resolves once those keys have arrived (or finally failed).
+   */
+  async ensure(keys: Iterable<string>, onProgress?: (p: number) => void): Promise<void> {
+    const wanted = [...new Set(keys)].filter((key) => this.catalog.has(key));
+    if (!wanted.length) { onProgress?.(1); return; }
+    let settled = 0;
+    const waits = wanted.map((key) => this.enqueue(key, this.catalog.get(key)!).done.then(() => {
+      settled++;
+      onProgress?.(Math.min(1, settled / wanted.length));
+    }));
+    this.pump();
+    await Promise.all(waits);
   }
 
   /**
@@ -114,6 +159,13 @@ export class Assets {
   private enqueue(key: string, url: string): Job {
     const existing = this.jobs.get(key);
     if (existing) return existing;
+    // Already loaded or finally failed: a resolved job lets ensure() count it without a fetch.
+    if (this.images.has(key) || this.failed.has(key)) {
+      let resolve!: () => void;
+      const done = new Promise<void>((r) => { resolve = r; });
+      resolve();
+      return { key, url, done, resolve };
+    }
     let resolve!: () => void;
     const done = new Promise<void>((r) => { resolve = r; });
     const job: Job = { key, url, done, resolve };
@@ -142,25 +194,50 @@ export class Assets {
   }
 
   private async fetchImage(job: Job): Promise<void> {
-    const img = new Image();
-    img.decoding = "async";
-    const ok = await new Promise<boolean>((resolve) => {
-      img.onload = () => resolve(true);
-      img.onerror = () => resolve(false);
-      img.src = job.url;
-    });
-    if (!ok) {
-      console.warn("image failed:", job.key, job.url);
-      this.failed.add(job.key);
-      return;
+    for (let attempt = 1; attempt <= ATTEMPTS; attempt++) {
+      const url = attempt === 1 ? job.url : retryUrl(job.url, attempt);
+      const img = await loadImage(url);
+      if (img) {
+        // Decode off the main thread now, not on the first drawImage of a room's first frame.
+        try { await img.decode(); } catch { /* decoded lazily instead */ }
+        if (!job.key.startsWith("bg_")) {
+          const n = this.sheetFrames.get(job.key);
+          await this.measure(job.key, img, n && n > 1 ? [1, n] : [1]);
+        }
+        this.images.set(job.key, img);
+        return;
+      }
+      if (attempt < ATTEMPTS) await delay(RETRY_DELAY_MS * attempt);
     }
-    // Decode off the main thread now, not on the first drawImage of a room's first frame.
-    try { await img.decode(); } catch { /* decoded lazily instead */ }
-    if (!job.key.startsWith("bg_")) {
-      const n = this.sheetFrames.get(job.key);
-      await this.measure(job.key, img, n && n > 1 ? [1, n] : [1]);
+    console.warn("image failed after retries:", job.key, job.url);
+    this.failed.add(job.key);
+    // A missing plate must not leave the room black: paint a quiet fallback under the scene.
+    if (job.key.startsWith("bg_")) {
+      const fallback = await this.fallbackImage();
+      if (fallback) this.images.set(job.key, fallback);
     }
-    this.images.set(job.key, img);
+  }
+
+  /** One dark, foggy plate reused when any background has failed for good. */
+  private fallbackImage(): Promise<HTMLImageElement | null> {
+    if (!this.fallback) {
+      this.fallback = new Promise((resolve) => {
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="880" viewBox="0 0 1920 880">
+          <defs><linearGradient id="f" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#0a1420"/><stop offset="0.62" stop-color="#122536"/><stop offset="1" stop-color="#071018"/>
+          </linearGradient><radialGradient id="g" cx="0.5" cy="0.3" r="0.7">
+            <stop offset="0" stop-color="#28435a" stop-opacity="0.5"/><stop offset="1" stop-color="#000" stop-opacity="0"/>
+          </radialGradient></defs>
+          <rect width="1920" height="880" fill="url(#f)"/><rect width="1920" height="880" fill="url(#g)"/>
+        </svg>`;
+        const img = new Image();
+        img.decoding = "async";
+        img.onload = () => resolve(img);
+        img.onerror = () => resolve(null);
+        img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+      });
+    }
+    return this.fallback;
   }
 
   private boundsCache = new Map<string, Bounds[]>();
@@ -280,4 +357,36 @@ export interface Bounds {
   right: number;
   /** Horizontal centre of the torso, the stable anchor for a figure. */
   torso: number;
+}
+
+/** Load one image with a deadline; a stalled request must not hold a room forever. */
+function loadImage(url: string): Promise<HTMLImageElement | null> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.decoding = "async";
+    let done = false;
+    const finish = (value: HTMLImageElement | null): void => {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      img.onload = null;
+      img.onerror = null;
+      resolve(value);
+    };
+    const timer = setTimeout(() => finish(null), IMAGE_TIMEOUT_MS);
+    img.onload = () => finish(img);
+    img.onerror = () => finish(null);
+    img.src = url;
+  });
+}
+
+/** A retry of a cached 404 needs a different URL or the browser may answer from its cache. */
+function retryUrl(url: string, attempt: number): string {
+  if (url.startsWith("data:") || url.startsWith("blob:")) return url;
+  const sep = url.includes("?") ? "&" : "?";
+  return `${url}${sep}retry=${attempt}`;
+}
+
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

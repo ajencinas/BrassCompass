@@ -10,7 +10,7 @@ import type { CaseNote } from "./casebook";
 import { SOUNDS, type Effect } from "./types";
 
 /** Bumped when the meaning of a field changes; saves without one are version 1. */
-export const SAVE_VERSION = 3;
+export const SAVE_VERSION = 4;
 
 /**
  * Items that were renamed by a content rewrite. A save holding the old id would otherwise lose
@@ -23,10 +23,48 @@ const LEGACY_ITEMS: Record<string, string> = {
   mushroom: "rum",
 };
 
+/**
+ * Room ids renamed by a content rewrite. The reboot kept every room id, so this is empty today;
+ * the map is the safe path for a future rename: `normalizeSave` applies it *before* validating
+ * the room, so an old save lands in the new room instead of being thrown away.
+ */
+const LEGACY_ROOMS: Record<string, string> = {};
+
+/**
+ * Flag ids renamed by a content rewrite, applied before validation and before the ending flags
+ * are cleared. The previous cut called its two closing choices `ending_pirate` / `ending_desk`;
+ * the reboot's are `ending_long_way` / `ending_fog_lifts`.
+ */
+const LEGACY_FLAGS: Record<string, string> = {
+  ending_pirate: "ending_long_way",
+  ending_desk: "ending_fog_lifts",
+};
+
 /** Conversation nodes renamed by a content rewrite, by tree; a saved queue may still name them. */
 const LEGACY_NODES: Record<string, Record<string, string>> = {
   tavernkeeper: { nofungus: "norum", nofungus2: "norum2" },
 };
+
+/**
+ * Flags that pick the closing card. A save is deliberately written *before* the final choice, so
+ * these are never part of a resumable voyage: the choice has to be made again on Continue. They
+ * are stripped when a save is written (so a completed run cannot pre-seed the next one) and when
+ * one is read (healing saves written by older builds, which did persist them).
+ */
+export const ENDING_FLAGS: ReadonlySet<string> = new Set([
+  "ending_fog_lifts", "ending_long_way", "ending_pirate", "ending_desk",
+]);
+
+/**
+ * The rest of what the final choice sets: `curse_broken` goes with laying the dead to rest,
+ * `escaped_fog` with taking the living and running. They drive the last tip ("Let the ending
+ * play"), so they must be cleared with the ending flag or Continue would think the choice had
+ * already been made.
+ */
+export const FINAL_CHOICE_FLAGS: ReadonlySet<string> = new Set(["curse_broken", "escaped_fog"]);
+
+/** Everything the final choice can set; none of it belongs in the pre-choice save. */
+export const ENDING_RESET_FLAGS: ReadonlySet<string> = new Set([...ENDING_FLAGS, ...FINAL_CHOICE_FLAGS]);
 
 export interface SaveData {
   /** Shape version; see SAVE_VERSION. */
@@ -66,8 +104,11 @@ export interface SaveData {
 export const SAVE_KEY = "brasscompass.save.v4";
 /** Saves from before the story rewrite: restarted at the beginning of the new voyage. */
 export const OLD_SAVE_KEYS = ["brasscompass.save.v3", "brasscompass.save.v2"];
+/** Every raw save that could not be used as-is, kept so no progress is ever silently deleted. */
+export const ARCHIVE_KEY = "brasscompass.save.archive";
+/** The voyage a "Begin anew" / "Restart" replaced, so the title can take it up again. */
+export const PREVIOUS_KEY = "brasscompass.save.previous";
 
-/** What the game knows exists, so a save naming something that's gone can be cleaned up. */
 export interface SaveKnown {
   room: (id: string) => boolean;
   item: (id: string) => boolean;
@@ -80,6 +121,12 @@ export interface SaveKnown {
    * undefined for an act that doesn't exist. Only an old save's migration needs it.
    */
   actFlags?: (n: number) => ReadonlySet<string> | undefined;
+  /** Flags that choose the closing card; defaults to ENDING_FLAGS. */
+  endingFlags?: ReadonlySet<string>;
+  /** Room ids renamed by content, applied before the room is validated. */
+  renamedRooms?: Readonly<Record<string, string>>;
+  /** Flag ids renamed by content, applied before the ending flags are stripped. */
+  renamedFlags?: Readonly<Record<string, string>>;
 }
 
 /** An item id as the current content knows it, or null when it names nothing. */
@@ -87,6 +134,34 @@ function knownItem(id: string, known: SaveKnown): string | null {
   if (known.item(id)) return id;
   const renamed = LEGACY_ITEMS[id];
   return renamed !== undefined && known.item(renamed) ? renamed : null;
+}
+
+/** The shape version a stored object declares; saves without one are version 1. */
+export function saveVersionOf(raw: unknown): number {
+  if (!isObject(raw) || !isNum(raw.version)) return 1;
+  return Math.max(1, Math.floor(raw.version));
+}
+
+/** `flags` without the closing-choice flags. The input is not modified. */
+export function withoutEndingFlags(
+  flags: Record<string, unknown>,
+  endingFlags: ReadonlySet<string> = ENDING_RESET_FLAGS,
+): Record<string, unknown> {
+  return Object.fromEntries(Object.entries(flags).filter(([id]) => !endingFlags.has(id)));
+}
+
+/** Apply a rename map to a saved object's ids; an existing target wins over the old name. */
+function renamedRecord(
+  values: Record<string, unknown>,
+  map: Readonly<Record<string, string>>,
+): Record<string, unknown> {
+  const out = { ...values };
+  for (const [from, to] of Object.entries(map)) {
+    if (!(from in out)) continue;
+    if (!(to in out)) out[to] = out[from];
+    delete out[from];
+  }
+  return out;
 }
 
 /**
@@ -100,7 +175,10 @@ function currentEffect(e: Effect, known: SaveKnown, act: number): Effect | null 
   // last act: anything else (a damaged save's `act 9`) would roll the credits, or skip acts, from
   // the middle of another one.
   if (e.k === "act") return e.n === act && known.act(e.n) ? e : null;
-  if (e.k === "win") return known.act(act + 1) ? null : e;
+  // A saved ending is never replayed: the save deliberately stops before the final choice, so
+  // Continue must let the player make that choice again (with no ending flag left over). The
+  // room's own scene/hotspot opens the closing conversation again.
+  if (e.k === "win") return null;
   if (e.k === "give" || e.k === "take") {
     const item = knownItem(e.item, known);
     return item === null ? null : { ...e, item };
@@ -121,6 +199,15 @@ export interface LoadResult {
   raw: string | null;
   /** True when a save existed but could not be used. */
   corrupt: boolean;
+  /** The shape this save was written in, when it was older and has been migrated. */
+  migratedFrom?: number;
+  /**
+   * True when the save was written by a newer build than this one. `raw` is the only safe copy:
+   * the caller must archive it rather than overwrite it.
+   */
+  future?: boolean;
+  /** The shape a future save declared, kept for the archive. */
+  futureVersion?: number;
 }
 
 const isObject = (v: unknown): v is Record<string, unknown> =>
@@ -154,7 +241,11 @@ export function isEffect(v: unknown): v is Effect {
  */
 export function normalizeSave(raw: unknown, known: SaveKnown): SaveData | null {
   if (!isObject(raw)) return null;
-  if (!isStr(raw.room) || !known.room(raw.room)) return null;
+  // A newer build's shape may mean something else in every field: never coerce it into this one.
+  if (saveVersionOf(raw) > SAVE_VERSION) return null;
+  if (!isStr(raw.room)) return null;
+  const room = (known.renamedRooms ?? LEGACY_ROOMS)[raw.room] ?? raw.room;
+  if (!known.room(room)) return null;
   if (!isObject(raw.flags)) return null;
   if (!Array.isArray(raw.inventory)) return null;
 
@@ -173,11 +264,17 @@ export function normalizeSave(raw: unknown, known: SaveKnown): SaveData | null {
       notes.push({ id: n.id, text: n.text, act: isNum(n.act) ? n.act : act });
     }
   }
+  // Rename first, then clear the ending choice: a save is always before that choice, so even an
+  // old save that leaked one into its flags comes back ready to choose again.
+  const flags = withoutEndingFlags(
+    renamedRecord(raw.flags, known.renamedFlags ?? LEGACY_FLAGS),
+    known.endingFlags ?? ENDING_RESET_FLAGS,
+  );
   const data: SaveData = {
     version: SAVE_VERSION,
-    room: raw.room,
+    room,
     facing: raw.facing === -1 ? -1 : 1,
-    flags: { ...raw.flags },
+    flags,
     inventory,
     act,
     notes,
@@ -215,8 +312,13 @@ export function readSave(known: SaveKnown): LoadResult {
   } catch {
     return { data: null, raw, corrupt: true };
   }
+  const version = saveVersionOf(parsed);
+  if (version > SAVE_VERSION) return { data: null, raw, corrupt: false, future: true, futureVersion: version };
   const data = normalizeSave(parsed, known);
-  return data ? { data, raw, corrupt: false } : { data: null, raw, corrupt: true };
+  if (!data) return { data: null, raw, corrupt: true };
+  return version < SAVE_VERSION
+    ? { data, raw, corrupt: false, migratedFrom: version }
+    : { data, raw, corrupt: false };
 }
 
 /**
@@ -281,20 +383,114 @@ export function backupCorrupt(raw: string): void {
   }
 }
 
-/** Take an old save out of storage, if one exists. Returns its raw text. */
+export type ArchiveReason = "migrated" | "old-key" | "future" | "corrupt";
+
+export interface ArchivedSave {
+  at: number;
+  reason: ArchiveReason;
+  /** The storage key the raw text came from. */
+  key: string;
+  /** The shape it declared, when it could be read. */
+  version?: number;
+  raw: string;
+}
+
+/** How many archived pages to keep: the last few, not an unbounded notebook. */
+export const MAX_ARCHIVED = 5;
+
+/** Read the archive, dropping anything malformed (or written by something else). */
+export function archivedSaves(): ArchivedSave[] {
+  try {
+    const raw = localStorage.getItem(ARCHIVE_KEY);
+    if (!raw) return [];
+    const parsed: unknown = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((v): v is ArchivedSave =>
+      isObject(v) && isStr(v.raw) && isStr(v.reason) && isStr(v.key) && isNum(v.at));
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Keep a raw save that cannot be loaded as the current one: an older shape, an old-story key, or
+ * one written by a newer build. Best-effort and idempotent, so a re-read doesn't duplicate it.
+ */
+export function archiveSave(raw: string, reason: ArchiveReason, key = SAVE_KEY, version?: number): boolean {
+  try {
+    const list = archivedSaves();
+    if (list.some((saved) => saved.raw === raw)) return true;
+    list.push({ at: Date.now(), reason, key, ...(version !== undefined ? { version } : {}), raw });
+    while (list.length > MAX_ARCHIVED) list.shift();
+    localStorage.setItem(ARCHIVE_KEY, JSON.stringify(list));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Take an old key out of storage, but archive its page first. The old story cannot be resumed in
+ * this one; it can still be read back, or recovered by hand, instead of vanishing on first read.
+ */
 export function takeOldSave(): string | null {
+  let first: string | null = null;
   for (const key of OLD_SAVE_KEYS) {
     try {
       const raw = localStorage.getItem(key);
       if (raw) {
-        localStorage.removeItem(key);
-        return raw;
+        let version: number | undefined;
+        try { version = saveVersionOf(JSON.parse(raw)); } catch { /* unreadable, raw is enough */ }
+        // Only drop the old key once the page is safely in the archive. If storage refuses the
+        // archive write, the old key stays where it is: preservation beats tidiness.
+        if (archiveSave(raw, "old-key", key, version)) localStorage.removeItem(key);
+        first ??= raw;
       }
     } catch {
       /* keep looking */
     }
   }
-  return null;
+  return first;
+}
+
+/**
+ * Keep the current save as the one a new voyage replaced. `Begin anew` and `Restart` call this
+ * before their first write, so the title can offer "Take up last voyage" without a redesign.
+ */
+export function stashCurrentSave(): boolean {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return false;
+    // A second new voyage replaces the one-step undo too; put the older page in the archive
+    // rather than dropping it, so "one undo" doesn't mean "one page only".
+    const older = localStorage.getItem(PREVIOUS_KEY);
+    if (older) archiveSave(older, "old-key", PREVIOUS_KEY);
+    localStorage.setItem(PREVIOUS_KEY, raw);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function hasStashedSave(): boolean {
+  try {
+    return localStorage.getItem(PREVIOUS_KEY) !== null;
+  } catch {
+    return false;
+  }
+}
+
+/** Put the stashed voyage back as the current save. One undo; the stash is consumed. */
+export function restoreStashedSave(): boolean {
+  try {
+    const raw = localStorage.getItem(PREVIOUS_KEY);
+    if (!raw) return false;
+    localStorage.setItem(SAVE_KEY, raw);
+    localStorage.removeItem(PREVIOUS_KEY);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export function hasAnySave(): boolean {

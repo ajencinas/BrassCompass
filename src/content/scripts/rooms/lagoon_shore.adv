@@ -97,6 +97,7 @@ room lagoon_shore "The Wrack Line"
     stand 1010,850
     look "Vex, on the flats, with his coat half off. He has stopped being the captain of anything."
     talk "He does not look up. \"The tide is wrong. We have until it turns.\""
+      talk vex at shore
     give "He looks at my hands, then at the water. \"Keep it. I travel light these days.\""
 
   hotspot quill "Quill"

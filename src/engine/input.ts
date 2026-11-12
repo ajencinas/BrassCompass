@@ -3,15 +3,20 @@
  *
  * A mouse is read from mouse events, as it always has been: `detail` counts double-clicks, and
  * the dev editor's Alt+click intercepts `mousedown` before the game sees it. Touch and pen use
- * pointer events: a tap acts when the finger lifts, a long press (~500 ms) is a right-click, and
- * two quick taps in one place count as a double-click.
+ * pointer events: a tap acts when the finger lifts, and a long press (~500 ms) is a look.
+ *
+ * Touch deliberately reports every tap as a single click. A double tap used to arrive as
+ * `clicks: 2`, which let it skip the game's arm-then-confirm step and take a door at once; a
+ * finger that bounces is not a second decision. A press is also owned by the window now, so a
+ * release outside the canvas, a cancelled pointer or a backgrounded tab cannot leave its
+ * long-press timer armed to fire later.
  */
 
 import type { View } from "./view";
 
 export type PointerKind = "mouse" | "touch" | "pen";
 export interface PointerInfo {
-  /** 2 for the second click of a double-click (or a double tap). */
+  /** 2 for the second click of a double-click. Touch/pen always report 1. */
   clicks: number;
   kind: PointerKind;
 }
@@ -20,7 +25,15 @@ export type PointerHandler = (x: number, y: number, button: number, info: Pointe
 const LONG_PRESS_MS = 500;
 /** CSS pixels a finger may drift before a press stops counting as a tap. */
 const TAP_SLOP = 14;
-const DOUBLE_TAP_MS = 350;
+
+interface Press {
+  id: number;
+  x: number;
+  y: number;
+  kind: PointerKind;
+  timer: number;
+  long: boolean;
+}
 
 export class Input {
   x = 0;
@@ -57,12 +70,18 @@ export class Input {
     });
 
     // ---- touch and pen
-    let press: { id: number; x: number; y: number; kind: PointerKind; timer: number; long: boolean } | null = null;
-    let lastTap = { t: -1e9, x: 0, y: 0 };
+    let press: Press | null = null;
     const cancelPress = () => {
       if (press) window.clearTimeout(press.timer);
       press = null;
     };
+    /** Compatibility mouse events trail a touch; ignore them for a moment. */
+    const settleTouch = () => window.setTimeout(() => { this.touching = false; }, 400);
+    const inside = (x: number, y: number): boolean => {
+      const r = view.canvas.getBoundingClientRect();
+      return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+    };
+
     view.canvas.addEventListener("pointerdown", (e) => {
       if (e.pointerType === "mouse") return;
       e.preventDefault();
@@ -71,39 +90,49 @@ export class Input {
       this.touching = true;
       const kind: PointerKind = e.pointerType === "pen" ? "pen" : "touch";
       this.lastKind = kind;
-      const p = { id: e.pointerId, x: e.clientX, y: e.clientY, kind, long: false, timer: 0 };
+      // Keep receiving the release even if the finger leaves the canvas. Window handlers below
+      // are the safety net if a browser refuses the capture.
+      try { view.canvas.setPointerCapture(e.pointerId); } catch { /* optional */ }
+      const p: Press = { id: e.pointerId, x: e.clientX, y: e.clientY, kind, long: false, timer: 0 };
       p.timer = window.setTimeout(() => {
-        // Long press: the right-click of a touch screen.
+        if (press !== p || p.long) return;
         p.long = true;
+        p.timer = 0;
         if (navigator.vibrate) try { navigator.vibrate(12); } catch { /* optional */ }
         emit(this.handlers.move, p.x, p.y, 0, { clicks: 0, kind });
         emit(this.handlers.down, p.x, p.y, 2, { clicks: 1, kind });
       }, LONG_PRESS_MS);
       press = p;
     });
-    view.canvas.addEventListener("pointermove", (e) => {
+
+    // The window owns movement, release and cancellation: a finger that slides off the canvas
+    // (or lets go over the HUD) must not turn into a tap or a late long press.
+    window.addEventListener("pointermove", (e) => {
       if (!press || e.pointerId !== press.id) return;
       if (Math.hypot(e.clientX - press.x, e.clientY - press.y) > TAP_SLOP) cancelPress();
     });
-    view.canvas.addEventListener("pointerup", (e) => {
+    window.addEventListener("pointerup", (e) => {
       if (e.pointerType === "mouse") return;
-      e.preventDefault();
+      if (!press || e.pointerId !== press.id) return;
       const p = press;
       cancelPress();
-      // Compatibility mouse events may trail a touch; ignore them for a moment.
-      window.setTimeout(() => { this.touching = false; }, 400);
-      if (!p || p.id !== e.pointerId || p.long) return;
-      const now = performance.now();
-      const double = now - lastTap.t < DOUBLE_TAP_MS && Math.hypot(p.x - lastTap.x, p.y - lastTap.y) < TAP_SLOP * 2;
-      lastTap = double ? { t: -1e9, x: 0, y: 0 } : { t: now, x: p.x, y: p.y };
-      // A tap is a hover and a click in one: touch has nothing to hover with.
+      settleTouch();
+      if (p.long || !inside(e.clientX, e.clientY)) return;
+      // A tap is a hover and a click in one: touch has nothing to hover with. Never `clicks: 2`:
+      // a bounced finger must still arm, not confirm.
       emit(this.handlers.move, p.x, p.y, 0, { clicks: 0, kind: p.kind });
-      emit(this.handlers.down, p.x, p.y, 0, { clicks: double ? 2 : 1, kind: p.kind });
+      emit(this.handlers.down, p.x, p.y, 0, { clicks: 1, kind: p.kind });
     });
-    view.canvas.addEventListener("pointercancel", () => {
-      cancelPress();
-      this.touching = false;
+    window.addEventListener("pointercancel", (e) => {
+      if (e.pointerType === "mouse") return;
+      if (press && e.pointerId === press.id) { cancelPress(); this.touching = false; }
     });
+    // Releasing outside the browser, switching tabs, or opening a system menu: every one of
+    // these ends the gesture, and none of them should leave a timer behind.
+    const releaseAll = () => { cancelPress(); this.touching = false; };
+    window.addEventListener("blur", releaseAll);
+    document.addEventListener("visibilitychange", () => { if (document.hidden) releaseAll(); });
+    window.addEventListener("contextmenu", releaseAll);
 
     view.canvas.addEventListener("contextmenu", (e) => e.preventDefault());
 

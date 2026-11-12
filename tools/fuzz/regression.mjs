@@ -48,6 +48,9 @@ const browser = await Browser.launch();
 try {
   const page = await openGamePage(browser, { url: server.url });
   const ev = (x) => page.evaluate(x, { timeout: 600000 });
+  // The harness drives a synthetic clock; use the old automatic pace so queued effects drain
+  // without a player click. The shipped default stays wait-for-click.
+  await page.evaluate("window.__game.prefs.waitForClick = false");
 
   console.log(`invariants sweep (${server.url})`);
   // Every room the reboot's reach map puts in an act: Act I's island, Act II's Marrow, Act III's
@@ -82,12 +85,33 @@ try {
   });
 
   console.log("softlocks");
-  await check("act II: every reachable state can still finish the act", async () => {
-    const r = await ev("window.__fz.phaseB(2, { maxStates: 2000, maxMs: 120000 })");
-    assert.equal(r.complete, true, "search did not finish");
-    assert.ok(r.goalStates > 0, "act end never reached");
-    assert.equal(r.stuck, 0, JSON.stringify(r.stuckExamples.slice(0, 3)));
-  });
+  // Act I's crew chain is wide: depth-first reaches its end in the budget, and the fuzzer
+  // separates states left unexpanded (unresolved) from states whose explored exits really
+  // dead-end (stuck), so a partial search still means something. Acts II and III finish
+  // breadth-first; Act IV is small. Every act's checked states must reach its end.
+  const softlocks = [
+    { act: 1, opts: "{ maxStates: 5000, maxMs: 120000, order: \"dfs\" }" },
+    { act: 2, opts: "{ maxStates: 2000, maxMs: 120000 }" },
+    { act: 3, opts: "{ maxStates: 3000, maxMs: 120000 }" },
+    { act: 4, opts: "{ maxStates: 3000, maxMs: 30000 }" },
+  ];
+  for (const { act, opts } of softlocks) {
+    await check(`act ${act}: every explored state can still finish the act`, async () => {
+      const r = await ev(`(() => {
+        const fz = window.__fz, old = { ...fz.opts };
+        fz.opts.dlgCap = 60; fz.opts.settleSteps = 2500;
+        try { return fz.phaseB(${act}, ${opts}); } finally { Object.assign(fz.opts, old); }
+      })()`);
+      const bad = r.findings.flatMap((f) => [
+        ...f.anomalies.filter((a) => HARD.has(a.kind)).map((a) => a.kind + " " + JSON.stringify(a.detail).slice(0, 160)),
+        ...f.errors.map((e) => "error " + e.where + ": " + e.message),
+      ]);
+      assert.deepEqual(bad.slice(0, 5), [], `${bad.length} problems`);
+      assert.ok(r.goalStates > 0, "act end never reached within the budget");
+      assert.equal(r.stuck, 0, JSON.stringify(r.stuckExamples.slice(0, 3)));
+      if (!r.complete) console.log(`       (bounded: ${r.expanded} expanded, ${r.unresolved} unresolved, ${r.frontierLeft} left)`);
+    });
+  }
 
   console.log("monkey");
   await check("60 random-input runs: no exceptions or invariant breaks", async () => {
@@ -209,6 +233,32 @@ try {
       return out.filter(Boolean);
     })()`);
     assert.deepEqual([...new Set(r.filter((t) => (t ?? "").replace(/\.\.\.+/g, "").includes("..")))].slice(0, 3), []);
+  });
+
+  await check("Act IV item-on-target attempts do the job, not just refuse", async () => {
+    const r = await ev(`(() => {
+      const g = __game, fz = __fz, P = fz.newProbe("r"); fz.cur = P;
+      fz.stopOverlays(); g.resetState(); g.title = false; g.startAct(4); fz.runToEnd(P, { explore: false });
+      const base = fz.snap();
+      const out = {};
+      let p = fz.probe(base, { kind: "itemOn", verb: "use", item: "crowbar", hs: "bell", explore: false });
+      out.bell = { cut: g.flags.bell_cut === true, tam: g.flags.tam_freed === true, narration: p.narration };
+      fz.restore(base, { persist: false });
+      p = fz.probe({ ...base, inventory: [...base.inventory, "lantern"] },
+        { kind: "itemOn", verb: "use", item: "lantern", hs: "great_lantern", explore: false });
+      out.lantern = { doused: g.flags.lantern_doused === true, kept: g.inventory.includes("lantern"), narration: p.narration };
+      fz.restore(base, { persist: false });
+      g.devGoRoom("arcadia_cabin"); fz.runToEnd(P, { explore: false });
+      p = fz.probe(fz.snap(), { kind: "itemOn", verb: "use", item: "nameplate", hs: "nameplate", explore: false });
+      out.name = { spoken: g.flags.name_spoken === true, talks: p.outcome.dialogues ?? [], narration: p.narration };
+      fz.cur = null;
+      return out;
+    })()`);
+    assert.equal(r.bell.cut && r.bell.tam, true, JSON.stringify(r.bell));
+    assert.equal(r.lantern.doused, true, JSON.stringify(r.lantern));
+    assert.equal(r.lantern.kept, false, "the canvas was not handed over");
+    assert.equal(r.name.spoken, true, JSON.stringify(r.name));
+    assert.ok(r.name.talks.some((id) => id.startsWith("mordant")), JSON.stringify(r.name));
   });
 
   // A save notice counts as read while its banner is on screen (g.saveNoticeShown()).

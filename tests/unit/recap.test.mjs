@@ -13,10 +13,10 @@ const save = (over = {}) => ({
   act: 2, notes: [], actStarted: true, ...over,
 });
 const hooks = {
-  actTitle: (n) => (n === 2 ? "Act II · The Vela Straits" : null),
+  actTitle: (n) => (n === 2 ? "Act II · The Crew" : null),
   roomName: (id) => ({ marrow_cabin: "The Marrow — Captain's Cabin" }[id] ?? id),
   itemName: (id) => ({ compass: "brass compass", crowbar: "crowbar" }[id] ?? id),
-  actCaption: (n) => (n === 2 ? "Dawn, and the Marrow is mine to stand on." : null),
+  actCaption: (n) => (n === 2 ? "The Marrow is ours, for what that's worth. Vex at the helm, Quill aloft, Dorrit below, Hobb at the mast. The fog is waiting." : null),
   waitingOnLastChoice: (n) => n === 4,
   sail: () => {}, readCasebook: () => {}, back: () => {},
 };
@@ -41,16 +41,16 @@ test("elapsed time reads the way a person says it", () => {
 test("the card names the act, the room, the hint, the notes and the satchel", () => {
   const c = card({
     at: NOW - 3 * 86400_000,
-    tip: "Ask Vane what he saw from the quarterdeck.",
-    notes: [{ id: "a", text: "The stamp is in the drawer.", act: 1 }, { id: "b", text: "Pell's log names the Straits.", act: 2 }, { id: "c", text: "Vane was on watch.", act: 2 }],
+    tip: "Ask Vex what he saw from the helm.",
+    notes: [{ id: "a", text: "Vex has Quill's compass.", act: 1 }, { id: "b", text: "The nameplate reads Mordant.", act: 2 }, { id: "c", text: "Vex turned his light away.", act: 2 }],
   });
-  assert.equal(c.act, "Act II · The Vela Straits");
+  assert.equal(c.act, "Act II · The Crew");
   assert.equal(c.when, "Last sailed 3 days ago.");
   assert.equal(c.where, "Fenn was in The Marrow — Captain's Cabin.");
-  assert.equal(c.doing, "He was doing: Ask Vane what he saw from the quarterdeck.");
+  assert.equal(c.doing, "He was doing: Ask Vex what he saw from the helm.");
   assert.equal(c.knows, "He knows: 3 entries.");
   // The last two, in the order he wrote them.
-  assert.deepEqual(c.notes, ["Pell's log names the Straits.", "Vane was on watch."]);
+  assert.deepEqual(c.notes, ["The nameplate reads Mordant.", "Vex turned his light away."]);
   assert.equal(c.carrying, "He is carrying: brass compass and crowbar.");
   assert.equal(c.talking, false);
   assert.equal(c.waiting, false);
@@ -63,7 +63,7 @@ test("a save with nothing to say still says it plainly", () => {
   assert.equal(c.knows, "He knows: 0 entries.");
   assert.deepEqual(c.notes, []);
   assert.equal(c.carrying, "He is carrying: nothing at all.");
-  assert.equal(c.act, "Act II · The Vela Straits");
+  assert.equal(c.act, "Act II · The Crew");
 });
 
 test("one entry, one item, a queued line, and the act still to begin", () => {
@@ -72,7 +72,7 @@ test("one entry, one item, a queued line, and the act still to begin", () => {
   assert.equal(card({ queue: [{ k: "say", text: "…" }] }).talking, true);
   const opening = card({ actStarted: false, tip: "This hint is not the plan." });
   assert.equal(opening.opening, true);
-  assert.equal(opening.doing, "The act hasn't begun. It opens with: “Dawn, and the Marrow is mine to stand on.”");
+  assert.equal(opening.doing, "The act hasn't begun. It opens with: “The Marrow is ours, for what that's worth. Vex at the helm, Quill aloft, Dorrit below, Hobb at the mast. The fog is waiting.”");
   // Without a caption there is still something honest to put there.
   const bare = buildRecap(save({ actStarted: false }), { ...hooks, actCaption: () => null }, NOW);
   assert.equal(bare.doing, "The act hasn't begun. Nobody has said anything yet.");

@@ -233,7 +233,8 @@ if (!existsSync(join(DIST, "index.html"))) {
 
 // The gameplay needs its art; a build without it would upload a game with no scenery. Warn
 // loudly but still pack (CI builds test-only bundles, and the owner may package art separately).
-for (const folder of ["scenes", "characters", "props", "audio", "video"]) {
+// `video` is deliberately absent: the reboot ships no cinematics, so the old films are excluded.
+for (const folder of ["scenes", "characters", "props", "audio"]) {
   if (!existsSync(join(DIST, "assets", folder))) console.warn(`package:itch — warning: dist/assets/${folder} is missing.`);
 }
 

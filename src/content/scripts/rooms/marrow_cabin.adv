@@ -61,8 +61,8 @@ room marrow_cabin "The Marrow — Captain's Cabin"
     area 1960,60 330x560
     stand 2100,840
     look "Beyond the stern window, the captain's gallery, over the wake. Vex's. Nobody goes out uninvited."
-    walk "Without an invitation, I would only be a clerk on a balcony, being looked at."
-    open "Without an invitation, I would only be a clerk on a balcony, being looked at."
+    walk "Without an invitation, I would only be a stranger on a balcony, being looked at."
+    open "Without an invitation, I would only be a stranger on a balcony, being looked at."
     state if act 2 and fog_tried
       exit marrow_gallery
       look "The gallery, and nobody on it. Vex is at the wheel; the invitation is the empty rail."

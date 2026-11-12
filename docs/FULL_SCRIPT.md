@@ -24,15 +24,15 @@
 - [Act II: The Crew](#act2)
   - [Act II — Opening](#act2-opening)
   - [The Marrow — Deck](#act2-marrow_deck)
-  - [The Shroud](#act2-bow_fog)
   - [The Marrow — Crow's Nest](#act2-crows_nest)
+  - [The Marrow — Bow](#act2-bow_fog)
   - [The Marrow — Crew Deck](#act2-below_decks)
   - [The Marrow — Helm](#act2-marrow_quarterdeck)
   - [The Marrow — Captain's Cabin](#act2-marrow_cabin)
   - [The Marrow — Stern Gallery](#act2-marrow_gallery)
 - [Act III: The Shroud](#act3)
   - [Act III — Opening](#act3-opening)
-  - [The Fog Flats](#act3-lagoon_shore)
+  - [The Wrack Line](#act3-lagoon_shore)
   - [The Reef Gate](#act3-key_gate)
   - [The Sunken Wreck](#act3-reef_wreck)
   - [The Castaway Camp](#act3-salt_camp)
@@ -42,7 +42,6 @@
   - [The Grey Lantern — Deck](#act4-lantern_deck)
   - [The Grey Lantern — Captain's Cabin](#act4-arcadia_cabin)
 - [Combinations that work anywhere](#global-combos)
-- [Conversations not opened from any room](#orphan-trees)
 - [Items](#items)
 - [Tips](#tips)
 - [The Ending](#ending)
@@ -56,7 +55,7 @@
 
 **CAPTAIN MORDANT** — Captain of the Grey Lantern. Ancient, courteous, territorial. *[28 lines in ending, mordant.]*
 
-**ELIAS FENN** — Fenn's father, 50s. Cheerful about catastrophe; apologises for the wrong things. *[47 lines in elias.]*
+**ELIAS FENN** — Fenn's father, 50s. Cheerful about catastrophe; apologises for the wrong things. *[48 lines in elias.]*
 
 **FENN** — Cartographer's apprentice, 23. Precise, dry, maps everything; braver than he sounds. *[The player: every choice and every verb line.]*
 
@@ -101,68 +100,68 @@
 
 **On arrival**
 
-- *Once,* *[Act I, if dock_landed = false]* <sub>rooms/dock.adv:34</sub>
-  - *[sets dock_landed]* <sub>rooms/dock.adv:35</sub>
-  - **FENN (V.O.)**: The boatman puts me on the pier and pushes off before I can thank him. <sub>rooms/dock.adv:36</sub>
-  - **FENN (V.O.)**: Dreadwater. Three months since my father sailed, and the harbour has gone quiet. <sub>rooms/dock.adv:37</sub>
-  - **FENN (V.O.)**: One ship is tied up. The other berths are empty, and the lamps are lit for nobody. <sub>rooms/dock.adv:38</sub>
-  - **FENN (V.O.)**: A lamp burns in the harbourmaster's house. It is the only welcome in sight. <sub>rooms/dock.adv:39</sub>
-  - **FENN (V.O.)**: The quay runs on past the harbourmaster's house, out toward the harbour mouth. <sub>rooms/dock.adv:40</sub>
+- *Once,* *[Act I, if dock_landed = false]* <sub>rooms/dock.adv:41</sub>
+  - *[sets dock_landed]* <sub>rooms/dock.adv:42</sub>
+  - **FENN (V.O.)**: The boatman puts me on the pier and pushes off before I can thank him. <sub>rooms/dock.adv:43</sub>
+  - **FENN (V.O.)**: Dreadwater. Three months since my father sailed, and the harbour has gone quiet. <sub>rooms/dock.adv:44</sub>
+  - **FENN (V.O.)**: One ship is tied up. The other berths are empty, and the lamps are lit for nobody. <sub>rooms/dock.adv:45</sub>
+  - **FENN (V.O.)**: A lamp burns in the harbourmaster's house. It is the only welcome in sight. <sub>rooms/dock.adv:46</sub>
+  - **FENN (V.O.)**: The quay runs on past the harbourmaster's house, out toward the harbour mouth. <sub>rooms/dock.adv:47</sub>
 
-**the Marrow** `ship` <sub>rooms/dock.adv:42</sub>
+**the Marrow** `ship` <sub>rooms/dock.adv:49</sub>
 
-- **Look at:** The Marrow. Her sails are still bent, and her deck is scrubbed. She is the only ship here with any gear aloft. <sub>rooms/dock.adv:45</sub>
-- **Talk to:** I call up to the deck. Nobody answers. The harbour has taught everyone not to shout at ships. <sub>rooms/dock.adv:46</sub>
-- **Use:** I would need a captain first. That seems to be the trouble everywhere on this island. <sub>rooms/dock.adv:49</sub>
-- **Open:** I am not opening a ship. Ships open themselves, usually at the worst moment. <sub>rooms/dock.adv:47</sub>
-- **Pick up:** She is a little big for my satchel. <sub>rooms/dock.adv:48</sub>
-- *When* *[if vex_deal]* <sub>rooms/dock.adv:50</sub>
-  - **Look at:** The Marrow. A new rudder is lashed by her rail, and somebody has been painting her name. <sub>rooms/dock.adv:51</sub>
-  - **Talk to:** A man on deck raises a hand, then remembers he is not supposed to be friendly. <sub>rooms/dock.adv:52</sub>
-- *When* *[if met_vex]* *— called “the Marrow, Vex's ship”* <sub>rooms/dock.adv:53</sub>
-  - **Look at:** The Marrow. Vex's ship, and the only way off this island that is still afloat. <sub>rooms/dock.adv:55</sub>
+- **Look at:** The Marrow. Her sails are still bent, and her deck is scrubbed. She is the only ship here with any gear aloft. <sub>rooms/dock.adv:52</sub>
+- **Talk to:** I call up to the deck. Nobody answers. The harbour has taught everyone not to shout at ships. <sub>rooms/dock.adv:53</sub>
+- **Use:** I would need a captain first. That seems to be the trouble everywhere on this island. <sub>rooms/dock.adv:56</sub>
+- **Open:** I am not opening a ship. Ships open themselves, usually at the worst moment. <sub>rooms/dock.adv:54</sub>
+- **Pick up:** She is a little big for my satchel. <sub>rooms/dock.adv:55</sub>
+- *When* *[if vex_deal]* <sub>rooms/dock.adv:57</sub>
+  - **Look at:** The Marrow. A new rudder is lashed by her rail, and somebody has been painting her name. <sub>rooms/dock.adv:58</sub>
+  - **Talk to:** A man on deck raises a hand, then remembers he is not supposed to be friendly. <sub>rooms/dock.adv:59</sub>
+- *When* *[if met_vex]* *— called “the Marrow, Vex's ship”* <sub>rooms/dock.adv:60</sub>
+  - **Look at:** The Marrow. Vex's ship, and the only way off this island that is still afloat. <sub>rooms/dock.adv:62</sub>
 
-**the Salty Keel** `tavern_door` <sub>rooms/dock.adv:57</sub>
+**the Salty Keel** `tavern_door` <sub>rooms/dock.adv:66</sub>
 
-- **Look at:** The Salty Keel. Warm light, and the sound of people carefully not saying something. <sub>rooms/dock.adv:61</sub>
-- **Use / Walk to:** *[→ goes to The Salty Keel]* <sub>rooms/dock.adv:60</sub>
-- **Open:** I push the door. The room goes quiet in the way a room does when it knows me. <sub>rooms/dock.adv:62</sub>
-  - *[→ goes to The Salty Keel]* <sub>rooms/dock.adv:60</sub>
+- **Look at:** The Salty Keel. Warm light, and the sound of people carefully not saying something. <sub>rooms/dock.adv:70</sub>
+- **Use / Walk to:** *[→ goes to The Salty Keel]* <sub>rooms/dock.adv:69</sub>
+- **Open:** I push the door. The room goes quiet in the way a room does when it knows me. <sub>rooms/dock.adv:71</sub>
+  - *[→ goes to The Salty Keel]* <sub>rooms/dock.adv:69</sub>
 
-**the harbourmaster's house** `office_door` <sub>rooms/dock.adv:64</sub>
+**the harbourmaster's house** `office_door` <sub>rooms/dock.adv:73</sub>
 
-- **Look at:** The harbourmaster's house. A lamp is burning behind the glass. <sub>rooms/dock.adv:68</sub>
-- **Use / Walk to:** *[→ goes to The Harbourmaster's House]* <sub>rooms/dock.adv:67</sub>
-- **Open:** I go in. Bramwick has run this harbour for thirty years, and he will know what to say. <sub>rooms/dock.adv:69</sub>
-  - *[→ goes to The Harbourmaster's House]* <sub>rooms/dock.adv:67</sub>
+- **Look at:** The harbourmaster's house. A lamp is burning behind the glass. <sub>rooms/dock.adv:77</sub>
+- **Use / Walk to:** *[→ goes to The Harbourmaster's House]* <sub>rooms/dock.adv:76</sub>
+- **Open:** I go in. Bramwick has run this harbour for thirty years, and he will know what to say. <sub>rooms/dock.adv:78</sub>
+  - *[→ goes to The Harbourmaster's House]* <sub>rooms/dock.adv:76</sub>
 
-**Wreckers' Lane** `alley_mouth` <sub>rooms/dock.adv:71</sub>
+**Wreckers' Lane** `alley_mouth` <sub>rooms/dock.adv:82</sub>
 
-- **Look at:** A gap between two warehouses. Wreckers' Lane. The name is doing a lot of work. <sub>rooms/dock.adv:75</sub>
-- **Use / Walk to:** *[→ goes to Wreckers' Lane]* <sub>rooms/dock.adv:74</sub>
-- **Open:** I turn into the lane. It smells of tar and wet rope. <sub>rooms/dock.adv:76</sub>
-  - *[→ goes to Wreckers' Lane]* <sub>rooms/dock.adv:74</sub>
+- **Look at:** A gap between two warehouses. Wreckers' Lane. The name is doing a lot of work. <sub>rooms/dock.adv:86</sub>
+- **Use / Walk to:** *[→ goes to Wreckers' Lane]* <sub>rooms/dock.adv:85</sub>
+- **Open:** I turn into the lane. It smells of tar and wet rope. <sub>rooms/dock.adv:87</sub>
+  - *[→ goes to Wreckers' Lane]* <sub>rooms/dock.adv:85</sub>
 
-**the road up to town** `road` <sub>rooms/dock.adv:78</sub>
+**the road up to town** `road` <sub>rooms/dock.adv:91</sub>
 
-- **Look at:** The road climbs between the warehouses to Upper Town. Every shutter up there is shut. <sub>rooms/dock.adv:82</sub>
-- **Use / Walk to:** *[→ goes to Upper Town]* <sub>rooms/dock.adv:81</sub>
-- **Open:** I take the road up. The cobbles are wet, and the town is listening. <sub>rooms/dock.adv:83</sub>
-  - *[→ goes to Upper Town]* <sub>rooms/dock.adv:81</sub>
+- **Look at:** The steps climb between the warehouses to Upper Town. Every shutter up there is shut. <sub>rooms/dock.adv:95</sub>
+- **Use / Walk to:** *[→ goes to Upper Town]* <sub>rooms/dock.adv:94</sub>
+- **Open:** I take the steps up. The stone is wet, and the town is listening. <sub>rooms/dock.adv:96</sub>
+  - *[→ goes to Upper Town]* <sub>rooms/dock.adv:94</sub>
 
-**the quay to the harbour mouth** `pier` <sub>rooms/dock.adv:85</sub>
+**the quay to the harbour mouth** `pier` <sub>rooms/dock.adv:100</sub>
 
-- **Look at:** The boardwalk runs on past the harbourmaster's house. Past it is the quay, then the pier, then the harbour mouth. <sub>rooms/dock.adv:89</sub>
-- **Use / Walk to:** *[→ goes to The Quay]* <sub>rooms/dock.adv:88</sub>
-- **Open:** I walk on along the quay, out toward the harbour mouth. <sub>rooms/dock.adv:90</sub>
-  - *[→ goes to The Quay]* <sub>rooms/dock.adv:88</sub>
+- **Look at:** The wet path runs on past the harbourmaster's house. Past it is the quay, then the pier, then the harbour mouth. <sub>rooms/dock.adv:104</sub>
+- **Use / Walk to:** *[→ goes to The Quay]* <sub>rooms/dock.adv:103</sub>
+- **Open:** I walk on along the quay, out toward the harbour mouth. <sub>rooms/dock.adv:105</sub>
+  - *[→ goes to The Quay]* <sub>rooms/dock.adv:103</sub>
 
-**the harbour water** `water` <sub>rooms/dock.adv:92</sub>
+**the harbour water** `water` <sub>rooms/dock.adv:107</sub>
 
-- **Look at:** Black water. Past the headland, the fog has sat for three months without moving. <sub>rooms/dock.adv:95</sub>
-  - **FENN (V.O.)**: Six ships used to tie up here. Now there is one. <sub>rooms/dock.adv:96</sub>
-- **Talk to:** I say my father's name to the water. The water has heard it before. <sub>rooms/dock.adv:97</sub>
-- **Use:** I could drink it. I have had worse from the tavern. <sub>rooms/dock.adv:98</sub>
+- **Look at:** Black water. Past the headland, the fog has sat for three months without moving. <sub>rooms/dock.adv:110</sub>
+  - **FENN (V.O.)**: Six ships used to tie up here. Now there is one. <sub>rooms/dock.adv:111</sub>
+- **Talk to:** I say my father's name to the water. The water has heard it before. <sub>rooms/dock.adv:112</sub>
+- **Use:** I could drink it. I have had worse from the tavern. <sub>rooms/dock.adv:113</sub>
 
 <a id="act1-tavern"></a>
 ## The Salty Keel
@@ -171,77 +170,69 @@
 
 **On arrival**
 
-- *Once,* *[if met_rook = false]* <sub>rooms/tavern.adv:28</sub>
-  - **FENN (V.O.)**: There's an old man at the corner table. His drink has gone flat. <sub>rooms/tavern.adv:29</sub>
+- *Once,* *[if met_rook = false]* <sub>rooms/tavern.adv:35</sub>
+  - **FENN (V.O.)**: There's an old man at the long table. His drink has gone flat. <sub>rooms/tavern.adv:36</sub>
 
-**Marta** `marta` <sub>rooms/tavern.adv:31</sub>
+**the bottle shelf** `bottles` <sub>rooms/tavern.adv:40</sub>
 
-- **Look at:** Marta, behind the bar. She's been wiping the same glass since I walked in. <sub>rooms/tavern.adv:34</sub>
-- **Talk to:** I catch her eye. It takes some catching. <sub>rooms/tavern.adv:35</sub>
-  - *[→ conversation* [marta](#dlg-marta) *— below]* <sub>rooms/tavern.adv:36</sub>
-- **Give:** She only takes things worth trading. <sub>rooms/tavern.adv:37</sub>
-- **Open:** Marta is not a door. She's made that point to better men than me. <sub>rooms/tavern.adv:38</sub>
-- *When* *[if seen:rook.story]* <sub>rooms/tavern.adv:39</sub>
-  - **Look at:** Marta's watching the corner where Rook sits. She's stopped wiping the glass. <sub>rooms/tavern.adv:40</sub>
+- **Look at:** Bottles, sorted by colour and trouble. <sub>rooms/tavern.adv:43</sub>
+- **Use:** I'd have to reach over the bar. Marta is watching. <sub>rooms/tavern.adv:44</sub>
 
-**old sailor** `rook` <sub>rooms/tavern.adv:42</sub>
+**Marta** `marta` <sub>rooms/tavern.adv:46</sub>
 
-- **Look at:** An old man at a corner table. His mug is full and his eyes aren't. <sub>rooms/tavern.adv:45</sub>
-- **Talk to:** He looks up before I speak. He's been waiting. <sub>rooms/tavern.adv:46</sub>
-  - *[→ conversation* [rook](#dlg-rook) *— below]* <sub>rooms/tavern.adv:47</sub>
-- **Give:** He waves it away without looking at it. <sub>rooms/tavern.adv:48</sub>
-- *When* *[if met_rook]* *— called “Old Rook”* <sub>rooms/tavern.adv:49</sub>
-  - **Look at:** Rook at his table by the door. He's put the mug down. <sub>rooms/tavern.adv:51</sub>
+- **Look at:** Marta, behind the bar. She's been wiping the same glass since I walked in. <sub>rooms/tavern.adv:49</sub>
+- **Talk to:** I catch her eye. It takes some catching. <sub>rooms/tavern.adv:50</sub>
+  - *[→ conversation* [marta](#dlg-marta) *— below]* <sub>rooms/tavern.adv:51</sub>
+- **Give:** She only takes things worth trading. <sub>rooms/tavern.adv:52</sub>
+- **Open:** Marta is not a door. She's made that point to better men than me. <sub>rooms/tavern.adv:53</sub>
+- *When* *[if seen:rook.story]* <sub>rooms/tavern.adv:54</sub>
+  - **Look at:** Marta's watching the corner where Rook sits. She's stopped wiping the glass. <sub>rooms/tavern.adv:55</sub>
 
-**Dorrit** `dorrit` <sub>rooms/tavern.adv:53</sub>
+**old sailor** `rook` <sub>rooms/tavern.adv:57</sub>
 
-- **Look at:** Dorrit, in his apron, holding a spoon like a small weapon. <sub>rooms/tavern.adv:56</sub>
-- **Talk to:** I ask about the stores. He turns before I finish. <sub>rooms/tavern.adv:57</sub>
-  - *[sets met_dorrit]* *[→ conversation* [dorrit](#dlg-dorrit) *— below]* <sub>rooms/tavern.adv:58</sub>
-- **Give:** He looks at my hands. 'I've no use for it. I've no use for any of it.' <sub>rooms/tavern.adv:60</sub>
-- *When* *[if met_dorrit]* <sub>rooms/tavern.adv:61</sub>
-  - **Look at:** Dorrit, still furious and still cooking. The spoon has not been put down. <sub>rooms/tavern.adv:62</sub>
+- **Look at:** An old man at the long table. His mug is full and his eyes aren't. <sub>rooms/tavern.adv:60</sub>
+- **Talk to:** He looks up before I speak. He's been waiting. <sub>rooms/tavern.adv:61</sub>
+  - *[→ conversation* [rook](#dlg-rook) *— below]* <sub>rooms/tavern.adv:62</sub>
+- **Give:** He waves it away without looking at it. <sub>rooms/tavern.adv:63</sub>
+- *When* *[if met_rook]* *— called “Old Rook”* <sub>rooms/tavern.adv:64</sub>
+  - **Look at:** Rook at the long table against the back wall. He's put the mug down. <sub>rooms/tavern.adv:66</sub>
 
-**the bar** `bar` <sub>rooms/tavern.adv:64</sub>
+**Dorrit** `dorrit` <sub>rooms/tavern.adv:68</sub>
 
-- **Look at:** The bar. It's been polished by elbows and one very determined mop. <sub>rooms/tavern.adv:67</sub>
-- **Use:** I'd need money, and Marta's permission. I've neither. <sub>rooms/tavern.adv:68</sub>
-- **Open:** It's a bar, not a crate. <sub>rooms/tavern.adv:69</sub>
+- **Look at:** Dorrit, in his apron, holding a spoon like a small weapon. <sub>rooms/tavern.adv:71</sub>
+- **Talk to:** I ask about the stores. He turns before I finish. <sub>rooms/tavern.adv:72</sub>
+  - *[sets met_dorrit]* *[→ conversation* [dorrit](#dlg-dorrit) *— below]* <sub>rooms/tavern.adv:73</sub>
+- **Give:** He looks at my hands. "I've no use for it. I've no use for any of it." <sub>rooms/tavern.adv:75</sub>
+- *When* *[if met_dorrit]* <sub>rooms/tavern.adv:76</sub>
+  - **Look at:** Dorrit, still furious and still cooking. The spoon has not been put down. <sub>rooms/tavern.adv:77</sub>
 
-**the regulars** `crowd` <sub>rooms/tavern.adv:71</sub>
+**the bar** `bar` <sub>rooms/tavern.adv:79</sub>
 
-- **Look at:** Four regulars at the long table. They've been drinking to the Marrow. <sub>rooms/tavern.adv:74</sub>
-- **Talk to:** I ask about the fog. The table goes quiet at once. It's a local custom. <sub>rooms/tavern.adv:75</sub>
-- **Give:** They've no use for a compass and no manners for a gift. <sub>rooms/tavern.adv:76</sub>
-- *When* *[if seen:rook.story]* <sub>rooms/tavern.adv:77</sub>
-  - **Look at:** The regulars have heard Rook talking. They're pretending they haven't. <sub>rooms/tavern.adv:78</sub>
+- **Look at:** The bar. It's been polished by elbows and one very determined mop. <sub>rooms/tavern.adv:82</sub>
+- **Use:** I'd need money, and Marta's permission. I've neither. <sub>rooms/tavern.adv:83</sub>
+- **Open:** It's a bar, not a crate. <sub>rooms/tavern.adv:84</sub>
 
-**the door down to the harbour** `door_out` <sub>rooms/tavern.adv:82</sub>
+**the door down to the harbour** `door_out` <sub>rooms/tavern.adv:88</sub>
 
-- **Look at:** The door down to the harbour. The wind smells of salt and something colder. <sub>rooms/tavern.adv:86</sub>
-- **Use / Open / Walk to:** *[→ goes to Dreadwater Harbour]* <sub>rooms/tavern.adv:85</sub>
+- **Look at:** The door down to the harbour. The wind smells of salt and something colder. <sub>rooms/tavern.adv:92</sub>
+- **Use / Open / Walk to:** *[→ goes to Dreadwater Harbour]* <sub>rooms/tavern.adv:91</sub>
 
-**the window** `window` <sub>rooms/tavern.adv:88</sub>
+**the window** `window` <sub>rooms/tavern.adv:94</sub>
 
-- **Look at:** The window looks out on the harbour. There's one lamp and a lot of dark. <sub>rooms/tavern.adv:91</sub>
-- **Use:** It doesn't open. Marta says the view is better with the glass in. <sub>rooms/tavern.adv:92</sub>
+- **Look at:** The window looks out on the harbour. There's one lamp and a lot of dark. <sub>rooms/tavern.adv:97</sub>
+- **Use:** It doesn't open. Marta says the view is better with the glass in. <sub>rooms/tavern.adv:98</sub>
 
-**the nets** `nets` <sub>rooms/tavern.adv:94</sub>
+**the nets** `nets` <sub>rooms/tavern.adv:100</sub>
 
-- **Look at:** Nets hung from the beams, dry and stiff with salt. Nobody has fished them in years. <sub>rooms/tavern.adv:97</sub>
-- **Use:** I'd need a boat and a reason. <sub>rooms/tavern.adv:98</sub>
-- **Pull:** The net is tied off. Everything in this room is tied off. <sub>rooms/tavern.adv:99</sub>
-
-**the bottle shelf** `bottles` <sub>rooms/tavern.adv:101</sub>
-
-- **Look at:** Bottles, sorted by colour and trouble. <sub>rooms/tavern.adv:104</sub>
-- **Use:** I'd have to reach over the bar. Marta is watching. <sub>rooms/tavern.adv:105</sub>
+- **Look at:** Nets heaped by the door, dry and stiff with salt, and more hung from the beams overhead. <sub>rooms/tavern.adv:103</sub>
+- **Use:** I'd need a boat and a reason. <sub>rooms/tavern.adv:104</sub>
+- **Pull:** The net is tied off. Everything in this room is tied off. <sub>rooms/tavern.adv:105</sub>
 
 **Combinations here**
 
-- **Use Elias's compass on old sailor:** He turns it over once. 'Your father's. It still points at the fog.' <sub>rooms/tavern.adv:108</sub>
-- **Use Elias's compass on Marta:** She looks at it and gives it back. 'Keep it. It's the only thing of his you have.' <sub>rooms/tavern.adv:110</sub>
-- **Use Elias's compass on Dorrit:** She squints at it. 'Your father's? Then keep it dry.' <sub>rooms/tavern.adv:112</sub>
+- **Use Elias's compass on old sailor:** He turns it over once. "Your father's. It still points at the fog." <sub>rooms/tavern.adv:108</sub>
+- **Use Elias's compass on Marta:** She looks at it and gives it back. "Keep it. It's the only thing of his you have." <sub>rooms/tavern.adv:110</sub>
+- **Use Elias's compass on Dorrit:** He squints at it. "Your father's? Then keep it dry." <sub>rooms/tavern.adv:112</sub>
 - **Use Elias's chart on Marta:** *[if has Elias's chart]* She reads it upside down and doesn't ask. <sub>rooms/tavern.adv:114</sub>
 - **Use Elias's chart on old sailor:** *[if has Elias's chart]* He knows it. He doesn't want to touch it. <sub>rooms/tavern.adv:116</sub>
 
@@ -600,61 +591,69 @@
 <a id="dlg-dorrit-spoons"></a>`spoons` **DORRIT**: One for each year I've cooked here. I'm not leaving them for Pike. <sub>dialogue/dorrit.adv:57</sub>
 - *[ends]*
 
-<a id="dlg-dorrit-wen2"></a>`wen2` **DORRIT**: He can sleep in my kitchen till the Marrow sails. Pike won't look there. <sub>dialogue/dorrit.adv:60</sub>
+<a id="dlg-dorrit-wen2"></a>`wen2` **DORRIT**: The man in the shed? He can sleep in my kitchen. Pike won't look there. <sub>dialogue/dorrit.adv:60</sub>
 - *[ends]*
 
 <a id="dlg-dorrit-galley"></a>`galley` **DORRIT**: Mind the pot. It has been on since the anchor came up. <sub>dialogue/dorrit.adv:102</sub>
 - **1.** **FENN**: What's in it? <sub>dialogue/dorrit.adv:103</sub>
   - *→ continues at* [pot](#dlg-dorrit-pot)
-- **2.** **FENN**: You've seen the hold. *[if salvage_seen]* <sub>dialogue/dorrit.adv:104</sub>
+- **2.** **FENN**: Anything new? *[if seen:dorrit.galley]* <sub>dialogue/dorrit.adv:104</sub>
+  - *→ continues at* [galley_after](#dlg-dorrit-galley_after)
+- **3.** **FENN**: You've seen the hold. *[if salvage_seen]* <sub>dialogue/dorrit.adv:105</sub>
   - *→ continues at* [hold2](#dlg-dorrit-hold2)
-- **3.** **FENN**: Why did you come aboard? <sub>dialogue/dorrit.adv:105</sub>
+- **4.** **FENN**: Why did you come aboard? <sub>dialogue/dorrit.adv:106</sub>
   - *→ continues at* [why3](#dlg-dorrit-why3)
-- **4.** **FENN**: Later. <sub>dialogue/dorrit.adv:106</sub>
+- **5.** **FENN**: Later. <sub>dialogue/dorrit.adv:107</sub>
   - *[ends]*
 
-<a id="dlg-dorrit-pot"></a>`pot` **DORRIT**: Salt beef, and a potato that has seen better days. Don't tell the potato. <sub>dialogue/dorrit.adv:108</sub>
+<a id="dlg-dorrit-pot"></a>`pot` **DORRIT**: Salt beef, and a potato that has seen better days. Don't tell the potato. <sub>dialogue/dorrit.adv:109</sub>
 - *→ continues at* [galley2](#dlg-dorrit-galley2)
 
-<a id="dlg-dorrit-galley2"></a>`galley2` **FENN (V.O.)**: He stirs. He tastes. He adds salt with the look of a man settling a debt. <sub>dialogue/dorrit.adv:111</sub>
-- **1.** **FENN**: What's in it? <sub>dialogue/dorrit.adv:112</sub>
+<a id="dlg-dorrit-galley2"></a>`galley2` **FENN (V.O.)**: He stirs. He tastes. He adds salt with the look of a man settling a debt. <sub>dialogue/dorrit.adv:112</sub>
+- **1.** **FENN**: What's in it? <sub>dialogue/dorrit.adv:113</sub>
   - *→ continues at* [pot](#dlg-dorrit-pot) *(above)*
-- **2.** **FENN**: You've seen the hold. *[if salvage_seen]* <sub>dialogue/dorrit.adv:113</sub>
+- **2.** **FENN**: You've seen the hold. *[if salvage_seen]* <sub>dialogue/dorrit.adv:114</sub>
   - *→ continues at* [hold2](#dlg-dorrit-hold2)
-- **3.** **FENN**: Why did you come aboard? <sub>dialogue/dorrit.adv:114</sub>
+- **3.** **FENN**: Why did you come aboard? <sub>dialogue/dorrit.adv:115</sub>
   - *→ continues at* [why3](#dlg-dorrit-why3)
-- **4.** **FENN**: Later. <sub>dialogue/dorrit.adv:115</sub>
+- **4.** **FENN**: Later. <sub>dialogue/dorrit.adv:116</sub>
   - *[ends]*
 
-<a id="dlg-dorrit-hold2"></a>`hold2` **DORRIT**: I have cooked beside that pile for a day and never once looked at the names. <sub>dialogue/dorrit.adv:117</sub>
+<a id="dlg-dorrit-hold2"></a>`hold2` **DORRIT**: I have cooked beside that pile for a day and never once looked at the names. <sub>dialogue/dorrit.adv:118</sub>
 - *→ continues at* [hold3](#dlg-dorrit-hold3)
 
-<a id="dlg-dorrit-hold3"></a>`hold3` **DORRIT**: Marta tells a story about the Cormorant. She tells it on the cold nights. <sub>dialogue/dorrit.adv:120</sub>
-- **1.** **FENN**: Tell me the story. <sub>dialogue/dorrit.adv:121</sub>
+<a id="dlg-dorrit-hold3"></a>`hold3` **DORRIT**: Marta tells a story about the Cormorant. She tells it on the cold nights. <sub>dialogue/dorrit.adv:121</sub>
+- **1.** **FENN**: Tell me the story. <sub>dialogue/dorrit.adv:122</sub>
   - *→ continues at* [cormorant](#dlg-dorrit-cormorant)
-- **2.** **FENN**: Vex never said where it came from. <sub>dialogue/dorrit.adv:122</sub>
+- **2.** **FENN**: Vex never said where it came from. <sub>dialogue/dorrit.adv:123</sub>
   - *→ continues at* [never](#dlg-dorrit-never)
 
-<a id="dlg-dorrit-cormorant"></a>`cormorant` **DORRIT**: She says the sea keeps what it takes. Then she charges me for the rum. <sub>dialogue/dorrit.adv:124</sub>
+<a id="dlg-dorrit-cormorant"></a>`cormorant` **DORRIT**: She says the sea keeps what it takes. Then she charges me for the rum. <sub>dialogue/dorrit.adv:125</sub>
 - *[ends]*
 
-<a id="dlg-dorrit-never"></a>`never` **DORRIT**: No. He would have to admit where it came from, and Vex never admits anything. <sub>dialogue/dorrit.adv:127</sub>
+<a id="dlg-dorrit-never"></a>`never` **DORRIT**: No. He would have to admit where it came from, and Vex never admits anything. <sub>dialogue/dorrit.adv:128</sub>
 - *[ends]*
 
-<a id="dlg-dorrit-why3"></a>`why3` **DORRIT**: Because I fed this island for forty years and it never once asked if I was all right. <sub>dialogue/dorrit.adv:130</sub>
+<a id="dlg-dorrit-why3"></a>`why3` **DORRIT**: Because I fed this island for forty years and it never once asked if I was all right. <sub>dialogue/dorrit.adv:131</sub>
 - *→ continues at* [why4](#dlg-dorrit-why4)
 
-<a id="dlg-dorrit-why4"></a>`why4` **DORRIT**: Then you came asking. So here I am. Don't make it strange. <sub>dialogue/dorrit.adv:133</sub>
+<a id="dlg-dorrit-why4"></a>`why4` **DORRIT**: Then you came asking. So here I am. Don't make it strange. <sub>dialogue/dorrit.adv:134</sub>
 - *[ends]*
+
+<a id="dlg-dorrit-galley_after"></a>`galley_after` **DORRIT**: The pot is still on. That is the whole news. <sub>dialogue/dorrit.adv:137</sub>
+- **1.** **FENN**: What's in it? <sub>dialogue/dorrit.adv:138</sub>
+  - *→ continues at* [pot](#dlg-dorrit-pot) *(above)*
+- **2.** **FENN**: Later. <sub>dialogue/dorrit.adv:139</sub>
+  - *[ends]*
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
-*[thief: opened directly from rooms/warehouse.adv:42]*
+*[thief: opened directly from rooms/warehouse.adv:60]*
 
 <a id="dlg-dorrit-thief"></a>`thief` **FENN (V.O.)**: I knock on the top crate. The breathing stops. <sub>dialogue/dorrit.adv:64</sub>
 - *→ continues at* [voice](#dlg-dorrit-voice)
 
-<a id="dlg-dorrit-voice"></a>`voice` **FENN (V.O.)**: A man's voice, behind the crates. 'Don't call Pike. Please.' <sub>dialogue/dorrit.adv:67</sub>
+<a id="dlg-dorrit-voice"></a>`voice` **FENN (V.O.)**: A man's voice, behind the crates. "Don't call Pike. Please." <sub>dialogue/dorrit.adv:67</sub>
 - **1.** **FENN**: I'm not Pike. <sub>dialogue/dorrit.adv:68</sub>
   - *→ continues at* [notpike](#dlg-dorrit-notpike)
 - **2.** **FENN**: You're the one who took the stores. <sub>dialogue/dorrit.adv:69</sub>
@@ -662,13 +661,13 @@
 - **3.** **FENN**: Come out where I can see you. <sub>dialogue/dorrit.adv:70</sub>
   - *→ continues at* [come](#dlg-dorrit-come)
 
-<a id="dlg-dorrit-notpike"></a>`notpike` **FENN (V.O.)**: 'They all say that,' he says. 'Then they call Pike.' <sub>dialogue/dorrit.adv:72</sub>
+<a id="dlg-dorrit-notpike"></a>`notpike` **FENN (V.O.)**: "They all say that," he says. "Then they call Pike." <sub>dialogue/dorrit.adv:72</sub>
 - *→ continues at* [come](#dlg-dorrit-come)
 
 <a id="dlg-dorrit-come"></a>`come` **FENN (V.O.)**: A man stands up from behind the crates. His coat is stiff with salt. <sub>dialogue/dorrit.adv:78</sub>
 - *→ continues at* [confess](#dlg-dorrit-confess)
 
-<a id="dlg-dorrit-confess"></a>`confess` **FENN (V.O.)**: 'Pike paid me,' he says. 'Two crowns and a meal. I moved the stores to his shed.' <sub>dialogue/dorrit.adv:81</sub>
+<a id="dlg-dorrit-confess"></a>`confess` **FENN (V.O.)**: "Pike paid me," he says. "Two crowns and a meal. I moved the stores to his shed." <sub>dialogue/dorrit.adv:81</sub>
 - *[chart:* Pike paid the man in the boat shed to move the stores. Vex's spare rudder is in Pike's shed.*]* <sub>dialogue/dorrit.adv:82</sub>
 - **1.** **FENN**: And the Marrow's rudder? <sub>dialogue/dorrit.adv:83</sub>
   - *→ continues at* [rudder](#dlg-dorrit-rudder)
@@ -677,70 +676,64 @@
 - **3.** **FENN**: You stole from Dorrit. <sub>dialogue/dorrit.adv:85</sub>
   - *→ continues at* [stole](#dlg-dorrit-stole)
 
-<a id="dlg-dorrit-rudder"></a>`rudder` **FENN (V.O.)**: 'The rudder's in Pike's shed. He took it himself. He said it was owed.' <sub>dialogue/dorrit.adv:87</sub>
+<a id="dlg-dorrit-rudder"></a>`rudder` **FENN (V.O.)**: "The rudder's in Pike's shed. He took it himself. He said it was owed." <sub>dialogue/dorrit.adv:87</sub>
 - *→ continues at* [end](#dlg-dorrit-end)
 
 <a id="dlg-dorrit-end"></a>`end` **FENN (V.O.)**: When I look back, the gap behind the crates is empty. He has gone. <sub>dialogue/dorrit.adv:96</sub>
 - *[ends]*
 
-<a id="dlg-dorrit-why2"></a>`why2` **FENN (V.O.)**: 'I hadn't eaten in three days,' he says. 'I only wanted work.' <sub>dialogue/dorrit.adv:90</sub>
+<a id="dlg-dorrit-why2"></a>`why2` **FENN (V.O.)**: "I hadn't eaten in three days," he says. "I only wanted work." <sub>dialogue/dorrit.adv:90</sub>
 - *→ continues at* [end](#dlg-dorrit-end) *(above)*
 
-<a id="dlg-dorrit-stole"></a>`stole` **FENN (V.O.)**: 'I know,' he says. 'I'm sorry.' He says it like he's said it a lot. <sub>dialogue/dorrit.adv:93</sub>
+<a id="dlg-dorrit-stole"></a>`stole` **FENN (V.O.)**: "I know," he says. "I'm sorry." He says it like he's said it a lot. <sub>dialogue/dorrit.adv:93</sub>
 - *→ continues at* [end](#dlg-dorrit-end) *(above)*
 
-<a id="dlg-dorrit-took"></a>`took` **FENN (V.O.)**: 'I moved them,' he says. 'I didn't take them. There's a difference.' <sub>dialogue/dorrit.adv:75</sub>
+<a id="dlg-dorrit-took"></a>`took` **FENN (V.O.)**: "I moved them," he says. "I didn't take them. There's a difference." <sub>dialogue/dorrit.adv:75</sub>
 - *→ continues at* [come](#dlg-dorrit-come) *(above)*
 
-<a id="dlg-dorrit-galley_after"></a>`galley_after` **DORRIT**: The pot is still on. That is the whole news. <sub>dialogue/dorrit.adv:136</sub>
-- **1.** **FENN**: What's in it? <sub>dialogue/dorrit.adv:137</sub>
-  - *→ continues at* [pot](#dlg-dorrit-pot) *(above)*
-- **2.** **FENN**: Later. <sub>dialogue/dorrit.adv:138</sub>
-  - *[ends]*
+*[camp: opened directly from rooms/salt_camp.adv:119]*
 
-*[camp: opened directly from rooms/salt_camp.adv:111]*
-
-<a id="dlg-dorrit-camp"></a>`camp` **DORRIT**: Seven tents and nobody cooking. What kind of camp is that? <sub>dialogue/dorrit.adv:143</sub>
-- **1.** **FENN**: Where is everyone? <sub>dialogue/dorrit.adv:144</sub>
+<a id="dlg-dorrit-camp"></a>`camp` **DORRIT**: Seven tents and nobody cooking. What kind of camp is that? <sub>dialogue/dorrit.adv:144</sub>
+- **1.** **FENN**: Where is everyone? <sub>dialogue/dorrit.adv:145</sub>
   - *→ continues at* [camp_gone](#dlg-dorrit-camp_gone)
-- **2.** **FENN**: What about the hut? <sub>dialogue/dorrit.adv:145</sub>
+- **2.** **FENN**: What about the hut? <sub>dialogue/dorrit.adv:146</sub>
   - *→ continues at* [camp_hut](#dlg-dorrit-camp_hut)
-- **3.** **FENN**: How are you holding up? <sub>dialogue/dorrit.adv:146</sub>
+- **3.** **FENN**: How are you holding up? <sub>dialogue/dorrit.adv:147</sub>
   - *→ continues at* [holding](#dlg-dorrit-holding)
-- **4.** **FENN**: Tell me about the wreck. <sub>dialogue/dorrit.adv:147</sub>
+- **4.** **FENN**: Tell me about the wreck. <sub>dialogue/dorrit.adv:148</sub>
   - *→ continues at* [wreck](#dlg-dorrit-wreck)
-- **5.** **FENN**: And Vex? <sub>dialogue/dorrit.adv:148</sub>
+- **5.** **FENN**: And Vex? <sub>dialogue/dorrit.adv:149</sub>
   - *→ continues at* [vex](#dlg-dorrit-vex)
-- **6.** **FENN**: What about my father? <sub>dialogue/dorrit.adv:149</sub>
+- **6.** **FENN**: What about my father? <sub>dialogue/dorrit.adv:150</sub>
   - *→ continues at* [elias](#dlg-dorrit-elias)
-- **7.** **FENN**: Later. <sub>dialogue/dorrit.adv:150</sub>
+- **7.** **FENN**: Later. <sub>dialogue/dorrit.adv:151</sub>
   - *[ends]*
 
-<a id="dlg-dorrit-camp_gone"></a>`camp_gone` **DORRIT**: Gone. Every one. The washing is still out. That's what I can't get past. <sub>dialogue/dorrit.adv:152</sub>
+<a id="dlg-dorrit-camp_gone"></a>`camp_gone` **DORRIT**: Gone. Every one. The washing is still out. That's what I can't get past. <sub>dialogue/dorrit.adv:153</sub>
 - *→ continues at* [camp](#dlg-dorrit-camp) *(above)*
 
-<a id="dlg-dorrit-camp_hut"></a>`camp_hut` **DORRIT**: Locked from the outside. Somebody was afraid of their own cook. <sub>dialogue/dorrit.adv:155</sub>
+<a id="dlg-dorrit-camp_hut"></a>`camp_hut` **DORRIT**: Locked from the outside. Somebody was afraid of their own cook. <sub>dialogue/dorrit.adv:156</sub>
 - *→ continues at* [camp](#dlg-dorrit-camp) *(above)*
 
-<a id="dlg-dorrit-holding"></a>`holding` **DORRIT**: I lost forty spoons and a good pan. I'm furious. Don't tell anyone. <sub>dialogue/dorrit.adv:158</sub>
+<a id="dlg-dorrit-holding"></a>`holding` **DORRIT**: I lost forty spoons and a good pan. I'm furious. Don't tell anyone. <sub>dialogue/dorrit.adv:159</sub>
 - *→ continues at* [holding2](#dlg-dorrit-holding2)
 
-<a id="dlg-dorrit-holding2"></a>`holding2` **DORRIT**: Furious is better than frightened. I've had practice. <sub>dialogue/dorrit.adv:161</sub>
+<a id="dlg-dorrit-holding2"></a>`holding2` **DORRIT**: Furious is better than frightened. I've had practice. <sub>dialogue/dorrit.adv:162</sub>
 - *→ continues at* [camp](#dlg-dorrit-camp) *(above)*
 
-<a id="dlg-dorrit-wreck"></a>`wreck` **DORRIT**: The water came in and the deck went quiet. I held on to Hobb's arm and thought about my spoons. <sub>dialogue/dorrit.adv:164</sub>
+<a id="dlg-dorrit-wreck"></a>`wreck` **DORRIT**: The water came in and the deck went quiet. I held on to Hobb's arm and thought about my spoons. <sub>dialogue/dorrit.adv:165</sub>
 - *→ continues at* [wreck2](#dlg-dorrit-wreck2)
 
-<a id="dlg-dorrit-wreck2"></a>`wreck2` **DORRIT**: Then I was in the boat. I don't remember the rest. I don't want to. <sub>dialogue/dorrit.adv:167</sub>
+<a id="dlg-dorrit-wreck2"></a>`wreck2` **DORRIT**: Then I was in the boat. I don't remember the rest. I don't want to. <sub>dialogue/dorrit.adv:168</sub>
 - *→ continues at* [camp](#dlg-dorrit-camp) *(above)*
 
-<a id="dlg-dorrit-vex"></a>`vex` **DORRIT**: He never said thank you for the soup. That's not the crime. But I noticed. <sub>dialogue/dorrit.adv:170</sub>
+<a id="dlg-dorrit-vex"></a>`vex` **DORRIT**: He never said thank you for the soup. That's not the crime. But I noticed. <sub>dialogue/dorrit.adv:171</sub>
 - *→ continues at* [vex2](#dlg-dorrit-vex2)
 
-<a id="dlg-dorrit-vex2"></a>`vex2` **DORRIT**: The crime is he sailed us into that fog and called it weather. Soup doesn't cover that. <sub>dialogue/dorrit.adv:173</sub>
+<a id="dlg-dorrit-vex2"></a>`vex2` **DORRIT**: The crime is he sailed us into that fog and called it weather. Soup doesn't cover that. <sub>dialogue/dorrit.adv:174</sub>
 - *→ continues at* [camp](#dlg-dorrit-camp) *(above)*
 
-<a id="dlg-dorrit-elias"></a>`elias` **DORRIT**: He's thin. I'll make him something. Don't tell him it's porridge. <sub>dialogue/dorrit.adv:176</sub>
+<a id="dlg-dorrit-elias"></a>`elias` **DORRIT**: He's thin. I'll make him something. Don't tell him it's porridge. <sub>dialogue/dorrit.adv:177</sub>
 - *→ continues at* [camp](#dlg-dorrit-camp) *(above)*
 
 <a id="act1-office"></a>
@@ -750,49 +743,54 @@
 
 **On arrival**
 
-- *Once,* *[Act I, if seen:bramwick.root = false and office_called = false]* <sub>rooms/office.adv:15</sub>
-  - *[sets office_called]* <sub>rooms/office.adv:16</sub>
-  - **FENN (V.O.)**: Bramwick is at his desk with his coat on. He looks like a man who has stopped going home. <sub>rooms/office.adv:17</sub>
+- *Once,* *[Act I, if seen:bramwick.root = false and office_called = false]* <sub>rooms/office.adv:30</sub>
+  - *[sets office_called]* <sub>rooms/office.adv:31</sub>
+  - **FENN (V.O.)**: Bramwick is at his desk with his coat on. He looks like a man who has stopped going home. <sub>rooms/office.adv:32</sub>
 
-**Harbourmaster Bramwick** `bramwick` <sub>rooms/office.adv:21</sub>
+**Harbourmaster Bramwick** `bramwick` <sub>rooms/office.adv:38</sub>
 
-- **Look at:** Harbourmaster Bramwick. Thirty years of harbour business, and all of it has settled in his face. <sub>rooms/office.adv:24</sub>
-- **Talk to:** I clear my throat. Bramwick finishes writing before he looks up. <sub>rooms/office.adv:25</sub>
-  - *[→ conversation* [bramwick](#dlg-bramwick) *— below]* <sub>rooms/office.adv:26</sub>
-- **Give:** He takes nothing he has not signed for. <sub>rooms/office.adv:27</sub>
-- *When* *[if seen:bramwick.root]* *— called “Bramwick”* <sub>rooms/office.adv:28</sub>
-  - **Look at:** Bramwick. He has not moved, but the papers on his desk have been squared away. <sub>rooms/office.adv:30</sub>
-  - **Talk to:** *[→ conversation* [bramwick at again](#dlg-bramwick-again) *— below]* <sub>rooms/office.adv:31</sub>
+- **Look at:** Harbourmaster Bramwick. Thirty years of harbour business, and all of it has settled in his face. <sub>rooms/office.adv:41</sub>
+- **Talk to:** I clear my throat. Bramwick finishes writing before he looks up. <sub>rooms/office.adv:42</sub>
+  - *[→ conversation* [bramwick](#dlg-bramwick) *— below]* <sub>rooms/office.adv:43</sub>
+- **Give:** He takes nothing he has not signed for. <sub>rooms/office.adv:44</sub>
+- *When* *[if seen:bramwick.root]* *— called “Bramwick”* <sub>rooms/office.adv:45</sub>
+  - **Look at:** Bramwick. He has not moved, but the papers on his desk have been squared away. <sub>rooms/office.adv:47</sub>
+  - **Talk to:** *[→ conversation* [bramwick at again](#dlg-bramwick-again) *— below]* <sub>rooms/office.adv:48</sub>
 
-**the harbourmaster's desk** `desk` <sub>rooms/office.adv:33</sub>
+**the harbourmaster's desk** `desk` <sub>rooms/office.adv:50</sub>
 
-- **Look at:** The harbourmaster's desk. A lamp, a log book, and more paper than the harbour has ships. <sub>rooms/office.adv:36</sub>
-- **Use:** I have nothing to put on a harbourmaster's desk that would not insult us both. <sub>rooms/office.adv:38</sub>
-- **Open:** The desk has a drawer, and the drawer is locked. <sub>rooms/office.adv:37</sub>
-- *When* *[if seen:bramwick.root]* <sub>rooms/office.adv:39</sub>
-  - **Look at:** The desk. The log book is closed, which I have never seen before. <sub>rooms/office.adv:40</sub>
+- **Look at:** The harbourmaster's desk. A lamp, a log book, and more paper than the harbour has ships. <sub>rooms/office.adv:53</sub>
+- **Use:** I have nothing to put on a harbourmaster's desk that would not insult us both. <sub>rooms/office.adv:55</sub>
+- **Open:** The desk has a drawer, and the drawer is locked. <sub>rooms/office.adv:54</sub>
+- *When* *[if seen:bramwick.root]* <sub>rooms/office.adv:56</sub>
+  - **Look at:** The desk. The log book is closed, which I have never seen before. <sub>rooms/office.adv:57</sub>
 
-**the locked drawer** `drawer` <sub>rooms/office.adv:42</sub>
+**the locked drawer** `drawer` <sub>rooms/office.adv:59</sub>
 
-- **Look at:** A deep drawer with a brass keyhole. Bramwick's drawers are like his answers: locked and well made. <sub>rooms/office.adv:45</sub>
-- **Use:** It needs a key, and I am not a key. <sub>rooms/office.adv:48</sub>
-- **Open:** Locked. I am not going to crowbar a harbourmaster's desk. <sub>rooms/office.adv:46</sub>
-- **Pull:** I pull. The drawer makes a small, satisfied noise. <sub>rooms/office.adv:47</sub>
+- **Look at:** A deep drawer with a brass keyhole. Bramwick's drawers are like his answers: locked and well made. <sub>rooms/office.adv:62</sub>
+- **Use:** It needs a key, and I am not a key. <sub>rooms/office.adv:65</sub>
+- **Open:** Locked. I am not going to crowbar a harbourmaster's desk. <sub>rooms/office.adv:63</sub>
+- **Pull:** I pull. The drawer makes a small, satisfied noise. <sub>rooms/office.adv:64</sub>
 
-**the window** `window` <sub>rooms/office.adv:50</sub>
+**the shelves** `shelves` <sub>rooms/office.adv:68</sub>
 
-- **Look at:** The harbour, framed. One ship, and a great deal of empty water. <sub>rooms/office.adv:53</sub>
-- **Open:** Painted shut. Bramwick does not believe in fresh air or new ideas. <sub>rooms/office.adv:54</sub>
-- *When* *[if vex_deal]* <sub>rooms/office.adv:55</sub>
-  - **Look at:** The harbour, framed. The Marrow has a new rudder on her rail. <sub>rooms/office.adv:56</sub>
-    - **FENN (V.O.)**: Bramwick has not looked out of this window in a week. <sub>rooms/office.adv:57</sub>
+- **Look at:** Ledgers from the floor to the beams. Every ship the harbour has lost is in there, squared away. <sub>rooms/office.adv:71</sub>
+- **Use:** I'd need Bramwick's permission, and a ladder. <sub>rooms/office.adv:72</sub>
 
-**the harbour door** `door_out` <sub>rooms/office.adv:61</sub>
+**the window** `window` <sub>rooms/office.adv:74</sub>
 
-- **Look at:** The door back to the docks. <sub>rooms/office.adv:65</sub>
-- **Use / Walk to:** *[→ goes to Dreadwater Harbour]* <sub>rooms/office.adv:64</sub>
-- **Open:** I go back out to the harbour. <sub>rooms/office.adv:66</sub>
-  - *[→ goes to Dreadwater Harbour]* <sub>rooms/office.adv:64</sub>
+- **Look at:** The harbour, framed. One ship, and a great deal of empty water. <sub>rooms/office.adv:77</sub>
+- **Open:** Painted shut. Bramwick does not believe in fresh air or new ideas. <sub>rooms/office.adv:78</sub>
+- *When* *[if vex_deal]* <sub>rooms/office.adv:79</sub>
+  - **Look at:** The harbour, framed. The Marrow has a new rudder on her rail. <sub>rooms/office.adv:80</sub>
+    - **FENN (V.O.)**: Bramwick has not looked out of this window in a week. <sub>rooms/office.adv:81</sub>
+
+**the harbour door** `door_out` <sub>rooms/office.adv:85</sub>
+
+- **Look at:** The door back to the docks. The fog has come up to the step. <sub>rooms/office.adv:89</sub>
+- **Use / Walk to:** *[→ goes to Dreadwater Harbour]* <sub>rooms/office.adv:88</sub>
+- **Open:** I go back out to the harbour. <sub>rooms/office.adv:90</sub>
+  - *[→ goes to Dreadwater Harbour]* <sub>rooms/office.adv:88</sub>
 
 <a id="dlg-bramwick"></a>
 ### Conversation: bramwick (Harbourmaster Bramwick)
@@ -926,7 +924,7 @@
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
-*[again: opened directly from rooms/office.adv:31]*
+*[again: opened directly from rooms/office.adv:48]*
 
 <a id="dlg-bramwick-again"></a>`again` **HARBOURMASTER BRAMWICK**: Back again. The harbour has not improved, and neither have I. <sub>dialogue/bramwick.adv:78</sub>
 - **1.** **FENN**: Vex says he won't sail. *[if met_vex]* <sub>dialogue/bramwick.adv:79</sub>
@@ -958,62 +956,62 @@
 
 **On arrival**
 
-- *Once,* *[Act I, if alley_seen = false]* <sub>rooms/alley.adv:27</sub>
-  - *[sets alley_seen]* <sub>rooms/alley.adv:28</sub>
-  - **FENN (V.O.)**: Wreckers' Lane. Every door is shut except one, and the lamps are still lit. <sub>rooms/alley.adv:29</sub>
-  - **FENN (V.O.)**: A young man in a grey coat is writing on a clipboard under them. <sub>rooms/alley.adv:30</sub>
-- *Once,* *[if alley_way_out_seen = false]* <sub>rooms/alley.adv:34</sub>
-  - *[sets alley_way_out_seen]* <sub>rooms/alley.adv:35</sub>
-  - **FENN (V.O.)**: Up the lane, past Vex's lamps and the shipwright's lit window, the boat shed's latch is up and its door stands open a hand's width. <sub>rooms/alley.adv:36</sub>
+- *Once,* *[Act I, if alley_seen = false]* <sub>rooms/alley.adv:35</sub>
+  - *[sets alley_seen]* <sub>rooms/alley.adv:36</sub>
+  - **FENN (V.O.)**: Wreckers' Lane. Every door is shut except one, and the lamps are still lit. <sub>rooms/alley.adv:37</sub>
+  - **FENN (V.O.)**: A young man in a grey coat is writing on a clipboard under them. <sub>rooms/alley.adv:38</sub>
+- *Once,* *[if alley_way_out_seen = false]* <sub>rooms/alley.adv:42</sub>
+  - *[sets alley_way_out_seen]* <sub>rooms/alley.adv:43</sub>
+  - **FENN (V.O.)**: Up the lane, past Vex's green lamp and the shipwright's lit window, the boat shed's latch is up and its door stands open on the fog. <sub>rooms/alley.adv:44</sub>
 
-**Pike** `pike` <sub>rooms/alley.adv:40</sub>
+**Pike** `pike` <sub>rooms/alley.adv:50</sub>
 
-- **Look at:** Pike. Grey coat, yellow armband, and a clipboard he holds like a shield. <sub>rooms/alley.adv:43</sub>
-- **Talk to:** He lowers the clipboard a little. <sub>rooms/alley.adv:44</sub>
-  - *[→ conversation* [pike](#dlg-pike) *— below]* <sub>rooms/alley.adv:45</sub>
-- **Give:** He writes something down instead of taking it. <sub>rooms/alley.adv:46</sub>
-- *When* *[if rudder_back]* *— called “Pike”* <sub>rooms/alley.adv:47</sub>
-  - **Look at:** Pike. The clipboard is under his arm now. He looks like a man who has just been audited. <sub>rooms/alley.adv:49</sub>
-  - **Talk to:** *[→ conversation* [pike at after](#dlg-pike-after) *— below]* <sub>rooms/alley.adv:50</sub>
+- **Look at:** Pike. Grey coat, yellow armband, and a clipboard he holds like a shield. <sub>rooms/alley.adv:53</sub>
+- **Talk to:** He lowers the clipboard a little. <sub>rooms/alley.adv:54</sub>
+  - *[→ conversation* [pike](#dlg-pike) *— below]* <sub>rooms/alley.adv:55</sub>
+- **Give:** He writes something down instead of taking it. <sub>rooms/alley.adv:56</sub>
+- *When* *[if rudder_back]* *— called “Pike”* <sub>rooms/alley.adv:57</sub>
+  - **Look at:** Pike. The clipboard is under his arm now. He looks like a man who has just been audited. <sub>rooms/alley.adv:59</sub>
+  - **Talk to:** *[→ conversation* [pike at after](#dlg-pike-after) *— below]* <sub>rooms/alley.adv:60</sub>
 
-**the wreckers' shed** `shed` <sub>rooms/alley.adv:52</sub>
+**the wreckers' shed** `shed` <sub>rooms/alley.adv:63</sub>
 
-- **Look at:** A lean-to under the stairs, packed with crates of ships' stores. <sub>rooms/alley.adv:55</sub>
-  - **FENN (V.O.)**: Somebody has scraped the shipping marks off. <sub>rooms/alley.adv:56</sub>
-  - *[sets saw_stores]* <sub>rooms/alley.adv:57</sub>
-- **Open:** The lean-to is tied shut with a length of chain. The chain is loose enough to be a suggestion. <sub>rooms/alley.adv:58</sub>
-- **Push:** The chain rattles, and Pike's pencil stops moving. <sub>rooms/alley.adv:59</sub>
-- *When* *[if rudder_back]* *— called “the picked-over shed”* <sub>rooms/alley.adv:60</sub>
-  - **Look at:** The lean-to is tidier than it was. The chain is down, and the best crates have gone. <sub>rooms/alley.adv:62</sub>
+- **Look at:** A lean-to against the shed wall, packed with crates of ships' stores. <sub>rooms/alley.adv:66</sub>
+  - **FENN (V.O.)**: Somebody has scraped the shipping marks off. <sub>rooms/alley.adv:67</sub>
+  - *[sets saw_stores]* <sub>rooms/alley.adv:68</sub>
+- **Open:** The lean-to is tied shut with a length of chain. The chain is loose enough to be a suggestion. <sub>rooms/alley.adv:69</sub>
+- **Push:** The chain rattles, and Pike's pencil stops moving. <sub>rooms/alley.adv:70</sub>
+- *When* *[if rudder_back]* *— called “the picked-over shed”* <sub>rooms/alley.adv:71</sub>
+  - **Look at:** The lean-to is tidier than it was. The chain is down, and the best crates have gone. <sub>rooms/alley.adv:73</sub>
 
-**the boat shed door** `boat_shed` <sub>rooms/alley.adv:66</sub>
+**the boat shed door** `boat_shed` <sub>rooms/alley.adv:77</sub>
 
-- **Look at:** The boat shed. The latch is up, and the door is open a hand's width. Somebody is inside. <sub>rooms/alley.adv:70</sub>
-- **Use / Walk to:** *[→ goes to The Boat Shed]* <sub>rooms/alley.adv:69</sub>
-- **Open:** I push the door. It gives quietly, as if it has been opened carefully before. <sub>rooms/alley.adv:71</sub>
-  - *[→ goes to The Boat Shed]* <sub>rooms/alley.adv:69</sub>
-- *When* *[if dorrit_cleared]* <sub>rooms/alley.adv:72</sub>
-  - **Look at:** The boat shed. The door is shut now, and the latch is down. <sub>rooms/alley.adv:73</sub>
-  - **Open:** The shed is quiet. Dorrit has packed his spoons. <sub>rooms/alley.adv:74</sub>
+- **Look at:** The boat shed. The latch is up, and the door is open on the fog. Somebody is inside. <sub>rooms/alley.adv:81</sub>
+- **Use / Walk to:** *[→ goes to The Boat Shed]* <sub>rooms/alley.adv:80</sub>
+- **Open:** I push the door. It gives quietly, as if it has been opened carefully before. <sub>rooms/alley.adv:82</sub>
+  - *[→ goes to The Boat Shed]* <sub>rooms/alley.adv:80</sub>
+- *When* *[if dorrit_cleared]* <sub>rooms/alley.adv:83</sub>
+  - **Look at:** The boat shed. The door is shut now, and the latch is down. <sub>rooms/alley.adv:84</sub>
+  - **Open:** The shed is quiet. Dorrit has packed his spoons. <sub>rooms/alley.adv:85</sub>
 
-**the counting house door** `counting_door` <sub>rooms/alley.adv:78</sub>
+**the counting house door** `counting_door` <sub>rooms/alley.adv:89</sub>
 
-- **Look at:** A warehouse door with a lamp above it. The paint is newer than the rest of the lane. Vex's counting house. <sub>rooms/alley.adv:82</sub>
-- **Use / Walk to:** *[→ goes to Vex's Warehouse]* <sub>rooms/alley.adv:81</sub>
-- **Open:** I go up the lane to Vex's warehouse. <sub>rooms/alley.adv:83</sub>
-  - *[→ goes to Vex's Warehouse]* <sub>rooms/alley.adv:81</sub>
+- **Look at:** A broad green warehouse door with a lamp above it. The paint is newer than the rest of the lane. Vex's counting house. <sub>rooms/alley.adv:93</sub>
+- **Use / Walk to:** *[→ goes to Vex's Warehouse]* <sub>rooms/alley.adv:92</sub>
+- **Open:** I go up the lane to Vex's warehouse. <sub>rooms/alley.adv:94</sub>
+  - *[→ goes to Vex's Warehouse]* <sub>rooms/alley.adv:92</sub>
 
-**the shipwright's door** `chandlery_door` <sub>rooms/alley.adv:87</sub>
+**the shipwright's door** `chandlery_door` <sub>rooms/alley.adv:97</sub>
 
-- **Look at:** The shipwright's window, lit and full of rope. Open late, because ships are always leaving. <sub>rooms/alley.adv:91</sub>
-- **Use / Walk to:** *[→ goes to The Shipwright's]* <sub>rooms/alley.adv:90</sub>
-- **Open:** I push the door. A bell somewhere in the shop regrets it. <sub>rooms/alley.adv:92</sub>
-  - *[→ goes to The Shipwright's]* <sub>rooms/alley.adv:90</sub>
+- **Look at:** The shipwright's door, and a broad lit window full of rope and oars. Open late, because ships are always leaving. <sub>rooms/alley.adv:101</sub>
+- **Use / Walk to:** *[→ goes to The Shipwright's]* <sub>rooms/alley.adv:100</sub>
+- **Open:** I push the door. A bell somewhere in the shop regrets it. <sub>rooms/alley.adv:102</sub>
+  - *[→ goes to The Shipwright's]* <sub>rooms/alley.adv:100</sub>
 
-**the lane back down to the docks** `to_dock` <sub>rooms/alley.adv:96</sub>
+**the lane back down to the docks** `to_dock` <sub>rooms/alley.adv:106</sub>
 
-- **Look at:** The lane runs back down to the waterfront. <sub>rooms/alley.adv:100</sub>
-- **Use / Open / Walk to:** *[→ goes to Dreadwater Harbour]* <sub>rooms/alley.adv:99</sub>
+- **Look at:** The lane runs back down to the waterfront. <sub>rooms/alley.adv:110</sub>
+- **Use / Open / Walk to:** *[→ goes to Dreadwater Harbour]* <sub>rooms/alley.adv:109</sub>
 
 <a id="dlg-pike"></a>
 ### Conversation: pike (Pike)
@@ -1152,10 +1150,10 @@
 - **2.** **FENN**: Goodbye. <sub>dialogue/pike.adv:59</sub>
   - *→ continues at* [bye](#dlg-pike-bye) *(above)*
 
-<a id="dlg-pike-aside"></a>`aside` **PIKE**: You are not a wrecker. You are a clerk in a wet coat. <sub>dialogue/pike.adv:77</sub>
-- **1.** **FENN**: I'm the clerk who knows Vex. *[if met_vex]* <sub>dialogue/pike.adv:78</sub>
+<a id="dlg-pike-aside"></a>`aside` **PIKE**: You are not a wrecker. You are a cartographer in a wet coat. <sub>dialogue/pike.adv:77</sub>
+- **1.** **FENN**: I'm the cartographer who knows Vex. *[if met_vex]* <sub>dialogue/pike.adv:78</sub>
   - *→ continues at* [rudder](#dlg-pike-rudder) *(above)*
-- **2.** **FENN**: I'm the clerk who is asking nicely. <sub>dialogue/pike.adv:79</sub>
+- **2.** **FENN**: I'm the cartographer who is asking nicely. <sub>dialogue/pike.adv:79</sub>
   - *→ continues at* [nice](#dlg-pike-nice)
 - **3.** **FENN**: Goodbye. <sub>dialogue/pike.adv:80</sub>
   - *→ continues at* [bye](#dlg-pike-bye) *(above)*
@@ -1166,7 +1164,7 @@
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
-*[after: opened directly from rooms/alley.adv:50]*
+*[after: opened directly from rooms/alley.adv:60]*
 
 <a id="dlg-pike-after"></a>`after` **PIKE**: The rudder's on its way to the Marrow. I have the record. <sub>dialogue/pike.adv:84</sub>
 - **1.** **FENN**: Good. <sub>dialogue/pike.adv:85</sub>
@@ -1184,87 +1182,87 @@
 
 **On arrival**
 
-- *Once,* *[if seen:marta.father and village_father_room = false]* <sub>rooms/village.adv:21</sub>
-  - *[sets village_father_room]* <sub>rooms/village.adv:22</sub>
-  - **FENN (V.O.)**: The window over the Salty Keel's back door. My father's room. The shutters are open and the lamp is out. <sub>rooms/village.adv:23</sub>
-- *Once,* *[if village_way_out_seen = false]* <sub>rooms/village.adv:26</sub>
-  - *[sets village_way_out_seen]* <sub>rooms/village.adv:27</sub>
-  - **FENN (V.O.)**: The harbour steps drop away past the well, and the lane to the light climbs out between the stalls at the far end of the street. <sub>rooms/village.adv:28</sub>
+- *Once,* *[if seen:marta.father and village_father_room = false]* <sub>rooms/village.adv:34</sub>
+  - *[sets village_father_room]* <sub>rooms/village.adv:35</sub>
+  - **FENN (V.O.)**: The window over the Salty Keel's back door. My father's room. The shutters are open and the lamp is out. <sub>rooms/village.adv:36</sub>
+- *Once,* *[if village_way_out_seen = false]* <sub>rooms/village.adv:40</sub>
+  - *[sets village_way_out_seen]* <sub>rooms/village.adv:41</sub>
+  - **FENN (V.O.)**: The harbour steps drop away past the well on the left, and the stair to the light climbs out between the houses at the far end of the lane. <sub>rooms/village.adv:42</sub>
 
-**Nell** `nell` <sub>rooms/village.adv:30</sub>
+**Nell** `nell` <sub>rooms/village.adv:44</sub>
 
-- **Look at:** Nell, behind a stall of rope and dried fish. She's already decided what I'm going to buy. <sub>rooms/village.adv:33</sub>
-- **Talk to:** She looks at me the way she looks at weather. <sub>rooms/village.adv:34</sub>
-  - *[→ conversation* [nell](#dlg-nell) *— below]* <sub>rooms/village.adv:35</sub>
-- **Give:** She takes goods, not charity. <sub>rooms/village.adv:36</sub>
-- **Open:** Nell is not a stall, though she has been mistaken for one. <sub>rooms/village.adv:37</sub>
+- **Look at:** Nell, beside a stall of rope and dried fish. She's already decided what I'm going to buy. <sub>rooms/village.adv:47</sub>
+- **Talk to:** She looks at me the way she looks at weather. <sub>rooms/village.adv:48</sub>
+  - *[→ conversation* [nell](#dlg-nell) *— below]* <sub>rooms/village.adv:49</sub>
+- **Give:** She takes goods, not charity. <sub>rooms/village.adv:50</sub>
+- **Open:** Nell is not a stall, though she has been mistaken for one. <sub>rooms/village.adv:51</sub>
 
-**Tam** `tam` <sub>rooms/village.adv:39</sub>
+**Old Onn** `onn` <sub>rooms/village.adv:53</sub>
 
-- **Look at:** A boy in a cap two sizes too big, counting something under his breath. He's always counting. <sub>rooms/village.adv:42</sub>
-- **Talk to:** He's already turned round. He was waiting for someone to talk to. <sub>rooms/village.adv:43</sub>
-  - *[→ conversation* [tam](#dlg-tam) *— below]* <sub>rooms/village.adv:44</sub>
-- **Give:** He looks at my hands and decides they're empty. <sub>rooms/village.adv:45</sub>
-- **Open:** He is not a cupboard. He'd probably fit in one. <sub>rooms/village.adv:46</sub>
+- **Look at:** An old woman sweeping cobbles that were already clean. <sub>rooms/village.adv:56</sub>
+- **Talk to:** She stops sweeping before I say anything. <sub>rooms/village.adv:57</sub>
+  - *[→ conversation* [onn](#dlg-onn) *— below]* <sub>rooms/village.adv:58</sub>
+- **Give:** She waves it away. She's done taking things from this harbour. <sub>rooms/village.adv:59</sub>
+- **Open:** She is not a door, and she'd have something to say about being asked. <sub>rooms/village.adv:60</sub>
 
-**Old Onn** `onn` <sub>rooms/village.adv:48</sub>
+**the well** `well` <sub>rooms/village.adv:62</sub>
 
-- **Look at:** An old woman sweeping cobbles that were already clean. <sub>rooms/village.adv:51</sub>
-- **Talk to:** She stops sweeping before I say anything. <sub>rooms/village.adv:52</sub>
-  - *[→ conversation* [onn](#dlg-onn) *— below]* <sub>rooms/village.adv:53</sub>
-- **Give:** She waves it away. She's done taking things from this harbour. <sub>rooms/village.adv:54</sub>
-- **Open:** She is not a door, and she'd have something to say about being asked. <sub>rooms/village.adv:55</sub>
+- **Look at:** A stone well with a windlass and a bucket. The water down there is older than the harbour. <sub>rooms/village.adv:65</sub>
+- **Use:** I draw a bucket. It's cold and tastes of stone. Best thing I've had all night. <sub>rooms/village.adv:66</sub>
+- **Pull:** The windlass turns. Somewhere below, a bucket fills. <sub>rooms/village.adv:67</sub>
 
-**the well** `well` <sub>rooms/village.adv:57</sub>
+**market stalls** `stalls` <sub>rooms/village.adv:69</sub>
 
-- **Look at:** A stone well with a windlass and a bucket. The water down there is older than the harbour. <sub>rooms/village.adv:60</sub>
-- **Use:** I draw a bucket. It's cold and tastes of stone. Best thing I've had all night. <sub>rooms/village.adv:61</sub>
-- **Pull:** The windlass turns. Somewhere below, a bucket fills. <sub>rooms/village.adv:62</sub>
+- **Look at:** Rope, lamp oil, dried fish. Everything a ship needs and nobody is buying. <sub>rooms/village.adv:72</sub>
+- **Use:** I've no money and no need. Two things that rarely arrive together. <sub>rooms/village.adv:73</sub>
 
-**market stalls** `stalls` <sub>rooms/village.adv:64</sub>
+**the shrine** `shrine` <sub>rooms/village.adv:75</sub>
 
-- **Look at:** Rope, lamp oil, dried fish. Everything a ship needs and nobody is buying. <sub>rooms/village.adv:67</sub>
-- **Use:** I've no money and no need. Two things that rarely arrive together. <sub>rooms/village.adv:68</sub>
+- **Look at:** A niche with a painted figure and a shelf of candle stubs. Somebody still lights them. <sub>rooms/village.adv:78</sub>
+- **Use:** I put a coin in the box. It's the least I can do, and it is exactly that. <sub>rooms/village.adv:79</sub>
+- **Open:** The niche is open, as niches are. <sub>rooms/village.adv:80</sub>
+- **Pull:** I'm not going to rifle a shrine. <sub>rooms/village.adv:81</sub>
 
-**the shrine** `shrine` <sub>rooms/village.adv:70</sub>
+**washing line** `washing` <sub>rooms/village.adv:83</sub>
 
-- **Look at:** A niche with a painted figure and a shelf of candle stubs. Somebody still lights them. <sub>rooms/village.adv:73</sub>
-- **Use:** I put a coin in the box. It's the least I can do, and it is exactly that. <sub>rooms/village.adv:74</sub>
-- **Open:** The niche is open, as niches are. <sub>rooms/village.adv:75</sub>
-- **Pull:** I'm not going to rifle a shrine. <sub>rooms/village.adv:76</sub>
+- **Look at:** Ten shirts on a line between two houses. Somebody is still washing for men who aren't coming home. <sub>rooms/village.adv:87</sub>
+- *When* *[if seen:onn.crew]* <sub>rooms/village.adv:88</sub>
+  - **Look at:** Ten shirts on the line. Onn counted ten men off this street. Somebody still washes for them. <sub>rooms/village.adv:89</sub>
 
-**washing line** `washing` <sub>rooms/village.adv:78</sub>
+**the houses** `cottages` <sub>rooms/village.adv:91</sub>
 
-- **Look at:** Ten shirts on a line between two houses. Somebody is still washing for men who aren't coming home. <sub>rooms/village.adv:81</sub>
-- *When* *[if seen:onn.crew]* <sub>rooms/village.adv:82</sub>
-  - **Look at:** Ten shirts on the line. Onn counted ten men off this street. Somebody still washes for them. <sub>rooms/village.adv:83</sub>
+- **Look at:** The houses lean on each other. Half the windows are dark, and it isn't late. <sub>rooms/village.adv:95</sub>
 
-**the houses** `cottages` <sub>rooms/village.adv:85</sub>
+**the window above the back door** `father_room` <sub>rooms/village.adv:97</sub>
 
-- **Look at:** The houses lean on each other. Half the windows are dark, and it isn't late. <sub>rooms/village.adv:88</sub>
+- **Look at:** A window over a back door. The shutters are open and the lamp is out. <sub>rooms/village.adv:101</sub>
+- **Use:** The window is shut. The back door below is bolted from the inside. <sub>rooms/village.adv:102</sub>
+- **Open:** The window is shut. The back door below is bolted from the inside. <sub>rooms/village.adv:103</sub>
+- *When* *[if seen:marta.father]* *— called “the room above the tavern”* <sub>rooms/village.adv:104</sub>
+  - **Look at:** My father's room, over the Salty Keel's back door. The shutters are open and the lamp is out. <sub>rooms/village.adv:106</sub>
 
-**the window above the back door** `father_room` <sub>rooms/village.adv:90</sub>
+**the steps down to the harbour** `steps_down` <sub>rooms/village.adv:109</sub>
 
-- **Look at:** A window over a back door. The shutters are open and the lamp is out. <sub>rooms/village.adv:93</sub>
-- **Use:** The window is shut. The back door below is bolted from the inside. <sub>rooms/village.adv:94</sub>
-- **Open:** The window is shut. The back door below is bolted from the inside. <sub>rooms/village.adv:95</sub>
-- *When* *[if seen:marta.father]* *— called “the room above the tavern”* <sub>rooms/village.adv:96</sub>
-  - **Look at:** My father's room, over the Salty Keel's back door. The shutters are open and the lamp is out. <sub>rooms/village.adv:98</sub>
+- **Look at:** The top of the steps down to the harbour. The lamps are on and the street is empty. <sub>rooms/village.adv:113</sub>
+- **Use / Open / Walk to:** *[→ goes to Dreadwater Harbour]* <sub>rooms/village.adv:112</sub>
 
-**the steps down to the harbour** `steps_down` <sub>rooms/village.adv:103</sub>
+**the lane up to the light** `light_path` <sub>rooms/village.adv:116</sub>
 
-- **Look at:** The top of the steps down to the harbour. The lamps are on and the street is empty. <sub>rooms/village.adv:107</sub>
-- **Use / Open / Walk to:** *[→ goes to Dreadwater Harbour]* <sub>rooms/village.adv:106</sub>
+- **Look at:** A broad stone stair between the houses, climbing towards the lighthouse. <sub>rooms/village.adv:120</sub>
+- **Use / Open / Walk to:** *[→ goes to The Lighthouse]* <sub>rooms/village.adv:119</sub>
 
-**the lane up to the light** `light_path` <sub>rooms/village.adv:110</sub>
+**Tam** `tam` <sub>rooms/village.adv:124</sub>
 
-- **Look at:** A stone lane between the houses, climbing towards the lighthouse. <sub>rooms/village.adv:114</sub>
-- **Use / Open / Walk to:** *[→ goes to The Lighthouse]* <sub>rooms/village.adv:113</sub>
+- **Look at:** A boy in a cap two sizes too big, counting something under his breath. He's always counting. <sub>rooms/village.adv:127</sub>
+- **Talk to:** He's already turned round. He was waiting for someone to talk to. <sub>rooms/village.adv:128</sub>
+  - *[→ conversation* [tam](#dlg-tam) *— below]* <sub>rooms/village.adv:129</sub>
+- **Give:** He looks at my hands and decides they're empty. <sub>rooms/village.adv:130</sub>
+- **Open:** He is not a cupboard. He'd probably fit in one. <sub>rooms/village.adv:131</sub>
 
 **Combinations here**
 
-- **Use Elias's compass on Tam:** He holds it to his ear like a shell. 'It doesn't point north.' <sub>rooms/village.adv:117</sub>
-- **Use Elias's compass on Old Onn:** She doesn't take it. 'Keep your father's things, child.' <sub>rooms/village.adv:119</sub>
+- **Use Elias's compass on Tam:** He holds it to his ear like a shell. "It doesn't point north." <sub>rooms/village.adv:134</sub>
+- **Use Elias's compass on Old Onn:** She doesn't take it. "Keep your father's things, child." <sub>rooms/village.adv:136</sub>
 
 <a id="dlg-nell"></a>
 ### Conversation: nell (Nell)
@@ -1327,6 +1325,63 @@
 <a id="dlg-nell-think"></a>`think` **NELL**: I think a harbour town should sound like a harbour. This one doesn't. <sub>dialogue/nell.adv:30</sub>
 - *→ continues at* [bye](#dlg-nell-bye) *(above)*
 
+<a id="dlg-onn"></a>
+### Conversation: onn (Old Onn)
+
+*[source:* `dialogue onn`*, starts at* `root`*]* <sub>dialogue/onn.adv:1</sub>
+
+<a id="dlg-onn-root"></a>`root` **OLD ONN**: Mind the cobbles. They're wet, and I've swept them twice. <sub>dialogue/onn.adv:2</sub>
+- **1.** **FENN**: You knew the Arcadia's crew? <sub>dialogue/onn.adv:3</sub>
+  - *→ continues at* [crew](#dlg-onn-crew)
+- **2.** **FENN**: What's wrong with the water past the reef? <sub>dialogue/onn.adv:4</sub>
+  - *→ continues at* [water](#dlg-onn-water)
+- **3.** **FENN**: Do you need help? <sub>dialogue/onn.adv:5</sub>
+  - *→ continues at* [help](#dlg-onn-help)
+- **4.** **FENN**: I'll leave you to it. <sub>dialogue/onn.adv:6</sub>
+  - *→ continues at* [bye](#dlg-onn-bye)
+
+<a id="dlg-onn-crew"></a>`crew` **OLD ONN**: My husband's cousin. The boy from the end house. Ten off this street. <sub>dialogue/onn.adv:7</sub>
+- *→ continues at* [crew2](#dlg-onn-crew2)
+
+<a id="dlg-onn-crew2"></a>`crew2` **OLD ONN**: I counted them out. I counted them back. Only the first part worked. <sub>dialogue/onn.adv:9</sub>
+- **1.** **FENN**: What happened to them? <sub>dialogue/onn.adv:10</sub>
+  - *→ continues at* [water](#dlg-onn-water)
+- **2.** **FENN**: I'm sorry, Onn. <sub>dialogue/onn.adv:11</sub>
+  - *→ continues at* [sorry](#dlg-onn-sorry)
+
+<a id="dlg-onn-water"></a>`water` **OLD ONN**: Past the reef the water goes quiet. Not calm. Quiet. The fishermen won't say its name. <sub>dialogue/onn.adv:14</sub>
+- *→ continues at* [water2](#dlg-onn-water2)
+
+<a id="dlg-onn-water2"></a>`water2` **OLD ONN**: They call it the Shroud. Don't say it twice. <sub>dialogue/onn.adv:16</sub>
+- **1.** **FENN**: What do you think it is? <sub>dialogue/onn.adv:17</sub>
+  - *→ continues at* [think](#dlg-onn-think)
+- **2.** **FENN**: I'll be careful. <sub>dialogue/onn.adv:18</sub>
+  - *→ continues at* [bye](#dlg-onn-bye)
+
+<a id="dlg-onn-think"></a>`think` **OLD ONN**: I think it's old. Older than the harbour, older than the name. It was here first. <sub>dialogue/onn.adv:19</sub>
+- *→ continues at* [bye](#dlg-onn-bye)
+
+<a id="dlg-onn-bye"></a>`bye` **OLD ONN**: Mind the cobbles. I've swept them twice. <sub>dialogue/onn.adv:30</sub>
+- *[ends]*
+
+<a id="dlg-onn-sorry"></a>`sorry` **OLD ONN**: Don't be sorry. Be useful. Find out what's out there. <sub>dialogue/onn.adv:12</sub>
+- *→ continues at* [bye](#dlg-onn-bye) *(above)*
+
+<a id="dlg-onn-help"></a>`help` **OLD ONN**: No, child. I have the broom, the step, and a lot of time. <sub>dialogue/onn.adv:21</sub>
+- *→ continues at* [help2](#dlg-onn-help2)
+
+<a id="dlg-onn-help2"></a>`help2` **OLD ONN**: What I want is one person to come back and tell me what's out there. <sub>dialogue/onn.adv:23</sub>
+- **1.** **FENN**: I'll try. <sub>dialogue/onn.adv:24</sub>
+  - *→ continues at* [promise](#dlg-onn-promise)
+- **2.** **FENN**: I can't promise that. <sub>dialogue/onn.adv:25</sub>
+  - *→ continues at* [honest](#dlg-onn-honest)
+
+<a id="dlg-onn-promise"></a>`promise` **OLD ONN**: Then try. When you know, come and tell me. Not the harbourmaster. Me. <sub>dialogue/onn.adv:26</sub>
+- *→ continues at* [bye](#dlg-onn-bye) *(above)*
+
+<a id="dlg-onn-honest"></a>`honest` **OLD ONN**: No. Nobody can. That's why I'm asking anyway. <sub>dialogue/onn.adv:28</sub>
+- *→ continues at* [bye](#dlg-onn-bye) *(above)*
+
 <a id="dlg-tam"></a>
 ### Conversation: tam (Tam)
 
@@ -1386,63 +1441,6 @@
 <a id="dlg-tam-stop"></a>`stop` **TAM**: She was never late. Not once. <sub>dialogue/tam.adv:21</sub>
 - *→ continues at* [dad](#dlg-tam-dad) *(above)*
 
-<a id="dlg-onn"></a>
-### Conversation: onn (Old Onn)
-
-*[source:* `dialogue onn`*, starts at* `root`*]* <sub>dialogue/onn.adv:1</sub>
-
-<a id="dlg-onn-root"></a>`root` **OLD ONN**: Mind the cobbles. They're wet, and I've swept them twice. <sub>dialogue/onn.adv:2</sub>
-- **1.** **FENN**: You knew the Arcadia's crew? <sub>dialogue/onn.adv:3</sub>
-  - *→ continues at* [crew](#dlg-onn-crew)
-- **2.** **FENN**: What's wrong with the water past the reef? <sub>dialogue/onn.adv:4</sub>
-  - *→ continues at* [water](#dlg-onn-water)
-- **3.** **FENN**: Do you need help? <sub>dialogue/onn.adv:5</sub>
-  - *→ continues at* [help](#dlg-onn-help)
-- **4.** **FENN**: I'll leave you to it. <sub>dialogue/onn.adv:6</sub>
-  - *→ continues at* [bye](#dlg-onn-bye)
-
-<a id="dlg-onn-crew"></a>`crew` **OLD ONN**: My husband's cousin. The boy from the end house. Ten off this street. <sub>dialogue/onn.adv:7</sub>
-- *→ continues at* [crew2](#dlg-onn-crew2)
-
-<a id="dlg-onn-crew2"></a>`crew2` **OLD ONN**: I counted them out. I counted them back. Only the first part worked. <sub>dialogue/onn.adv:9</sub>
-- **1.** **FENN**: What happened to them? <sub>dialogue/onn.adv:10</sub>
-  - *→ continues at* [water](#dlg-onn-water)
-- **2.** **FENN**: I'm sorry, Onn. <sub>dialogue/onn.adv:11</sub>
-  - *→ continues at* [sorry](#dlg-onn-sorry)
-
-<a id="dlg-onn-water"></a>`water` **OLD ONN**: Past the reef the water goes quiet. Not calm. Quiet. The fishermen won't say its name. <sub>dialogue/onn.adv:14</sub>
-- *→ continues at* [water2](#dlg-onn-water2)
-
-<a id="dlg-onn-water2"></a>`water2` **OLD ONN**: They call it the Shroud. Don't say it twice. <sub>dialogue/onn.adv:16</sub>
-- **1.** **FENN**: What do you think it is? <sub>dialogue/onn.adv:17</sub>
-  - *→ continues at* [think](#dlg-onn-think)
-- **2.** **FENN**: I'll be careful. <sub>dialogue/onn.adv:18</sub>
-  - *→ continues at* [bye](#dlg-onn-bye)
-
-<a id="dlg-onn-think"></a>`think` **OLD ONN**: I think it's old. Older than the harbour, older than the name. It was here first. <sub>dialogue/onn.adv:19</sub>
-- *→ continues at* [bye](#dlg-onn-bye)
-
-<a id="dlg-onn-bye"></a>`bye` **OLD ONN**: Mind the cobbles. I've swept them twice. <sub>dialogue/onn.adv:30</sub>
-- *[ends]*
-
-<a id="dlg-onn-sorry"></a>`sorry` **OLD ONN**: Don't be sorry. Be useful. Find out what's out there. <sub>dialogue/onn.adv:12</sub>
-- *→ continues at* [bye](#dlg-onn-bye) *(above)*
-
-<a id="dlg-onn-help"></a>`help` **OLD ONN**: No, child. I have the broom, the step, and a lot of time. <sub>dialogue/onn.adv:21</sub>
-- *→ continues at* [help2](#dlg-onn-help2)
-
-<a id="dlg-onn-help2"></a>`help2` **OLD ONN**: What I want is one person to come back and tell me what's out there. <sub>dialogue/onn.adv:23</sub>
-- **1.** **FENN**: I'll try. <sub>dialogue/onn.adv:24</sub>
-  - *→ continues at* [promise](#dlg-onn-promise)
-- **2.** **FENN**: I can't promise that. <sub>dialogue/onn.adv:25</sub>
-  - *→ continues at* [honest](#dlg-onn-honest)
-
-<a id="dlg-onn-promise"></a>`promise` **OLD ONN**: Then try. When you know, come and tell me. Not the harbourmaster. Me. <sub>dialogue/onn.adv:26</sub>
-- *→ continues at* [bye](#dlg-onn-bye) *(above)*
-
-<a id="dlg-onn-honest"></a>`honest` **OLD ONN**: No. Nobody can. That's why I'm asking anyway. <sub>dialogue/onn.adv:28</sub>
-- *→ continues at* [bye](#dlg-onn-bye) *(above)*
-
 <a id="act1-quay"></a>
 ## The Quay
 
@@ -1450,31 +1448,31 @@
 
 **On arrival**
 
-- *Once,* *[if quay_seen = false]* <sub>rooms/quay.adv:26</sub>
-  - *[sets quay_seen]* <sub>rooms/quay.adv:27</sub>
-  - **FENN (V.O.)**: The water opens here. The harbourmaster's house behind me, the pier and the lighthouse ahead. <sub>rooms/quay.adv:28</sub>
+- *Once,* *[if quay_seen = false]* <sub>rooms/quay.adv:30</sub>
+  - *[sets quay_seen]* <sub>rooms/quay.adv:31</sub>
+  - **FENN (V.O.)**: The water opens here. The harbourmaster's house behind me, the pier and the lighthouse ahead. <sub>rooms/quay.adv:32</sub>
 
-**the harbour mouth** `harbour_mouth` <sub>rooms/quay.adv:33</sub>
+**the harbour mouth** `harbour_mouth` <sub>rooms/quay.adv:36</sub>
 
-- **Look at:** The stone quay runs out along the water. Past the last lamp is the harbour mouth. <sub>rooms/quay.adv:37</sub>
-- **Use / Walk to:** *[→ goes to The Harbour Mouth]* <sub>rooms/quay.adv:36</sub>
-- **Open:** I walk out along the quay toward the harbour mouth. <sub>rooms/quay.adv:38</sub>
-  - *[→ goes to The Harbour Mouth]* <sub>rooms/quay.adv:36</sub>
+- **Look at:** The stone quay runs out along the water. Past the last lamp is the harbour mouth. <sub>rooms/quay.adv:40</sub>
+- **Use / Walk to:** *[→ goes to The Harbour Mouth]* <sub>rooms/quay.adv:39</sub>
+- **Open:** I walk out along the quay toward the harbour mouth. <sub>rooms/quay.adv:41</sub>
+  - *[→ goes to The Harbour Mouth]* <sub>rooms/quay.adv:39</sub>
 
-**the harbour** `harbour` <sub>rooms/quay.adv:40</sub>
+**the harbour** `harbour` <sub>rooms/quay.adv:45</sub>
 
-- **Look at:** The boards run back past the harbourmaster's house to the harbour. The Marrow is tied up beyond it. <sub>rooms/quay.adv:44</sub>
-- **Use / Walk to:** *[→ goes to Dreadwater Harbour]* <sub>rooms/quay.adv:43</sub>
-- **Open:** I follow the boards back into the harbour. <sub>rooms/quay.adv:45</sub>
-  - *[→ goes to Dreadwater Harbour]* <sub>rooms/quay.adv:43</sub>
+- **Look at:** The boards run back past the harbourmaster's house to the harbour. The Marrow is tied up beyond it. <sub>rooms/quay.adv:49</sub>
+- **Use / Walk to:** *[→ goes to Dreadwater Harbour]* <sub>rooms/quay.adv:48</sub>
+- **Open:** I follow the boards back into the harbour. <sub>rooms/quay.adv:50</sub>
+  - *[→ goes to Dreadwater Harbour]* <sub>rooms/quay.adv:48</sub>
 
-**the lighthouse** `lighthouse` <sub>rooms/quay.adv:47</sub>
+**the lighthouse** `lighthouse` <sub>rooms/quay.adv:52</sub>
 
-- **Look at:** The lighthouse on the point. It burns for the harbour mouth, and it does not reach the fog. <sub>rooms/quay.adv:50</sub>
+- **Look at:** The lighthouse on the point. It burns for the harbour mouth, and it does not reach the fog. <sub>rooms/quay.adv:55</sub>
 
-**the Marrow's bow** `marrow` <sub>rooms/quay.adv:52</sub>
+**the Marrow's bow** `marrow` <sub>rooms/quay.adv:57</sub>
 
-- **Look at:** The Marrow's bow, high above the boards. Her gear is aloft, as if she were leaving. <sub>rooms/quay.adv:55</sub>
+- **Look at:** The Marrow's bow, high above the boards. Her gear is aloft, as if she were leaving. <sub>rooms/quay.adv:60</sub>
 
 <a id="act1-warehouse"></a>
 ## The Boat Shed
@@ -1483,45 +1481,50 @@
 
 **On arrival**
 
-- *Once,* *[Act I, if boat_shed_arrived = false]* <sub>rooms/warehouse.adv:18</sub>
-  - *[sets boat_shed_arrived]* <sub>rooms/warehouse.adv:19</sub>
-  - **FENN (V.O.)**: The boat shed. The island's stores in the dark, and one stack turned wrong. <sub>rooms/warehouse.adv:20</sub>
+- *Once,* *[Act I, if boat_shed_arrived = false]* <sub>rooms/warehouse.adv:33</sub>
+  - *[sets boat_shed_arrived]* <sub>rooms/warehouse.adv:34</sub>
+  - **FENN (V.O.)**: The boat shed. The island's stores in the dark, and one stack turned wrong. <sub>rooms/warehouse.adv:35</sub>
 
-**the desk** `desk` <sub>rooms/warehouse.adv:22</sub>
+**the desk** `desk` <sub>rooms/warehouse.adv:38</sub>
 
-- **Look at:** A desk in a boat shed: a candle, three books, and a week of dust. <sub>rooms/warehouse.adv:25</sub>
-- **Use:** The candle is fresh. Somebody has been sitting here. <sub>rooms/warehouse.adv:27</sub>
-- **Open:** The drawer is empty except for a fish hook and a smell of salt. <sub>rooms/warehouse.adv:26</sub>
+- **Look at:** A desk in a boat shed: a candle, three books, and a week of dust. <sub>rooms/warehouse.adv:41</sub>
+- **Use:** The candle is fresh. Somebody has been sitting here. <sub>rooms/warehouse.adv:43</sub>
+- **Open:** The drawer is empty except for a fish hook and a smell of salt. <sub>rooms/warehouse.adv:42</sub>
 
-**the books** `books` <sub>rooms/warehouse.adv:29</sub>
+**the books** `books` <sub>rooms/warehouse.adv:46</sub>
 
-- **Look at:** Three books, swollen with damp. The top one is a book of sea stories. <sub>rooms/warehouse.adv:32</sub>
-- **Use:** The pages are stuck together. The story is about a ship that came back. <sub>rooms/warehouse.adv:33</sub>
+- **Look at:** Three books, swollen with damp. The top one is a book of sea stories. <sub>rooms/warehouse.adv:49</sub>
+- **Use:** The pages are stuck together. The story is about a ship that came back. <sub>rooms/warehouse.adv:50</sub>
 
-**the stores** `stores` <sub>rooms/warehouse.adv:35</sub>
+**the stores** `stores` <sub>rooms/warehouse.adv:53</sub>
 
-- **Look at:** The boat shed's stores: crates, barrels, salt beef. One corner is stacked wrong. <sub>rooms/warehouse.adv:39</sub>
-- **Talk to:** I knock on the top crate. <sub>rooms/warehouse.adv:41</sub>
-  - *[→ conversation* [dorrit at thief](#dlg-dorrit-thief) *— see Act I › The Salty Keel]* <sub>rooms/warehouse.adv:42</sub>
-- **Use:** I count what's left. Dorrit has already counted it twice. <sub>rooms/warehouse.adv:40</sub>
-- *When* *[if seen:dorrit.confess]* <sub>rooms/warehouse.adv:43</sub>
-  - **Look at:** The stores, stacked wrong at the corner. The gap behind them is empty now. <sub>rooms/warehouse.adv:44</sub>
-  - **Talk to:** There's nobody behind the stores. The thief has gone. <sub>rooms/warehouse.adv:45</sub>
+- **Look at:** The boat shed's stores: crates, barrels, salt beef. One corner is stacked wrong. <sub>rooms/warehouse.adv:57</sub>
+- **Talk to:** I knock on the top crate. <sub>rooms/warehouse.adv:59</sub>
+  - *[→ conversation* [dorrit at thief](#dlg-dorrit-thief) *— see Act I › The Salty Keel]* <sub>rooms/warehouse.adv:60</sub>
+- **Use:** I count what's left. Dorrit has already counted it twice. <sub>rooms/warehouse.adv:58</sub>
+- *When* *[if seen:dorrit.confess]* <sub>rooms/warehouse.adv:61</sub>
+  - **Look at:** The stores, stacked wrong at the corner. The gap behind them is empty now. <sub>rooms/warehouse.adv:62</sub>
+  - **Talk to:** There's nobody behind the stores. The thief has gone. <sub>rooms/warehouse.adv:63</sub>
 
-**the crates** `crates` <sub>rooms/warehouse.adv:47</sub>
+**the crates** `crates` <sub>rooms/warehouse.adv:66</sub>
 
-- **Look at:** Three crates, stacked neat. The top one has been opened and closed again. <sub>rooms/warehouse.adv:50</sub>
-- **Use:** The nails are new. Somebody has been at this stack in a hurry. <sub>rooms/warehouse.adv:51</sub>
+- **Look at:** Three crates, stacked neat. The top one has been opened and closed again. <sub>rooms/warehouse.adv:69</sub>
+- **Use:** The nails are new. Somebody has been at this stack in a hurry. <sub>rooms/warehouse.adv:70</sub>
 
-**the hoist** `hoist` <sub>rooms/warehouse.adv:53</sub>
+**the longboat** `longboat` <sub>rooms/warehouse.adv:73</sub>
 
-- **Look at:** A block and tackle. The rope is new, and the hook is still swinging. <sub>rooms/warehouse.adv:56</sub>
-- **Use:** I give the rope a pull. Something in the loft shifts and settles. <sub>rooms/warehouse.adv:57</sub>
+- **Look at:** The longboat, slung from the beams and opened at the ribs. Somebody is rebuilding her a plank at a time. <sub>rooms/warehouse.adv:76</sub>
+- **Use:** I run a hand along the new planking. It is sound, and it is not for me. <sub>rooms/warehouse.adv:77</sub>
 
-**the lane door** `lane_door` <sub>rooms/warehouse.adv:61</sub>
+**the hoist** `hoist` <sub>rooms/warehouse.adv:79</sub>
 
-- **Look at:** The lane door, open a hand's width. Fog light comes through. <sub>rooms/warehouse.adv:65</sub>
-- **Use / Open / Walk to:** *[→ goes to Wreckers' Lane]* <sub>rooms/warehouse.adv:64</sub>
+- **Look at:** A block and tackle. The rope is new, and the hook is still swinging. <sub>rooms/warehouse.adv:82</sub>
+- **Use:** I give the rope a pull. Something in the loft shifts and settles. <sub>rooms/warehouse.adv:83</sub>
+
+**the lane door** `lane_door` <sub>rooms/warehouse.adv:87</sub>
+
+- **Look at:** The lane door, open on the fog. Cold harbour light comes through. <sub>rooms/warehouse.adv:91</sub>
+- **Use / Open / Walk to:** *[→ goes to Wreckers' Lane]* <sub>rooms/warehouse.adv:90</sub>
 
 <a id="act1-counting_house"></a>
 ## Vex's Warehouse
@@ -1530,57 +1533,57 @@
 
 **On arrival**
 
-- *Once,* *[Act I, if vex_warehouse_arrived = false]* <sub>rooms/counting_house.adv:25</sub>
-  - *[sets vex_warehouse_arrived]* <sub>rooms/counting_house.adv:26</sub>
-  - **FENN (V.O.)**: Vex's warehouse. Desks, green lamps, and one very good safe. <sub>rooms/counting_house.adv:27</sub>
+- *Once,* *[Act I, if vex_warehouse_arrived = false]* <sub>rooms/counting_house.adv:34</sub>
+  - *[sets vex_warehouse_arrived]* <sub>rooms/counting_house.adv:35</sub>
+  - **FENN (V.O.)**: Vex's warehouse. Desks, green lamps, and one very good safe. <sub>rooms/counting_house.adv:36</sub>
 
-**the lane door** `door_out` <sub>rooms/counting_house.adv:30</sub>
+**the lane door** `door_out` <sub>rooms/counting_house.adv:40</sub>
 
-- **Look at:** The lane door. Oiled hinges, and no lock. Vex likes to hear who comes in. <sub>rooms/counting_house.adv:34</sub>
-- **Use / Open / Walk to:** *[→ goes to Wreckers' Lane]* <sub>rooms/counting_house.adv:33</sub>
+- **Look at:** The lane door. Oiled hinges, and no lock. Vex likes to hear who comes in. <sub>rooms/counting_house.adv:44</sub>
+- **Use / Open / Walk to:** *[→ goes to Wreckers' Lane]* <sub>rooms/counting_house.adv:43</sub>
 
-**the portrait** `portrait` <sub>rooms/counting_house.adv:36</sub>
+**the portrait** `portrait` <sub>rooms/counting_house.adv:46</sub>
 
-- **Look at:** The last owner in oils: top hat, sword, and a chin the painter improved. Vex bought the warehouse with the portrait still hanging. <sub>rooms/counting_house.adv:39</sub>
-- **Talk to:** I ask why he keeps it. Vex says it is the only honest man in the room, and he likes to be reminded what honesty looks like. <sub>rooms/counting_house.adv:40</sub>
+- **Look at:** The last owner in oils: top hat, sword, and a chin the painter improved. Vex bought the warehouse with the portrait still hanging. <sub>rooms/counting_house.adv:49</sub>
+- **Talk to:** I ask why he keeps it. Vex says it is the only honest man in the room, and he likes to be reminded what honesty looks like. <sub>rooms/counting_house.adv:50</sub>
 
-**the pigeonholes** `pigeonholes` <sub>rooms/counting_house.adv:42</sub>
+**the pigeonholes** `pigeonholes` <sub>rooms/counting_house.adv:52</sub>
 
-- **Look at:** Rolled charts in every hole, one for each ship that didn't come home. <sub>rooms/counting_house.adv:45</sub>
-- **Use:** Vex calls this his library. The sea calls it salvage. <sub>rooms/counting_house.adv:46</sub>
+- **Look at:** Rolled charts in every hole, one for each ship that didn't come home. <sub>rooms/counting_house.adv:56</sub>
+- **Use:** Vex calls this his library. The sea calls it salvage. <sub>rooms/counting_house.adv:57</sub>
 
-**the desks** `desks` <sub>rooms/counting_house.adv:48</sub>
+**the desks** `desks` <sub>rooms/counting_house.adv:60</sub>
 
-- **Look at:** Five tall desks, pens out, no clerks. Vex does his own accounts and enjoys it. <sub>rooms/counting_house.adv:51</sub>
-- **Use:** I straighten a pen. It was already straight. <sub>rooms/counting_house.adv:53</sub>
-- **Open:** The drawers are locked. The keys are on a ring in Vex's pocket, alphabetised. <sub>rooms/counting_house.adv:52</sub>
+- **Look at:** The tall desks, pens out, nobody at them. Vex does his own accounts and enjoys it. <sub>rooms/counting_house.adv:63</sub>
+- **Use:** I straighten a pen. It was already straight. <sub>rooms/counting_house.adv:65</sub>
+- **Open:** The drawers are locked. The keys are on a ring in Vex's pocket, alphabetised. <sub>rooms/counting_house.adv:64</sub>
 
-**the strongbox** `safe` <sub>rooms/counting_house.adv:55</sub>
+**the strongbox** `safe` <sub>rooms/counting_house.adv:67</sub>
 
-- **Look at:** A black safe with a brass dial. Vex says it holds tide tables. <sub>rooms/counting_house.adv:58</sub>
-- **Use:** It is bolted through the floor. The floor seems nervous about it. <sub>rooms/counting_house.adv:60</sub>
-- **Open:** The dial is worn smooth on one side. Vex opens it with his thumb and a look. <sub>rooms/counting_house.adv:59</sub>
+- **Look at:** A black safe with a brass dial. Vex says it holds tide tables. <sub>rooms/counting_house.adv:70</sub>
+- **Use:** It is bolted through the floor. The floor seems nervous about it. <sub>rooms/counting_house.adv:72</sub>
+- **Open:** The dial is worn smooth on one side. Vex opens it with his thumb and a look. <sub>rooms/counting_house.adv:71</sub>
 
-**the brass cloud** `brass_cloud` <sub>rooms/counting_house.adv:62</sub>
+**the shuttered window** `window` <sub>rooms/counting_house.adv:75</sub>
 
-- **Look at:** A brass cloud over the door. Vex says it's his family crest. <sub>rooms/counting_house.adv:65</sub>
-- **Use:** I've seen that cloud on salvage from three ships. Vex says it's a coincidence. <sub>rooms/counting_house.adv:66</sub>
+- **Look at:** The shutters are barred, and cold moonlight falls through the slats across the charts. <sub>rooms/counting_house.adv:78</sub>
+- **Use:** The shutters are bolted from the inside. Vex does not like the view. <sub>rooms/counting_house.adv:79</sub>
 
-**Captain Vex** `vex` <sub>rooms/counting_house.adv:68</sub>
+**Captain Vex** `vex` <sub>rooms/counting_house.adv:81</sub>
 
-- **Look at:** Captain Vex, in a coat worth more than the Marrow. <sub>rooms/counting_house.adv:71</sub>
-- **Talk to:** I take my hat off. He likes that. <sub>rooms/counting_house.adv:72</sub>
-  - *[→ conversation* [vex](#dlg-vex) *— below]* <sub>rooms/counting_house.adv:73</sub>
-- *When* *[if vex_deal]* <sub>rooms/counting_house.adv:74</sub>
-  - **Look at:** Captain Vex, counting the tide. He is already spending the salvage. <sub>rooms/counting_house.adv:75</sub>
-  - **Talk to:** He is in a better mood than usual, which is worse. <sub>rooms/counting_house.adv:76</sub>
-    - *[→ conversation* [vex at deal_done](#dlg-vex-deal_done) *— below]* <sub>rooms/counting_house.adv:77</sub>
-- *When* *[if rudder_back]* <sub>rooms/counting_house.adv:78</sub>
-  - **Talk to:** He has seen the rudder. He is deciding how grateful to look. <sub>rooms/counting_house.adv:79</sub>
-    - *[→ conversation* [vex at rudder](#dlg-vex-rudder) *— below]* <sub>rooms/counting_house.adv:80</sub>
-- *When* *[if met_vex]* <sub>rooms/counting_house.adv:81</sub>
-  - **Talk to:** He does not look up from the desk. <sub>rooms/counting_house.adv:82</sub>
-    - *[→ conversation* [vex at no_rudder](#dlg-vex-no_rudder) *— below]* <sub>rooms/counting_house.adv:83</sub>
+- **Look at:** Captain Vex, in a coat worth more than the Marrow. <sub>rooms/counting_house.adv:84</sub>
+- **Talk to:** I take my hat off. He likes that. <sub>rooms/counting_house.adv:85</sub>
+  - *[→ conversation* [vex](#dlg-vex) *— below]* <sub>rooms/counting_house.adv:86</sub>
+- *When* *[if vex_deal]* <sub>rooms/counting_house.adv:87</sub>
+  - **Look at:** Captain Vex, counting the tide. He is already spending the salvage. <sub>rooms/counting_house.adv:88</sub>
+  - **Talk to:** He is in a better mood than usual, which is worse. <sub>rooms/counting_house.adv:89</sub>
+    - *[→ conversation* [vex at deal_done](#dlg-vex-deal_done) *— below]* <sub>rooms/counting_house.adv:90</sub>
+- *When* *[if rudder_back]* <sub>rooms/counting_house.adv:91</sub>
+  - **Talk to:** He has seen the rudder. He is deciding how grateful to look. <sub>rooms/counting_house.adv:92</sub>
+    - *[→ conversation* [vex at rudder](#dlg-vex-rudder) *— below]* <sub>rooms/counting_house.adv:93</sub>
+- *When* *[if met_vex]* <sub>rooms/counting_house.adv:94</sub>
+  - **Talk to:** He does not look up from the desk. <sub>rooms/counting_house.adv:95</sub>
+    - *[→ conversation* [vex at no_rudder](#dlg-vex-no_rudder) *— below]* <sub>rooms/counting_house.adv:96</sub>
 
 <a id="dlg-vex"></a>
 ### Conversation: vex (Captain Vex)
@@ -1618,7 +1621,7 @@
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
-*[no_rudder: opened directly from rooms/counting_house.adv:83]*
+*[no_rudder: opened directly from rooms/counting_house.adv:96]*
 
 <a id="dlg-vex-no_rudder"></a>`no_rudder` **CAPTAIN VEX**: Still no rudder. Still no voyage. <sub>dialogue/vex.adv:25</sub>
 - **1.** **FENN**: Where would Pike keep it? <sub>dialogue/vex.adv:26</sub>
@@ -1626,7 +1629,7 @@
 - **2.** **FENN**: I'm working on it. <sub>dialogue/vex.adv:27</sub>
   - *[ends]*
 
-*[rudder: opened directly from rooms/counting_house.adv:80]*
+*[rudder: opened directly from rooms/counting_house.adv:93]*
 
 <a id="dlg-vex-rudder"></a>`rudder` **CAPTAIN VEX**: That is my rudder. You're either very good or very lucky. <sub>dialogue/vex.adv:29</sub>
 - *[sets met_vex]* <sub>dialogue/vex.adv:30</sub>
@@ -1665,7 +1668,7 @@
 <a id="dlg-vex-bluff"></a>`bluff` **CAPTAIN VEX**: There isn't another captain. That's the joke. <sub>dialogue/vex.adv:35</sub>
 - *→ continues at* [deal](#dlg-vex-deal) *(above)*
 
-*[deal_done: opened directly from rooms/counting_house.adv:77]*
+*[deal_done: opened directly from rooms/counting_house.adv:90]*
 
 <a id="dlg-vex-deal_done"></a>`deal_done` **CAPTAIN VEX**: We sail at the tide. Try not to be late. <sub>dialogue/vex.adv:59</sub>
 - **1.** **FENN**: About the fog. <sub>dialogue/vex.adv:60</sub>
@@ -1692,9 +1695,9 @@
 <a id="dlg-vex-charts"></a>`charts` **CAPTAIN VEX**: Salvage. The sea gives, and I keep. That's the trade. <sub>dialogue/vex.adv:75</sub>
 - *[ends]*
 
-*[helm: opened directly from rooms/marrow_quarterdeck.adv:37]*
+*[helm: opened directly from rooms/marrow_quarterdeck.adv:45]*
 
-<a id="dlg-vex-helm"></a>`helm` **CAPTAIN VEX**: You're on my quarterdeck, clerk. Say your piece. <sub>dialogue/vex.adv:80</sub>
+<a id="dlg-vex-helm"></a>`helm` **CAPTAIN VEX**: You're on my quarterdeck, cartographer. Say your piece. <sub>dialogue/vex.adv:80</sub>
 - **1.** **FENN**: What are we doing out here? <sub>dialogue/vex.adv:81</sub>
   - *→ continues at* [edge](#dlg-vex-edge)
 - **2.** **FENN**: Why the bow? <sub>dialogue/vex.adv:82</sub>
@@ -1728,7 +1731,7 @@
 <a id="dlg-vex-bow"></a>`bow` **CAPTAIN VEX**: Because the fog has a voice, and I want to hear it before it hears us. <sub>dialogue/vex.adv:88</sub>
 - *→ continues at* [send](#dlg-vex-send) *(above)*
 
-*[helm_done: opened directly from rooms/marrow_quarterdeck.adv:45]*
+*[helm_done: opened directly from rooms/marrow_quarterdeck.adv:53]*
 
 <a id="dlg-vex-helm_done"></a>`helm_done` **CAPTAIN VEX**: The bow. I meant what I said about calling the water. <sub>dialogue/vex.adv:106</sub>
 - **1.** **FENN**: What if it answers? <sub>dialogue/vex.adv:107</sub>
@@ -1739,7 +1742,7 @@
 <a id="dlg-vex-answer"></a>`answer` **CAPTAIN VEX**: Then we learn something. Try not to. <sub>dialogue/vex.adv:110</sub>
 - *[ends]*
 
-*[after_fog: opened directly from rooms/marrow_quarterdeck.adv:41]*
+*[after_fog: opened directly from rooms/marrow_quarterdeck.adv:49]*
 
 <a id="dlg-vex-after_fog"></a>`after_fog` **CAPTAIN VEX**: You're back. Good. I was starting to think the fog had taste. <sub>dialogue/vex.adv:113</sub>
 - **1.** **FENN**: The bell rang on its own. <sub>dialogue/vex.adv:114</sub>
@@ -1753,7 +1756,7 @@
 <a id="dlg-vex-out"></a>`out` **CAPTAIN VEX**: Then we keep the light low and our mouths shut. <sub>dialogue/vex.adv:120</sub>
 - *[ends]*
 
-*[confront: opened directly from rooms/marrow_quarterdeck.adv:49]*
+*[confront: opened directly from rooms/marrow_quarterdeck.adv:57]*
 
 <a id="dlg-vex-confront"></a>`confront` **CAPTAIN VEX**: You've seen the hold. <sub>dialogue/vex.adv:123</sub>
 - **1.** **FENN**: Those crates have ships' names on them. <sub>dialogue/vex.adv:124</sub>
@@ -1802,7 +1805,7 @@
 <a id="dlg-vex-crew"></a>`crew` **CAPTAIN VEX**: Then they can hate me on the way back. It is how I am paid. <sub>dialogue/vex.adv:134</sub>
 - *→ continues at* [admit](#dlg-vex-admit) *(above)*
 
-*[last: opened directly from rooms/marrow_quarterdeck.adv:53, rooms/marrow_quarterdeck.adv:64]*
+*[last: opened directly from rooms/marrow_quarterdeck.adv:61, rooms/marrow_quarterdeck.adv:72]*
 
 <a id="dlg-vex-last"></a>`last` **CAPTAIN VEX**: I'm taking her deeper. You can watch, or you can swim. <sub>dialogue/vex.adv:162</sub>
 - **1.** **FENN**: The light. It hunts light, doesn't it? *[if rule_light]* <sub>dialogue/vex.adv:163</sub>
@@ -1857,6 +1860,8 @@
 <a id="dlg-vex-last_go"></a>`last_go` **CAPTAIN VEX**: Good. Hold on to something. <sub>dialogue/vex.adv:173</sub>
 - *→ continues at* [gone](#dlg-vex-gone) *(above)*
 
+*[shore: opened directly from rooms/lagoon_shore.adv:100]*
+
 <a id="dlg-vex-shore"></a>`shore` **CAPTAIN VEX**: Stranded on a fog flat with a crew that would happily leave me here. I've had worse mornings. <sub>dialogue/vex.adv:215</sub>
 - **1.** **FENN**: What do we do now? <sub>dialogue/vex.adv:216</sub>
   - *→ continues at* [shore_what](#dlg-vex-shore_what)
@@ -1884,7 +1889,7 @@
 - **3.** **FENN**: Nothing. <sub>dialogue/vex.adv:231</sub>
   - *[ends]*
 
-<a id="dlg-vex-shore_saw"></a>`shore_saw` **CAPTAIN VEX**: You want the part I didn't say on the Marrow. <sub>dialogue/vex.adv:236</sub>
+<a id="dlg-vex-shore_saw"></a>`shore_saw` **CAPTAIN VEX**: You want the rest. The part I didn't say on the sand. <sub>dialogue/vex.adv:236</sub>
 - **1.** **FENN**: Tell me. *[if seen:vex.saw_elias = false]* <sub>dialogue/vex.adv:237</sub>
   - *→ continues at* [saw_elias](#dlg-vex-saw_elias)
 - **2.** **FENN**: Tell me again. *[if seen:vex.saw_elias]* <sub>dialogue/vex.adv:238</sub>
@@ -1892,7 +1897,7 @@
 - **3.** **FENN**: Not now. <sub>dialogue/vex.adv:239</sub>
   - *[ends]*
 
-<a id="dlg-vex-saw_elias"></a>`saw_elias` **CAPTAIN VEX**: I saw him. Off the reef, standing on a rock, waving a lantern. I turned the wheel and my light away. <sub>dialogue/vex.adv:241</sub>
+<a id="dlg-vex-saw_elias"></a>`saw_elias` **CAPTAIN VEX**: I keep seeing it. A lantern going up and down off the reef. I told myself it was a buoy. It wasn't. <sub>dialogue/vex.adv:241</sub>
 - **1.** **FENN**: You left him there. <sub>dialogue/vex.adv:242</sub>
   - *→ continues at* [saw_left](#dlg-vex-saw_left)
 - **2.** **FENN**: Why? <sub>dialogue/vex.adv:243</sub>
@@ -1932,11 +1937,13 @@
 <a id="dlg-vex-saw_now"></a>`saw_now` **CAPTAIN VEX**: Because you'd have found out. You're the sort who finds out. <sub>dialogue/vex.adv:252</sub>
 - *→ continues at* [saw_fear](#dlg-vex-saw_fear) *(above)*
 
-<a id="dlg-vex-saw_again"></a>`saw_again` **CAPTAIN VEX**: A light, off the reef. I told myself it was a lamp on a buoy. It wasn't. <sub>dialogue/vex.adv:273</sub>
+<a id="dlg-vex-saw_again"></a>`saw_again` **CAPTAIN VEX**: I have said it. The lantern still goes up and down in my head. <sub>dialogue/vex.adv:273</sub>
 - *[ends]*
 
 <a id="dlg-vex-shore_give"></a>`shore_give` **CAPTAIN VEX**: I have a boat, a coat, and a good story. Two of those are useful. <sub>dialogue/vex.adv:233</sub>
 - *[ends]*
+
+*[wreck: opened directly from rooms/reef_wreck.adv:150]*
 
 <a id="dlg-vex-wreck"></a>`wreck` **CAPTAIN VEX**: I know this water. I've been picking at it for years, and it never picks back. <sub>dialogue/vex.adv:277</sub>
 - **1.** **FENN**: Whose ship was she? <sub>dialogue/vex.adv:278</sub>
@@ -1971,7 +1978,7 @@
 <a id="dlg-vex-wreck_plate_known"></a>`wreck_plate_known` **CAPTAIN VEX**: Then keep it behind your teeth until we're aboard. Names carry. <sub>dialogue/vex.adv:298</sub>
 - *[ends]*
 
-*[gate: opened directly from rooms/key_gate.adv:59, rooms/key_gate.adv:130]*
+*[gate: opened directly from rooms/key_gate.adv:66, rooms/key_gate.adv:138]*
 
 <a id="dlg-vex-gate"></a>`gate` **CAPTAIN VEX**: The gate stays shut until I like the plan. I don't like it yet. <sub>dialogue/vex.adv:302</sub>
 - **1.** **FENN**: What is missing? <sub>dialogue/vex.adv:303</sub>
@@ -2018,7 +2025,7 @@
 <a id="dlg-vex-gate_bell"></a>`gate_bell` **CAPTAIN VEX**: Hobb's plan. If it involves climbing, I'm holding the rope from down here. <sub>dialogue/vex.adv:334</sub>
 - *[ends]*
 
-*[board: opened directly from rooms/key_gate.adv:126]*
+*[board: opened directly from rooms/key_gate.adv:134]*
 
 <a id="dlg-vex-board"></a>`board` **CAPTAIN VEX**: I row you out. After that, I'm a passenger with a good coat. <sub>dialogue/vex.adv:338</sub>
 - **1.** **FENN**: Why are you coming? <sub>dialogue/vex.adv:339</sub>
@@ -2061,95 +2068,95 @@
 
 **On arrival**
 
-- *Once,* *[Act I, if chandlery_arrived = false]* <sub>rooms/chandlery.adv:20</sub>
-  - *[sets chandlery_arrived]* <sub>rooms/chandlery.adv:21</sub>
-  - **FENN (V.O.)**: The shipwright's shop. Tar, sawdust, and a mast against the back wall. <sub>rooms/chandlery.adv:22</sub>
-- *Once,* *[Act I, if quill_compass and seen:quill.join = false]* <sub>rooms/chandlery.adv:24</sub>
-  - **FENN (V.O.)**: Quill is at the counter, holding out her empty hand. <sub>rooms/chandlery.adv:25</sub>
+- *Once,* *[Act I, if chandlery_arrived = false]* <sub>rooms/chandlery.adv:33</sub>
+  - *[sets chandlery_arrived]* <sub>rooms/chandlery.adv:34</sub>
+  - **FENN (V.O.)**: The shipwright's shop. Tar, sawdust, and a mast against the back wall. <sub>rooms/chandlery.adv:35</sub>
+- *Once,* *[Act I, if quill_compass and seen:quill.join = false]* <sub>rooms/chandlery.adv:37</sub>
+  - **FENN (V.O.)**: Quill is at the counter, holding out her empty hand. <sub>rooms/chandlery.adv:38</sub>
 
-**the counter** `counter` <sub>rooms/chandlery.adv:27</sub>
+**the counter** `counter` <sub>rooms/chandlery.adv:40</sub>
 
-- **Look at:** A long counter: a brass scale, a lantern, and a hundred small things ships need. <sub>rooms/chandlery.adv:30</sub>
-- **Use:** I could price a whole ship off this counter. I'd rather not. <sub>rooms/chandlery.adv:32</sub>
-- **Open:** The counter is a counter. The shipwright keeps his money in his boot. <sub>rooms/chandlery.adv:31</sub>
+- **Look at:** A long counter: a brass scale, a lantern, and a hundred small things ships need. <sub>rooms/chandlery.adv:43</sub>
+- **Use:** I could price a whole ship off this counter. I'd rather not. <sub>rooms/chandlery.adv:45</sub>
+- **Open:** The counter is a counter. The shipwright keeps his money in his boot. <sub>rooms/chandlery.adv:44</sub>
 
-**the brass scale** `scale` <sub>rooms/chandlery.adv:34</sub>
+**the shelves** `shelves` <sub>rooms/chandlery.adv:49</sub>
 
-- **Look at:** A brass scale, polished. The shipwright weighs everything twice and charges once. <sub>rooms/chandlery.adv:37</sub>
-- **Use:** I put a finger on the pan. The scale thinks about it and says nothing. <sub>rooms/chandlery.adv:38</sub>
+- **Look at:** Coils of rope, bolts of canvas, a dozen lanterns. Everything a ship needs to come back. <sub>rooms/chandlery.adv:52</sub>
+- **Use:** Good rope. Good canvas. None of it does you much good in the fog. <sub>rooms/chandlery.adv:53</sub>
 
-**the shelves** `shelves` <sub>rooms/chandlery.adv:40</sub>
+**the brass scale** `scale` <sub>rooms/chandlery.adv:55</sub>
 
-- **Look at:** Coils of rope, bolts of canvas, a dozen lanterns. Everything a ship needs to come back. <sub>rooms/chandlery.adv:43</sub>
-- **Use:** Good rope. Good canvas. None of it does you much good in the fog. <sub>rooms/chandlery.adv:44</sub>
+- **Look at:** A brass scale, polished. The shipwright weighs everything twice and charges once. <sub>rooms/chandlery.adv:58</sub>
+- **Use:** I put a finger on the pan. The scale thinks about it and says nothing. <sub>rooms/chandlery.adv:59</sub>
 
-**the sailcloth** `sailcloth` <sub>rooms/chandlery.adv:46</sub>
+**the sailcloth** `sailcloth` <sub>rooms/chandlery.adv:61</sub>
 
-- **Look at:** Bolts of sailcloth, still in their wrapping. The shipwright charges by the yard. <sub>rooms/chandlery.adv:49</sub>
-- **Use:** The canvas is good. It would make a fine sail for a ship with a mast. <sub>rooms/chandlery.adv:50</sub>
+- **Look at:** Bolts of sailcloth, wrapped and roped. The shipwright charges by the yard. <sub>rooms/chandlery.adv:64</sub>
+- **Use:** The canvas is good. It would make a fine sail for a ship with a mast. <sub>rooms/chandlery.adv:65</sub>
 
-**the ship's lantern** `lantern` <sub>rooms/chandlery.adv:52</sub>
+**the ship's lantern** `lantern` <sub>rooms/chandlery.adv:67</sub>
 
-- **Look at:** A ship's lantern, lit. The glass is clean and the wick is new. <sub>rooms/chandlery.adv:55</sub>
-- **Use:** I could carry it. The shipwright would notice before I reached the door. <sub>rooms/chandlery.adv:56</sub>
+- **Look at:** A ship's lantern, lit. The glass is clean and the wick is new. <sub>rooms/chandlery.adv:70</sub>
+- **Use:** I could carry it. The shipwright would notice before I reached the door. <sub>rooms/chandlery.adv:71</sub>
 
-**the crowbar** `crowbar` *[present if doesn't have Hobb's crowbar]* *[Pick up gives: Hobb's crowbar]* <sub>rooms/chandlery.adv:58</sub>
+**the crowbar** `crowbar` *[present if doesn't have Hobb's crowbar]* *[Pick up gives: Hobb's crowbar]* <sub>rooms/chandlery.adv:75</sub>
 
-- **Look at:** Hobb's crowbar, red with old rust. It has opened more ships than it has closed. <sub>rooms/chandlery.adv:63</sub>
-- **Pick up:** I take the crowbar off the counter. Nobody stops me. <sub>rooms/chandlery.adv:64</sub>
+- **Look at:** Hobb's crowbar, red with old rust, leaning against the counter. It has opened more ships than it has closed. <sub>rooms/chandlery.adv:80</sub>
+- **Pick up:** I take the crowbar from against the counter. Nobody stops me. <sub>rooms/chandlery.adv:81</sub>
 
-**Quill** `quill` <sub>rooms/chandlery.adv:66</sub>
+**the Marrow's mast** `mast` <sub>rooms/chandlery.adv:83</sub>
 
-- **Look at:** Quill: sharp, quick, and standing where she can see the door. <sub>rooms/chandlery.adv:69</sub>
-- **Talk to:** She looks me over the way she'd look over a chart. <sub>rooms/chandlery.adv:70</sub>
-  - *[→ conversation* [quill](#dlg-quill) *— below]* <sub>rooms/chandlery.adv:71</sub>
-- *When* *[if seen:quill.join]* <sub>rooms/chandlery.adv:72</sub>
-  - **Talk to:** She is checking the rigging with her eyes. <sub>rooms/chandlery.adv:73</sub>
-    - *[→ conversation* [quill at after](#dlg-quill-after) *— below]* <sub>rooms/chandlery.adv:74</sub>
-- *When* *[if quill_compass]* <sub>rooms/chandlery.adv:75</sub>
-  - **Talk to:** She is already holding out her hand. <sub>rooms/chandlery.adv:76</sub>
-    - *[→ conversation* [quill at got](#dlg-quill-got) *— below]* <sub>rooms/chandlery.adv:77</sub>
-- *When* *[if met_quill]* <sub>rooms/chandlery.adv:78</sub>
-  - **Talk to:** She is watching the fog through the window. <sub>rooms/chandlery.adv:79</sub>
-    - *[→ conversation* [quill at again](#dlg-quill-again) *— below]* <sub>rooms/chandlery.adv:80</sub>
+- **Look at:** The Marrow's mast, standing against the back wall. The iron band at the counter is seized. <sub>rooms/chandlery.adv:87</sub>
+- **Use:** The band at the counter won't move. It needs a lever. <sub>rooms/chandlery.adv:88</sub>
+- *When* *[if hobb_joined]* <sub>rooms/chandlery.adv:89</sub>
+  - **Look at:** The mast, banded and sound. Hobb rests one hand on it. <sub>rooms/chandlery.adv:90</sub>
+  - **Use:** The band is sound now. Hobb would only make me do it again. <sub>rooms/chandlery.adv:91</sub>
+- *When* *[if has Hobb's crowbar]* <sub>rooms/chandlery.adv:92</sub>
+  - **Look at:** The iron band at the counter is seized. The crowbar will shift it. <sub>rooms/chandlery.adv:93</sub>
+  - **Use:** I need to put the crowbar to it. <sub>rooms/chandlery.adv:94</sub>
 
-**Hobb** `hobb` <sub>rooms/chandlery.adv:82</sub>
+**Quill** `quill` <sub>rooms/chandlery.adv:96</sub>
 
-- **Look at:** Hobb: a big man with folded arms and no interest in small talk. <sub>rooms/chandlery.adv:85</sub>
-- **Talk to:** He looks at me. He waits. <sub>rooms/chandlery.adv:86</sub>
-  - *[→ conversation* [hobb](#dlg-hobb) *— below]* <sub>rooms/chandlery.adv:87</sub>
-- *When* *[if seen:hobb.joined]* <sub>rooms/chandlery.adv:88</sub>
-  - **Talk to:** He is still looking at the mast. <sub>rooms/chandlery.adv:89</sub>
-    - *[→ conversation* [hobb at after](#dlg-hobb-after) *— below]* <sub>rooms/chandlery.adv:90</sub>
-- *When* *[if hobb_joined]* <sub>rooms/chandlery.adv:91</sub>
-  - **Talk to:** He is still looking at the mast. <sub>rooms/chandlery.adv:92</sub>
-    - *[→ conversation* [hobb at joined](#dlg-hobb-joined) *— below]* <sub>rooms/chandlery.adv:93</sub>
-- *When* *[if met_hobb]* <sub>rooms/chandlery.adv:94</sub>
-  - **Talk to:** He does not look up from the band. <sub>rooms/chandlery.adv:95</sub>
-    - *[→ conversation* [hobb at again](#dlg-hobb-again) *— below]* <sub>rooms/chandlery.adv:96</sub>
+- **Look at:** Quill: sharp, quick, and standing where she can see the door. <sub>rooms/chandlery.adv:99</sub>
+- **Talk to:** She looks me over the way she'd look over a chart. <sub>rooms/chandlery.adv:100</sub>
+  - *[→ conversation* [quill](#dlg-quill) *— below]* <sub>rooms/chandlery.adv:101</sub>
+- *When* *[if seen:quill.join]* <sub>rooms/chandlery.adv:102</sub>
+  - **Talk to:** She is checking the rigging with her eyes. <sub>rooms/chandlery.adv:103</sub>
+    - *[→ conversation* [quill at after](#dlg-quill-after) *— below]* <sub>rooms/chandlery.adv:104</sub>
+- *When* *[if quill_compass]* <sub>rooms/chandlery.adv:105</sub>
+  - **Talk to:** She is already holding out her hand. <sub>rooms/chandlery.adv:106</sub>
+    - *[→ conversation* [quill at got](#dlg-quill-got) *— below]* <sub>rooms/chandlery.adv:107</sub>
+- *When* *[if met_quill]* <sub>rooms/chandlery.adv:108</sub>
+  - **Talk to:** She is watching the fog through the window. <sub>rooms/chandlery.adv:109</sub>
+    - *[→ conversation* [quill at again](#dlg-quill-again) *— below]* <sub>rooms/chandlery.adv:110</sub>
 
-**the Marrow's mast** `mast` <sub>rooms/chandlery.adv:98</sub>
+**Hobb** `hobb` <sub>rooms/chandlery.adv:112</sub>
 
-- **Look at:** The Marrow's mast, standing against the back wall. The iron band at the counter is seized. <sub>rooms/chandlery.adv:102</sub>
-- **Use:** The band at the counter won't move. It needs a lever. <sub>rooms/chandlery.adv:103</sub>
-- *When* *[if hobb_joined]* <sub>rooms/chandlery.adv:104</sub>
-  - **Look at:** The mast, banded and sound. Hobb rests one hand on it. <sub>rooms/chandlery.adv:105</sub>
-  - **Use:** The band is sound now. Hobb would only make me do it again. <sub>rooms/chandlery.adv:106</sub>
-- *When* *[if has Hobb's crowbar]* <sub>rooms/chandlery.adv:107</sub>
-  - **Look at:** The iron band at the counter is seized. The crowbar will shift it. <sub>rooms/chandlery.adv:108</sub>
-  - **Use:** I need to put the crowbar to it. <sub>rooms/chandlery.adv:109</sub>
+- **Look at:** Hobb: a big man with folded arms and no interest in small talk. <sub>rooms/chandlery.adv:115</sub>
+- **Talk to:** He looks at me. He waits. <sub>rooms/chandlery.adv:116</sub>
+  - *[→ conversation* [hobb](#dlg-hobb) *— below]* <sub>rooms/chandlery.adv:117</sub>
+- *When* *[if seen:hobb.joined]* <sub>rooms/chandlery.adv:118</sub>
+  - **Talk to:** He is still looking at the mast. <sub>rooms/chandlery.adv:119</sub>
+    - *[→ conversation* [hobb at after](#dlg-hobb-after) *— below]* <sub>rooms/chandlery.adv:120</sub>
+- *When* *[if hobb_joined]* <sub>rooms/chandlery.adv:121</sub>
+  - **Talk to:** He is still looking at the mast. <sub>rooms/chandlery.adv:122</sub>
+    - *[→ conversation* [hobb at joined](#dlg-hobb-joined) *— below]* <sub>rooms/chandlery.adv:123</sub>
+- *When* *[if met_hobb]* <sub>rooms/chandlery.adv:124</sub>
+  - **Talk to:** He does not look up from the band. <sub>rooms/chandlery.adv:125</sub>
+    - *[→ conversation* [hobb at again](#dlg-hobb-again) *— below]* <sub>rooms/chandlery.adv:126</sub>
 
-**the lane door** `door_out` <sub>rooms/chandlery.adv:113</sub>
+**the lane door** `door_out` <sub>rooms/chandlery.adv:129</sub>
 
-- **Look at:** The lane door. The shipwright keeps it open for the smell of the sea. <sub>rooms/chandlery.adv:117</sub>
-- **Use / Open / Walk to:** *[→ goes to Wreckers' Lane]* <sub>rooms/chandlery.adv:116</sub>
+- **Look at:** The lane door. The shipwright keeps it open for the smell of the sea. <sub>rooms/chandlery.adv:133</sub>
+- **Use / Open / Walk to:** *[→ goes to Wreckers' Lane]* <sub>rooms/chandlery.adv:132</sub>
 
 **Combinations here**
 
-- **Use Hobb's crowbar on the Marrow's mast:** *[if hobb_joined]* The band is sound. Hobb would only make me do it again. <sub>rooms/chandlery.adv:120</sub>
-- **Use Hobb's crowbar on the Marrow's mast:** I get the bar under the iron band and lean. The band shifts with a crack. <sub>rooms/chandlery.adv:122</sub>
-  - **FENN (V.O.)**: Hobb puts one hand flat on the mast. He does not say anything. <sub>rooms/chandlery.adv:123</sub>
-  - *[sets hobb_joined]* *[sound: chime]* <sub>rooms/chandlery.adv:124</sub>
+- **Use Hobb's crowbar on the Marrow's mast:** *[if hobb_joined]* The band is sound. Hobb would only make me do it again. <sub>rooms/chandlery.adv:136</sub>
+- **Use Hobb's crowbar on the Marrow's mast:** I get the bar under the iron band and lean. The band shifts with a crack. <sub>rooms/chandlery.adv:138</sub>
+  - **FENN (V.O.)**: Hobb puts one hand flat on the mast. He does not say anything. <sub>rooms/chandlery.adv:139</sub>
+  - *[sets hobb_joined]* *[sound: chime]* <sub>rooms/chandlery.adv:140</sub>
 
 <a id="dlg-quill"></a>
 ### Conversation: quill (Quill)
@@ -2234,7 +2241,7 @@
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
-*[again: opened directly from rooms/chandlery.adv:80]*
+*[again: opened directly from rooms/chandlery.adv:110]*
 
 <a id="dlg-quill-again"></a>`again` **QUILL**: Still no compass. Still no voyage. <sub>dialogue/quill.adv:36</sub>
 - **1.** **FENN**: Where does Vex keep it? <sub>dialogue/quill.adv:37</sub>
@@ -2242,7 +2249,7 @@
 - **2.** **FENN**: I'm working on it. <sub>dialogue/quill.adv:38</sub>
   - *[ends]*
 
-*[got: opened directly from rooms/chandlery.adv:77]*
+*[got: opened directly from rooms/chandlery.adv:107]*
 
 <a id="dlg-quill-got"></a>`got` **QUILL**: That's my compass. Vex gave it up? <sub>dialogue/quill.adv:40</sub>
 - *[sets met_quill]* <sub>dialogue/quill.adv:41</sub>
@@ -2268,7 +2275,7 @@
 <a id="dlg-quill-found"></a>`found` **QUILL**: Liar. I like it. <sub>dialogue/quill.adv:49</sub>
 - *→ continues at* [join](#dlg-quill-join) *(above)*
 
-*[after: opened directly from rooms/chandlery.adv:74]*
+*[after: opened directly from rooms/chandlery.adv:104]*
 
 <a id="dlg-quill-after"></a>`after` **QUILL**: Navigator. Don't make me regret it. <sub>dialogue/quill.adv:59</sub>
 - **1.** **FENN**: My father is out there. *[if seen:quill.father = false]* <sub>dialogue/quill.adv:60</sub>
@@ -2276,7 +2283,7 @@
 - **2.** **FENN**: Welcome aboard. <sub>dialogue/quill.adv:61</sub>
   - *[ends]*
 
-*[nest: opened directly from rooms/crows_nest.adv:70]*
+*[nest: opened directly from rooms/crows_nest.adv:78]*
 
 <a id="dlg-quill-nest"></a>`nest` **QUILL**: You're in my office. Mind the edge. <sub>dialogue/quill.adv:89</sub>
 - **1.** **FENN**: What do you see? <sub>dialogue/quill.adv:90</sub>
@@ -2323,7 +2330,7 @@
 <a id="dlg-quill-why_nest"></a>`why_nest` **QUILL**: Up here I can see the shape of things. Down there I'm a pair of hands. <sub>dialogue/quill.adv:122</sub>
 - *[ends]*
 
-*[nest_after: opened directly from rooms/crows_nest.adv:73]*
+*[nest_after: opened directly from rooms/crows_nest.adv:81]*
 
 <a id="dlg-quill-nest_after"></a>`nest_after` **QUILL**: Still leaning. Still leaning the wrong way. <sub>dialogue/quill.adv:125</sub>
 - **1.** **FENN**: Anything else? <sub>dialogue/quill.adv:126</sub>
@@ -2331,7 +2338,7 @@
 - **2.** **FENN**: Keep watching. <sub>dialogue/quill.adv:127</sub>
   - *[ends]*
 
-*[gallery: opened directly from rooms/marrow_gallery.adv:92]*
+*[gallery: opened directly from rooms/marrow_gallery.adv:98]*
 
 <a id="dlg-quill-gallery"></a>`gallery` **QUILL**: Off watch. Don't tell anyone. <sub>dialogue/quill.adv:130</sub>
 - **1.** **FENN**: Why out here? <sub>dialogue/quill.adv:131</sub>
@@ -2372,7 +2379,7 @@
 <a id="dlg-quill-gal_salvage2"></a>`gal_salvage2` **QUILL**: He pays me. Don't ask me to be sorry for him. Ask me to be better than him. <sub>dialogue/quill.adv:156</sub>
 - *→ continues at* [gal_more](#dlg-quill-gal_more) *(above)*
 
-*[gallery_after: opened directly from rooms/marrow_gallery.adv:95]*
+*[gallery_after: opened directly from rooms/marrow_gallery.adv:101]*
 
 <a id="dlg-quill-gallery_after"></a>`gallery_after` **QUILL**: The sun is nearly in the sea. It does that every night, and I still watch it. <sub>dialogue/quill.adv:159</sub>
 - **1.** **FENN**: Why out here? <sub>dialogue/quill.adv:160</sub>
@@ -2380,7 +2387,7 @@
 - **2.** **FENN**: Goodnight, Quill. <sub>dialogue/quill.adv:161</sub>
   - *[ends]*
 
-*[camp: opened directly from rooms/salt_camp.adv:147]*
+*[camp: opened directly from rooms/salt_camp.adv:155]*
 
 <a id="dlg-quill-camp"></a>`camp` **QUILL**: Seven tents. A dozen shirts on the line. Nobody. I counted twice. <sub>dialogue/quill.adv:167</sub>
 - **1.** **FENN**: Where did they go? <sub>dialogue/quill.adv:168</sub>
@@ -2422,7 +2429,7 @@
 <a id="dlg-quill-holding"></a>`holding` **QUILL**: I lost my ship. I didn't lose you. I'm counting that as a win. <sub>dialogue/quill.adv:197</sub>
 - *→ continues at* [camp](#dlg-quill-camp) *(above)*
 
-*[pans: opened directly from rooms/far_pans.adv:95]*
+*[pans: opened directly from rooms/far_pans.adv:97]*
 
 <a id="dlg-quill-pans"></a>`pans` **QUILL**: From here the fog looks like weather. That's what I keep telling myself. <sub>dialogue/quill.adv:201</sub>
 - **1.** **FENN**: What do you see? <sub>dialogue/quill.adv:202</sub>
@@ -2508,7 +2515,7 @@
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
-*[again: opened directly from rooms/chandlery.adv:96]*
+*[again: opened directly from rooms/chandlery.adv:126]*
 
 <a id="dlg-hobb-again"></a>`again` **HOBB**: The band won't move. The crowbar's on the counter, if you're helping. <sub>dialogue/hobb.adv:31</sub>
 - **1.** **FENN**: I'm helping. <sub>dialogue/hobb.adv:32</sub>
@@ -2516,7 +2523,7 @@
 - **2.** **FENN**: I'll come back. <sub>dialogue/hobb.adv:33</sub>
   - *[ends]*
 
-*[joined: opened directly from rooms/chandlery.adv:93]*
+*[joined: opened directly from rooms/chandlery.adv:123]*
 
 <a id="dlg-hobb-joined"></a>`joined` **HOBB**: She'll hold. I'm coming with her. <sub>dialogue/hobb.adv:35</sub>
 - *[sets met_hobb]* <sub>dialogue/hobb.adv:36</sub>
@@ -2537,7 +2544,7 @@
 <a id="dlg-hobb-sorry"></a>`sorry` **HOBB**: Don't be. Be useful. <sub>dialogue/hobb.adv:47</sub>
 - *[ends]*
 
-*[after: opened directly from rooms/chandlery.adv:90]*
+*[after: opened directly from rooms/chandlery.adv:120]*
 
 <a id="dlg-hobb-after"></a>`after` **HOBB**: The mast will hold. I'll be at the Marrow. <sub>dialogue/hobb.adv:50</sub>
 - **1.** **FENN**: Your brother? <sub>dialogue/hobb.adv:51</sub>
@@ -2545,7 +2552,7 @@
 - **2.** **FENN**: Right. <sub>dialogue/hobb.adv:52</sub>
   - *[ends]*
 
-*[hold_after: opened directly from rooms/below_decks.adv:96]*
+*[hold_after: opened directly from rooms/below_decks.adv:94]*
 
 <a id="dlg-hobb-hold_after"></a>`hold_after` **HOBB**: Forty-one barrels. I will know if one goes missing. <sub>dialogue/hobb.adv:78</sub>
 - **1.** **FENN**: Who do we tell? <sub>dialogue/hobb.adv:79</sub>
@@ -2556,7 +2563,7 @@
 <a id="dlg-hobb-tell2"></a>`tell2` **HOBB**: The crew. All of it. He can't sell cargo we have all seen. <sub>dialogue/hobb.adv:82</sub>
 - *[ends]*
 
-*[bell: opened directly from rooms/reef_wreck.adv:120]*
+*[bell: opened directly from rooms/reef_wreck.adv:129]*
 
 <a id="dlg-hobb-bell"></a>`bell` **HOBB**: You heard it. Three, then one. <sub>dialogue/hobb.adv:88</sub>
 - *→ continues at* [bell2](#dlg-hobb-bell2)
@@ -2584,10 +2591,10 @@
 <a id="dlg-hobb-promise3"></a>`promise3` **HOBB**: Aye. When we board her, I go to the bell first. You find your father. <sub>dialogue/hobb.adv:112</sub>
 - *→ continues at* [plate](#dlg-hobb-plate)
 
-<a id="dlg-hobb-plate"></a>`plate` **FENN (V.O.)**: Hobb works a broken bow timber out of the deck. It does not belong to this ship. <sub>dialogue/hobb.adv:118</sub>
+<a id="dlg-hobb-plate"></a>`plate` **FENN (V.O.)**: Hobb works a broken bow timber out of the wreck. The wood is grey, and it does not belong to this ship. <sub>dialogue/hobb.adv:118</sub>
 - *→ continues at* [plate2](#dlg-hobb-plate2)
 
-<a id="dlg-hobb-plate2"></a>`plate2` **HOBB**: M. Mordant. Master. <sub>dialogue/hobb.adv:121</sub>
+<a id="dlg-hobb-plate2"></a>`plate2` **HOBB**: M. Mordant. Master. Torn off her bow and jammed in another ship's ribs. <sub>dialogue/hobb.adv:121</sub>
 - *[Fenn receives: Mordant's nameplate]* <sub>dialogue/hobb.adv:122</sub>
 - *[chart:* M. MORDANT, MASTER, on a brass plate from the Grey Lantern's bow.*]* <sub>dialogue/hobb.adv:123</sub>
 - **1.** **FENN**: The Grey Lantern's bow. <sub>dialogue/hobb.adv:124</sub>
@@ -2597,7 +2604,7 @@
 - **3.** **FENN**: Then we have a name. <sub>dialogue/hobb.adv:126</sub>
   - *→ continues at* [name2](#dlg-hobb-name2)
 
-<a id="dlg-hobb-bow"></a>`bow` **HOBB**: Aye. Grey paint under the salt. The old ship has been shedding pieces for eighty years. <sub>dialogue/hobb.adv:128</sub>
+<a id="dlg-hobb-bow"></a>`bow` **HOBB**: Aye. Grey paint under the salt. The old ship has been shedding pieces for eighty years. This one still has her name on it. <sub>dialogue/hobb.adv:128</sub>
 - *→ continues at* [plan](#dlg-hobb-plan)
 
 <a id="dlg-hobb-plan"></a>`plan` **HOBB**: When we board her, I go to the bell. I cut it loose before the rest of you are aboard. <sub>dialogue/hobb.adv:137</sub>
@@ -2624,7 +2631,7 @@
 <a id="dlg-hobb-why5"></a>`why5` **HOBB**: He is ringing that bell. A dead man has no need to keep time. <sub>dialogue/hobb.adv:157</sub>
 - *[ends]*
 
-<a id="dlg-hobb-mordant"></a>`mordant` **HOBB**: Her master. It is the one thing the wreck held on to. <sub>dialogue/hobb.adv:131</sub>
+<a id="dlg-hobb-mordant"></a>`mordant` **HOBB**: Her master. It is the one thing the sea gave back. <sub>dialogue/hobb.adv:131</sub>
 - *→ continues at* [plan](#dlg-hobb-plan) *(above)*
 
 <a id="dlg-hobb-name2"></a>`name2` **HOBB**: We have a name. What we do with it is your business. <sub>dialogue/hobb.adv:134</sub>
@@ -2639,7 +2646,7 @@
 <a id="dlg-hobb-wind"></a>`wind` **HOBB**: The wind has never kept time. Tam does. <sub>dialogue/hobb.adv:105</sub>
 - *→ continues at* [tam](#dlg-hobb-tam) *(above)*
 
-*[plan_after: opened directly from rooms/reef_wreck.adv:125]*
+*[plan_after: opened directly from rooms/reef_wreck.adv:134]*
 
 <a id="dlg-hobb-plan_after"></a>`plan_after` **HOBB**: The bell is mine. The rest is yours. <sub>dialogue/hobb.adv:146</sub>
 - **1.** **FENN**: Why did you come? <sub>dialogue/hobb.adv:147</sub>
@@ -2654,57 +2661,57 @@
 
 **On arrival**
 
-- *Once,* *[if seen:rook.book and weather_works_store = false]* <sub>rooms/weather_works.adv:17</sub>
-  - **FENN (V.O.)**: The lighthouse yard. Rook's log should be in the keeper's store, behind the brazier. <sub>rooms/weather_works.adv:18</sub>
+- *Once,* *[if seen:rook.book and weather_works_store = false]* <sub>rooms/weather_works.adv:26</sub>
+  - **FENN (V.O.)**: The lighthouse yard. Rook's log should be in the keeper's store, behind the brazier. <sub>rooms/weather_works.adv:27</sub>
 
-**the path down to Upper Town** `path_down` <sub>rooms/weather_works.adv:22</sub>
+**the path down to Upper Town** `path_down` <sub>rooms/weather_works.adv:31</sub>
 
-- **Look at:** The path down the hill to Upper Town. The wind comes up it, cold. <sub>rooms/weather_works.adv:26</sub>
-- **Use / Open / Walk to:** *[→ goes to Upper Town]* <sub>rooms/weather_works.adv:25</sub>
+- **Look at:** The path down the hill to Upper Town. The wind comes up it, cold. <sub>rooms/weather_works.adv:35</sub>
+- **Use / Open / Walk to:** *[→ goes to Upper Town]* <sub>rooms/weather_works.adv:34</sub>
 
-**the Shroud** `fog` <sub>rooms/weather_works.adv:28</sub>
+**the Shroud** `fog` <sub>rooms/weather_works.adv:37</sub>
 
-- **Look at:** The Shroud, lying on the water below the headland. It looks like weather. The island knows better. <sub>rooms/weather_works.adv:32</sub>
-- **Talk to:** I say the island's name into the fog. Nothing answers, which is something. <sub>rooms/weather_works.adv:33</sub>
+- **Look at:** The Shroud, lying on the water below the headland. It looks like weather. The island knows better. <sub>rooms/weather_works.adv:41</sub>
+- **Talk to:** I say the island's name into the fog. Nothing answers, which is something. <sub>rooms/weather_works.adv:42</sub>
 
-**the path to the lighthouse** `path` <sub>rooms/weather_works.adv:35</sub>
+**the path to the lighthouse** `path` <sub>rooms/weather_works.adv:44</sub>
 
-- **Look at:** The path climbs the headland to the lighthouse door. Wet cobbles, and the wind coming up them. <sub>rooms/weather_works.adv:38</sub>
-- **Use:** It goes up. It also goes down. I know which way I came. <sub>rooms/weather_works.adv:39</sub>
+- **Look at:** The path climbs the headland to the lighthouse door. Wet flagstones, and the wind coming up them. <sub>rooms/weather_works.adv:47</sub>
+- **Use:** It goes up. It also goes down. I know which way I came. <sub>rooms/weather_works.adv:48</sub>
 
-**the lighthouse** `lighthouse` <sub>rooms/weather_works.adv:41</sub>
+**the lighthouse** `lighthouse` <sub>rooms/weather_works.adv:50</sub>
 
-- **Look at:** The lighthouse. Stone on stone, and a lamp lit at the top of it. From the sea it must look like the only thing holding the dark up. <sub>rooms/weather_works.adv:44</sub>
-- **Talk to:** I talk to the tower. It has heard worse from the wind. <sub>rooms/weather_works.adv:45</sub>
-- **Use:** The door at the base is barred. The keeper is up top, where the light is. <sub>rooms/weather_works.adv:46</sub>
+- **Look at:** The lighthouse. Stone on stone, and a lamp lit at the top of it. From the sea it must look like the only thing holding the dark up. <sub>rooms/weather_works.adv:53</sub>
+- **Talk to:** I talk to the tower. It has heard worse from the wind. <sub>rooms/weather_works.adv:54</sub>
+- **Use:** The door at the base is barred. The keeper is up top, where the light is. <sub>rooms/weather_works.adv:55</sub>
 
-**the great lamp** `light` <sub>rooms/weather_works.adv:48</sub>
+**the great lamp** `light` <sub>rooms/weather_works.adv:57</sub>
 
-- **Look at:** The great lamp, burning behind its glass. The keeper trims it twice a night, and has never once been late. <sub>rooms/weather_works.adv:51</sub>
-- **Talk to:** I say nothing to the light. It has enough to do. <sub>rooms/weather_works.adv:52</sub>
-- **Use:** The glass is warm from the other side. I leave it alone. <sub>rooms/weather_works.adv:53</sub>
+- **Look at:** The great lamp, burning behind its glass. The keeper trims it twice a night, and has never once been late. <sub>rooms/weather_works.adv:60</sub>
+- **Talk to:** I say nothing to the light. It has enough to do. <sub>rooms/weather_works.adv:61</sub>
+- **Use:** The glass is warm from the other side. I leave it alone. <sub>rooms/weather_works.adv:62</sub>
 
-**the keeper's store** `store` <sub>rooms/weather_works.adv:55</sub>
+**the keeper's store** `store` <sub>rooms/weather_works.adv:64</sub>
 
-- **Look at:** The keeper's store, behind the brazier. Rook's old log is on the shelf behind the brazier. Not mine to take yet. <sub>rooms/weather_works.adv:58</sub>
-  - *[chart:* Rook's old log is in the keeper's store at the lighthouse. The last page is a list of names.*]* <sub>rooms/weather_works.adv:59</sub>
-- **Use:** I take the log down. The keeper can have it back when Rook has read it. <sub>rooms/weather_works.adv:60</sub>
-  - *[chart:* Rook's old log is in the keeper's store at the lighthouse. The last page is a list of names.*]* <sub>rooms/weather_works.adv:61</sub>
-  - *[sets weather_works_store]* <sub>rooms/weather_works.adv:62</sub>
-- **Open:** The store door is open. I take Rook's log from the shelf. <sub>rooms/weather_works.adv:63</sub>
-  - *[chart:* Rook's old log is in the keeper's store at the lighthouse. The last page is a list of names.*]* <sub>rooms/weather_works.adv:64</sub>
-  - *[sets weather_works_store]* <sub>rooms/weather_works.adv:65</sub>
-- *When* *[if weather_works_store]* <sub>rooms/weather_works.adv:66</sub>
-  - **Look at:** The shelf where Rook's log sat is empty. The keeper will have questions. <sub>rooms/weather_works.adv:67</sub>
-  - **Use:** I have what I need. The keeper can keep the shelf. <sub>rooms/weather_works.adv:68</sub>
-  - **Open:** I have what I need. <sub>rooms/weather_works.adv:69</sub>
+- **Look at:** The keeper's store, behind the brazier. Rook's old log is on the shelf behind the brazier. Not mine to take yet. <sub>rooms/weather_works.adv:67</sub>
+  - *[chart:* Rook's old log is in the keeper's store at the lighthouse. The last page is a list of names.*]* <sub>rooms/weather_works.adv:68</sub>
+- **Use:** I take the log down. The keeper can have it back when Rook has read it. <sub>rooms/weather_works.adv:69</sub>
+  - *[chart:* Rook's old log is in the keeper's store at the lighthouse. The last page is a list of names.*]* <sub>rooms/weather_works.adv:70</sub>
+  - *[sets weather_works_store]* <sub>rooms/weather_works.adv:71</sub>
+- **Open:** The store door is open. I take Rook's log from the shelf. <sub>rooms/weather_works.adv:72</sub>
+  - *[chart:* Rook's old log is in the keeper's store at the lighthouse. The last page is a list of names.*]* <sub>rooms/weather_works.adv:73</sub>
+  - *[sets weather_works_store]* <sub>rooms/weather_works.adv:74</sub>
+- *When* *[if weather_works_store]* <sub>rooms/weather_works.adv:75</sub>
+  - **Look at:** The shelf where Rook's log sat is empty. The keeper will have questions. <sub>rooms/weather_works.adv:76</sub>
+  - **Use:** I have what I need. The keeper can keep the shelf. <sub>rooms/weather_works.adv:77</sub>
+  - **Open:** I have what I need. <sub>rooms/weather_works.adv:78</sub>
 
-**the brazier** `brazier` <sub>rooms/weather_works.adv:71</sub>
+**the brazier** `brazier` <sub>rooms/weather_works.adv:80</sub>
 
-- **Look at:** The brazier at the keeper's door, heaped with kelp. It throws more smoke than light. <sub>rooms/weather_works.adv:74</sub>
-- **Use:** I'd only add to the smoke. <sub>rooms/weather_works.adv:75</sub>
-- **Pick up:** Absolutely not. <sub>rooms/weather_works.adv:77</sub>
-- **Turn off:** There's no lid and no switch. The sea is a long walk down. <sub>rooms/weather_works.adv:76</sub>
+- **Look at:** The brazier at the keeper's door, heaped with kelp. It throws more smoke than light. <sub>rooms/weather_works.adv:83</sub>
+- **Use:** I'd only add to the smoke. <sub>rooms/weather_works.adv:84</sub>
+- **Pick up:** Absolutely not. <sub>rooms/weather_works.adv:86</sub>
+- **Turn off:** There's no lid and no switch. The sea is a long walk down. <sub>rooms/weather_works.adv:85</sub>
 
 <a id="act1-pier_end"></a>
 ## The Harbour Mouth
@@ -2713,45 +2720,45 @@
 
 **On arrival**
 
-- *Once,* *[Act I, if vex_deal and dorrit_cleared and quill_compass and seen:quill.join and rook_story and hobb_joined and pier_ready = false]* <sub>rooms/pier_end.adv:22</sub>
-  - *[sets pier_ready]* <sub>rooms/pier_end.adv:23</sub>
-  - **FENN (V.O.)**: Vex is at the lamp with his coat buttoned to the throat. <sub>rooms/pier_end.adv:24</sub>
-  - **FENN (V.O.)**: The harbour is quiet. Even the gulls have gone to bed. <sub>rooms/pier_end.adv:25</sub>
+- *Once,* *[Act I, if vex_deal and dorrit_cleared and quill_compass and seen:quill.join and rook_story and hobb_joined and pier_ready = false]* <sub>rooms/pier_end.adv:35</sub>
+  - *[sets pier_ready]* <sub>rooms/pier_end.adv:36</sub>
+  - **FENN (V.O.)**: Vex is at the lamp with his coat buttoned to the throat. <sub>rooms/pier_end.adv:37</sub>
+  - **FENN (V.O.)**: The harbour is quiet. Even the gulls have gone to bed. <sub>rooms/pier_end.adv:38</sub>
 
-**Captain Vex** `vex` *[present Act I, if vex_deal and dorrit_cleared and quill_compass and seen:quill.join and rook_story and hobb_joined]* <sub>rooms/pier_end.adv:29</sub>
+**Captain Vex** `vex` *[present Act I, if vex_deal and dorrit_cleared and quill_compass and seen:quill.join and rook_story and hobb_joined]* <sub>rooms/pier_end.adv:42</sub>
 
-- **Look at:** Captain Vex, at the lamp, dressed for a portrait and a fight. He is watching the fog, not me. <sub>rooms/pier_end.adv:33</sub>
-- **Talk to:** Captain. The crew is ready, and the rudder is on. <sub>rooms/pier_end.adv:34</sub>
-  - **FENN (V.O.)**: Vex turns from the fog. For once he does not look pleased with himself. <sub>rooms/pier_end.adv:35</sub>
-  - **FENN (V.O.)**: "Then we go," he says. "Before I remember why I do not." <sub>rooms/pier_end.adv:36</sub>
-  - **FENN (V.O.)**: He walks down to the boat without looking back at the island. <sub>rooms/pier_end.adv:37</sub>
-  - *[→ Act I ends]* <sub>rooms/pier_end.adv:38</sub>
-- **Give:** He looks at my hands. "Keep it. I have been paid enough for one lifetime." <sub>rooms/pier_end.adv:39</sub>
+- **Look at:** Captain Vex, at the lamp, dressed for a portrait and a fight. He is watching the fog, not me. <sub>rooms/pier_end.adv:46</sub>
+- **Talk to:** Captain. The crew is ready, and the rudder is on. <sub>rooms/pier_end.adv:47</sub>
+  - **FENN (V.O.)**: Vex turns from the fog. For once he does not look pleased with himself. <sub>rooms/pier_end.adv:48</sub>
+  - **FENN (V.O.)**: "Then we go," he says. "Before I remember why I do not." <sub>rooms/pier_end.adv:49</sub>
+  - **FENN (V.O.)**: He walks down to the boat without looking back at the island. <sub>rooms/pier_end.adv:50</sub>
+  - *[→ Act I ends]* <sub>rooms/pier_end.adv:51</sub>
+- **Give:** He looks at my hands. "Keep it. I have been paid enough for one lifetime." <sub>rooms/pier_end.adv:52</sub>
 
-**the Marrow's boat** `boat` <sub>rooms/pier_end.adv:41</sub>
+**the Marrow's boat** `boat` <sub>rooms/pier_end.adv:54</sub>
 
-- **Look at:** The Marrow's boat, made fast under the lamp. Her sail is furled and her oars are shipped. <sub>rooms/pier_end.adv:44</sub>
-- **Use:** I could row out to the Marrow myself. I would rather not arrive out of breath. <sub>rooms/pier_end.adv:46</sub>
-- **Open:** I step aboard. It rocks like a boat that has been waiting. <sub>rooms/pier_end.adv:45</sub>
-- *When* *[Act I, if vex_deal and dorrit_cleared and quill_compass and seen:quill.join and rook_story and hobb_joined]* <sub>rooms/pier_end.adv:47</sub>
-  - **Look at:** The boat is ready. Somebody has folded her sail and left the gangplank down. <sub>rooms/pier_end.adv:48</sub>
+- **Look at:** The Marrow's boat, made fast under the lamp. Her sail is furled and her oars are shipped. <sub>rooms/pier_end.adv:57</sub>
+- **Use:** I could row out to the Marrow myself. I would rather not arrive out of breath. <sub>rooms/pier_end.adv:59</sub>
+- **Open:** I step aboard. It rocks like a boat that has been waiting. <sub>rooms/pier_end.adv:58</sub>
+- *When* *[Act I, if vex_deal and dorrit_cleared and quill_compass and seen:quill.join and rook_story and hobb_joined]* <sub>rooms/pier_end.adv:60</sub>
+  - **Look at:** The boat is ready. Somebody has folded her sail and left the gangplank down. <sub>rooms/pier_end.adv:61</sub>
 
-**back along the quay** `town` <sub>rooms/pier_end.adv:50</sub>
+**back along the quay** `town` <sub>rooms/pier_end.adv:65</sub>
 
-- **Look at:** Back along the quay, the lights of Dreadwater. Half of them are out. <sub>rooms/pier_end.adv:54</sub>
-- **Use / Walk to:** *[→ goes to The Quay]* <sub>rooms/pier_end.adv:53</sub>
-- **Open:** I walk back toward the harbour. <sub>rooms/pier_end.adv:55</sub>
-  - *[→ goes to The Quay]* <sub>rooms/pier_end.adv:53</sub>
+- **Look at:** Back along the quay, the lights of Dreadwater. Half of them are out. <sub>rooms/pier_end.adv:69</sub>
+- **Use / Walk to:** *[→ goes to The Quay]* <sub>rooms/pier_end.adv:68</sub>
+- **Open:** I walk back toward the harbour. <sub>rooms/pier_end.adv:70</sub>
+  - *[→ goes to The Quay]* <sub>rooms/pier_end.adv:68</sub>
 
-**the lighthouse** `lighthouse` <sub>rooms/pier_end.adv:57</sub>
+**the lighthouse** `lighthouse` <sub>rooms/pier_end.adv:72</sub>
 
-- **Look at:** The lighthouse. It has burned every night for eighty years, and it does not reach the fog. <sub>rooms/pier_end.adv:60</sub>
-- **Use:** I cannot climb it from here. I am not sure I would want to. <sub>rooms/pier_end.adv:61</sub>
+- **Look at:** The lighthouse. It has burned every night for eighty years, and it does not reach the fog. <sub>rooms/pier_end.adv:75</sub>
+- **Use:** I cannot climb it from here. I am not sure I would want to. <sub>rooms/pier_end.adv:76</sub>
 
-**the harbour mouth** `sea` <sub>rooms/pier_end.adv:63</sub>
+**the harbour mouth** `sea` <sub>rooms/pier_end.adv:78</sub>
 
-- **Look at:** The harbour mouth. Past it the fog bank sits on the water, tall as a wall and twice as quiet. <sub>rooms/pier_end.adv:66</sub>
-- **Talk to:** I tell the fog I am coming. It does not answer, which is worse than an answer. <sub>rooms/pier_end.adv:67</sub>
+- **Look at:** The harbour mouth. Past it the fog bank sits on the water, tall as a wall and twice as quiet. <sub>rooms/pier_end.adv:81</sub>
+- **Talk to:** I tell the fog I am coming. It does not answer, which is worse than an answer. <sub>rooms/pier_end.adv:82</sub>
 
 <a id="act2"></a>
 # Act II: The Crew
@@ -2772,185 +2779,112 @@
 
 **On arrival**
 
-- *Once,* *[Act II, if fog_tried and hatch_hinted = false]* <sub>rooms/marrow_deck.adv:23</sub>
-  - *[sets hatch_hinted]* <sub>rooms/marrow_deck.adv:24</sub>
-  - **FENN (V.O.)**: The hatch cover comes up clean now. Below: the ladder, the crew deck, and the smell of other ships. <sub>rooms/marrow_deck.adv:25</sub>
-- *Once,* *[Act II, if fog_tried = false and seen:vex.send = false]* <sub>rooms/marrow_deck.adv:27</sub>
-  - **FENN (V.O.)**: A deck built for thirty, and hardly anybody on it. <sub>rooms/marrow_deck.adv:28</sub>
-  - **FENN (V.O.)**: Vex is at the helm, hat down against the sun. He has not looked back at the island. <sub>rooms/marrow_deck.adv:29</sub>
-- *Once,* *[Act II, if seen:vex.send and fog_tried = false and shrouds_hinted = false]* <sub>rooms/marrow_deck.adv:31</sub>
-  - *[sets shrouds_hinted]* <sub>rooms/marrow_deck.adv:32</sub>
-  - **FENN (V.O.)**: Quill's office is up the rigging by the foremast. The rope ladder would take me, if my hands agreed. <sub>rooms/marrow_deck.adv:33</sub>
-- *Once,* *[Act II, if fog_tried and salvage_seen = false]* <sub>rooms/marrow_deck.adv:35</sub>
-  - **FENN (V.O.)**: The crew is on deck. The hatch is unbarred, and nobody wants to be first below. <sub>rooms/marrow_deck.adv:36</sub>
-- *Once,* *[Act II, if salvage_seen and vex_exposed = false]* <sub>rooms/marrow_deck.adv:38</sub>
-  - **FENN (V.O.)**: The deck is empty. They have all gone up to the helm. <sub>rooms/marrow_deck.adv:39</sub>
-  - **FENN (V.O.)**: The captain is waiting. <sub>rooms/marrow_deck.adv:40</sub>
-- *Once,* *[Act II, if vex_exposed and marrow_lost = false]* <sub>rooms/marrow_deck.adv:42</sub>
-  - **FENN (V.O.)**: Above us, the helm is turning. Vex is not waiting for me. <sub>rooms/marrow_deck.adv:43</sub>
+- *Once,* *[Act II, if fog_tried and hatch_hinted = false]* <sub>rooms/marrow_deck.adv:35</sub>
+  - *[sets hatch_hinted]* <sub>rooms/marrow_deck.adv:36</sub>
+  - **FENN (V.O.)**: The hatch cover comes up clean now. Below: the ladder, the crew deck, and the smell of other ships. <sub>rooms/marrow_deck.adv:37</sub>
+- *Once,* *[Act II, if fog_tried = false and seen:vex.send = false]* <sub>rooms/marrow_deck.adv:39</sub>
+  - **FENN (V.O.)**: A deck built for thirty, and hardly anybody on it. <sub>rooms/marrow_deck.adv:40</sub>
+  - **FENN (V.O.)**: Vex is at the helm, hat down against the sun. He has not looked back at the island. <sub>rooms/marrow_deck.adv:41</sub>
+- *Once,* *[Act II, if seen:vex.send and fog_tried = false and shrouds_hinted = false]* <sub>rooms/marrow_deck.adv:43</sub>
+  - *[sets shrouds_hinted]* <sub>rooms/marrow_deck.adv:44</sub>
+  - **FENN (V.O.)**: Quill's office is up the rigging by the foremast. The rope ladder would take me, if my hands agreed. <sub>rooms/marrow_deck.adv:45</sub>
+- *Once,* *[Act II, if fog_tried and salvage_seen = false]* <sub>rooms/marrow_deck.adv:47</sub>
+  - **FENN (V.O.)**: The crew is on deck. The hatch is unbarred, and nobody wants to be first below. <sub>rooms/marrow_deck.adv:48</sub>
+- *Once,* *[Act II, if salvage_seen and vex_exposed = false]* <sub>rooms/marrow_deck.adv:50</sub>
+  - **FENN (V.O.)**: The deck is empty. They have all gone up to the helm. <sub>rooms/marrow_deck.adv:51</sub>
+  - **FENN (V.O.)**: The captain is waiting. <sub>rooms/marrow_deck.adv:52</sub>
+- *Once,* *[Act II, if vex_exposed and marrow_lost = false]* <sub>rooms/marrow_deck.adv:54</sub>
+  - **FENN (V.O.)**: Above us, the helm is turning. Vex is not waiting for me. <sub>rooms/marrow_deck.adv:55</sub>
 
-**the sea** `rail` <sub>rooms/marrow_deck.adv:45</sub>
+**the sea** `rail` <sub>rooms/marrow_deck.adv:57</sub>
 
-- **Look at:** The sea, going gold at the edge. It looked bigger from the quay. Or I was smaller. <sub>rooms/marrow_deck.adv:48</sub>
-- **Talk to:** I say hello to the sea. It has heard better. <sub>rooms/marrow_deck.adv:49</sub>
-- **Use:** The sea has nothing to say to a clerk with a compass. <sub>rooms/marrow_deck.adv:50</sub>
+- **Look at:** The sea, going gold at the edge. It looked bigger from the quay. Or I was smaller. <sub>rooms/marrow_deck.adv:60</sub>
+- **Talk to:** I say hello to the sea. It has heard better. <sub>rooms/marrow_deck.adv:61</sub>
+- **Use:** The sea has nothing to say to a cartographer with a compass. <sub>rooms/marrow_deck.adv:62</sub>
 
-**the bow deck** `forward` <sub>rooms/marrow_deck.adv:52</sub>
+**the ladder to the crow's nest** `shrouds` <sub>rooms/marrow_deck.adv:64</sub>
 
-- **Look at:** The bow, and the fog past it. The deck narrows there, and the fog does not. <sub>rooms/marrow_deck.adv:55</sub>
-- **Open:** Vex wants us aft until he has said his piece. The bow can wait. <sub>rooms/marrow_deck.adv:56</sub>
-- *When* *[Act II, if fog_tried]* <sub>rooms/marrow_deck.adv:57</sub>
-  - **Look at:** The bow, and the fog past it. I have heard it answer. <sub>rooms/marrow_deck.adv:59</sub>
-  - **Use / Walk to:** *[→ goes to The Shroud]* <sub>rooms/marrow_deck.adv:58</sub>
-  - **Open:** I go forward again. My hands remember the rail. <sub>rooms/marrow_deck.adv:60</sub>
-    - *[→ goes to The Shroud]* <sub>rooms/marrow_deck.adv:58</sub>
-- *When* *[Act II, if seen:vex.send]* <sub>rooms/marrow_deck.adv:61</sub>
-  - **Look at:** The bow. Vex says the fog has a voice, and I am to call the water. <sub>rooms/marrow_deck.adv:63</sub>
-  - **Use / Walk to:** *[→ goes to The Shroud]* <sub>rooms/marrow_deck.adv:62</sub>
-  - **Open:** I go forward. The deck narrows, and the fog comes to meet me. <sub>rooms/marrow_deck.adv:64</sub>
-    - *[→ goes to The Shroud]* <sub>rooms/marrow_deck.adv:62</sub>
+- **Look at:** The rope ladders up to the crow's nest. Quill's country. <sub>rooms/marrow_deck.adv:68</sub>
+- **Use:** I would get two rungs up before Quill had me down by the collar. <sub>rooms/marrow_deck.adv:69</sub>
+  - *[→ goes to The Marrow — Crow's Nest]* <sub>rooms/marrow_deck.adv:67</sub>
+- **Open / Walk to:** *[→ goes to The Marrow — Crow's Nest]* <sub>rooms/marrow_deck.adv:67</sub>
+- **Pick up:** They are attached to the mast. That is the point of them. <sub>rooms/marrow_deck.adv:70</sub>
 
-**the ladder to the crow's nest** `shrouds` <sub>rooms/marrow_deck.adv:66</sub>
+**the bow deck** `forward` <sub>rooms/marrow_deck.adv:72</sub>
 
-- **Look at:** The rope ladders up to the crow's nest. Quill's country. <sub>rooms/marrow_deck.adv:70</sub>
-- **Use:** I would get two rungs up before Quill had me down by the collar. <sub>rooms/marrow_deck.adv:71</sub>
-  - *[→ goes to The Marrow — Crow's Nest]* <sub>rooms/marrow_deck.adv:69</sub>
-- **Open / Walk to:** *[→ goes to The Marrow — Crow's Nest]* <sub>rooms/marrow_deck.adv:69</sub>
-- **Pick up:** They are attached to the mast. That is the point of them. <sub>rooms/marrow_deck.adv:72</sub>
+- **Look at:** The bow, and the fog past it. The deck narrows there, and the fog does not. <sub>rooms/marrow_deck.adv:75</sub>
+- **Open:** Vex wants us aft until he has said his piece. The bow can wait. <sub>rooms/marrow_deck.adv:76</sub>
+- *When* *[Act II, if fog_tried]* <sub>rooms/marrow_deck.adv:77</sub>
+  - **Look at:** The bow, and the fog past it. I have heard it answer. <sub>rooms/marrow_deck.adv:79</sub>
+  - **Use / Walk to:** *[→ goes to The Marrow — Bow]* <sub>rooms/marrow_deck.adv:78</sub>
+  - **Open:** I go forward again. My hands remember the rail. <sub>rooms/marrow_deck.adv:80</sub>
+    - *[→ goes to The Marrow — Bow]* <sub>rooms/marrow_deck.adv:78</sub>
+- *When* *[Act II, if seen:vex.send]* <sub>rooms/marrow_deck.adv:81</sub>
+  - **Look at:** The bow. Vex says the fog has a voice, and I am to call the water. <sub>rooms/marrow_deck.adv:83</sub>
+  - **Use / Walk to:** *[→ goes to The Marrow — Bow]* <sub>rooms/marrow_deck.adv:82</sub>
+  - **Open:** I go forward. The deck narrows, and the fog comes to meet me. <sub>rooms/marrow_deck.adv:84</sub>
+    - *[→ goes to The Marrow — Bow]* <sub>rooms/marrow_deck.adv:82</sub>
 
-**the stores** `crates` <sub>rooms/marrow_deck.adv:74</sub>
+**the stores** `crates` <sub>rooms/marrow_deck.adv:86</sub>
 
-- **Look at:** Crates lashed by the rail. Salt beef, hard bread, and one crate Dorrit has marked HANDS OFF in chalk. <sub>rooms/marrow_deck.adv:77</sub>
-- **Use:** Dorrit is watching me. I put my hands where he can see them. <sub>rooms/marrow_deck.adv:79</sub>
-- **Open:** Nailed shut. Dorrit counts the nails. <sub>rooms/marrow_deck.adv:78</sub>
+- **Look at:** Crates lashed by the rail. Salt beef, hard bread, and one crate Dorrit has claimed as his own. <sub>rooms/marrow_deck.adv:89</sub>
+- **Use:** Dorrit is watching me. I put my hands where he can see them. <sub>rooms/marrow_deck.adv:91</sub>
+- **Open:** Nailed shut. Dorrit counts the nails. <sub>rooms/marrow_deck.adv:90</sub>
 
-**the hatch to the crew deck** `hatch` <sub>rooms/marrow_deck.adv:81</sub>
+**the hatch to the crew deck** `hatch` <sub>rooms/marrow_deck.adv:93</sub>
 
-- **Look at:** The main hatch. A smell of tar and old rope comes up. Under it, something else: wet wood and old cargo. <sub>rooms/marrow_deck.adv:84</sub>
-- **Open:** The cover is on and barred. Vex says the hold is cargo. <sub>rooms/marrow_deck.adv:85</sub>
-- *When* *[Act II, if salvage_seen]* <sub>rooms/marrow_deck.adv:86</sub>
-  - **Look at:** The cover is loose. I have seen what is down there. <sub>rooms/marrow_deck.adv:88</sub>
-  - **Use / Walk to:** *[→ goes to The Marrow — Crew Deck]* <sub>rooms/marrow_deck.adv:87</sub>
-  - **Open:** I lift the cover again. The dark has a shape now. <sub>rooms/marrow_deck.adv:89</sub>
-    - *[→ goes to The Marrow — Crew Deck]* <sub>rooms/marrow_deck.adv:87</sub>
-- *When* *[Act II, if fog_tried]* <sub>rooms/marrow_deck.adv:90</sub>
-  - **Look at:** The cover is loose. Below, crates are stacked where the hammocks should be. <sub>rooms/marrow_deck.adv:92</sub>
-  - **Use / Walk to:** *[→ goes to The Marrow — Crew Deck]* <sub>rooms/marrow_deck.adv:91</sub>
-  - **Open:** I lift the cover and go below. The ladder is steep, and the dark smells of old cargo. <sub>rooms/marrow_deck.adv:93</sub>
-    - *[→ goes to The Marrow — Crew Deck]* <sub>rooms/marrow_deck.adv:91</sub>
+- **Look at:** The main hatch, its cover thrown back. A smell of tar and old rope comes up. Under it, something else: wet wood and old cargo. <sub>rooms/marrow_deck.adv:96</sub>
+- **Open:** The cover is up. Vex says the hold is cargo. <sub>rooms/marrow_deck.adv:97</sub>
+- *When* *[Act II, if salvage_seen]* <sub>rooms/marrow_deck.adv:98</sub>
+  - **Look at:** The cover is up. I have seen what is down there. <sub>rooms/marrow_deck.adv:100</sub>
+  - **Use / Walk to:** *[→ goes to The Marrow — Crew Deck]* <sub>rooms/marrow_deck.adv:99</sub>
+  - **Open:** I go down the ladder again. The dark has a shape now. <sub>rooms/marrow_deck.adv:101</sub>
+    - *[→ goes to The Marrow — Crew Deck]* <sub>rooms/marrow_deck.adv:99</sub>
+- *When* *[Act II, if fog_tried]* <sub>rooms/marrow_deck.adv:102</sub>
+  - **Look at:** The cover is up. Below, crates are stacked where the hammocks should be. <sub>rooms/marrow_deck.adv:104</sub>
+  - **Use / Walk to:** *[→ goes to The Marrow — Crew Deck]* <sub>rooms/marrow_deck.adv:103</sub>
+  - **Open:** I go down the ladder. It is steep, and the dark smells of old cargo. <sub>rooms/marrow_deck.adv:105</sub>
+    - *[→ goes to The Marrow — Crew Deck]* <sub>rooms/marrow_deck.adv:103</sub>
 
-**the steps to the helm** `stairs_up` <sub>rooms/marrow_deck.adv:95</sub>
+**the steps to the helm** `stairs_up` <sub>rooms/marrow_deck.adv:107</sub>
 
-- **Look at:** The steps up to the quarterdeck. Vex is at the top, not looking down. <sub>rooms/marrow_deck.adv:99</sub>
-- **Use / Walk to:** *[→ goes to The Marrow — Helm]* <sub>rooms/marrow_deck.adv:98</sub>
-- **Open:** I go up. <sub>rooms/marrow_deck.adv:100</sub>
-  - *[→ goes to The Marrow — Helm]* <sub>rooms/marrow_deck.adv:98</sub>
+- **Look at:** The steps up to the quarterdeck. Vex is at the top, not looking down. <sub>rooms/marrow_deck.adv:111</sub>
+- **Use / Walk to:** *[→ goes to The Marrow — Helm]* <sub>rooms/marrow_deck.adv:110</sub>
+- **Open:** I go up. <sub>rooms/marrow_deck.adv:112</sub>
+  - *[→ goes to The Marrow — Helm]* <sub>rooms/marrow_deck.adv:110</sub>
 
-**Quill** `quill` *[present Act II, if salvage_seen = false]* <sub>rooms/marrow_deck.adv:102</sub>
+**Quill** `quill` *[present Act II, if salvage_seen = false]* <sub>rooms/marrow_deck.adv:114</sub>
 
-- **Look at:** Quill, at the rail with her spyglass. She has not used it once since we left. <sub>rooms/marrow_deck.adv:106</sub>
-- **Talk to:** She does not turn around. "I came for the chart. And because Vex owes me a horizon." <sub>rooms/marrow_deck.adv:107</sub>
-- **Give:** She looks at my hands. "I have a compass. I need a horizon." <sub>rooms/marrow_deck.adv:108</sub>
-- *When* *[if fog_tried]* <sub>rooms/marrow_deck.adv:109</sub>
-  - **Look at:** Quill has put the spyglass away. She is watching the water, not the horizon. <sub>rooms/marrow_deck.adv:110</sub>
-  - **Talk to:** She says, "That was not weather. Weather does not ring a bell." <sub>rooms/marrow_deck.adv:111</sub>
+- **Look at:** Quill, at the rail with her spyglass. She has not used it once since we left. <sub>rooms/marrow_deck.adv:118</sub>
+- **Talk to:** She does not turn around. "I came for the chart. And because Vex owes me a horizon." <sub>rooms/marrow_deck.adv:119</sub>
+- **Give:** She looks at my hands. "I have a compass. I need a horizon." <sub>rooms/marrow_deck.adv:120</sub>
+- *When* *[if fog_tried]* <sub>rooms/marrow_deck.adv:121</sub>
+  - **Look at:** Quill has put the spyglass away. She is watching the water, not the horizon. <sub>rooms/marrow_deck.adv:122</sub>
+  - **Talk to:** She says, "That was not weather. Weather does not ring a bell." <sub>rooms/marrow_deck.adv:123</sub>
 
-**Hobb** `hobb` *[present Act II, if salvage_seen = false]* <sub>rooms/marrow_deck.adv:113</sub>
+**Hobb** `hobb` *[present Act II, if salvage_seen = false]* <sub>rooms/marrow_deck.adv:125</sub>
 
-- **Look at:** Hobb, one hand on the mast, the other on his crowbar. <sub>rooms/marrow_deck.adv:117</sub>
-- **Talk to:** He answers before I ask. "My brother is in the fog. That is all of it." <sub>rooms/marrow_deck.adv:118</sub>
-- **Give:** He looks at it and shakes his head. "Give it to someone who needs opening." <sub>rooms/marrow_deck.adv:119</sub>
-- *When* *[if fog_tried]* <sub>rooms/marrow_deck.adv:120</sub>
-  - **Look at:** Hobb has his ear against the mast. He does not like what it is saying. <sub>rooms/marrow_deck.adv:121</sub>
-  - **Talk to:** He says, "Something passed under us. Big as the ship." <sub>rooms/marrow_deck.adv:122</sub>
+- **Look at:** Hobb, one hand on the mast, the other on his crowbar. <sub>rooms/marrow_deck.adv:129</sub>
+- **Talk to:** He answers before I ask. "My brother is in the fog. That is all of it." <sub>rooms/marrow_deck.adv:130</sub>
+- **Give:** He looks at it and shakes his head. "Give it to someone who needs opening." <sub>rooms/marrow_deck.adv:131</sub>
+- *When* *[if fog_tried]* <sub>rooms/marrow_deck.adv:132</sub>
+  - **Look at:** Hobb has his ear against the mast. He does not like what it is saying. <sub>rooms/marrow_deck.adv:133</sub>
+  - **Talk to:** He says, "Something passed under us. Big as the ship." <sub>rooms/marrow_deck.adv:134</sub>
 
-**Dorrit** `dorrit` *[present Act II, if salvage_seen = false]* <sub>rooms/marrow_deck.adv:124</sub>
+**Dorrit** `dorrit` *[present Act II, if salvage_seen = false]* <sub>rooms/marrow_deck.adv:136</sub>
 
-- **Look at:** Dorrit, in his apron, negotiating with a potato. <sub>rooms/marrow_deck.adv:128</sub>
-- **Talk to:** He does not look up. "If you are going to stand there, hold this." <sub>rooms/marrow_deck.adv:129</sub>
-- **Give:** He hands me a knife and points at the potatoes. That is not a gift. <sub>rooms/marrow_deck.adv:130</sub>
-- *When* *[if fog_tried]* <sub>rooms/marrow_deck.adv:131</sub>
-  - **Look at:** Dorrit has stopped cooking. The pot is still on the stove. <sub>rooms/marrow_deck.adv:132</sub>
-  - **Talk to:** He says, "The bell rang. There is no bell on this deck." <sub>rooms/marrow_deck.adv:133</sub>
-
-**Combinations here**
-
-- **Use Elias's compass on the sea:** The needle swings past north and settles on the fog ahead. <sub>rooms/marrow_deck.adv:136</sub>
-- **Use Quill's spyglass on the sea:** Grey water, then more grey, then a shape I decide is a wave. <sub>rooms/marrow_deck.adv:138</sub>
-- **Use Hobb's crowbar on the stores:** Dorrit's crates. I put the crowbar away before he sees it. <sub>rooms/marrow_deck.adv:140</sub>
-
-<a id="act2-bow_fog"></a>
-## The Shroud
-
-*[room* `bow_fog`*]* <sub>rooms/bow_fog.adv:1</sub>
-
-**On arrival**
-
-- *Once,* *[Act II, if fog_tried = false]* <sub>rooms/bow_fog.adv:19</sub>
-  - *[sets fog_tried]* *[sets rule_light]* <sub>rooms/bow_fog.adv:20</sub>
-  - *[chart:* The Shroud hunts light as well as sound. It came when the bow lantern died.*]* <sub>rooms/bow_fog.adv:22</sub>
-  - **FENN (V.O.)**: They call it calling the water. You stand at the bow and speak into the fog. <sub>rooms/bow_fog.adv:23</sub>
-  - **FENN (V.O.)**: Nobody has told me the words. I say my father's name, and then I wait. <sub>rooms/bow_fog.adv:24</sub>
-  - **FENN (V.O.)**: The fog takes it and gives nothing back. The deck is wet, and the ship is quiet. <sub>rooms/bow_fog.adv:25</sub>
-  - **FENN (V.O.)**: Then the bell rings. <sub>rooms/bow_fog.adv:26</sub>
-  - **FENN (V.O.)**: One note, then another. It is a bell, close above my head. <sub>rooms/bow_fog.adv:27</sub>
-  - **FENN (V.O.)**: I look up. The rope hangs still. There is no hand on it. <sub>rooms/bow_fog.adv:28</sub>
-  - **FENN (V.O.)**: The bow lantern gutters. The flame leans, as if something has breathed on it. <sub>rooms/bow_fog.adv:29</sub>
-  - **FENN (V.O.)**: The light goes out. The fog comes over the rail after it, slow and certain. <sub>rooms/bow_fog.adv:30</sub>
-  - **FENN (V.O.)**: The hull lifts under my feet. Not a wave. Something is passing beneath us. <sub>rooms/bow_fog.adv:31</sub>
-  - **FENN (V.O.)**: I hear it against the planks, a long scrape that does not hurry. <sub>rooms/bow_fog.adv:32</sub>
-  - **FENN (V.O.)**: From the helm, Vex's voice, very low: "No lights. Nobody speaks." <sub>rooms/bow_fog.adv:33</sub>
-  - **FENN (V.O.)**: The lamps go out along the deck. I hear the crew go still, one at a time. <sub>rooms/bow_fog.adv:34</sub>
-  - **FENN (V.O.)**: We drift. The fog closes over the place where the water moved. <sub>rooms/bow_fog.adv:35</sub>
-  - **FENN (V.O.)**: When I can hear again, the bow is quiet. The lantern is out, and nothing follows us. <sub>rooms/bow_fog.adv:36</sub>
-
-**the fog** `fog` <sub>rooms/bow_fog.adv:38</sub>
-
-- **Look at:** The Shroud. It stands on the water like a wall and does not move. <sub>rooms/bow_fog.adv:41</sub>
-  - **FENN (V.O.)**: Past it the sea goes on to nowhere I have charted. <sub>rooms/bow_fog.adv:42</sub>
-- **Talk to:** I say the Marrow's name into the fog, the way sailors do. Nothing answers. <sub>rooms/bow_fog.adv:43</sub>
-- **Use:** I could put my hand in it. I did that once, and it was colder than water. <sub>rooms/bow_fog.adv:44</sub>
-- *When* *[if fog_tried]* <sub>rooms/bow_fog.adv:45</sub>
-  - **Look at:** The fog is quiet today. It was quiet that night too, right up until the bell. <sub>rooms/bow_fog.adv:46</sub>
-    - **FENN (V.O.)**: Past it the sea goes on to nowhere I have charted. <sub>rooms/bow_fog.adv:47</sub>
-
-**the bow rail** `bow_rail` <sub>rooms/bow_fog.adv:49</sub>
-
-- **Look at:** The bow rail. The paint is worn pale where hands have held it. <sub>rooms/bow_fog.adv:52</sub>
-- **Talk to:** I lean on the rail and tell it we are still here. It does not answer. <sub>rooms/bow_fog.adv:53</sub>
-- **Use:** I lean on it and look down. The water under us is white and says nothing. <sub>rooms/bow_fog.adv:54</sub>
-- *When* *[if fog_tried]* <sub>rooms/bow_fog.adv:55</sub>
-  - **Look at:** The bow rail. Wet, cold, and still here. So am I. <sub>rooms/bow_fog.adv:56</sub>
-  - **Use:** I look over the rail. The water is white and shallow-looking. I do not look for long. <sub>rooms/bow_fog.adv:57</sub>
-
-**the bow lantern** `bow_lantern` <sub>rooms/bow_fog.adv:59</sub>
-
-- **Look at:** The bow lantern on its post, big enough to read a chart by. It burns all night. <sub>rooms/bow_fog.adv:65</sub>
-- **Talk to:** I leave the lantern alone. It is a lamp. Lamps have enough to do. <sub>rooms/bow_fog.adv:66</sub>
-- **Use:** The wick is trimmed and the glass is clean. Somebody looks after it. <sub>rooms/bow_fog.adv:67</sub>
-- *When* *[if rule_light]* <sub>rooms/bow_fog.adv:68</sub>
-  - **Look at:** The bow lantern is lit again, turned down low. Nobody stands close to the glass. <sub>rooms/bow_fog.adv:69</sub>
-  - **Use:** I turn it down until the flame is a seed, then step back from it. <sub>rooms/bow_fog.adv:70</sub>
-
-**the bell rope** `bell_rope` <sub>rooms/bow_fog.adv:72</sub>
-
-- **Look at:** The bell rope, hanging out of the fog above the lantern. The bell is up there too, out of sight. <sub>rooms/bow_fog.adv:75</sub>
-- **Talk to:** I do not talk to the bell. I have heard it answer. <sub>rooms/bow_fog.adv:76</sub>
-- **Use:** I put a hand on the rope. It is cold, and it does not move. <sub>rooms/bow_fog.adv:77</sub>
-- *When* *[if fog_tried]* <sub>rooms/bow_fog.adv:78</sub>
-  - **Look at:** The bell rope, slack and still. Nobody has rung it for the watch since that night. <sub>rooms/bow_fog.adv:79</sub>
-  - **Use:** I take the rope and hold it. It stays quiet. I let it go. <sub>rooms/bow_fog.adv:80</sub>
-
-**back along the deck** `aft` <sub>rooms/bow_fog.adv:82</sub>
-
-- **Look at:** The deck runs back toward the mast and the helm. The fog sits between me and the rest of the ship. <sub>rooms/bow_fog.adv:86</sub>
-- **Use / Walk to:** *[→ goes to The Marrow — Deck]* <sub>rooms/bow_fog.adv:85</sub>
-- **Open:** I go back aft along the deck, keeping to the middle of it. <sub>rooms/bow_fog.adv:87</sub>
-  - *[→ goes to The Marrow — Deck]* <sub>rooms/bow_fog.adv:85</sub>
+- **Look at:** Dorrit, in his apron, negotiating with a potato. <sub>rooms/marrow_deck.adv:140</sub>
+- **Talk to:** He does not look up. "If you are going to stand there, hold this." <sub>rooms/marrow_deck.adv:141</sub>
+- **Give:** He hands me a knife and points at the potatoes. That is not a gift. <sub>rooms/marrow_deck.adv:142</sub>
+- *When* *[if fog_tried]* <sub>rooms/marrow_deck.adv:143</sub>
+  - **Look at:** Dorrit has stopped cooking. The pot is still on the stove. <sub>rooms/marrow_deck.adv:144</sub>
+  - **Talk to:** He says, "The bell rang. There is no bell on this deck." <sub>rooms/marrow_deck.adv:145</sub>
 
 **Combinations here**
 
-- **Use Quill's spyglass on the fog:** I put the glass up. The fog has no distance in it. It is the same white at the end of the glass. <sub>rooms/bow_fog.adv:90</sub>
+- **Use Elias's compass on the sea:** The needle swings past north and settles on the fog ahead. <sub>rooms/marrow_deck.adv:148</sub>
+- **Use Quill's spyglass on the sea:** Grey water, then more grey, then a shape I decide is a wave. <sub>rooms/marrow_deck.adv:150</sub>
+- **Use Hobb's crowbar on the stores:** Dorrit's crates. I put the crowbar away before he sees it. <sub>rooms/marrow_deck.adv:152</sub>
 
 <a id="act2-crows_nest"></a>
 ## The Marrow — Crow's Nest
@@ -2959,50 +2893,119 @@
 
 **On arrival**
 
-- *Once,* *[Act II, if nest_arrived = false]* <sub>rooms/crows_nest.adv:20</sub>
-  - *[sets nest_arrived]* <sub>rooms/crows_nest.adv:21</sub>
-  - **FENN (V.O.)**: The crow's nest is a plank platform high on the foremast, with a rail Quill does not trust. She calls it an office. <sub>rooms/crows_nest.adv:22</sub>
-  - **FENN (V.O.)**: She comes down the shrouds when she hears me, and holds her hand out for the spyglass. <sub>rooms/crows_nest.adv:23</sub>
+- *Once,* *[Act II, if nest_arrived = false]* <sub>rooms/crows_nest.adv:33</sub>
+  - *[sets nest_arrived]* <sub>rooms/crows_nest.adv:34</sub>
+  - **FENN (V.O.)**: The crow's nest is a plank platform high on the foremast, with a rail Quill does not trust. She calls it an office. <sub>rooms/crows_nest.adv:35</sub>
+  - **FENN (V.O.)**: She comes down the shrouds when she hears me, and holds her hand out for the spyglass. <sub>rooms/crows_nest.adv:36</sub>
 
-**the Shroud** `shroud` <sub>rooms/crows_nest.adv:25</sub>
+**the Shroud** `shroud` <sub>rooms/crows_nest.adv:38</sub>
 
-- **Look at:** The Shroud, low and white on the water. It looks like weather. The island knows better. <sub>rooms/crows_nest.adv:29</sub>
-- *When* *[if seen:quill.nest]* <sub>rooms/crows_nest.adv:30</sub>
-  - **Look at:** The fog has a lean on it now. I can see it from here, and I wish I could not. <sub>rooms/crows_nest.adv:31</sub>
+- **Look at:** The Shroud, low and white on the water. It looks like weather. The island knows better. <sub>rooms/crows_nest.adv:42</sub>
+- *When* *[if seen:quill.nest]* <sub>rooms/crows_nest.adv:43</sub>
+  - **Look at:** The fog has a lean on it now. I can see it from here, and I wish I could not. <sub>rooms/crows_nest.adv:44</sub>
 
-**the sky** `sky` <sub>rooms/crows_nest.adv:33</sub>
+**the sky** `sky` <sub>rooms/crows_nest.adv:46</sub>
 
-- **Look at:** The sky, doing the one thing it does well out here: nothing at all. <sub>rooms/crows_nest.adv:36</sub>
+- **Look at:** The sky, doing the one thing it does well out here: nothing at all. <sub>rooms/crows_nest.adv:49</sub>
 
-**the shrouds down to the deck** `shrouds` <sub>rooms/crows_nest.adv:38</sub>
+**the hatch down to the deck** `shrouds` <sub>rooms/crows_nest.adv:51</sub>
 
-- **Look at:** The shrouds down to the deck. Quill goes up them like a ladder. I come down like a sack of charts. <sub>rooms/crows_nest.adv:42</sub>
-- **Use / Open / Walk to:** *[→ goes to The Marrow — Deck]* <sub>rooms/crows_nest.adv:41</sub>
+- **Look at:** The hatch down to the deck. The rope ladder drops into warm lamplight, a long way down. <sub>rooms/crows_nest.adv:56</sub>
+- **Use / Open / Walk to:** *[→ goes to The Marrow — Deck]* <sub>rooms/crows_nest.adv:55</sub>
 
-**the steps down** `steps` <sub>rooms/crows_nest.adv:44</sub>
+**the crates** `crates` <sub>rooms/crows_nest.adv:58</sub>
 
-- **Look at:** The steps down from the nest. A short ladder, then a long way of shrouds. <sub>rooms/crows_nest.adv:48</sub>
+- **Look at:** Crates lashed down in the corner of the nest with new line. Vex's cargo, going out with us. <sub>rooms/crows_nest.adv:61</sub>
+- **Use:** The rope is new. The knots are Vex's. He ties them like he is counting. <sub>rooms/crows_nest.adv:62</sub>
 
-**the crates** `crates` <sub>rooms/crows_nest.adv:50</sub>
+**the rail** `rail` <sub>rooms/crows_nest.adv:64</sub>
 
-- **Look at:** Crates lashed down in the corner of the nest with new line. Vex's cargo, going out with us. <sub>rooms/crows_nest.adv:53</sub>
-- **Use:** The rope is new. The knots are Vex's. He ties them like he is counting. <sub>rooms/crows_nest.adv:54</sub>
+- **Look at:** The rail, cold and wet under my hand. Beyond it the sea is going about its business. <sub>rooms/crows_nest.adv:67</sub>
+- **Use:** I put my ear on the rail. The wood hums. That is the ship, probably. <sub>rooms/crows_nest.adv:68</sub>
+- *When* *[if seen:quill.nest]* <sub>rooms/crows_nest.adv:69</sub>
+  - **Use:** I put my ear on the rail. The hum is still there, under the wood. It is not the ship. <sub>rooms/crows_nest.adv:70</sub>
 
-**the rail** `rail` <sub>rooms/crows_nest.adv:56</sub>
+**Quill** `quill` *[present Act II only]* <sub>rooms/crows_nest.adv:72</sub>
 
-- **Look at:** The rail, cold and wet under my hand. Beyond it the sea is going about its business. <sub>rooms/crows_nest.adv:59</sub>
-- **Use:** I put my ear on the rail. The wood hums. That is the ship, probably. <sub>rooms/crows_nest.adv:60</sub>
-- *When* *[if seen:quill.nest]* <sub>rooms/crows_nest.adv:61</sub>
-  - **Use:** I put my ear on the rail. The hum is still there, under the wood. It is not the ship. <sub>rooms/crows_nest.adv:62</sub>
+- **Look at:** Quill, spyglass to her eye, watching the fog's edge the way I watch a page. <sub>rooms/crows_nest.adv:76</sub>
+- **Talk to:** She takes it without a word and puts it to her eye. <sub>rooms/crows_nest.adv:77</sub>
+  - *[→ conversation* [quill at nest](#dlg-quill-nest) *— see Act I › The Shipwright's]* <sub>rooms/crows_nest.adv:78</sub>
+- *When* *[if seen:quill.nest]* <sub>rooms/crows_nest.adv:79</sub>
+  - **Talk to:** She is talking before I get to the rail. <sub>rooms/crows_nest.adv:80</sub>
+    - *[→ conversation* [quill at nest_after](#dlg-quill-nest_after) *— see Act I › The Shipwright's]* <sub>rooms/crows_nest.adv:81</sub>
 
-**Quill** `quill` *[present Act II only]* <sub>rooms/crows_nest.adv:64</sub>
+<a id="act2-bow_fog"></a>
+## The Marrow — Bow
 
-- **Look at:** Quill, spyglass to her eye, watching the fog's edge the way I watch a page. <sub>rooms/crows_nest.adv:68</sub>
-- **Talk to:** She takes it without a word and puts it to her eye. <sub>rooms/crows_nest.adv:69</sub>
-  - *[→ conversation* [quill at nest](#dlg-quill-nest) *— see Act I › The Shipwright's]* <sub>rooms/crows_nest.adv:70</sub>
-- *When* *[if seen:quill.nest]* <sub>rooms/crows_nest.adv:71</sub>
-  - **Talk to:** She is talking before I get to the rail. <sub>rooms/crows_nest.adv:72</sub>
-    - *[→ conversation* [quill at nest_after](#dlg-quill-nest_after) *— see Act I › The Shipwright's]* <sub>rooms/crows_nest.adv:73</sub>
+*[room* `bow_fog`*]* <sub>rooms/bow_fog.adv:1</sub>
+
+**On arrival**
+
+- *Once,* *[Act II, if fog_tried = false]* <sub>rooms/bow_fog.adv:24</sub>
+  - *[sets fog_tried]* *[sets rule_light]* <sub>rooms/bow_fog.adv:25</sub>
+  - *[chart:* The Shroud hunts light as well as sound. It came when the bow lantern died.*]* <sub>rooms/bow_fog.adv:27</sub>
+  - **FENN (V.O.)**: They call it calling the water. You stand at the bow and speak into the fog. <sub>rooms/bow_fog.adv:28</sub>
+  - **FENN (V.O.)**: Nobody has told me the words. I say my father's name, and then I wait. <sub>rooms/bow_fog.adv:29</sub>
+  - **FENN (V.O.)**: The fog takes it and gives nothing back. The deck is wet, and the ship is quiet. <sub>rooms/bow_fog.adv:30</sub>
+  - **FENN (V.O.)**: Then the bell rings. <sub>rooms/bow_fog.adv:31</sub>
+  - **FENN (V.O.)**: One note, then another. It is a bell, close above my head. <sub>rooms/bow_fog.adv:32</sub>
+  - **FENN (V.O.)**: I look up. The rope hangs still. There is no hand on it. <sub>rooms/bow_fog.adv:33</sub>
+  - **FENN (V.O.)**: The bow lantern gutters. The flame leans, as if something has breathed on it. <sub>rooms/bow_fog.adv:34</sub>
+  - **FENN (V.O.)**: The light goes out. The fog comes over the rail after it, slow and certain. <sub>rooms/bow_fog.adv:35</sub>
+  - **FENN (V.O.)**: The hull lifts under my feet. Not a wave. Something is passing beneath us. <sub>rooms/bow_fog.adv:36</sub>
+  - **FENN (V.O.)**: I hear it against the planks, a long scrape that does not hurry. <sub>rooms/bow_fog.adv:37</sub>
+  - **FENN (V.O.)**: From the helm, Vex's voice, very low: "No lights. Nobody speaks." <sub>rooms/bow_fog.adv:38</sub>
+  - **FENN (V.O.)**: The lamps go out along the deck. I hear the crew go still, one at a time. <sub>rooms/bow_fog.adv:39</sub>
+  - **FENN (V.O.)**: We drift. The fog closes over the place where the water moved. <sub>rooms/bow_fog.adv:40</sub>
+  - **FENN (V.O.)**: When I can hear again, the bow is quiet. The lantern is out, and nothing follows us. <sub>rooms/bow_fog.adv:41</sub>
+
+**the fog** `fog` <sub>rooms/bow_fog.adv:43</sub>
+
+- **Look at:** The Shroud. It stands on the water like a wall and does not move. <sub>rooms/bow_fog.adv:46</sub>
+  - **FENN (V.O.)**: Past it the sea goes on to nowhere I have charted. <sub>rooms/bow_fog.adv:47</sub>
+- **Talk to:** I say the Marrow's name into the fog, the way sailors do. Nothing answers. <sub>rooms/bow_fog.adv:48</sub>
+- **Use:** I could put my hand in it. I did that once, and it was colder than water. <sub>rooms/bow_fog.adv:49</sub>
+- *When* *[if fog_tried]* <sub>rooms/bow_fog.adv:50</sub>
+  - **Look at:** The fog is quiet today. It was quiet that night too, right up until the bell. <sub>rooms/bow_fog.adv:51</sub>
+    - **FENN (V.O.)**: Past it the sea goes on to nowhere I have charted. <sub>rooms/bow_fog.adv:52</sub>
+
+**the bow rail** `bow_rail` <sub>rooms/bow_fog.adv:54</sub>
+
+- **Look at:** The bow rail. The paint is worn pale where hands have held it. <sub>rooms/bow_fog.adv:57</sub>
+- **Talk to:** I lean on the rail and tell it we are still here. It does not answer. <sub>rooms/bow_fog.adv:58</sub>
+- **Use:** I lean on it and look down. The water under us is white and says nothing. <sub>rooms/bow_fog.adv:59</sub>
+- *When* *[if fog_tried]* <sub>rooms/bow_fog.adv:60</sub>
+  - **Look at:** The bow rail. Wet, cold, and still here. So am I. <sub>rooms/bow_fog.adv:61</sub>
+  - **Use:** I look over the rail. The water is white and shallow-looking. I do not look for long. <sub>rooms/bow_fog.adv:62</sub>
+
+**the bow lantern** `bow_lantern` <sub>rooms/bow_fog.adv:64</sub>
+
+- **Look at:** The bow lantern on its post, big enough to read a chart by. It burns all night. <sub>rooms/bow_fog.adv:69</sub>
+- **Talk to:** I leave the lantern alone. It is a lamp. Lamps have enough to do. <sub>rooms/bow_fog.adv:70</sub>
+- **Use:** The wick is trimmed and the glass is clean. Somebody looks after it. <sub>rooms/bow_fog.adv:71</sub>
+- *When* *[if rule_light]* <sub>rooms/bow_fog.adv:72</sub>
+  - **Look at:** The bow lantern is lit again, turned down low. Nobody stands close to the glass. <sub>rooms/bow_fog.adv:73</sub>
+  - **Use:** I turn it down until the flame is a seed, then step back from it. <sub>rooms/bow_fog.adv:74</sub>
+
+**the bell rope** `bell_rope` <sub>rooms/bow_fog.adv:76</sub>
+
+- **Look at:** The bell rope, hanging out of the fog above the lantern. The bell is up there too, out of sight. <sub>rooms/bow_fog.adv:79</sub>
+- **Talk to:** I do not talk to the bell. I have heard it answer. <sub>rooms/bow_fog.adv:80</sub>
+- **Use:** I put a hand on the rope. It is cold, and it does not move. <sub>rooms/bow_fog.adv:81</sub>
+- *When* *[if fog_tried]* <sub>rooms/bow_fog.adv:82</sub>
+  - **Look at:** The bell rope, slack and still. Nobody has rung it for the watch since that night. <sub>rooms/bow_fog.adv:83</sub>
+  - **Use:** I take the rope and hold it. It stays quiet. I let it go. <sub>rooms/bow_fog.adv:84</sub>
+
+**back along the deck** `aft` <sub>rooms/bow_fog.adv:86</sub>
+
+- **Look at:** The deck runs back toward the mast and the helm. The fog sits between me and the rest of the ship. <sub>rooms/bow_fog.adv:91</sub>
+- **Use / Walk to:** *[→ goes to The Marrow — Deck]* <sub>rooms/bow_fog.adv:90</sub>
+- **Open:** I go back aft along the deck, keeping to the middle of it. <sub>rooms/bow_fog.adv:92</sub>
+  - *[→ goes to The Marrow — Deck]* <sub>rooms/bow_fog.adv:90</sub>
+
+**Combinations here**
+
+- **Use Quill's spyglass on the fog:** I put the glass up. The fog has no distance in it. It is the same white at the end of the glass. <sub>rooms/bow_fog.adv:95</sub>
 
 <a id="act2-below_decks"></a>
 ## The Marrow — Crew Deck
@@ -3011,82 +3014,71 @@
 
 **On arrival**
 
-- *Once,* *[Act II, if below_arrived = false]* <sub>rooms/below_decks.adv:25</sub>
-  - *[sets below_arrived]* <sub>rooms/below_decks.adv:26</sub>
-  - **FENN (V.O.)**: The crew deck smells of other ships. Tar, salt, and wood that has been in the water. <sub>rooms/below_decks.adv:27</sub>
-  - **FENN (V.O.)**: The hold is full. What would not fit is stacked here, where the crew eats. <sub>rooms/below_decks.adv:28</sub>
-  - **FENN (V.O.)**: Dorrit has stopped stirring. Down the deck, Hobb has his hand flat on a barrel head. <sub>rooms/below_decks.adv:29</sub>
+- *Once,* *[Act II, if below_arrived = false]* <sub>rooms/below_decks.adv:35</sub>
+  - *[sets below_arrived]* <sub>rooms/below_decks.adv:36</sub>
+  - **FENN (V.O.)**: The crew deck smells of other ships. Tar, salt, and wood that has been in the water. <sub>rooms/below_decks.adv:37</sub>
+  - **FENN (V.O.)**: The hold is full. What would not fit is stacked here, where the crew eats. <sub>rooms/below_decks.adv:38</sub>
+  - **FENN (V.O.)**: Dorrit has stopped stirring. Down the deck, Hobb has his hand flat on a barrel head. <sub>rooms/below_decks.adv:39</sub>
 
-**the salvage** `salvage` <sub>rooms/below_decks.adv:31</sub>
+**the salvage** `salvage` <sub>rooms/below_decks.adv:41</sub>
 
-- **Look at:** Barrels in the corner, every head burnt with a name. CORMORANT. KESTREL. ARCADIA. All lost. <sub>rooms/below_decks.adv:34</sub>
-  - *[sets salvage_seen]* <sub>rooms/below_decks.adv:35</sub>
-  - *[chart:* Vex's hold is full of salvage from the ships the fog took: the Cormorant, the Kestrel, the Arcadia.*]* <sub>rooms/below_decks.adv:36</sub>
-  - **FENN (V.O.)**: Hobb takes his hand off the Arcadia barrel. He puts it behind his back. <sub>rooms/below_decks.adv:37</sub>
-  - **FENN (V.O.)**: Dorrit sets the ladle down. The stew goes on bubbling at nobody. <sub>rooms/below_decks.adv:38</sub>
-- *When* *[if salvage_seen]* <sub>rooms/below_decks.adv:39</sub>
-  - **Look at:** The salvage. I keep reading the names, hoping one of them is a mistake. <sub>rooms/below_decks.adv:40</sub>
+- **Look at:** Barrels in the corner, every head burnt with a name. CORMORANT. KESTREL. ARCADIA. All lost. <sub>rooms/below_decks.adv:45</sub>
+  - *[sets salvage_seen]* <sub>rooms/below_decks.adv:46</sub>
+  - *[chart:* Vex's hold is full of salvage from the ships the fog took: the Cormorant, the Kestrel, the Arcadia.*]* <sub>rooms/below_decks.adv:47</sub>
+  - **FENN (V.O.)**: Hobb takes his hand off the Arcadia barrel. He puts it behind his back. <sub>rooms/below_decks.adv:48</sub>
+  - **FENN (V.O.)**: Dorrit sets the ladle down. The stew goes on bubbling at nobody. <sub>rooms/below_decks.adv:49</sub>
+- *When* *[if salvage_seen]* <sub>rooms/below_decks.adv:50</sub>
+  - **Look at:** The salvage. I keep reading the names, hoping one of them is a mistake. <sub>rooms/below_decks.adv:51</sub>
 
-**the sea-chest** `chest` <sub>rooms/below_decks.adv:42</sub>
+**the sea-chest** `chest` <sub>rooms/below_decks.adv:53</sub>
 
-- **Look at:** A sea-chest with iron bands. CORMORANT burnt into the lid. The barrels in the corner carry more. <sub>rooms/below_decks.adv:45</sub>
-- **Open:** The lid is warped with salt. Whatever was inside, Vex has had it out. <sub>rooms/below_decks.adv:46</sub>
-- *When* *[if salvage_seen]* <sub>rooms/below_decks.adv:47</sub>
-  - **Look at:** The Cormorant's chest. Marta tells that story on the cold nights. She never says how it ends. <sub>rooms/below_decks.adv:48</sub>
+- **Look at:** A sea-chest with iron bands. CORMORANT burnt into the lid. The barrels in the corner carry more. <sub>rooms/below_decks.adv:56</sub>
+- **Open:** The lid is warped with salt. Whatever was inside, Vex has had it out. <sub>rooms/below_decks.adv:57</sub>
+- *When* *[if salvage_seen]* <sub>rooms/below_decks.adv:58</sub>
+  - **Look at:** The Cormorant's chest. Marta tells that story on the cold nights. She never says how it ends. <sub>rooms/below_decks.adv:59</sub>
 
-**the hammocks** `hammocks` <sub>rooms/below_decks.adv:50</sub>
+**the hammocks** `hammocks` <sub>rooms/below_decks.adv:61</sub>
 
-- **Look at:** Hammocks slung in rows, swaying with the ship. Nobody is asleep in any of them. <sub>rooms/below_decks.adv:53</sub>
-- **Use:** I'd get in and never get out again. <sub>rooms/below_decks.adv:54</sub>
+- **Look at:** Hammocks slung in rows, swaying with the ship. Nobody is asleep in any of them. <sub>rooms/below_decks.adv:64</sub>
+- **Use:** I'd get in and never get out again. <sub>rooms/below_decks.adv:65</sub>
 
-**the grating** `grating` <sub>rooms/below_decks.adv:56</sub>
+**the mess table** `table` <sub>rooms/below_decks.adv:67</sub>
 
-- **Look at:** Daylight through a grating, in neat squares, laid out like a chart I did not draw. <sub>rooms/below_decks.adv:59</sub>
+- **Look at:** The mess table, scrubbed pale, with benches for more of us than there are. <sub>rooms/below_decks.adv:70</sub>
+- **Use:** I straighten a bench. It has been straightened. <sub>rooms/below_decks.adv:71</sub>
 
-**the mess table** `table` <sub>rooms/below_decks.adv:61</sub>
+**the galley stove** `stove` <sub>rooms/below_decks.adv:73</sub>
 
-- **Look at:** The mess table, scrubbed pale, with benches for more of us than there are. <sub>rooms/below_decks.adv:64</sub>
-- **Use:** I straighten a bench. It has been straightened. <sub>rooms/below_decks.adv:65</sub>
+- **Look at:** The galley stove, hot and complaining. Dorrit has been at it since the anchor came up. <sub>rooms/below_decks.adv:76</sub>
+- **Turn off:** Dorrit would have my fingers off. He has had a hard week. <sub>rooms/below_decks.adv:77</sub>
 
-**the galley stove** `stove` <sub>rooms/below_decks.adv:67</sub>
+**the stew pot** `stew` <sub>rooms/below_decks.adv:79</sub>
 
-- **Look at:** The galley stove, hot and complaining. Dorrit has been at it since the anchor came up. <sub>rooms/below_decks.adv:70</sub>
-- **Turn off:** Dorrit would have my fingers off. He has had a hard week. <sub>rooms/below_decks.adv:71</sub>
+- **Look at:** A stew pot the size of a font. It smells of salt beef and decisions. <sub>rooms/below_decks.adv:82</sub>
+- **Pick up:** Dorrit's ladle arrives before my hand does. <sub>rooms/below_decks.adv:83</sub>
 
-**the stew pot** `stew` <sub>rooms/below_decks.adv:73</sub>
+**Hobb** `hobb` *[present Act II only]* <sub>rooms/below_decks.adv:85</sub>
 
-- **Look at:** A stew pot the size of a font. It smells of salt beef and decisions. <sub>rooms/below_decks.adv:76</sub>
-- **Pick up:** Dorrit's ladle arrives before my hand does. <sub>rooms/below_decks.adv:77</sub>
+- **Look at:** Hobb, by the chest, reading the barrel head like it's a letter. <sub>rooms/below_decks.adv:89</sub>
+- **Talk to:** He doesn't turn round. He says, "Come and look at this." <sub>rooms/below_decks.adv:90</sub>
+  - *[→ conversation* [hobb at hold](#dlg-hobb-hold) *— see Act I › The Shipwright's]* <sub>rooms/below_decks.adv:91</sub>
+- *When* *[if seen:hobb.hold]* <sub>rooms/below_decks.adv:92</sub>
+  - **Talk to:** He has not moved from the barrel. <sub>rooms/below_decks.adv:93</sub>
+    - *[→ conversation* [hobb at hold_after](#dlg-hobb-hold_after) *— see Act I › The Shipwright's]* <sub>rooms/below_decks.adv:94</sub>
 
-**the ship's bell** `bell` <sub>rooms/below_decks.adv:79</sub>
+**Dorrit** `dorrit` *[present Act II only]* <sub>rooms/below_decks.adv:96</sub>
 
-- **Look at:** A brass bell, polished till it shows me my own face. Dorrit rings it for meals. <sub>rooms/below_decks.adv:82</sub>
-- **Use:** I reach for the rope. Dorrit's ladle and I have already had this conversation. <sub>rooms/below_decks.adv:83</sub>
-- *When* *[if salvage_seen]* <sub>rooms/below_decks.adv:84</sub>
-  - **Look at:** The brass bell, polished. Dorrit rings it twice a day and lets nobody else near the rope. <sub>rooms/below_decks.adv:85</sub>
+- **Look at:** Dorrit at the stove, stirring a pot he has stopped believing in. <sub>rooms/below_decks.adv:100</sub>
+- **Talk to:** He keeps stirring. "You've seen the barrels, then." <sub>rooms/below_decks.adv:101</sub>
+  - *[→ conversation* [dorrit at galley](#dlg-dorrit-galley) *— see Act I › The Salty Keel]* <sub>rooms/below_decks.adv:102</sub>
+- *When* *[if salvage_seen = false]* <sub>rooms/below_decks.adv:103</sub>
+  - **Talk to:** He is watching the pot. He is not watching me. <sub>rooms/below_decks.adv:104</sub>
+    - *[→ conversation* [dorrit at galley](#dlg-dorrit-galley) *— see Act I › The Salty Keel]* <sub>rooms/below_decks.adv:105</sub>
 
-**Hobb** `hobb` *[present Act II only]* <sub>rooms/below_decks.adv:87</sub>
+**the ladder up to the deck** `ladder` <sub>rooms/below_decks.adv:107</sub>
 
-- **Look at:** Hobb, by the chest, reading the barrel head like it's a letter. <sub>rooms/below_decks.adv:91</sub>
-- **Talk to:** He doesn't turn round. He says, 'Come and look at this.' <sub>rooms/below_decks.adv:92</sub>
-  - *[→ conversation* [hobb at hold](#dlg-hobb-hold) *— see Act I › The Shipwright's]* <sub>rooms/below_decks.adv:93</sub>
-- *When* *[if seen:hobb.hold]* <sub>rooms/below_decks.adv:94</sub>
-  - **Talk to:** He has not moved from the barrel. <sub>rooms/below_decks.adv:95</sub>
-    - *[→ conversation* [hobb at hold_after](#dlg-hobb-hold_after) *— see Act I › The Shipwright's]* <sub>rooms/below_decks.adv:96</sub>
-
-**Dorrit** `dorrit` *[present Act II only]* <sub>rooms/below_decks.adv:98</sub>
-
-- **Look at:** Dorrit at the stove, stirring a pot he has stopped believing in. <sub>rooms/below_decks.adv:102</sub>
-- **Talk to:** He keeps stirring. 'You've seen the barrels, then.' <sub>rooms/below_decks.adv:103</sub>
-  - *[→ conversation* [dorrit at galley](#dlg-dorrit-galley) *— see Act I › The Salty Keel]* <sub>rooms/below_decks.adv:104</sub>
-- *When* *[if salvage_seen = false]* <sub>rooms/below_decks.adv:105</sub>
-  - **Talk to:** He is watching the pot. He is not watching me. <sub>rooms/below_decks.adv:106</sub>
-    - *[→ conversation* [dorrit at galley](#dlg-dorrit-galley) *— see Act I › The Salty Keel]* <sub>rooms/below_decks.adv:107</sub>
-
-**the ladder up to the deck** `ladder` <sub>rooms/below_decks.adv:109</sub>
-
-- **Look at:** The ladder up to the deck. Daylight, and the smell of open sea coming down it. <sub>rooms/below_decks.adv:113</sub>
-- **Use / Open / Walk to:** *[→ goes to The Marrow — Deck]* <sub>rooms/below_decks.adv:112</sub>
+- **Look at:** The ladder up to the deck. Daylight, and the smell of open sea coming down it. <sub>rooms/below_decks.adv:112</sub>
+- **Use / Open / Walk to:** *[→ goes to The Marrow — Deck]* <sub>rooms/below_decks.adv:111</sub>
 
 <a id="act2-marrow_quarterdeck"></a>
 ## The Marrow — Helm
@@ -3095,100 +3087,100 @@
 
 **On arrival**
 
-- *Once,* *[Act II, if salvage_seen and vex_exposed = false]* <sub>rooms/marrow_quarterdeck.adv:24</sub>
-  - **FENN (V.O.)**: Quill, Hobb and Dorrit come up behind me. Nobody says anything. <sub>rooms/marrow_quarterdeck.adv:25</sub>
-  - **FENN (V.O.)**: Vex is at the wheel. He does not turn around. <sub>rooms/marrow_quarterdeck.adv:26</sub>
-- *Once,* *[Act II, if vex_exposed and marrow_lost = false]* <sub>rooms/marrow_quarterdeck.adv:28</sub>
-  - **FENN (V.O.)**: Vex has the wheel. The Marrow is already turning into the fog. <sub>rooms/marrow_quarterdeck.adv:29</sub>
+- *Once,* *[Act II, if salvage_seen and vex_exposed = false]* <sub>rooms/marrow_quarterdeck.adv:32</sub>
+  - **FENN (V.O.)**: Quill, Hobb and Dorrit come up behind me. Nobody says anything. <sub>rooms/marrow_quarterdeck.adv:33</sub>
+  - **FENN (V.O.)**: Vex is at the wheel. He does not turn around. <sub>rooms/marrow_quarterdeck.adv:34</sub>
+- *Once,* *[Act II, if vex_exposed and marrow_lost = false]* <sub>rooms/marrow_quarterdeck.adv:36</sub>
+  - **FENN (V.O.)**: Vex has the wheel. The Marrow is already turning into the fog. <sub>rooms/marrow_quarterdeck.adv:37</sub>
 
-**Captain Vex** `vex` *[present Act II, if marrow_lost = false]* <sub>rooms/marrow_quarterdeck.adv:31</sub>
+**Captain Vex** `vex` *[present Act II, if marrow_lost = false]* <sub>rooms/marrow_quarterdeck.adv:39</sub>
 
-- **Look at:** Captain Vex at the helm, coat buttoned, both hands where the crew can see them. He likes to be seen working. <sub>rooms/marrow_quarterdeck.adv:35</sub>
-- **Talk to:** I get his attention. It takes some getting. <sub>rooms/marrow_quarterdeck.adv:36</sub>
-  - *[→ conversation* [vex at helm](#dlg-vex-helm) *— see Act I › Vex's Warehouse]* <sub>rooms/marrow_quarterdeck.adv:37</sub>
-- *When* *[Act II, if fog_tried and salvage_seen = false and vex_exposed = false]* <sub>rooms/marrow_quarterdeck.adv:38</sub>
-  - **Look at:** Vex is watching the water where the bell rang. He has not blinked. <sub>rooms/marrow_quarterdeck.adv:39</sub>
-  - **Talk to:** He hears me on the stairs and turns his head. <sub>rooms/marrow_quarterdeck.adv:40</sub>
-    - *[→ conversation* [vex at after_fog](#dlg-vex-after_fog) *— see Act I › Vex's Warehouse]* <sub>rooms/marrow_quarterdeck.adv:41</sub>
-- *When* *[Act II, if seen:vex.send and fog_tried = false and salvage_seen = false]* <sub>rooms/marrow_quarterdeck.adv:42</sub>
-  - **Look at:** Vex is watching the bow, not me. He is waiting for something out there. <sub>rooms/marrow_quarterdeck.adv:43</sub>
-  - **Talk to:** He does not turn from the bow. <sub>rooms/marrow_quarterdeck.adv:44</sub>
-    - *[→ conversation* [vex at helm_done](#dlg-vex-helm_done) *— see Act I › Vex's Warehouse]* <sub>rooms/marrow_quarterdeck.adv:45</sub>
-- *When* *[Act II, if salvage_seen and vex_exposed = false]* <sub>rooms/marrow_quarterdeck.adv:46</sub>
-  - **Look at:** Vex is at the wheel. He has not looked at me since the hold. <sub>rooms/marrow_quarterdeck.adv:47</sub>
-  - **Talk to:** The crew is behind me. He knows why. <sub>rooms/marrow_quarterdeck.adv:48</sub>
-    - *[→ conversation* [vex at confront](#dlg-vex-confront) *— see Act I › Vex's Warehouse]* <sub>rooms/marrow_quarterdeck.adv:49</sub>
-- *When* *[Act II, if vex_exposed and marrow_lost = false]* <sub>rooms/marrow_quarterdeck.adv:50</sub>
-  - **Look at:** Vex has both hands on the wheel. He is not waiting for permission. <sub>rooms/marrow_quarterdeck.adv:51</sub>
-  - **Talk to:** He does not turn around. "Say it or hold on." <sub>rooms/marrow_quarterdeck.adv:52</sub>
-    - *[→ conversation* [vex at last](#dlg-vex-last) *— see Act I › Vex's Warehouse]* <sub>rooms/marrow_quarterdeck.adv:53</sub>
+- **Look at:** Captain Vex at the helm, coat buttoned, both hands where the crew can see them. He likes to be seen working. <sub>rooms/marrow_quarterdeck.adv:43</sub>
+- **Talk to:** I get his attention. It takes some getting. <sub>rooms/marrow_quarterdeck.adv:44</sub>
+  - *[→ conversation* [vex at helm](#dlg-vex-helm) *— see Act I › Vex's Warehouse]* <sub>rooms/marrow_quarterdeck.adv:45</sub>
+- *When* *[Act II, if fog_tried and salvage_seen = false and vex_exposed = false]* <sub>rooms/marrow_quarterdeck.adv:46</sub>
+  - **Look at:** Vex is watching the water where the bell rang. He has not blinked. <sub>rooms/marrow_quarterdeck.adv:47</sub>
+  - **Talk to:** He hears me on the stairs and turns his head. <sub>rooms/marrow_quarterdeck.adv:48</sub>
+    - *[→ conversation* [vex at after_fog](#dlg-vex-after_fog) *— see Act I › Vex's Warehouse]* <sub>rooms/marrow_quarterdeck.adv:49</sub>
+- *When* *[Act II, if seen:vex.send and fog_tried = false and salvage_seen = false]* <sub>rooms/marrow_quarterdeck.adv:50</sub>
+  - **Look at:** Vex is watching the bow, not me. He is waiting for something out there. <sub>rooms/marrow_quarterdeck.adv:51</sub>
+  - **Talk to:** He does not turn from the bow. <sub>rooms/marrow_quarterdeck.adv:52</sub>
+    - *[→ conversation* [vex at helm_done](#dlg-vex-helm_done) *— see Act I › Vex's Warehouse]* <sub>rooms/marrow_quarterdeck.adv:53</sub>
+- *When* *[Act II, if salvage_seen and vex_exposed = false]* <sub>rooms/marrow_quarterdeck.adv:54</sub>
+  - **Look at:** Vex is at the wheel. He has not looked at me since the hold. <sub>rooms/marrow_quarterdeck.adv:55</sub>
+  - **Talk to:** The crew is behind me. He knows why. <sub>rooms/marrow_quarterdeck.adv:56</sub>
+    - *[→ conversation* [vex at confront](#dlg-vex-confront) *— see Act I › Vex's Warehouse]* <sub>rooms/marrow_quarterdeck.adv:57</sub>
+- *When* *[Act II, if vex_exposed and marrow_lost = false]* <sub>rooms/marrow_quarterdeck.adv:58</sub>
+  - **Look at:** Vex has both hands on the wheel. He is not waiting for permission. <sub>rooms/marrow_quarterdeck.adv:59</sub>
+  - **Talk to:** He does not turn around. "Say it or hold on." <sub>rooms/marrow_quarterdeck.adv:60</sub>
+    - *[→ conversation* [vex at last](#dlg-vex-last) *— see Act I › Vex's Warehouse]* <sub>rooms/marrow_quarterdeck.adv:61</sub>
 
-**the wheel** `wheel` <sub>rooms/marrow_quarterdeck.adv:55</sub>
+**the wheel** `wheel` <sub>rooms/marrow_quarterdeck.adv:63</sub>
 
-- **Look at:** The wheel, lashed to the captain's heading. It is bigger than it looks from the quay. <sub>rooms/marrow_quarterdeck.adv:58</sub>
-- **Use:** I put a hand on it. The ship does not notice, but I do. <sub>rooms/marrow_quarterdeck.adv:59</sub>
-- **Turn on:** There is nothing to turn on. The ship is already doing it. <sub>rooms/marrow_quarterdeck.adv:60</sub>
-- *When* *[Act II, if vex_exposed and marrow_lost = false]* <sub>rooms/marrow_quarterdeck.adv:61</sub>
-  - **Look at:** The wheel is turning under Vex's hands. He is taking her deeper. <sub>rooms/marrow_quarterdeck.adv:62</sub>
-  - **Use:** I put my hand beside his. He does not take it off. <sub>rooms/marrow_quarterdeck.adv:63</sub>
-    - *[→ conversation* [vex at last](#dlg-vex-last) *— see Act I › Vex's Warehouse]* <sub>rooms/marrow_quarterdeck.adv:64</sub>
+- **Look at:** The wheel, lashed to the captain's heading. It is bigger than it looks from the quay. <sub>rooms/marrow_quarterdeck.adv:66</sub>
+- **Use:** I put a hand on it. The ship does not notice, but I do. <sub>rooms/marrow_quarterdeck.adv:67</sub>
+- **Turn on:** There is nothing to turn on. The ship is already doing it. <sub>rooms/marrow_quarterdeck.adv:68</sub>
+- *When* *[Act II, if vex_exposed and marrow_lost = false]* <sub>rooms/marrow_quarterdeck.adv:69</sub>
+  - **Look at:** The wheel is turning under Vex's hands. He is taking her deeper. <sub>rooms/marrow_quarterdeck.adv:70</sub>
+  - **Use:** I put my hand beside his. He does not take it off. <sub>rooms/marrow_quarterdeck.adv:71</sub>
+    - *[→ conversation* [vex at last](#dlg-vex-last) *— see Act I › Vex's Warehouse]* <sub>rooms/marrow_quarterdeck.adv:72</sub>
 
-**the binnacle** `binnacle` <sub>rooms/marrow_quarterdeck.adv:66</sub>
+**the binnacle** `binnacle` <sub>rooms/marrow_quarterdeck.adv:74</sub>
 
-- **Look at:** The binnacle. A ship's compass in brass and glass, swinging slow. My father's compass disagrees with it. <sub>rooms/marrow_quarterdeck.adv:69</sub>
-- **Use:** The ship's compass points north. Mine points at the fog. One of them is wrong. <sub>rooms/marrow_quarterdeck.adv:70</sub>
-- **Open:** Sealed. You do not open a binnacle any more than you open a doctor. <sub>rooms/marrow_quarterdeck.adv:71</sub>
-- **Turn on:** It is lit. It has been lit since before I came aboard. <sub>rooms/marrow_quarterdeck.adv:72</sub>
+- **Look at:** The binnacle. A ship's compass in brass and glass, swinging slow. My father's compass disagrees with it. <sub>rooms/marrow_quarterdeck.adv:77</sub>
+- **Use:** The ship's compass points north. Mine points at the fog. One of them is wrong. <sub>rooms/marrow_quarterdeck.adv:78</sub>
+- **Open:** Sealed. You do not open a binnacle any more than you open a doctor. <sub>rooms/marrow_quarterdeck.adv:79</sub>
+- **Turn on:** It is lit. It has been lit since before I came aboard. <sub>rooms/marrow_quarterdeck.adv:80</sub>
 
-**the Shroud** `seas` <sub>rooms/marrow_quarterdeck.adv:74</sub>
+**the Shroud** `seas` <sub>rooms/marrow_quarterdeck.adv:82</sub>
 
-- **Look at:** The Shroud, ahead and to starboard, grey where the weather sits. It has taken every ship for eighty years. <sub>rooms/marrow_quarterdeck.adv:77</sub>
-- **Use:** I hold up my father's compass. The needle settles on the grey and stays there. <sub>rooms/marrow_quarterdeck.adv:78</sub>
+- **Look at:** The Shroud, ahead and to starboard, grey where the weather sits. It has taken every ship for eighty years. <sub>rooms/marrow_quarterdeck.adv:85</sub>
+- **Use:** I hold up my father's compass. The needle settles on the grey and stays there. <sub>rooms/marrow_quarterdeck.adv:86</sub>
 
-**the cabin door** `cabin_door` <sub>rooms/marrow_quarterdeck.adv:80</sub>
+**the cabin door** `cabin_door` <sub>rooms/marrow_quarterdeck.adv:88</sub>
 
-- **Look at:** Carved doors under the helm: the captain's cabin, and the charts. <sub>rooms/marrow_quarterdeck.adv:84</sub>
-- **Use / Walk to:** *[→ goes to The Marrow — Captain's Cabin]* <sub>rooms/marrow_quarterdeck.adv:83</sub>
-- **Open:** I knock, then go in. Nobody is here to stop me. <sub>rooms/marrow_quarterdeck.adv:85</sub>
-  - *[→ goes to The Marrow — Captain's Cabin]* <sub>rooms/marrow_quarterdeck.adv:83</sub>
+- **Look at:** The captain's door, carved and warm at the edges. The charts are in there. <sub>rooms/marrow_quarterdeck.adv:92</sub>
+- **Use / Walk to:** *[→ goes to The Marrow — Captain's Cabin]* <sub>rooms/marrow_quarterdeck.adv:91</sub>
+- **Open:** I knock, then go in. Nobody is here to stop me. <sub>rooms/marrow_quarterdeck.adv:93</sub>
+  - *[→ goes to The Marrow — Captain's Cabin]* <sub>rooms/marrow_quarterdeck.adv:91</sub>
 
-**the steps to the deck** `stairs_down` <sub>rooms/marrow_quarterdeck.adv:87</sub>
+**the steps to the deck** `stairs_down` <sub>rooms/marrow_quarterdeck.adv:95</sub>
 
-- **Look at:** The steps back down to the main deck. <sub>rooms/marrow_quarterdeck.adv:91</sub>
-- **Use / Walk to:** *[→ goes to The Marrow — Deck]* <sub>rooms/marrow_quarterdeck.adv:90</sub>
-- **Open:** I go down. <sub>rooms/marrow_quarterdeck.adv:92</sub>
-  - *[→ goes to The Marrow — Deck]* <sub>rooms/marrow_quarterdeck.adv:90</sub>
+- **Look at:** The open companionway, its cover thrown back. Warm light comes up the steps from the main deck. <sub>rooms/marrow_quarterdeck.adv:99</sub>
+- **Use / Walk to:** *[→ goes to The Marrow — Deck]* <sub>rooms/marrow_quarterdeck.adv:98</sub>
+- **Open:** I go down. <sub>rooms/marrow_quarterdeck.adv:100</sub>
+  - *[→ goes to The Marrow — Deck]* <sub>rooms/marrow_quarterdeck.adv:98</sub>
 
-**the rail lantern** `rail_lantern` <sub>rooms/marrow_quarterdeck.adv:94</sub>
+**the rail lantern** `rail_lantern` <sub>rooms/marrow_quarterdeck.adv:102</sub>
 
-- **Look at:** The rail lantern. It burns all night, whether anyone is watching or not. <sub>rooms/marrow_quarterdeck.adv:97</sub>
-- *When* *[if rule_light]* *— called “the last lantern”* <sub>rooms/marrow_quarterdeck.adv:98</sub>
-  - **Look at:** The lantern is burning. I keep looking at it, waiting for the fog to take it. <sub>rooms/marrow_quarterdeck.adv:100</sub>
-  - **Use:** I put my hand near the glass. Warm. For now. <sub>rooms/marrow_quarterdeck.adv:101</sub>
+- **Look at:** The rail lantern. It burns all night, whether anyone is watching or not. <sub>rooms/marrow_quarterdeck.adv:105</sub>
+- *When* *[if rule_light]* *— called “the last lantern”* <sub>rooms/marrow_quarterdeck.adv:106</sub>
+  - **Look at:** The lantern is burning. I keep looking at it, waiting for the fog to take it. <sub>rooms/marrow_quarterdeck.adv:108</sub>
+  - **Use:** I put my hand near the glass. Warm. For now. <sub>rooms/marrow_quarterdeck.adv:109</sub>
 
-**Quill** `quill` *[present Act II, if salvage_seen and marrow_lost = false]* <sub>rooms/marrow_quarterdeck.adv:103</sub>
+**Quill** `quill` *[present Act II, if salvage_seen and marrow_lost = false]* <sub>rooms/marrow_quarterdeck.adv:111</sub>
 
-- **Look at:** Quill has her spyglass out. She is not looking at the horizon. <sub>rooms/marrow_quarterdeck.adv:107</sub>
-- **Talk to:** She says, "Those crates had ships' names on them. I could read them from the door." <sub>rooms/marrow_quarterdeck.adv:108</sub>
-- **Give:** She does not take it. "Keep your hands where I can see them. Both of them." <sub>rooms/marrow_quarterdeck.adv:109</sub>
+- **Look at:** Quill has her spyglass out. She is not looking at the horizon. <sub>rooms/marrow_quarterdeck.adv:115</sub>
+- **Talk to:** She says, "Those crates came off another ship. I could tell from the door." <sub>rooms/marrow_quarterdeck.adv:116</sub>
+- **Give:** She does not take it. "Keep your hands where I can see them. Both of them." <sub>rooms/marrow_quarterdeck.adv:117</sub>
 
-**Hobb** `hobb` *[present Act II, if salvage_seen and marrow_lost = false]* <sub>rooms/marrow_quarterdeck.adv:111</sub>
+**Hobb** `hobb` *[present Act II, if salvage_seen and marrow_lost = false]* <sub>rooms/marrow_quarterdeck.adv:119</sub>
 
-- **Look at:** Hobb has his crowbar across his knees. He is holding it like a handrail. <sub>rooms/marrow_quarterdeck.adv:115</sub>
-- **Talk to:** He says, "I counted the crates. Then I stopped counting." <sub>rooms/marrow_quarterdeck.adv:116</sub>
-- **Give:** He looks at it for a long time. "Not yet. Not for this." <sub>rooms/marrow_quarterdeck.adv:117</sub>
+- **Look at:** Hobb has his crowbar across his knees. He is holding it like a handrail. <sub>rooms/marrow_quarterdeck.adv:123</sub>
+- **Talk to:** He says, "I counted the crates. Then I stopped counting." <sub>rooms/marrow_quarterdeck.adv:124</sub>
+- **Give:** He looks at it for a long time. "Not yet. Not for this." <sub>rooms/marrow_quarterdeck.adv:125</sub>
 
-**Dorrit** `dorrit` *[present Act II, if salvage_seen and marrow_lost = false]* <sub>rooms/marrow_quarterdeck.adv:119</sub>
+**Dorrit** `dorrit` *[present Act II, if salvage_seen and marrow_lost = false]* <sub>rooms/marrow_quarterdeck.adv:127</sub>
 
-- **Look at:** Dorrit has come up from the galley with his sleeves rolled. He is not holding a spoon. <sub>rooms/marrow_quarterdeck.adv:123</sub>
-- **Talk to:** He says, "I cooked for a man who sells the dead. I want that said somewhere." <sub>rooms/marrow_quarterdeck.adv:124</sub>
-- **Give:** He looks at my hands and puts his own behind his back. <sub>rooms/marrow_quarterdeck.adv:125</sub>
+- **Look at:** Dorrit has come up from the galley with his sleeves rolled. He is not holding a spoon. <sub>rooms/marrow_quarterdeck.adv:131</sub>
+- **Talk to:** He says, "I cooked for a man who sells the dead. I want that said somewhere." <sub>rooms/marrow_quarterdeck.adv:132</sub>
+- **Give:** He looks at my hands and puts his own behind his back. <sub>rooms/marrow_quarterdeck.adv:133</sub>
 
 **Combinations here**
 
-- **Use Elias's compass on the binnacle:** North, says the binnacle. The fog, says my father's compass. They glare at each other. <sub>rooms/marrow_quarterdeck.adv:128</sub>
-- **Use Elias's compass on the Shroud:** The needle points into the grey off the bow. It has never wanted anything so much. <sub>rooms/marrow_quarterdeck.adv:130</sub>
-- **Use Quill's spyglass on the Shroud:** Grey, then more grey, then a wave that is only a wave. <sub>rooms/marrow_quarterdeck.adv:132</sub>
+- **Use Elias's compass on the binnacle:** North, says the binnacle. The fog, says my father's compass. They glare at each other. <sub>rooms/marrow_quarterdeck.adv:136</sub>
+- **Use Elias's compass on the Shroud:** The needle points into the grey off the bow. It has never wanted anything so much. <sub>rooms/marrow_quarterdeck.adv:138</sub>
+- **Use Quill's spyglass on the Shroud:** Grey, then more grey, then a wave that is only a wave. <sub>rooms/marrow_quarterdeck.adv:140</sub>
 
 <a id="act2-marrow_cabin"></a>
 ## The Marrow — Captain's Cabin
@@ -3197,51 +3189,51 @@
 
 **On arrival**
 
-- *Once,* *[Act II, if fog_tried and gallery_hinted = false]* <sub>rooms/marrow_cabin.adv:20</sub>
-  - *[sets gallery_hinted]* <sub>rooms/marrow_cabin.adv:21</sub>
-  - **FENN (V.O.)**: The stern window is unlatched. The gallery is empty, and every lantern on it is lit. <sub>rooms/marrow_cabin.adv:22</sub>
-- *Once,* *[Act II, if vex_exposed = false]* <sub>rooms/marrow_cabin.adv:24</sub>
-  - **FENN (V.O.)**: Vex's cabin. The chart is out, the lamp is lit, and nobody is here to stop me. <sub>rooms/marrow_cabin.adv:25</sub>
+- *Once,* *[Act II, if fog_tried and gallery_hinted = false]* <sub>rooms/marrow_cabin.adv:30</sub>
+  - *[sets gallery_hinted]* <sub>rooms/marrow_cabin.adv:31</sub>
+  - **FENN (V.O.)**: The stern window is unlatched. The gallery is empty, and every lantern on it is lit. <sub>rooms/marrow_cabin.adv:32</sub>
+- *Once,* *[Act II, if vex_exposed = false]* <sub>rooms/marrow_cabin.adv:34</sub>
+  - **FENN (V.O.)**: Vex's cabin. The chart is out, the lamp is lit, and nobody is here to stop me. <sub>rooms/marrow_cabin.adv:35</sub>
 
-**the chart table** `chart` <sub>rooms/marrow_cabin.adv:27</sub>
+**the chart table** `chart` <sub>rooms/marrow_cabin.adv:37</sub>
 
-- **Look at:** Vex's chart of the Shroud. The edge is drawn in a careful hand, and the wrecks are marked in pencil. <sub>rooms/marrow_cabin.adv:30</sub>
-- **Use:** A salvage list, tucked under the chart's edge. Ships, dates, cargo, prices. Neat as a shopman's book. <sub>rooms/marrow_cabin.adv:31</sub>
-- **Open:** The chart is pinned at the corners. Vex does not like it moved. <sub>rooms/marrow_cabin.adv:32</sub>
+- **Look at:** Vex's chart of the Shroud. The coast is ruled in a careful hand; the wrecks are not marked yet. <sub>rooms/marrow_cabin.adv:40</sub>
+- **Use:** A bundle of papers, tucked under the chart's edge. Ships, dates, cargo, prices. Neat as a shopman's book. <sub>rooms/marrow_cabin.adv:41</sub>
+- **Open:** The chart is pinned at the corners. Vex does not like it moved. <sub>rooms/marrow_cabin.adv:42</sub>
 
-**the instrument shelf** `shelf` <sub>rooms/marrow_cabin.adv:34</sub>
+**the instrument shelf** `shelf` <sub>rooms/marrow_cabin.adv:44</sub>
 
-- **Look at:** A shelf of brass instruments, polished every morning. A telescope, dividers, and one thing that does nothing but look expensive. <sub>rooms/marrow_cabin.adv:37</sub>
-- **Use:** I do not touch another captain's instruments. That is how expensive things get broken. <sub>rooms/marrow_cabin.adv:38</sub>
+- **Look at:** A shelf of brass instruments, polished every morning. A telescope, dividers, and one thing that does nothing but look expensive. <sub>rooms/marrow_cabin.adv:47</sub>
+- **Use:** I do not touch another captain's instruments. That is how expensive things get broken. <sub>rooms/marrow_cabin.adv:48</sub>
 
-**the bunk** `bunk` <sub>rooms/marrow_cabin.adv:40</sub>
+**the bunk** `bunk` <sub>rooms/marrow_cabin.adv:50</sub>
 
-- **Look at:** A bunk made with naval precision. Under the pillow, a novel called Vengeance, face down. The cover has a lady and a sword. <sub>rooms/marrow_cabin.adv:43</sub>
+- **Look at:** A bunk made with naval precision. Under the pillow, a novel, face down. The cover has a lady and a sword. <sub>rooms/marrow_cabin.adv:53</sub>
 
-**the stern windows** `windows` <sub>rooms/marrow_cabin.adv:45</sub>
+**the stern windows** `windows` <sub>rooms/marrow_cabin.adv:55</sub>
 
-- **Look at:** The wake, going back to a harbour I cannot see. Every reason I took this berth is in that white water. <sub>rooms/marrow_cabin.adv:48</sub>
+- **Look at:** The wake, going back to a harbour I cannot see. Every reason I took this berth is in that white water. <sub>rooms/marrow_cabin.adv:58</sub>
 
-**out to the stern gallery** `gallery` <sub>rooms/marrow_cabin.adv:50</sub>
+**out to the stern gallery** `gallery` <sub>rooms/marrow_cabin.adv:60</sub>
 
-- **Look at:** Beyond the stern window, the captain's gallery, over the wake. Vex's. Nobody goes out uninvited. <sub>rooms/marrow_cabin.adv:53</sub>
-- **Open:** Without an invitation, I would only be a clerk on a balcony, being looked at. <sub>rooms/marrow_cabin.adv:55</sub>
-- **Walk to:** Without an invitation, I would only be a clerk on a balcony, being looked at. <sub>rooms/marrow_cabin.adv:54</sub>
-- *When* *[Act II, if fog_tried]* <sub>rooms/marrow_cabin.adv:56</sub>
-  - **Look at:** The gallery, and nobody on it. Vex is at the wheel; the invitation is the empty rail. <sub>rooms/marrow_cabin.adv:58</sub>
-  - **Use / Open:** *[→ goes to The Marrow — Stern Gallery]* <sub>rooms/marrow_cabin.adv:57</sub>
-  - **Walk to:** Out onto the gallery, while the captain is busy. <sub>rooms/marrow_cabin.adv:59</sub>
-    - *[→ goes to The Marrow — Stern Gallery]* <sub>rooms/marrow_cabin.adv:57</sub>
+- **Look at:** Beyond the stern window, the captain's gallery, over the wake. Vex's. Nobody goes out uninvited. <sub>rooms/marrow_cabin.adv:63</sub>
+- **Open:** Without an invitation, I would only be a stranger on a balcony, being looked at. <sub>rooms/marrow_cabin.adv:65</sub>
+- **Walk to:** Without an invitation, I would only be a stranger on a balcony, being looked at. <sub>rooms/marrow_cabin.adv:64</sub>
+- *When* *[Act II, if fog_tried]* <sub>rooms/marrow_cabin.adv:66</sub>
+  - **Look at:** The gallery, and nobody on it. Vex is at the wheel; the invitation is the empty rail. <sub>rooms/marrow_cabin.adv:68</sub>
+  - **Use / Open:** *[→ goes to The Marrow — Stern Gallery]* <sub>rooms/marrow_cabin.adv:67</sub>
+  - **Walk to:** Out onto the gallery, while the captain is busy. <sub>rooms/marrow_cabin.adv:69</sub>
+    - *[→ goes to The Marrow — Stern Gallery]* <sub>rooms/marrow_cabin.adv:67</sub>
 
-**the door to the helm** `door_out` <sub>rooms/marrow_cabin.adv:61</sub>
+**the door to the helm** `door_out` <sub>rooms/marrow_cabin.adv:71</sub>
 
-- **Look at:** The door back out to the quarterdeck. <sub>rooms/marrow_cabin.adv:65</sub>
-- **Use / Open / Walk to:** *[→ goes to The Marrow — Helm]* <sub>rooms/marrow_cabin.adv:64</sub>
+- **Look at:** The door back out to the quarterdeck, lamplight on the sill. <sub>rooms/marrow_cabin.adv:75</sub>
+- **Use / Open / Walk to:** *[→ goes to The Marrow — Helm]* <sub>rooms/marrow_cabin.adv:74</sub>
 
 **Combinations here**
 
-- **Use Elias's compass on the chart table:** The needle points past the edge Vex has drawn. It has no opinion about the pencil. <sub>rooms/marrow_cabin.adv:68</sub>
-- **Use Quill's spyglass on the stern windows:** The wake, closer. It is still going the wrong way. <sub>rooms/marrow_cabin.adv:70</sub>
+- **Use Elias's compass on the chart table:** The needle points past the edge Vex has drawn. It has no opinion about the pencil. <sub>rooms/marrow_cabin.adv:78</sub>
+- **Use Quill's spyglass on the stern windows:** The wake, closer. It is still going the wrong way. <sub>rooms/marrow_cabin.adv:80</sub>
 
 <a id="act2-marrow_gallery"></a>
 ## The Marrow — Stern Gallery
@@ -3250,65 +3242,65 @@
 
 **On arrival**
 
-- *Once,* *[Act II, if gallery_arrived = false]* <sub>rooms/marrow_gallery.adv:24</sub>
-  - *[sets gallery_arrived]* <sub>rooms/marrow_gallery.adv:25</sub>
-  - **FENN (V.O.)**: Sundown on the stern gallery. Quill is here, off watch, with the glass she does not need. <sub>rooms/marrow_gallery.adv:26</sub>
+- *Once,* *[Act II, if gallery_arrived = false]* <sub>rooms/marrow_gallery.adv:30</sub>
+  - *[sets gallery_arrived]* <sub>rooms/marrow_gallery.adv:31</sub>
+  - **FENN (V.O.)**: Sundown on the stern gallery. Quill is here, off watch, with the glass she does not need. <sub>rooms/marrow_gallery.adv:32</sub>
 
-**the cabin doors** `doors` <sub>rooms/marrow_gallery.adv:28</sub>
+**the cabin doors** `doors` <sub>rooms/marrow_gallery.adv:34</sub>
 
-- **Look at:** The doors back into the cabin, lamplight behind the glass. In there it is his ship. Out here it is only the sea. <sub>rooms/marrow_gallery.adv:32</sub>
-- **Use / Open / Walk to:** *[→ goes to The Marrow — Captain's Cabin]* <sub>rooms/marrow_gallery.adv:31</sub>
+- **Look at:** The doors back into the cabin, lamplight behind the glass. In there it is his ship. Out here it is only the sea. <sub>rooms/marrow_gallery.adv:38</sub>
+- **Use / Open / Walk to:** *[→ goes to The Marrow — Captain's Cabin]* <sub>rooms/marrow_gallery.adv:37</sub>
 
-**the sunset** `sun` <sub>rooms/marrow_gallery.adv:34</sub>
+**the sunset** `sun` <sub>rooms/marrow_gallery.adv:40</sub>
 
-- **Look at:** The sun is going into the sea with a lack of restraint that would embarrass a chart. <sub>rooms/marrow_gallery.adv:37</sub>
+- **Look at:** The sun is going into the sea with a lack of restraint that would embarrass a chart. <sub>rooms/marrow_gallery.adv:43</sub>
 
-**the wake** `wake` <sub>rooms/marrow_gallery.adv:39</sub>
+**the wake** `wake` <sub>rooms/marrow_gallery.adv:45</sub>
 
-- **Look at:** Our wake, ruled straight back to Dreadwater. The one line on this voyage I could draw myself. <sub>rooms/marrow_gallery.adv:42</sub>
+- **Look at:** Our wake, ruled straight back to Dreadwater. The one line on this voyage I could draw myself. <sub>rooms/marrow_gallery.adv:48</sub>
 
-**the Shroud** `sea` <sub>rooms/marrow_gallery.adv:44</sub>
+**the Shroud** `sea` <sub>rooms/marrow_gallery.adv:50</sub>
 
-- **Look at:** The water between us and the island. Every colour there is, and none of it on my chart. <sub>rooms/marrow_gallery.adv:47</sub>
+- **Look at:** The water between us and the island. Every colour there is, and none of it on my chart. <sub>rooms/marrow_gallery.adv:53</sub>
 
-**the islands** `islands` <sub>rooms/marrow_gallery.adv:49</sub>
+**the islands** `islands` <sub>rooms/marrow_gallery.adv:55</sub>
 
-- **Look at:** Islands going blue with distance, like ink drying. Not one of them with a name I know. <sub>rooms/marrow_gallery.adv:52</sub>
+- **Look at:** Islands going blue with distance, like ink drying. Not one of them with a name I know. <sub>rooms/marrow_gallery.adv:58</sub>
 
-**gulls** `gulls` <sub>rooms/marrow_gallery.adv:54</sub>
+**gulls** `gulls` <sub>rooms/marrow_gallery.adv:60</sub>
 
-- **Look at:** Gulls, hanging off the stern without a wingbeat. I have drawn worse birds than that. <sub>rooms/marrow_gallery.adv:57</sub>
+- **Look at:** Gulls, hanging off the stern without a wingbeat. I have drawn worse birds than that. <sub>rooms/marrow_gallery.adv:63</sub>
 
-**flying fish** `fish` <sub>rooms/marrow_gallery.adv:59</sub>
+**flying fish** `fish` <sub>rooms/marrow_gallery.adv:65</sub>
 
-- **Look at:** A flying fish leaves the sea, glides fifty yards on fins never meant for it, and drops back in, astonished. I know the feeling. <sub>rooms/marrow_gallery.adv:62</sub>
+- **Look at:** A flying fish leaves the sea, glides fifty yards on fins never meant for it, and drops back in, astonished. I know the feeling. <sub>rooms/marrow_gallery.adv:68</sub>
 
-**the rail** `rail` <sub>rooms/marrow_gallery.adv:64</sub>
+**the rail** `rail` <sub>rooms/marrow_gallery.adv:70</sub>
 
-- **Look at:** The rail, turned and polished by years of a captain's elbows. There is a dent in it the size of a glass. <sub>rooms/marrow_gallery.adv:67</sub>
-- **Push:** I lean on it, like a sailor. The sea leans back, like the sea. I stop. <sub>rooms/marrow_gallery.adv:68</sub>
+- **Look at:** The rail, turned and polished by years of a captain's elbows. There is a dent in it the size of a glass. <sub>rooms/marrow_gallery.adv:73</sub>
+- **Push:** I lean on it, like a sailor. The sea leans back, like the sea. I stop. <sub>rooms/marrow_gallery.adv:74</sub>
 
-**the captain's table** `table` <sub>rooms/marrow_gallery.adv:70</sub>
+**the captain's table** `table` <sub>rooms/marrow_gallery.adv:76</sub>
 
-- **Look at:** A bottle of rum and one glass. The glass is full and nobody is drinking it. <sub>rooms/marrow_gallery.adv:73</sub>
-- **Pick up:** It isn't mine to take. I get the feeling it isn't his either. <sub>rooms/marrow_gallery.adv:74</sub>
+- **Look at:** A bottle of rum and one glass. The glass is full and nobody is drinking it. <sub>rooms/marrow_gallery.adv:79</sub>
+- **Pick up:** It isn't mine to take. I get the feeling it isn't his either. <sub>rooms/marrow_gallery.adv:80</sub>
 
-**the stern lantern** `lantern` <sub>rooms/marrow_gallery.adv:76</sub>
+**the stern lantern** `lantern` <sub>rooms/marrow_gallery.adv:82</sub>
 
-- **Look at:** A brass lantern on a bracket, lit already, in case the sun changes its mind. <sub>rooms/marrow_gallery.adv:79</sub>
+- **Look at:** A brass lantern on a bracket, lit already, in case the sun changes its mind. <sub>rooms/marrow_gallery.adv:85</sub>
 
-**the carving** `carving` <sub>rooms/marrow_gallery.adv:81</sub>
+**the carving** `carving` <sub>rooms/marrow_gallery.adv:87</sub>
 
-- **Look at:** Gilt carving on the gallery corner: vines, a cherub, and a mermaid who looks tired of holding a pose. <sub>rooms/marrow_gallery.adv:84</sub>
+- **Look at:** Gilt carving on the gallery corner: vines, a cherub, and a mermaid who looks tired of holding a pose. <sub>rooms/marrow_gallery.adv:90</sub>
 
-**Quill** `quill` *[present Act II only]* <sub>rooms/marrow_gallery.adv:86</sub>
+**Quill** `quill` *[present Act II only]* <sub>rooms/marrow_gallery.adv:92</sub>
 
-- **Look at:** Quill at the rail, off watch, with her spyglass and the whole sunset and no use for either. <sub>rooms/marrow_gallery.adv:90</sub>
-- **Talk to:** She doesn't turn round. She moves the spyglass an inch along the rail, which I take as hello. <sub>rooms/marrow_gallery.adv:91</sub>
-  - *[→ conversation* [quill at gallery](#dlg-quill-gallery) *— see Act I › The Shipwright's]* <sub>rooms/marrow_gallery.adv:92</sub>
-- *When* *[if seen:quill.gallery]* <sub>rooms/marrow_gallery.adv:93</sub>
-  - **Talk to:** She has the spyglass pointed at nothing in particular. <sub>rooms/marrow_gallery.adv:94</sub>
-    - *[→ conversation* [quill at gallery_after](#dlg-quill-gallery_after) *— see Act I › The Shipwright's]* <sub>rooms/marrow_gallery.adv:95</sub>
+- **Look at:** Quill at the rail, off watch, with her spyglass and the whole sunset and no use for either. <sub>rooms/marrow_gallery.adv:96</sub>
+- **Talk to:** She doesn't turn round. She moves the spyglass an inch along the rail, which I take as hello. <sub>rooms/marrow_gallery.adv:97</sub>
+  - *[→ conversation* [quill at gallery](#dlg-quill-gallery) *— see Act I › The Shipwright's]* <sub>rooms/marrow_gallery.adv:98</sub>
+- *When* *[if seen:quill.gallery]* <sub>rooms/marrow_gallery.adv:99</sub>
+  - **Talk to:** She has the spyglass pointed at nothing in particular. <sub>rooms/marrow_gallery.adv:100</sub>
+    - *[→ conversation* [quill at gallery_after](#dlg-quill-gallery_after) *— see Act I › The Shipwright's]* <sub>rooms/marrow_gallery.adv:101</sub>
 
 <a id="act3"></a>
 # Act III: The Shroud
@@ -3318,96 +3310,97 @@
 
 *[Fenn carries: Elias's compass, Hobb's crowbar, Elias's chart]* <sub>acts.adv:18</sub>
 
-*[starts in The Fog Flats]*
+*[starts in The Wrack Line]*
 
 > **CAPTION**: The wreck of the Marrow behind us, the rock ahead. The fog is not empty. It has been waiting. <sub>acts.adv:19</sub>
 
 <a id="act3-lagoon_shore"></a>
-## The Fog Flats
+## The Wrack Line
 
 *[room* `lagoon_shore`*]* <sub>rooms/lagoon_shore.adv:1</sub>
 
 **On arrival**
 
-- *Once,* *[Act III, if stranded = false]* <sub>rooms/lagoon_shore.adv:30</sub>
-  - *[sets stranded]* <sub>rooms/lagoon_shore.adv:31</sub>
-  - **FENN (V.O.)**: The longboat comes in on a wave and stops hard on the sand. For a moment nobody moves. <sub>rooms/lagoon_shore.adv:32</sub>
-  - **FENN (V.O.)**: Behind us the Marrow is going down. The fog is in no hurry about it. <sub>rooms/lagoon_shore.adv:33</sub>
-  - **FENN (V.O.)**: I count heads. Quill. Dorrit. Hobb. Vex. Me. Five. That is the whole crew. <sub>rooms/lagoon_shore.adv:34</sub>
-  - **FENN (V.O.)**: Vex is the last one out. He stands with his coat over his face. Then he says it. <sub>rooms/lagoon_shore.adv:35</sub>
-  - **FENN (V.O.)**: "I saw your father. Three weeks back, out past the bar. He was standing on a rock." <sub>rooms/lagoon_shore.adv:36</sub>
-  - **FENN (V.O.)**: Nobody moves. The water goes on doing its small work along the sand. <sub>rooms/lagoon_shore.adv:37</sub>
-  - **FENN (V.O.)**: "I could have come about. I told myself the fog was too thick." <sub>rooms/lagoon_shore.adv:38</sub>
-  - **FENN (V.O.)**: Quill turns on him. "You knew," she says. "You knew, and you let us come." <sub>rooms/lagoon_shore.adv:39</sub>
-  - **FENN (V.O.)**: Dorrit does not say anything. That is how I know he is angry. <sub>rooms/lagoon_shore.adv:40</sub>
-  - **FENN (V.O.)**: Vex pulls the coat down. He looks older than he did this morning. <sub>rooms/lagoon_shore.adv:41</sub>
-  - **FENN (V.O.)**: "The fog was thinner than I told myself. He waved. I turned the wheel." <sub>rooms/lagoon_shore.adv:42</sub>
-  - **FENN (V.O.)**: "You can hate me on the walk. There is a long walk." <sub>rooms/lagoon_shore.adv:43</sub>
-  - **FENN (V.O.)**: Hobb has not said a word. He is looking out at the wreck on the reef. <sub>rooms/lagoon_shore.adv:44</sub>
-  - *[chart:* Vex saw my father on the rock three weeks back. He turned the wheel.*]* <sub>rooms/lagoon_shore.adv:45</sub>
-- *Once,* *[Act III, if stranded and nudge_reef_gate = false]* <sub>rooms/lagoon_shore.adv:49</sub>
-  - *[sets nudge_reef_gate]* <sub>rooms/lagoon_shore.adv:50</sub>
-  - **FENN (V.O.)**: East along the wet sand, the palisade stands where the flats end. One pale gap in it, and that is the gate. <sub>rooms/lagoon_shore.adv:51</sub>
-  - **FENN (V.O.)**: Vex does not turn round. "When the plan is real," he says. "Not before." <sub>rooms/lagoon_shore.adv:52</sub>
+- *Once,* *[Act III, if stranded = false]* <sub>rooms/lagoon_shore.adv:31</sub>
+  - *[sets stranded]* <sub>rooms/lagoon_shore.adv:32</sub>
+  - **FENN (V.O.)**: The longboat comes in on a wave and stops hard on the sand. For a moment nobody moves. <sub>rooms/lagoon_shore.adv:33</sub>
+  - **FENN (V.O.)**: Behind us the Marrow is going down. The fog is in no hurry about it. <sub>rooms/lagoon_shore.adv:34</sub>
+  - **FENN (V.O.)**: I count heads. Quill. Dorrit. Hobb. Vex. Me. Five. That is the whole crew. <sub>rooms/lagoon_shore.adv:35</sub>
+  - **FENN (V.O.)**: Vex is the last one out. He stands with his coat over his face. Then he says it. <sub>rooms/lagoon_shore.adv:36</sub>
+  - **FENN (V.O.)**: "I saw your father. Three weeks back, out past the bar. He was standing on a rock." <sub>rooms/lagoon_shore.adv:37</sub>
+  - **FENN (V.O.)**: Nobody moves. The water goes on doing its small work along the sand. <sub>rooms/lagoon_shore.adv:38</sub>
+  - **FENN (V.O.)**: "I could have come about. I told myself the fog was too thick." <sub>rooms/lagoon_shore.adv:39</sub>
+  - **FENN (V.O.)**: Quill turns on him. "You knew," she says. "You knew, and you let us come." <sub>rooms/lagoon_shore.adv:40</sub>
+  - **FENN (V.O.)**: Dorrit does not say anything. That is how I know he is angry. <sub>rooms/lagoon_shore.adv:41</sub>
+  - **FENN (V.O.)**: Vex pulls the coat down. He looks older than he did this morning. <sub>rooms/lagoon_shore.adv:42</sub>
+  - **FENN (V.O.)**: "The fog was thinner than I told myself. He waved. I turned the wheel." <sub>rooms/lagoon_shore.adv:43</sub>
+  - **FENN (V.O.)**: "You can hate me on the walk. There is a long walk." <sub>rooms/lagoon_shore.adv:44</sub>
+  - **FENN (V.O.)**: Hobb has not said a word. He is looking out at the wreck on the reef. <sub>rooms/lagoon_shore.adv:45</sub>
+  - *[chart:* Vex saw my father on the rock three weeks back. He turned the wheel.*]* <sub>rooms/lagoon_shore.adv:46</sub>
+- *Once,* *[Act III, if stranded and nudge_reef_gate = false]* <sub>rooms/lagoon_shore.adv:50</sub>
+  - *[sets nudge_reef_gate]* <sub>rooms/lagoon_shore.adv:51</sub>
+  - **FENN (V.O.)**: East along the wet sand, the palisade stands where the flats end. One pale gap in it, and that is the gate. <sub>rooms/lagoon_shore.adv:52</sub>
+  - **FENN (V.O.)**: Vex does not turn round. "When the plan is real," he says. "Not before." <sub>rooms/lagoon_shore.adv:53</sub>
 
-**the lagoon** `lagoon` <sub>rooms/lagoon_shore.adv:59</sub>
+**the lagoon** `lagoon` <sub>rooms/lagoon_shore.adv:60</sub>
 
-- **Look at:** The lagoon, flat and cold. The water lies in grey channels between the sandbars. <sub>rooms/lagoon_shore.adv:62</sub>
-- **Talk to:** I say my father's name out over the water. The water has heard it before. <sub>rooms/lagoon_shore.adv:63</sub>
-- **Use:** I could drink it. I have had worse from the tavern. <sub>rooms/lagoon_shore.adv:64</sub>
-- **Pick up:** I would need something to carry it in. My hands have been tried. <sub>rooms/lagoon_shore.adv:65</sub>
+- **Look at:** The lagoon, flat and cold. The water lies in grey channels between the sandbars. <sub>rooms/lagoon_shore.adv:63</sub>
+- **Talk to:** I say my father's name out over the water. The water has heard it before. <sub>rooms/lagoon_shore.adv:64</sub>
+- **Use:** I could drink it. I have had worse from the tavern. <sub>rooms/lagoon_shore.adv:65</sub>
+- **Pick up:** I would need something to carry it in. My hands have been tried. <sub>rooms/lagoon_shore.adv:66</sub>
 
-**the wreck in the fog** `wreck_far` <sub>rooms/lagoon_shore.adv:67</sub>
+**the wreck in the fog** `wreck_far` <sub>rooms/lagoon_shore.adv:68</sub>
 
-- **Look at:** A wreck far out in the fog, only her broken masts showing. The longboat is the only way out to her. <sub>rooms/lagoon_shore.adv:70</sub>
-- **Talk to:** I call across the flats. The fog takes it and gives nothing back. <sub>rooms/lagoon_shore.adv:71</sub>
-- **Use:** She is further out than she looks. Wrecks usually are. <sub>rooms/lagoon_shore.adv:72</sub>
+- **Look at:** A wreck far out in the fog, only her broken masts showing. The longboat is the only way out to her. <sub>rooms/lagoon_shore.adv:72</sub>
+- **Talk to:** I call across the flats. The fog takes it and gives nothing back. <sub>rooms/lagoon_shore.adv:73</sub>
+- **Use:** She is further out than she looks. Wrecks usually are. <sub>rooms/lagoon_shore.adv:74</sub>
 
-**the reef gate** `reef_gate` <sub>rooms/lagoon_shore.adv:76</sub>
+**the reef gate** `reef_gate` <sub>rooms/lagoon_shore.adv:78</sub>
 
-- **Look at:** A palisade on a far dune, sharpened posts against the fog. Whatever it keeps out, it has kept out for years. <sub>rooms/lagoon_shore.adv:80</sub>
-- **Use / Walk to:** *[→ goes to The Reef Gate]* <sub>rooms/lagoon_shore.adv:79</sub>
-- **Open:** I start across the wet flats toward the palisade. <sub>rooms/lagoon_shore.adv:81</sub>
-  - *[→ goes to The Reef Gate]* <sub>rooms/lagoon_shore.adv:79</sub>
+- **Look at:** A palisade on the dune above the flats, sharpened posts against the fog. Whatever it keeps out, it has kept out for years. <sub>rooms/lagoon_shore.adv:82</sub>
+- **Use / Walk to:** *[→ goes to The Reef Gate]* <sub>rooms/lagoon_shore.adv:81</sub>
+- **Open:** I start across the wet flats toward the palisade. <sub>rooms/lagoon_shore.adv:83</sub>
+  - *[→ goes to The Reef Gate]* <sub>rooms/lagoon_shore.adv:81</sub>
 
-**the longboat to the wreck** `boat` <sub>rooms/lagoon_shore.adv:83</sub>
+**the longboat to the wreck** `boat` <sub>rooms/lagoon_shore.adv:85</sub>
 
-- **Look at:** The longboat, drawn up on the wet sand. She carried five of us in and did not complain. <sub>rooms/lagoon_shore.adv:87</sub>
-- **Talk to:** I put my hand on her gunwale. She is the only thing we own that still floats. <sub>rooms/lagoon_shore.adv:88</sub>
-- **Use:** We row out to the wreck. Quill takes one oar and gives me the other, which she regrets. <sub>rooms/lagoon_shore.adv:90</sub>
-  - *[→ goes to The Sunken Wreck]* <sub>rooms/lagoon_shore.adv:86</sub>
-- **Open:** We row out to the wreck. Quill takes one oar and gives me the other, which she regrets. <sub>rooms/lagoon_shore.adv:89</sub>
-  - *[→ goes to The Sunken Wreck]* <sub>rooms/lagoon_shore.adv:86</sub>
-- **Walk to:** *[→ goes to The Sunken Wreck]* <sub>rooms/lagoon_shore.adv:86</sub>
+- **Look at:** The longboat, drawn up on the wet sand. She carried five of us in and did not complain. <sub>rooms/lagoon_shore.adv:89</sub>
+- **Talk to:** I put my hand on her gunwale. She is the only thing we own that still floats. <sub>rooms/lagoon_shore.adv:90</sub>
+- **Use:** We row out to the wreck. Quill takes one oar and gives me the other, which she regrets. <sub>rooms/lagoon_shore.adv:92</sub>
+  - *[→ goes to The Sunken Wreck]* <sub>rooms/lagoon_shore.adv:88</sub>
+- **Open:** We row out to the wreck. Quill takes one oar and gives me the other, which she regrets. <sub>rooms/lagoon_shore.adv:91</sub>
+  - *[→ goes to The Sunken Wreck]* <sub>rooms/lagoon_shore.adv:88</sub>
+- **Walk to:** *[→ goes to The Sunken Wreck]* <sub>rooms/lagoon_shore.adv:88</sub>
 
-**Vex** `vex` *[present Act III only]* <sub>rooms/lagoon_shore.adv:92</sub>
+**Vex** `vex` *[present Act III only]* <sub>rooms/lagoon_shore.adv:94</sub>
 
-- **Look at:** Vex, on the flats, with his coat half off. He has stopped being the captain of anything. <sub>rooms/lagoon_shore.adv:96</sub>
-- **Talk to:** He does not look up. "The tide is wrong. We have until it turns." <sub>rooms/lagoon_shore.adv:97</sub>
-- **Give:** He looks at my hands, then at the water. "Keep it. I travel light these days." <sub>rooms/lagoon_shore.adv:98</sub>
+- **Look at:** Vex, on the flats, with his coat half off. He has stopped being the captain of anything. <sub>rooms/lagoon_shore.adv:98</sub>
+- **Talk to:** He does not look up. "The tide is wrong. We have until it turns." <sub>rooms/lagoon_shore.adv:99</sub>
+  - *[→ conversation* [vex at shore](#dlg-vex-shore) *— see Act I › Vex's Warehouse]* <sub>rooms/lagoon_shore.adv:100</sub>
+- **Give:** He looks at my hands, then at the water. "Keep it. I travel light these days." <sub>rooms/lagoon_shore.adv:101</sub>
 
-**Quill** `quill` *[present Act III only]* <sub>rooms/lagoon_shore.adv:100</sub>
+**Quill** `quill` *[present Act III only]* <sub>rooms/lagoon_shore.adv:103</sub>
 
-- **Look at:** Quill, her back to the boat. She is watching the wreck as if it owes her money. <sub>rooms/lagoon_shore.adv:104</sub>
-- **Talk to:** She says, "I can row us out there. I want it noted that I said us." <sub>rooms/lagoon_shore.adv:105</sub>
-- **Give:** She does not turn around. "Put it away. I have oars to carry." <sub>rooms/lagoon_shore.adv:106</sub>
+- **Look at:** Quill, her back to the boat. She is watching the wreck as if it owes her money. <sub>rooms/lagoon_shore.adv:107</sub>
+- **Talk to:** She says, "I can row us out there. I want it noted that I said us." <sub>rooms/lagoon_shore.adv:108</sub>
+- **Give:** She does not turn around. "Put it away. I have oars to carry." <sub>rooms/lagoon_shore.adv:109</sub>
 
-**Dorrit** `dorrit` *[present Act III only]* <sub>rooms/lagoon_shore.adv:108</sub>
+**Dorrit** `dorrit` *[present Act III only]* <sub>rooms/lagoon_shore.adv:111</sub>
 
-- **Look at:** Dorrit, counting what came ashore, and not liking the total. <sub>rooms/lagoon_shore.adv:112</sub>
-- **Talk to:** He holds up a spoon. "One pot. Four spoons. A captain with no ship. That is the whole of it." <sub>rooms/lagoon_shore.adv:113</sub>
-- **Give:** He weighs it in one hand and gives it back. "Not unless it is a spoon." <sub>rooms/lagoon_shore.adv:114</sub>
+- **Look at:** Dorrit, counting what came ashore, and not liking the total. <sub>rooms/lagoon_shore.adv:115</sub>
+- **Talk to:** He holds up a spoon. "One pot. Four spoons. A captain with no ship. That is the whole of it." <sub>rooms/lagoon_shore.adv:116</sub>
+- **Give:** He weighs it in one hand and gives it back. "Not unless it is a spoon." <sub>rooms/lagoon_shore.adv:117</sub>
 
-**Hobb** `hobb` *[present Act III only]* <sub>rooms/lagoon_shore.adv:116</sub>
+**Hobb** `hobb` *[present Act III only]* <sub>rooms/lagoon_shore.adv:119</sub>
 
-- **Look at:** Hobb, standing apart with his hands behind his back. He is looking at the wreck in the fog. <sub>rooms/lagoon_shore.adv:120</sub>
-- **Talk to:** He does not turn. "That wreck is older than the island. Somebody should have taken her apart years ago." <sub>rooms/lagoon_shore.adv:121</sub>
-- **Give:** He shakes his head. "Keep your hands free. We will need them." <sub>rooms/lagoon_shore.adv:122</sub>
+- **Look at:** Hobb, standing apart with his hands behind his back. He is looking at the wreck in the fog. <sub>rooms/lagoon_shore.adv:123</sub>
+- **Talk to:** He does not turn. "That wreck is older than the island. Somebody should have taken her apart years ago." <sub>rooms/lagoon_shore.adv:124</sub>
+- **Give:** He shakes his head. "Keep your hands free. We will need them." <sub>rooms/lagoon_shore.adv:125</sub>
 
 **Combinations here**
 
-- **Use Elias's compass on the wreck in the fog:** The needle swings to the wreck, then past her, out into the fog. It stays there. <sub>rooms/lagoon_shore.adv:125</sub>
-- **Use Elias's compass on the reef gate:** The needle points at the gate, then at the wreck. It cannot choose, so I put it away. <sub>rooms/lagoon_shore.adv:127</sub>
+- **Use Elias's compass on the wreck in the fog:** The needle swings to the wreck, then past her, out into the fog. It stays there. <sub>rooms/lagoon_shore.adv:128</sub>
+- **Use Elias's compass on the reef gate:** The needle points at the gate, then at the wreck. It cannot choose, so I put it away. <sub>rooms/lagoon_shore.adv:130</sub>
 
 <a id="act3-key_gate"></a>
 ## The Reef Gate
@@ -3416,84 +3409,84 @@
 
 **On arrival**
 
-- *Once,* *[Act III, if elias_found and bell_plan and rule_name and lantern_boarded = false and key_gate_ready = false]* <sub>rooms/key_gate.adv:35</sub>
-  - *[sets key_gate_ready]* <sub>rooms/key_gate.adv:36</sub>
-  - **FENN (V.O.)**: The gate stands open. The longboat is in the water, and Vex is holding the oars. <sub>rooms/key_gate.adv:37</sub>
-  - **FENN (V.O.)**: Nobody is saying anything. That is how I know it is time. <sub>rooms/key_gate.adv:38</sub>
-- *Once,* *[Act III, if key_gate_arrived = false and (elias_found = false or bell_plan = false or rule_name = false)]* <sub>rooms/key_gate.adv:40</sub>
-  - *[sets key_gate_arrived]* <sub>rooms/key_gate.adv:41</sub>
-  - **FENN (V.O.)**: The reef gate. The palisade runs down into the fog and stops at the water. <sub>rooms/key_gate.adv:42</sub>
-  - **FENN (V.O.)**: Beyond it, the Grey Lantern is at anchor. One green light, and no other lights. <sub>rooms/key_gate.adv:43</sub>
-  - **FENN (V.O.)**: Vex is by the brazier. He has not looked at the gate once. <sub>rooms/key_gate.adv:44</sub>
+- *Once,* *[Act III, if elias_found and bell_plan and rule_name and lantern_boarded = false and key_gate_ready = false]* <sub>rooms/key_gate.adv:42</sub>
+  - *[sets key_gate_ready]* <sub>rooms/key_gate.adv:43</sub>
+  - **FENN (V.O.)**: The gate stands open. The longboat is in the water, and Vex is holding the oars. <sub>rooms/key_gate.adv:44</sub>
+  - **FENN (V.O.)**: Nobody is saying anything. That is how I know it is time. <sub>rooms/key_gate.adv:45</sub>
+- *Once,* *[Act III, if key_gate_arrived = false and (elias_found = false or bell_plan = false or rule_name = false)]* <sub>rooms/key_gate.adv:47</sub>
+  - *[sets key_gate_arrived]* <sub>rooms/key_gate.adv:48</sub>
+  - **FENN (V.O.)**: The reef gate. The palisade runs down into the fog and stops at the water. <sub>rooms/key_gate.adv:49</sub>
+  - **FENN (V.O.)**: Beyond it, the Grey Lantern is at anchor. One green light, and no other lights. <sub>rooms/key_gate.adv:50</sub>
+  - **FENN (V.O.)**: Vex is by the brazier. He has not looked at the gate once. <sub>rooms/key_gate.adv:51</sub>
 
-**the reef gate** `gate` <sub>rooms/key_gate.adv:48</sub>
+**the reef gate** `gate` <sub>rooms/key_gate.adv:55</sub>
 
-- **Look at:** The reef gate. Ship's timber, twice my height, one leaf standing open on the fog. <sub>rooms/key_gate.adv:51</sub>
-- **Open:** I step toward the opening. Vex does not move out of the way. <sub>rooms/key_gate.adv:52</sub>
-- **Push:** I push the open leaf. It swings a little and comes back. <sub>rooms/key_gate.adv:53</sub>
-- **Pull:** I pull the leaf. The hinge grinds, and nothing else happens. <sub>rooms/key_gate.adv:54</sub>
-- *When* *[Act III, if (elias_found = false or bell_plan = false or rule_name = false)]* *— called “the held gate”* <sub>rooms/key_gate.adv:55</sub>
-  - **Look at:** The gate stands open, but Vex has one hand on the post and the other in his pocket. <sub>rooms/key_gate.adv:57</sub>
-  - **Talk to:** Vex answers without turning round. "Not yet." <sub>rooms/key_gate.adv:58</sub>
-    - *[→ conversation* [vex at gate](#dlg-vex-gate) *— see Act I › Vex's Warehouse]* <sub>rooms/key_gate.adv:59</sub>
-- *When* *[Act III, if elias_found and bell_plan and rule_name and lantern_boarded = false]* *— called “the opened gate”* <sub>rooms/key_gate.adv:60</sub>
-  - **Look at:** The gate stands open. The longboat waits in the water at its foot. <sub>rooms/key_gate.adv:62</sub>
-  - **Open:** I walk up to the open gate. The fog comes in to meet me. <sub>rooms/key_gate.adv:63</sub>
-    - **FENN (V.O.)**: I put a hand on the open leaf. It swings wider into the cold. <sub>rooms/key_gate.adv:64</sub>
-    - **FENN (V.O.)**: At the foot of the gate, the longboat rides on water the colour of old pewter. <sub>rooms/key_gate.adv:65</sub>
-    - **FENN (V.O.)**: Hobb is in the bow with his crowbar. Quill has the spyglass. Nobody is talking. <sub>rooms/key_gate.adv:66</sub>
-    - **FENN (V.O.)**: Vex is in the stern with both oars shipped. He does not offer me a hand. <sub>rooms/key_gate.adv:67</sub>
-    - **FENN (V.O.)**: Out past him, the fog has a shape: a great dark hull, and one green light. <sub>rooms/key_gate.adv:68</sub>
-    - **FENN (V.O.)**: The bell rings once. It is not our bell. <sub>rooms/key_gate.adv:69</sub>
-    - *[sound: chime]* <sub>rooms/key_gate.adv:70</sub>
-    - **FENN (V.O.)**: I step into the boat. The gate stands open behind me, and nobody looks back. <sub>rooms/key_gate.adv:71</sub>
-    - **FENN (V.O.)**: Vex pulls. The Grey Lantern comes out of the fog to meet us. <sub>rooms/key_gate.adv:72</sub>
-    - *[sets lantern_boarded]* *[→ Act III ends]* <sub>rooms/key_gate.adv:73</sub>
+- **Look at:** The reef gate. Ship's timber, twice my height, one leaf standing open on the fog. <sub>rooms/key_gate.adv:58</sub>
+- **Open:** I step toward the opening. Vex does not move out of the way. <sub>rooms/key_gate.adv:59</sub>
+- **Push:** I push the open leaf. It swings a little and comes back. <sub>rooms/key_gate.adv:60</sub>
+- **Pull:** I pull the leaf. The hinge grinds, and nothing else happens. <sub>rooms/key_gate.adv:61</sub>
+- *When* *[Act III, if (elias_found = false or bell_plan = false or rule_name = false)]* *— called “the held gate”* <sub>rooms/key_gate.adv:62</sub>
+  - **Look at:** The gate stands open, but Vex has one hand on the post and the other in his pocket. <sub>rooms/key_gate.adv:64</sub>
+  - **Talk to:** Vex answers without turning round. "Not yet." <sub>rooms/key_gate.adv:65</sub>
+    - *[→ conversation* [vex at gate](#dlg-vex-gate) *— see Act I › Vex's Warehouse]* <sub>rooms/key_gate.adv:66</sub>
+- *When* *[Act III, if elias_found and bell_plan and rule_name and lantern_boarded = false]* *— called “the opened gate”* <sub>rooms/key_gate.adv:67</sub>
+  - **Look at:** The gate stands open. The longboat waits in the water at its foot. <sub>rooms/key_gate.adv:69</sub>
+  - **Open:** I walk up to the open gate. The fog comes in to meet me. <sub>rooms/key_gate.adv:70</sub>
+    - **FENN (V.O.)**: I put a hand on the open leaf. It swings wider into the cold. <sub>rooms/key_gate.adv:71</sub>
+    - **FENN (V.O.)**: At the foot of the gate, the longboat rides on water the colour of old pewter. <sub>rooms/key_gate.adv:72</sub>
+    - **FENN (V.O.)**: Hobb is in the bow with his crowbar. Quill has the spyglass. Nobody is talking. <sub>rooms/key_gate.adv:73</sub>
+    - **FENN (V.O.)**: Vex is in the stern with both oars shipped. He does not offer me a hand. <sub>rooms/key_gate.adv:74</sub>
+    - **FENN (V.O.)**: Out past him, the fog has a shape: a great dark hull, and one green light. <sub>rooms/key_gate.adv:75</sub>
+    - **FENN (V.O.)**: The bell rings once. It is not our bell. <sub>rooms/key_gate.adv:76</sub>
+    - *[sound: chime]* <sub>rooms/key_gate.adv:77</sub>
+    - **FENN (V.O.)**: I step into the boat. The gate stands open behind me, and nobody looks back. <sub>rooms/key_gate.adv:78</sub>
+    - **FENN (V.O.)**: Vex pulls. The Grey Lantern comes out of the fog to meet us. <sub>rooms/key_gate.adv:79</sub>
+    - *[sets lantern_boarded]* *[→ Act III ends]* <sub>rooms/key_gate.adv:80</sub>
 
-**the longboat** `boat` <sub>rooms/key_gate.adv:78</sub>
+**the longboat** `boat` <sub>rooms/key_gate.adv:85</sub>
 
-- **Look at:** The longboat, waiting in the shallow water before the gate. Her oars are shipped and her hull is the only thing here that still floats. <sub>rooms/key_gate.adv:81</sub>
-- **Talk to:** I put a hand on her gunwale. She rode five of us in and did not complain. <sub>rooms/key_gate.adv:82</sub>
-- **Use:** Vex has the oars. He is not moving them yet. <sub>rooms/key_gate.adv:83</sub>
-- *When* *[Act III, if (elias_found = false or bell_plan = false or rule_name = false)]* <sub>rooms/key_gate.adv:84</sub>
-  - **Look at:** The longboat, empty, in the gate's shadow. She is not going anywhere without a plan. <sub>rooms/key_gate.adv:85</sub>
-  - **Talk to:** She is still and empty. Vex is not looking at her either. <sub>rooms/key_gate.adv:86</sub>
-  - **Use:** I put a hand on her gunwale. Vex says, "Not yet." <sub>rooms/key_gate.adv:87</sub>
-- *When* *[Act III, if elias_found and bell_plan and rule_name and lantern_boarded = false]* <sub>rooms/key_gate.adv:88</sub>
-  - **Look at:** The longboat is in the water. Vex is holding her against the gate. <sub>rooms/key_gate.adv:89</sub>
-  - **Talk to:** Her oars are across the thwarts. Vex is holding her ready. <sub>rooms/key_gate.adv:90</sub>
-  - **Use:** The gate first. Then the boat. <sub>rooms/key_gate.adv:91</sub>
+- **Look at:** The longboat, waiting in the shallow water before the gate. Her oars are shipped and her hull is the only thing here that still floats. <sub>rooms/key_gate.adv:88</sub>
+- **Talk to:** I put a hand on her gunwale. She rode five of us in and did not complain. <sub>rooms/key_gate.adv:89</sub>
+- **Use:** Vex has the oars. He is not moving them yet. <sub>rooms/key_gate.adv:90</sub>
+- *When* *[Act III, if (elias_found = false or bell_plan = false or rule_name = false)]* <sub>rooms/key_gate.adv:91</sub>
+  - **Look at:** The longboat, empty, in the gate's shadow. She is not going anywhere without a plan. <sub>rooms/key_gate.adv:92</sub>
+  - **Talk to:** She is still and empty. Vex is not looking at her either. <sub>rooms/key_gate.adv:93</sub>
+  - **Use:** I put a hand on her gunwale. Vex says, "Not yet." <sub>rooms/key_gate.adv:94</sub>
+- *When* *[Act III, if elias_found and bell_plan and rule_name and lantern_boarded = false]* <sub>rooms/key_gate.adv:95</sub>
+  - **Look at:** The longboat is in the water. Vex is holding her against the gate. <sub>rooms/key_gate.adv:96</sub>
+  - **Talk to:** Her oars are across the thwarts. Vex is holding her ready. <sub>rooms/key_gate.adv:97</sub>
+  - **Use:** The gate first. Then the boat. <sub>rooms/key_gate.adv:98</sub>
 
-**the dark hull** `dark_hull` <sub>rooms/key_gate.adv:94</sub>
+**the dark hull** `dark_hull` <sub>rooms/key_gate.adv:101</sub>
 
-- **Look at:** Out past the palisade, the fog has a shape in it. A dark hull, long and low, and one green light. <sub>rooms/key_gate.adv:98</sub>
-- **Use:** I cannot reach it from here. That is what the gate is for. <sub>rooms/key_gate.adv:99</sub>
-- *When* *[Act III, if elias_found and bell_plan and rule_name]* <sub>rooms/key_gate.adv:100</sub>
-  - **Look at:** The Grey Lantern, half-seen. Dark hull, green lantern, and a bell I can hear. <sub>rooms/key_gate.adv:101</sub>
+- **Look at:** Out past the palisade, the fog has a shape in it. A dark hull, long and low, and one green light. <sub>rooms/key_gate.adv:105</sub>
+- **Use:** I cannot reach it from here. That is what the gate is for. <sub>rooms/key_gate.adv:106</sub>
+- *When* *[Act III, if elias_found and bell_plan and rule_name]* <sub>rooms/key_gate.adv:107</sub>
+  - **Look at:** The Grey Lantern, half-seen. Dark hull, green lantern, and a bell I can hear. <sub>rooms/key_gate.adv:108</sub>
 
-**the signal brazier** `brazier` <sub>rooms/key_gate.adv:103</sub>
+**the signal brazier** `brazier` <sub>rooms/key_gate.adv:110</sub>
 
-- **Look at:** A brazier of cold kelp, smoking to keep the fog down. Somebody has kept it lit all night. <sub>rooms/key_gate.adv:106</sub>
-- **Use:** I warm my hands. The smoke leans out to sea. <sub>rooms/key_gate.adv:107</sub>
-- **Turn off:** Vex would only light it again. He likes a fire he can stand beside. <sub>rooms/key_gate.adv:108</sub>
+- **Look at:** A brazier of cold kelp, smoking to keep the fog down. Somebody has kept it lit all night. <sub>rooms/key_gate.adv:113</sub>
+- **Use:** I warm my hands. The smoke leans out to sea. <sub>rooms/key_gate.adv:114</sub>
+- **Turn off:** Vex would only light it again. He likes a fire he can stand beside. <sub>rooms/key_gate.adv:115</sub>
 
-**the path to the flats** `path` <sub>rooms/key_gate.adv:111</sub>
+**the path to the flats** `path` <sub>rooms/key_gate.adv:119</sub>
 
-- **Look at:** The path back into the fog flats. The sand is the only thing out here that has not moved. <sub>rooms/key_gate.adv:115</sub>
-- **Use / Open / Walk to:** *[→ goes to The Fog Flats]* <sub>rooms/key_gate.adv:114</sub>
+- **Look at:** The path back into the fog flats. The sand is the only thing out here that has not moved. <sub>rooms/key_gate.adv:123</sub>
+- **Use / Open / Walk to:** *[→ goes to The Wrack Line]* <sub>rooms/key_gate.adv:122</sub>
 
-**Captain Vex** `vex` *[present Act III only]* <sub>rooms/key_gate.adv:117</sub>
+**Captain Vex** `vex` *[present Act III only]* <sub>rooms/key_gate.adv:125</sub>
 
-- **Look at:** Vex by the brazier, coat buttoned to the chin, watching the fog as if it owes him money. <sub>rooms/key_gate.adv:121</sub>
-- **Talk to:** He does not turn round. "If you've come to blame me, form a queue." <sub>rooms/key_gate.adv:122</sub>
-- *When* *[Act III, if elias_found and bell_plan and rule_name]* <sub>rooms/key_gate.adv:123</sub>
-  - **Look at:** Vex has stopped watching the fog. He is watching the boat. <sub>rooms/key_gate.adv:124</sub>
-  - **Talk to:** He holds the oars across his knees and looks at me. <sub>rooms/key_gate.adv:125</sub>
-    - *[→ conversation* [vex at board](#dlg-vex-board) *— see Act I › Vex's Warehouse]* <sub>rooms/key_gate.adv:126</sub>
-- *When* *[Act III, if (elias_found = false or bell_plan = false or rule_name = false)]* <sub>rooms/key_gate.adv:127</sub>
-  - **Look at:** Vex is counting something on his fingers. It looks like the crew. <sub>rooms/key_gate.adv:128</sub>
-  - **Talk to:** He says, "We are not ready. Tell me we are ready." <sub>rooms/key_gate.adv:129</sub>
-    - *[→ conversation* [vex at gate](#dlg-vex-gate) *— see Act I › Vex's Warehouse]* <sub>rooms/key_gate.adv:130</sub>
+- **Look at:** Vex by the brazier, coat buttoned to the chin, watching the fog as if it owes him money. <sub>rooms/key_gate.adv:129</sub>
+- **Talk to:** He does not turn round. "If you've come to blame me, form a queue." <sub>rooms/key_gate.adv:130</sub>
+- *When* *[Act III, if elias_found and bell_plan and rule_name]* <sub>rooms/key_gate.adv:131</sub>
+  - **Look at:** Vex has stopped watching the fog. He is watching the boat. <sub>rooms/key_gate.adv:132</sub>
+  - **Talk to:** He holds the oars across his knees and looks at me. <sub>rooms/key_gate.adv:133</sub>
+    - *[→ conversation* [vex at board](#dlg-vex-board) *— see Act I › Vex's Warehouse]* <sub>rooms/key_gate.adv:134</sub>
+- *When* *[Act III, if (elias_found = false or bell_plan = false or rule_name = false)]* <sub>rooms/key_gate.adv:135</sub>
+  - **Look at:** Vex is counting something on his fingers. It looks like the crew. <sub>rooms/key_gate.adv:136</sub>
+  - **Talk to:** He says, "We are not ready. Tell me we are ready." <sub>rooms/key_gate.adv:137</sub>
+    - *[→ conversation* [vex at gate](#dlg-vex-gate) *— see Act I › Vex's Warehouse]* <sub>rooms/key_gate.adv:138</sub>
 
 <a id="act3-reef_wreck"></a>
 ## The Sunken Wreck
@@ -3502,100 +3495,101 @@
 
 **On arrival**
 
-- *Once,* *[Act III, if wreck_bell = false]* <sub>rooms/reef_wreck.adv:28</sub>
-  - *[sets wreck_bell]* <sub>rooms/reef_wreck.adv:29</sub>
-  - **FENN (V.O.)**: The wreck leans out of the water, older than anything I have sailed past. <sub>rooms/reef_wreck.adv:30</sub>
-  - **FENN (V.O.)**: Hobb stops at her hull and puts one hand flat on the wood. <sub>rooms/reef_wreck.adv:31</sub>
-  - **FENN (V.O.)**: Then, from across the flats, a bell rings. <sub>rooms/reef_wreck.adv:32</sub>
-  - **FENN (V.O.)**: Three notes, then one. Then the same again, slow and steady. <sub>rooms/reef_wreck.adv:33</sub>
-  - **FENN (V.O.)**: Hobb lifts his head. "That's Tam," he says. He does not sound surprised. <sub>rooms/reef_wreck.adv:34</sub>
-  - **FENN (V.O.)**: Quill looks at me. Neither of us asks him how he knows. <sub>rooms/reef_wreck.adv:35</sub>
-  - *[chart:* The bell across the flats rings three, then one. Hobb says it is his brother Tam.*]* <sub>rooms/reef_wreck.adv:36</sub>
-- *Once,* *[Act III, if wreck_bell and nudge_camp_east = false]* <sub>rooms/reef_wreck.adv:40</sub>
-  - *[sets nudge_camp_east]* <sub>rooms/reef_wreck.adv:41</sub>
-  - **FENN (V.O.)**: East of the wreck the reef flattens into shallow water, and the tracks go on out of sight. <sub>rooms/reef_wreck.adv:42</sub>
-  - **FENN (V.O.)**: Dorrit is looking that way already. "If there are people out there," he says, "they will have a pot." <sub>rooms/reef_wreck.adv:43</sub>
+- *Once,* *[Act III, if wreck_bell = false]* <sub>rooms/reef_wreck.adv:35</sub>
+  - *[sets wreck_bell]* <sub>rooms/reef_wreck.adv:36</sub>
+  - **FENN (V.O.)**: The wreck leans out of the water, older than anything I have sailed past. <sub>rooms/reef_wreck.adv:37</sub>
+  - **FENN (V.O.)**: Hobb stops at her hull and puts one hand flat on the wood. <sub>rooms/reef_wreck.adv:38</sub>
+  - **FENN (V.O.)**: Then, from across the flats, a bell rings. <sub>rooms/reef_wreck.adv:39</sub>
+  - **FENN (V.O.)**: Three notes, then one. Then the same again, slow and steady. <sub>rooms/reef_wreck.adv:40</sub>
+  - **FENN (V.O.)**: Hobb lifts his head. "That's Tam," he says. He does not sound surprised. <sub>rooms/reef_wreck.adv:41</sub>
+  - **FENN (V.O.)**: Quill looks at me. Neither of us asks him how he knows. <sub>rooms/reef_wreck.adv:42</sub>
+  - *[chart:* The bell across the flats rings three, then one. Hobb says it is his brother Tam.*]* <sub>rooms/reef_wreck.adv:43</sub>
+- *Once,* *[Act III, if wreck_bell and nudge_camp_east = false]* <sub>rooms/reef_wreck.adv:47</sub>
+  - *[sets nudge_camp_east]* <sub>rooms/reef_wreck.adv:48</sub>
+  - **FENN (V.O.)**: East of the wreck the reef flattens into shallow water, and the tracks go on out of sight. <sub>rooms/reef_wreck.adv:49</sub>
+  - **FENN (V.O.)**: Dorrit is looking that way already. "If there are people out there," he says, "they will have a pot." <sub>rooms/reef_wreck.adv:50</sub>
 
-**the shallows** `shallows` <sub>rooms/reef_wreck.adv:50</sub>
+**the shallows** `shallows` <sub>rooms/reef_wreck.adv:59</sub>
 
-- **Look at:** Shallow water over pale sand, all the way out to the fog. <sub>rooms/reef_wreck.adv:53</sub>
-- **Talk to:** I say my father's name out over the water. The flats do not pass it on. <sub>rooms/reef_wreck.adv:54</sub>
-- **Use:** I could wade. The flats go on further than the light does. <sub>rooms/reef_wreck.adv:55</sub>
+- **Look at:** Shallow water over pale sand, all the way out to the fog. <sub>rooms/reef_wreck.adv:62</sub>
+- **Talk to:** I say my father's name out over the water. The flats do not pass it on. <sub>rooms/reef_wreck.adv:63</sub>
+- **Use:** I could wade. The flats go on further than the light does. <sub>rooms/reef_wreck.adv:64</sub>
 
-**the bell** `bell` <sub>rooms/reef_wreck.adv:57</sub>
+**the bell** `bell` <sub>rooms/reef_wreck.adv:66</sub>
 
-- **Look at:** A ship's bell, ringing somewhere out on the flats. There is no ship out there to ring it. <sub>rooms/reef_wreck.adv:60</sub>
-- **Talk to:** I call back across the water. The bell keeps its time and does not answer. <sub>rooms/reef_wreck.adv:61</sub>
-- **Use:** I would need a boat and a very good reason. I have one of each. <sub>rooms/reef_wreck.adv:62</sub>
-- *When* *[if bell_plan]* <sub>rooms/reef_wreck.adv:63</sub>
-  - **Look at:** The bell, three and one. Hobb says the hand on the rope is his brother's. <sub>rooms/reef_wreck.adv:64</sub>
-- *When* *[if wreck_bell]* <sub>rooms/reef_wreck.adv:65</sub>
-  - **Look at:** The bell again, three and one. It is coming from further out than the wreck. <sub>rooms/reef_wreck.adv:66</sub>
+- **Look at:** A ship's bell, ringing somewhere out on the flats. There is no ship out there to ring it. <sub>rooms/reef_wreck.adv:69</sub>
+- **Talk to:** I call back across the water. The bell keeps its time and does not answer. <sub>rooms/reef_wreck.adv:70</sub>
+- **Use:** I would need a boat and a very good reason. I have one of each. <sub>rooms/reef_wreck.adv:71</sub>
+- *When* *[if bell_plan]* <sub>rooms/reef_wreck.adv:72</sub>
+  - **Look at:** The bell, three and one. Hobb says the hand on the rope is his brother's. <sub>rooms/reef_wreck.adv:73</sub>
+- *When* *[if wreck_bell]* <sub>rooms/reef_wreck.adv:74</sub>
+  - **Look at:** The bell again, three and one. It is coming from further out than the wreck. <sub>rooms/reef_wreck.adv:75</sub>
 
-**the wreck** `wreck` <sub>rooms/reef_wreck.adv:68</sub>
+**the wreck** `wreck` <sub>rooms/reef_wreck.adv:77</sub>
 
-- **Look at:** The old wreck, heeled over on the coral. Her name went with her crew. <sub>rooms/reef_wreck.adv:71</sub>
-- **Talk to:** I knock on her hull. The sound goes in and does not come back. <sub>rooms/reef_wreck.adv:72</sub>
-- **Use:** Her deck is above the water at low tide. The way up is the broken rail. <sub>rooms/reef_wreck.adv:73</sub>
-- **Pick up:** I would need a bigger satchel and a smaller wreck. <sub>rooms/reef_wreck.adv:74</sub>
+- **Look at:** The old wreck, heeled over on the coral. Her name went with her crew. <sub>rooms/reef_wreck.adv:80</sub>
+- **Talk to:** I knock on her hull. The sound goes in and does not come back. <sub>rooms/reef_wreck.adv:81</sub>
+- **Use:** Her deck is above the water at low tide. The way up is the broken rail. <sub>rooms/reef_wreck.adv:82</sub>
+- **Pick up:** I would need a bigger satchel and a smaller wreck. <sub>rooms/reef_wreck.adv:83</sub>
 
-**the nameplate** `nameplate` *[present Act III only]* <sub>rooms/reef_wreck.adv:76</sub>
+**the nameplate** `nameplate` *[present Act III only]* <sub>rooms/reef_wreck.adv:85</sub>
 
-- **Look at:** A brass plate on a broken bow timber, green with salt. One letter shows through: an M. <sub>rooms/reef_wreck.adv:80</sub>
-- **Talk to:** I spell out what I can. Hobb does not need me to read it. <sub>rooms/reef_wreck.adv:82</sub>
-- **Use:** The plate is nailed fast. Hobb has the knife and the patience. <sub>rooms/reef_wreck.adv:81</sub>
-- *When* *[if has Mordant's nameplate]* *— called “the bare timber”* <sub>rooms/reef_wreck.adv:83</sub>
-  - **Look at:** The bare wood where the plate was. Hobb worked it loose and wrapped it in rag. <sub>rooms/reef_wreck.adv:85</sub>
+- **Look at:** A brass plate on a grey bow timber jammed in the wreck, green with salt. The engraving is worn too smooth to read from this distance. <sub>rooms/reef_wreck.adv:89</sub>
+- **Talk to:** I spell out what I can. Hobb does not need me to read it. <sub>rooms/reef_wreck.adv:91</sub>
+- **Use:** The plate is nailed fast. Hobb has the hands and the patience. <sub>rooms/reef_wreck.adv:90</sub>
+- *When* *[if has Mordant's nameplate]* *— called “the bare timber”* <sub>rooms/reef_wreck.adv:92</sub>
+  - **Look at:** The bare wood where the plate was. Hobb worked it loose and wrapped it in rag. <sub>rooms/reef_wreck.adv:94</sub>
 
-**the longboat to the flats** `boat` <sub>rooms/reef_wreck.adv:88</sub>
+**the longboat to the flats** `boat` <sub>rooms/reef_wreck.adv:97</sub>
 
-- **Look at:** The longboat, pulled up on the coral. Quill rowed. I sat in the stern and tried to look like ballast. <sub>rooms/reef_wreck.adv:92</sub>
-- **Use:** We row back to the flats. Quill lets me take an oar until she hears me use it. <sub>rooms/reef_wreck.adv:94</sub>
-  - *[→ goes to The Fog Flats]* <sub>rooms/reef_wreck.adv:91</sub>
-- **Open:** We row back to the flats. Quill lets me take an oar until she hears me use it. <sub>rooms/reef_wreck.adv:93</sub>
-  - *[→ goes to The Fog Flats]* <sub>rooms/reef_wreck.adv:91</sub>
-- **Walk to:** *[→ goes to The Fog Flats]* <sub>rooms/reef_wreck.adv:91</sub>
+- **Look at:** The longboat, pulled up on the coral. Quill rowed. I sat in the stern and tried to look like ballast. <sub>rooms/reef_wreck.adv:101</sub>
+- **Use:** We row back to the flats. Quill lets me take an oar until she hears me use it. <sub>rooms/reef_wreck.adv:103</sub>
+  - *[→ goes to The Wrack Line]* <sub>rooms/reef_wreck.adv:100</sub>
+- **Open:** We row back to the flats. Quill lets me take an oar until she hears me use it. <sub>rooms/reef_wreck.adv:102</sub>
+  - *[→ goes to The Wrack Line]* <sub>rooms/reef_wreck.adv:100</sub>
+- **Walk to:** *[→ goes to The Wrack Line]* <sub>rooms/reef_wreck.adv:100</sub>
 
-**the camp path east** `salt_flats` *[present Act III only]* <sub>rooms/reef_wreck.adv:98</sub>
+**the camp path east** `salt_flats` *[present Act III only]* <sub>rooms/reef_wreck.adv:107</sub>
 
-- **Look at:** The flats run east, out of sight of the wreck. Somebody has walked this way before. <sub>rooms/reef_wreck.adv:103</sub>
-- **Use / Walk to:** *[→ goes to The Castaway Camp]* <sub>rooms/reef_wreck.adv:102</sub>
-- **Open:** I head east across the flats, away from the water. <sub>rooms/reef_wreck.adv:104</sub>
-  - *[→ goes to The Castaway Camp]* <sub>rooms/reef_wreck.adv:102</sub>
+- **Look at:** The flats run east, out of sight of the wreck. Somebody has walked this way before. <sub>rooms/reef_wreck.adv:112</sub>
+- **Use / Walk to:** *[→ goes to The Castaway Camp]* <sub>rooms/reef_wreck.adv:111</sub>
+- **Open:** I head east across the flats, away from the water. <sub>rooms/reef_wreck.adv:113</sub>
+  - *[→ goes to The Castaway Camp]* <sub>rooms/reef_wreck.adv:111</sub>
 
-**Quill** `quill` *[present Act III only]* <sub>rooms/reef_wreck.adv:106</sub>
+**Quill** `quill` *[present Act III only]* <sub>rooms/reef_wreck.adv:115</sub>
 
-- **Look at:** Quill has the oars over her shoulder and no intention of putting them down. <sub>rooms/reef_wreck.adv:110</sub>
-- **Talk to:** She says, "Say the word and I will row you back. I am not saying it twice." <sub>rooms/reef_wreck.adv:111</sub>
-- **Give:** She shifts the oars. "My hands are full. Keep it." <sub>rooms/reef_wreck.adv:112</sub>
+- **Look at:** Quill has the oars over her shoulder and no intention of putting them down. <sub>rooms/reef_wreck.adv:119</sub>
+- **Talk to:** She says, "Say the word and I will row you back. I am not saying it twice." <sub>rooms/reef_wreck.adv:120</sub>
+- **Give:** She shifts the oars. "My hands are full. Keep it." <sub>rooms/reef_wreck.adv:121</sub>
 
-**Hobb** `hobb` *[present Act III only]* <sub>rooms/reef_wreck.adv:114</sub>
+**Hobb** `hobb` *[present Act III only]* <sub>rooms/reef_wreck.adv:123</sub>
 
-- **Look at:** Hobb, one hand on the wreck. He is listening to the flats. <sub>rooms/reef_wreck.adv:118</sub>
-- **Talk to:** He holds up a hand for quiet. Then he points out across the water. <sub>rooms/reef_wreck.adv:119</sub>
-  - *[→ conversation* [hobb at bell](#dlg-hobb-bell) *— see Act I › The Shipwright's]* <sub>rooms/reef_wreck.adv:120</sub>
-- **Give:** He looks at it, then at the wreck. "Keep it. I have work." <sub>rooms/reef_wreck.adv:121</sub>
-- *When* *[if bell_plan]* <sub>rooms/reef_wreck.adv:122</sub>
-  - **Look at:** Hobb is coiling a length of old rope. He has already chosen his end of the ship. <sub>rooms/reef_wreck.adv:123</sub>
-  - **Talk to:** He ties the coil and puts it over his shoulder. "The bell is mine." <sub>rooms/reef_wreck.adv:124</sub>
-    - *[→ conversation* [hobb at plan_after](#dlg-hobb-plan_after) *— see Act I › The Shipwright's]* <sub>rooms/reef_wreck.adv:125</sub>
+- **Look at:** Hobb, one hand on the wreck. He is listening to the flats. <sub>rooms/reef_wreck.adv:127</sub>
+- **Talk to:** He holds up a hand for quiet. Then he points out across the water. <sub>rooms/reef_wreck.adv:128</sub>
+  - *[→ conversation* [hobb at bell](#dlg-hobb-bell) *— see Act I › The Shipwright's]* <sub>rooms/reef_wreck.adv:129</sub>
+- **Give:** He looks at it, then at the wreck. "Keep it. I have work." <sub>rooms/reef_wreck.adv:130</sub>
+- *When* *[if bell_plan]* <sub>rooms/reef_wreck.adv:131</sub>
+  - **Look at:** Hobb is coiling a length of old rope. He has already chosen his end of the ship. <sub>rooms/reef_wreck.adv:132</sub>
+  - **Talk to:** He ties the coil and puts it over his shoulder. "The bell is mine." <sub>rooms/reef_wreck.adv:133</sub>
+    - *[→ conversation* [hobb at plan_after](#dlg-hobb-plan_after) *— see Act I › The Shipwright's]* <sub>rooms/reef_wreck.adv:134</sub>
 
-**Dorrit** `dorrit` *[present Act III only]* <sub>rooms/reef_wreck.adv:127</sub>
+**Dorrit** `dorrit` *[present Act III only]* <sub>rooms/reef_wreck.adv:136</sub>
 
-- **Look at:** Dorrit, out ahead of us, looking east. He has found something he does not like. <sub>rooms/reef_wreck.adv:131</sub>
-- **Talk to:** He says, "There are tents out there. Tents mean people. People mean they eat." <sub>rooms/reef_wreck.adv:132</sub>
-- **Give:** He does not look at it. "Unless it is food, keep it dry." <sub>rooms/reef_wreck.adv:133</sub>
+- **Look at:** Dorrit, out ahead of us, looking east. He has found something he does not like. <sub>rooms/reef_wreck.adv:140</sub>
+- **Talk to:** He says, "There are tents out there. Tents mean people. People mean they eat." <sub>rooms/reef_wreck.adv:141</sub>
+- **Give:** He does not look at it. "Unless it is food, keep it dry." <sub>rooms/reef_wreck.adv:142</sub>
 
-**Vex** `vex` *[present Act III only]* <sub>rooms/reef_wreck.adv:135</sub>
+**Vex** `vex` *[present Act III only]* <sub>rooms/reef_wreck.adv:144</sub>
 
-- **Look at:** Vex, on the rocks with his coat around him. He is in no hurry to move. <sub>rooms/reef_wreck.adv:139</sub>
-- **Talk to:** He says, "I have been in worse. Not often, and not with this crew." <sub>rooms/reef_wreck.adv:140</sub>
-- **Give:** He waves it away. "I have a coat and a bad reputation. That is luggage enough." <sub>rooms/reef_wreck.adv:141</sub>
+- **Look at:** Vex, on the rocks with his coat around him. He is in no hurry to move. <sub>rooms/reef_wreck.adv:148</sub>
+- **Talk to:** He says, "I have been in worse. Not often, and not with this crew." <sub>rooms/reef_wreck.adv:149</sub>
+  - *[→ conversation* [vex at wreck](#dlg-vex-wreck) *— see Act I › Vex's Warehouse]* <sub>rooms/reef_wreck.adv:150</sub>
+- **Give:** He waves it away. "I have a coat and a bad reputation. That is luggage enough." <sub>rooms/reef_wreck.adv:151</sub>
 
 **Combinations here**
 
-- **Use Elias's compass on the wreck:** The needle points at the hull, then down, at whatever is left of her under the water. <sub>rooms/reef_wreck.adv:144</sub>
-- **Use Hobb's crowbar on the nameplate:** Hobb takes the crowbar out of my hand. "Brass first. Iron after." <sub>rooms/reef_wreck.adv:146</sub>
+- **Use Elias's compass on the wreck:** The needle points at the hull, then down, at whatever is left of her under the water. <sub>rooms/reef_wreck.adv:154</sub>
+- **Use Hobb's crowbar on the nameplate:** Hobb takes the crowbar out of my hand. "Brass first. Iron after." <sub>rooms/reef_wreck.adv:156</sub>
 
 <a id="act3-salt_camp"></a>
 ## The Castaway Camp
@@ -3604,119 +3598,120 @@
 
 **On arrival**
 
-- *Once,* *[Act III, if elias_found = false]* <sub>rooms/salt_camp.adv:32</sub>
-  - **FENN (V.O.)**: The shore runs white into the salt pans. Tents, a line of washing, a hut with its door shut. <sub>rooms/salt_camp.adv:33</sub>
-  - **FENN (V.O.)**: Nobody comes out. The washing moves, and that is all. <sub>rooms/salt_camp.adv:34</sub>
-  - **FENN (V.O.)**: Then a man stands up from behind the tents. He does not put his work down. <sub>rooms/salt_camp.adv:35</sub>
-  - *[→ conversation* [elias at found](#dlg-elias-found) *— below]* <sub>rooms/salt_camp.adv:36</sub>
-- *Once,* *[Act III, if elias_found and nudge_camp_west = false]* <sub>rooms/salt_camp.adv:40</sub>
-  - *[sets nudge_camp_west]* <sub>rooms/salt_camp.adv:41</sub>
-  - **FENN (V.O.)**: West of the tents the salt runs white to the water. The shore goes back to the wreck; the pan bank goes out to the far flats. <sub>rooms/salt_camp.adv:42</sub>
-  - **FENN (V.O.)**: Elias does not look up from the chart. "The far flats are a dead end," he says. "The wreck is the way back to the gate." <sub>rooms/salt_camp.adv:43</sub>
+- *Once,* *[Act III, if elias_found = false]* <sub>rooms/salt_camp.adv:39</sub>
+  - **FENN (V.O.)**: The shore runs white into the salt pans. Tents, a line of washing, a hut with its door shut. <sub>rooms/salt_camp.adv:40</sub>
+  - **FENN (V.O.)**: Nobody comes out. The washing moves, and that is all. <sub>rooms/salt_camp.adv:41</sub>
+  - **FENN (V.O.)**: Then a man stands up from behind the tents. He does not put his work down. <sub>rooms/salt_camp.adv:42</sub>
+  - *[→ conversation* [elias at found](#dlg-elias-found) *— below]* <sub>rooms/salt_camp.adv:43</sub>
+- *Once,* *[Act III, if elias_found and nudge_camp_west = false]* <sub>rooms/salt_camp.adv:47</sub>
+  - *[sets nudge_camp_west]* <sub>rooms/salt_camp.adv:48</sub>
+  - **FENN (V.O.)**: West of the tents the salt runs white to the water. The shore goes back to the wreck; the pan bank goes out to the far flats. <sub>rooms/salt_camp.adv:49</sub>
+  - **FENN (V.O.)**: Elias does not look up from the chart. "The far flats are a dead end," he says. "The wreck is the way back to the gate." <sub>rooms/salt_camp.adv:50</sub>
 
-**the salt pans** `pans` <sub>rooms/salt_camp.adv:45</sub>
+**the salt pans** `pans` <sub>rooms/salt_camp.adv:52</sub>
 
-- **Look at:** Salt pans, raked into squares. The salt is stacked in white heaps at the corners. <sub>rooms/salt_camp.adv:48</sub>
-- **Use:** I touch a heap and lick my finger. Salt. It has been here longer than the camp. <sub>rooms/salt_camp.adv:49</sub>
+- **Look at:** Salt pans, raked into squares. The salt is stacked in white heaps at the corners. <sub>rooms/salt_camp.adv:55</sub>
+- **Use:** I touch a heap and lick my finger. Salt. It has been here longer than the camp. <sub>rooms/salt_camp.adv:56</sub>
 
-**the tents** `tents` <sub>rooms/salt_camp.adv:51</sub>
+**the tents** `tents` <sub>rooms/salt_camp.adv:58</sub>
 
-- **Look at:** A row of tents, patched with sailcloth. The doors are tied shut from the outside. <sub>rooms/salt_camp.adv:54</sub>
-- **Talk to:** I call out. The tents do not answer. <sub>rooms/salt_camp.adv:55</sub>
+- **Look at:** A row of tents, patched with sailcloth. The doors are tied shut from the outside, with a sailor's knot. Someone tied them on the way out. <sub>rooms/salt_camp.adv:61</sub>
+- **Talk to:** I call out. The tents do not answer. <sub>rooms/salt_camp.adv:62</sub>
 
-**the washing** `washing` <sub>rooms/salt_camp.adv:57</sub>
+**the washing** `washing` <sub>rooms/salt_camp.adv:64</sub>
 
-- **Look at:** Shirts on a line, stiff with salt. Somebody washed them for men who did not come back. <sub>rooms/salt_camp.adv:60</sub>
+- **Look at:** Shirts on a line, stiff with salt. Somebody washed them for men who did not come back. The pegs are still in. <sub>rooms/salt_camp.adv:67</sub>
 
-**the store hut** `hut` <sub>rooms/salt_camp.adv:62</sub>
+**the store hut** `hut` <sub>rooms/salt_camp.adv:69</sub>
 
-- **Look at:** A stout hut with a barred window and a padlock. The camp's store, or its gaol. <sub>rooms/salt_camp.adv:65</sub>
-- **Talk to:** I knock. The sound goes in and does not come back. <sub>rooms/salt_camp.adv:67</sub>
-- **Use:** I rattle the padlock. It holds. Nothing inside answers. <sub>rooms/salt_camp.adv:68</sub>
-- **Open:** The padlock is new. The hut is not. It does not open for me. <sub>rooms/salt_camp.adv:66</sub>
+- **Look at:** A stout hut with a barred window and a padlock. A ship's slate is nailed beside the door. One line is still legible: THE BELL CALLED. WE WENT. <sub>rooms/salt_camp.adv:72</sub>
+  - *[chart:* The camp's slate says the bell called and they went. The tents were tied shut from the outside.*]* <sub>rooms/salt_camp.adv:73</sub>
+- **Talk to:** I knock. The slate by the door has already answered. <sub>rooms/salt_camp.adv:75</sub>
+- **Use:** The padlock is new. The crowbar would open it. The slate has told me enough. <sub>rooms/salt_camp.adv:76</sub>
+- **Open:** The padlock is new. The hut is not. It does not open for me. <sub>rooms/salt_camp.adv:74</sub>
 
-**the pallet** `pallet` <sub>rooms/salt_camp.adv:70</sub>
+**the pallet** `pallet` <sub>rooms/salt_camp.adv:78</sub>
 
-- **Look at:** A low wooden pallet, half buried in salt. Somebody sat here to work. <sub>rooms/salt_camp.adv:73</sub>
-- **Use:** There is a hollow in the salt beside it, the shape of a man who sat too long. <sub>rooms/salt_camp.adv:74</sub>
+- **Look at:** A low wooden pallet, half buried in salt. Somebody sat here to work. <sub>rooms/salt_camp.adv:81</sub>
+- **Use:** There is a hollow in the salt beside it, the shape of a man who sat too long. <sub>rooms/salt_camp.adv:82</sub>
 
-**the rakes** `rakes` <sub>rooms/salt_camp.adv:76</sub>
+**the rakes** `rakes` <sub>rooms/salt_camp.adv:84</sub>
 
-- **Look at:** Two rakes, left where they were put down. The salt has started to grow over them. <sub>rooms/salt_camp.adv:79</sub>
-- **Pick up:** I would only be taking a rake from a man who is not coming back for it. <sub>rooms/salt_camp.adv:80</sub>
+- **Look at:** Two rakes, left where they were put down. The salt has started to grow over them. <sub>rooms/salt_camp.adv:87</sub>
+- **Pick up:** I would only be taking a rake from a man who is not coming back for it. <sub>rooms/salt_camp.adv:88</sub>
 
-**the lagoon** `lagoon` <sub>rooms/salt_camp.adv:82</sub>
+**the lagoon** `lagoon` <sub>rooms/salt_camp.adv:90</sub>
 
-- **Look at:** The lagoon, flat and bright. Past it, the fog is a white line. <sub>rooms/salt_camp.adv:85</sub>
-- **Talk to:** I say my father's name to the water. This time he is close enough to hear me. <sub>rooms/salt_camp.adv:86</sub>
-- **Use:** I would not drink it. The salt has had it first. <sub>rooms/salt_camp.adv:87</sub>
+- **Look at:** The lagoon, flat and bright. Past it, the fog is a white line. <sub>rooms/salt_camp.adv:93</sub>
+- **Talk to:** I say my father's name to the water. This time he is close enough to hear me. <sub>rooms/salt_camp.adv:94</sub>
+- **Use:** I would not drink it. The salt has had it first. <sub>rooms/salt_camp.adv:95</sub>
 
-**the shore to the wreck** `shore_path` <sub>rooms/salt_camp.adv:91</sub>
+**the shore to the wreck** `shore_path` <sub>rooms/salt_camp.adv:99</sub>
 
-- **Look at:** The shore runs back toward the wreck, white and empty. <sub>rooms/salt_camp.adv:95</sub>
-- **Use / Walk to:** *[→ goes to The Sunken Wreck]* <sub>rooms/salt_camp.adv:94</sub>
-- **Open:** I walk back along the shore. <sub>rooms/salt_camp.adv:96</sub>
-  - *[→ goes to The Sunken Wreck]* <sub>rooms/salt_camp.adv:94</sub>
+- **Look at:** The shore runs back toward the wreck, white and empty. <sub>rooms/salt_camp.adv:103</sub>
+- **Use / Walk to:** *[→ goes to The Sunken Wreck]* <sub>rooms/salt_camp.adv:102</sub>
+- **Open:** I walk back along the shore. <sub>rooms/salt_camp.adv:104</sub>
+  - *[→ goes to The Sunken Wreck]* <sub>rooms/salt_camp.adv:102</sub>
 
-**the path to the far pans** `pans_path` *[present if elias_found]* <sub>rooms/salt_camp.adv:98</sub>
+**the path to the far pans** `pans_path` *[present if elias_found]* <sub>rooms/salt_camp.adv:106</sub>
 
-- **Look at:** The salt pans run on toward the far flats. The shore is open that way. <sub>rooms/salt_camp.adv:103</sub>
-- **Use / Walk to:** *[→ goes to The Far Flats]* <sub>rooms/salt_camp.adv:102</sub>
-- **Open:** I walk out along the bank. <sub>rooms/salt_camp.adv:104</sub>
-  - *[→ goes to The Far Flats]* <sub>rooms/salt_camp.adv:102</sub>
+- **Look at:** The salt pans run on toward the far flats. The shore is open that way. <sub>rooms/salt_camp.adv:111</sub>
+- **Use / Walk to:** *[→ goes to The Far Flats]* <sub>rooms/salt_camp.adv:110</sub>
+- **Open:** I walk out along the bank. <sub>rooms/salt_camp.adv:112</sub>
+  - *[→ goes to The Far Flats]* <sub>rooms/salt_camp.adv:110</sub>
 
-**Dorrit** `dorrit` <sub>rooms/salt_camp.adv:106</sub>
+**Dorrit** `dorrit` <sub>rooms/salt_camp.adv:114</sub>
 
-- **Look at:** Dorrit, with his sleeves rolled up and salt on his boots. He is already planning a meal. <sub>rooms/salt_camp.adv:109</sub>
-- **Talk to:** He is looking at the empty camp as if it has personally offended him. <sub>rooms/salt_camp.adv:110</sub>
-  - *[→ conversation* [dorrit at camp](#dlg-dorrit-camp) *— see Act I › The Salty Keel]* <sub>rooms/salt_camp.adv:111</sub>
+- **Look at:** Dorrit, with his sleeves rolled up and salt on his boots. He is already planning a meal. <sub>rooms/salt_camp.adv:117</sub>
+- **Talk to:** He is looking at the empty camp as if it has personally offended him. <sub>rooms/salt_camp.adv:118</sub>
+  - *[→ conversation* [dorrit at camp](#dlg-dorrit-camp) *— see Act I › The Salty Keel]* <sub>rooms/salt_camp.adv:119</sub>
 
-**Elias Fenn** `elias` <sub>rooms/salt_camp.adv:113</sub>
+**Elias Fenn** `elias` <sub>rooms/salt_camp.adv:121</sub>
 
-- **Look at:** A thin man in a coat too big for him. He has been drawing all morning. <sub>rooms/salt_camp.adv:116</sub>
-- **Talk to:** He looks up. Then he looks at me properly. <sub>rooms/salt_camp.adv:117</sub>
-  - *[→ conversation* [elias at found](#dlg-elias-found) *— below]* <sub>rooms/salt_camp.adv:118</sub>
-- *When* *[if rule_name]* *— called “Elias, my father”* <sub>rooms/salt_camp.adv:119</sub>
-  - **Look at:** My father, with salt in his beard. He has told me the rules. He looks lighter. <sub>rooms/salt_camp.adv:121</sub>
-  - **Talk to:** He has the chart ready. "Say the word," he says. <sub>rooms/salt_camp.adv:122</sub>
-    - *[→ conversation* [elias at hub](#dlg-elias-hub) *— below]* <sub>rooms/salt_camp.adv:123</sub>
-- *When* *[if elias_found]* *— called “Elias, my father”* <sub>rooms/salt_camp.adv:124</sub>
-  - **Look at:** My father, with salt in his beard. He is still drawing. <sub>rooms/salt_camp.adv:126</sub>
-  - **Talk to:** He moves the chart to make room for me. <sub>rooms/salt_camp.adv:127</sub>
-    - *[→ conversation* [elias at hub](#dlg-elias-hub) *— below]* <sub>rooms/salt_camp.adv:128</sub>
+- **Look at:** A thin man in a coat too big for him. He has been drawing all morning. <sub>rooms/salt_camp.adv:124</sub>
+- **Talk to:** He looks up. Then he looks at me properly. <sub>rooms/salt_camp.adv:125</sub>
+  - *[→ conversation* [elias at found](#dlg-elias-found) *— below]* <sub>rooms/salt_camp.adv:126</sub>
+- *When* *[if rule_name]* *— called “Elias, my father”* <sub>rooms/salt_camp.adv:127</sub>
+  - **Look at:** My father, with salt in his beard. He has told me the rules. He looks lighter. <sub>rooms/salt_camp.adv:129</sub>
+  - **Talk to:** He has the chart ready. "Say the word," he says. <sub>rooms/salt_camp.adv:130</sub>
+    - *[→ conversation* [elias at hub](#dlg-elias-hub) *— below]* <sub>rooms/salt_camp.adv:131</sub>
+- *When* *[if elias_found]* *— called “Elias, my father”* <sub>rooms/salt_camp.adv:132</sub>
+  - **Look at:** My father, with salt in his beard. He is still drawing. <sub>rooms/salt_camp.adv:134</sub>
+  - **Talk to:** He moves the chart to make room for me. <sub>rooms/salt_camp.adv:135</sub>
+    - *[→ conversation* [elias at hub](#dlg-elias-hub) *— below]* <sub>rooms/salt_camp.adv:136</sub>
 
-**Hobb** `hobb` <sub>rooms/salt_camp.adv:130</sub>
+**Hobb** `hobb` <sub>rooms/salt_camp.adv:138</sub>
 
-- **Look at:** Hobb, with his back to the camp, looking at the fog. <sub>rooms/salt_camp.adv:133</sub>
-- **Talk to:** He does not turn round. <sub>rooms/salt_camp.adv:134</sub>
-  - **FENN (V.O.)**: "The bell," Hobb says. "I heard it. It's Tam." <sub>rooms/salt_camp.adv:135</sub>
-  - **FENN (V.O.)**: He says it the way he says everything. Once. <sub>rooms/salt_camp.adv:136</sub>
-- *When* *[if rule_name]* <sub>rooms/salt_camp.adv:137</sub>
-  - **Talk to:** He is looking at the fog, but he is listening to me. <sub>rooms/salt_camp.adv:138</sub>
-    - **FENN (V.O.)**: "Cut the bell," he says. "Then we bring him home." <sub>rooms/salt_camp.adv:139</sub>
-    - **FENN (V.O.)**: He nods. It is the whole speech. <sub>rooms/salt_camp.adv:140</sub>
+- **Look at:** Hobb, with his back to the camp, looking at the fog. <sub>rooms/salt_camp.adv:141</sub>
+- **Talk to:** He does not turn round. <sub>rooms/salt_camp.adv:142</sub>
+  - **FENN (V.O.)**: "The bell," Hobb says. "I heard it. It's Tam." <sub>rooms/salt_camp.adv:143</sub>
+  - **FENN (V.O.)**: He says it the way he says everything. Once. <sub>rooms/salt_camp.adv:144</sub>
+- *When* *[if rule_name]* <sub>rooms/salt_camp.adv:145</sub>
+  - **Talk to:** He is looking at the fog, but he is listening to me. <sub>rooms/salt_camp.adv:146</sub>
+    - **FENN (V.O.)**: "Cut the bell," he says. "Then we bring him home." <sub>rooms/salt_camp.adv:147</sub>
+    - **FENN (V.O.)**: He nods. It is the whole speech. <sub>rooms/salt_camp.adv:148</sub>
 
-**Quill** `quill` <sub>rooms/salt_camp.adv:142</sub>
+**Quill** `quill` <sub>rooms/salt_camp.adv:150</sub>
 
-- **Look at:** Quill, with her glass under her arm and salt in her hair. She has been counting the tents. <sub>rooms/salt_camp.adv:145</sub>
-- **Talk to:** She is watching the camp, not me. <sub>rooms/salt_camp.adv:146</sub>
-  - *[→ conversation* [quill at camp](#dlg-quill-camp) *— see Act I › The Shipwright's]* <sub>rooms/salt_camp.adv:147</sub>
+- **Look at:** Quill, with her glass under her arm and salt in her hair. She has been counting the tents. <sub>rooms/salt_camp.adv:153</sub>
+- **Talk to:** She is watching the camp, not me. <sub>rooms/salt_camp.adv:154</sub>
+  - *[→ conversation* [quill at camp](#dlg-quill-camp) *— see Act I › The Shipwright's]* <sub>rooms/salt_camp.adv:155</sub>
 
-**Captain Vex** `vex` <sub>rooms/salt_camp.adv:149</sub>
+**Captain Vex** `vex` <sub>rooms/salt_camp.adv:157</sub>
 
-- **Look at:** Vex, standing apart from the tents with his coat pulled round him. He has not sat down. <sub>rooms/salt_camp.adv:152</sub>
-- **Talk to:** He sees me coming and does not look away. That is new. <sub>rooms/salt_camp.adv:153</sub>
-  - **FENN (V.O.)**: He says: "I saw him. After the Arcadia went down. He was on the reef, waving." <sub>rooms/salt_camp.adv:154</sub>
-- *When* *[if seen:elias.marrow]* <sub>rooms/salt_camp.adv:155</sub>
-  - **Talk to:** He knows what I am going to ask. <sub>rooms/salt_camp.adv:156</sub>
-    - **FENN (V.O.)**: "I turned my light away," Vex says. "I told myself it was the wind." <sub>rooms/salt_camp.adv:157</sub>
-    - **FENN (V.O.)**: Then he looks like Vex again, and asks me about the bell. <sub>rooms/salt_camp.adv:158</sub>
+- **Look at:** Vex, standing apart from the tents with his coat pulled round him. He has not sat down. <sub>rooms/salt_camp.adv:160</sub>
+- **Talk to:** He sees me coming and does not look away. That is new. <sub>rooms/salt_camp.adv:161</sub>
+  - **FENN (V.O.)**: He says: "You have heard it by now. I am not going to dress it up." <sub>rooms/salt_camp.adv:162</sub>
+- *When* *[if seen:vex.saw_elias]* <sub>rooms/salt_camp.adv:163</sub>
+  - **Talk to:** He knows I have heard the rest. <sub>rooms/salt_camp.adv:164</sub>
+    - **FENN (V.O.)**: "I have said my part," Vex says. "I am not going to say it better." <sub>rooms/salt_camp.adv:165</sub>
+    - **FENN (V.O.)**: Then he looks like Vex again, and asks me about the bell. <sub>rooms/salt_camp.adv:166</sub>
 
 **Combinations here**
 
-- **Use Elias's compass on Elias Fenn:** He turns it over. "Still pointing at the fog," he says. "So am I." <sub>rooms/salt_camp.adv:161</sub>
-- **Use Elias's compass on Quill:** She holds it up. "Still the fog," she says. She does not sound sorry. <sub>rooms/salt_camp.adv:163</sub>
-- **Use Hobb's crowbar on the store hut:** The padlock is new. The crowbar would open it. I decide I do not want to know. <sub>rooms/salt_camp.adv:165</sub>
+- **Use Elias's compass on Elias Fenn:** He turns it over. "Still pointing at the fog," he says. "So am I." <sub>rooms/salt_camp.adv:169</sub>
+- **Use Elias's compass on Quill:** She holds it up. "Still the fog," she says. She does not sound sorry. <sub>rooms/salt_camp.adv:171</sub>
+- **Use Hobb's crowbar on the store hut:** The padlock is new. The crowbar would open it. I leave the lock alone. <sub>rooms/salt_camp.adv:173</sub>
 
 <a id="dlg-elias"></a>
 ### Conversation: elias (Elias Fenn)
@@ -3900,7 +3895,7 @@
 
 *[entry points opened directly from elsewhere, or reached only from them:]*
 
-*[hub: opened directly from rooms/salt_camp.adv:123, rooms/salt_camp.adv:128]*
+*[hub: opened directly from rooms/salt_camp.adv:131, rooms/salt_camp.adv:136]*
 
 <a id="dlg-elias-hub"></a>`hub` **ELIAS FENN**: Still here? The plan won't wait. Neither will Hobb. <sub>dialogue/elias.adv:164</sub>
 - **1.** **FENN**: Tell me about the chart. <sub>dialogue/elias.adv:165</sub>
@@ -3915,42 +3910,47 @@
   - *→ continues at* [plan_again](#dlg-elias-plan_again)
 - **6.** **FENN**: Whose camp is this? <sub>dialogue/elias.adv:170</sub>
   - *→ continues at* [camp_hub](#dlg-elias-camp_hub)
-- **7.** **FENN**: Are you all right? <sub>dialogue/elias.adv:171</sub>
+- **7.** **FENN**: The slate says the bell called them. *[if looked:salt_camp.hut]* <sub>dialogue/elias.adv:171</sub>
+  - *→ continues at* [camp_slate](#dlg-elias-camp_slate)
+- **8.** **FENN**: Are you all right? <sub>dialogue/elias.adv:172</sub>
   - *→ continues at* [allright](#dlg-elias-allright)
-- **8.** **FENN**: I'll be back. <sub>dialogue/elias.adv:172</sub>
+- **9.** **FENN**: I'll be back. <sub>dialogue/elias.adv:173</sub>
   - *[ends]*
 
-<a id="dlg-elias-chart_hub"></a>`chart_hub` **ELIAS FENN**: The chart is the only thing I've made out here. I'd like it to be worth something. <sub>dialogue/elias.adv:174</sub>
+<a id="dlg-elias-chart_hub"></a>`chart_hub` **ELIAS FENN**: The chart is the only thing I've made out here. I'd like it to be worth something. <sub>dialogue/elias.adv:175</sub>
 - *→ continues at* [hub](#dlg-elias-hub) *(above)*
 
-<a id="dlg-elias-arcadia_hub"></a>`arcadia_hub` **ELIAS FENN**: She was a good ship. I was lucky. I keep thinking about the ones who weren't. <sub>dialogue/elias.adv:177</sub>
+<a id="dlg-elias-arcadia_hub"></a>`arcadia_hub` **ELIAS FENN**: She was a good ship. I was lucky. I keep thinking about the ones who weren't. <sub>dialogue/elias.adv:178</sub>
 - *→ continues at* [hub](#dlg-elias-hub) *(above)*
 
-<a id="dlg-elias-marrow"></a>`marrow` **ELIAS FENN**: Once. From the reef. I waved. I don't think he saw me. <sub>dialogue/elias.adv:180</sub>
+<a id="dlg-elias-marrow"></a>`marrow` **ELIAS FENN**: Once. From the reef. I waved. I don't think he saw me. <sub>dialogue/elias.adv:181</sub>
 - *→ continues at* [hub](#dlg-elias-hub) *(above)*
 
-<a id="dlg-elias-rules_again"></a>`rules_again` **ELIAS FENN**: Bell, lantern, name. I'll say them slower. <sub>dialogue/elias.adv:183</sub>
+<a id="dlg-elias-rules_again"></a>`rules_again` **ELIAS FENN**: Bell, lantern, name. I'll say them slower. <sub>dialogue/elias.adv:184</sub>
 - *→ continues at* [one](#dlg-elias-one) *(above)*
 
-<a id="dlg-elias-plan_again"></a>`plan_again` **ELIAS FENN**: Hobb takes the bell. Quill takes the lantern. You and I take the name. <sub>dialogue/elias.adv:186</sub>
+<a id="dlg-elias-plan_again"></a>`plan_again` **ELIAS FENN**: Hobb takes the bell. Quill takes the lantern. You and I take the name. <sub>dialogue/elias.adv:187</sub>
 - *→ continues at* [plan_details](#dlg-elias-plan_details)
 
-<a id="dlg-elias-plan_details"></a>`plan_details` **ELIAS FENN**: We do it together, or we don't do it at all. <sub>dialogue/elias.adv:189</sub>
+<a id="dlg-elias-plan_details"></a>`plan_details` **ELIAS FENN**: We do it together, or we don't do it at all. <sub>dialogue/elias.adv:190</sub>
 - *→ continues at* [hub](#dlg-elias-hub) *(above)*
 
-<a id="dlg-elias-camp_hub"></a>`camp_hub` **ELIAS FENN**: It was here when I came. The pots were still warm. I've tried not to move anything. <sub>dialogue/elias.adv:192</sub>
-- **1.** **FENN**: You think someone was here? <sub>dialogue/elias.adv:193</sub>
+<a id="dlg-elias-camp_hub"></a>`camp_hub` **ELIAS FENN**: It was here when I came. The pots were still warm. I've tried not to move anything. <sub>dialogue/elias.adv:193</sub>
+- **1.** **FENN**: You think someone was here? <sub>dialogue/elias.adv:194</sub>
   - *→ continues at* [camp_hub2](#dlg-elias-camp_hub2)
-- **2.** **FENN**: That's not an answer. <sub>dialogue/elias.adv:194</sub>
+- **2.** **FENN**: That's not an answer. <sub>dialogue/elias.adv:195</sub>
   - *→ continues at* [camp_hub3](#dlg-elias-camp_hub3)
 
-<a id="dlg-elias-camp_hub2"></a>`camp_hub2` **ELIAS FENN**: I think someone left in a hurry. I don't think they're coming back. <sub>dialogue/elias.adv:196</sub>
+<a id="dlg-elias-camp_hub2"></a>`camp_hub2` **ELIAS FENN**: I think someone left in a hurry. I don't think they're coming back. <sub>dialogue/elias.adv:197</sub>
 - *→ continues at* [hub](#dlg-elias-hub) *(above)*
 
-<a id="dlg-elias-camp_hub3"></a>`camp_hub3` **ELIAS FENN**: No. It isn't. I've had three months to make one up, and I can't. <sub>dialogue/elias.adv:199</sub>
+<a id="dlg-elias-camp_hub3"></a>`camp_hub3` **ELIAS FENN**: No. It isn't. I've had three months to make one up, and I can't. <sub>dialogue/elias.adv:200</sub>
 - *→ continues at* [hub](#dlg-elias-hub) *(above)*
 
-<a id="dlg-elias-allright"></a>`allright` **ELIAS FENN**: I'm alive. I'm drawing. I'm not hungry. That's three more than I expected. <sub>dialogue/elias.adv:202</sub>
+<a id="dlg-elias-camp_slate"></a>`camp_slate` **ELIAS FENN**: I heard it too. Every night. I stopped going to the door. <sub>dialogue/elias.adv:203</sub>
+- *→ continues at* [hub](#dlg-elias-hub) *(above)*
+
+<a id="dlg-elias-allright"></a>`allright` **ELIAS FENN**: I'm alive. I'm drawing. I'm not hungry. That's three more than I expected. <sub>dialogue/elias.adv:206</sub>
 - *→ continues at* [hub](#dlg-elias-hub) *(above)*
 
 <a id="act3-far_pans"></a>
@@ -3960,66 +3960,66 @@
 
 **On arrival**
 
-- *Once,* *[Act III, if pans_seen = false]* <sub>rooms/far_pans.adv:29</sub>
-  - *[sets pans_seen]* <sub>rooms/far_pans.adv:30</sub>
-  - **FENN (V.O.)**: The far pans run out to the water in white squares. Each one holds a piece of the sky. <sub>rooms/far_pans.adv:31</sub>
-  - **FENN (V.O.)**: Quill is at the end of the boardwalk with her glass up. She does not turn round. <sub>rooms/far_pans.adv:32</sub>
+- *Once,* *[Act III, if pans_seen = false]* <sub>rooms/far_pans.adv:31</sub>
+  - *[sets pans_seen]* <sub>rooms/far_pans.adv:32</sub>
+  - **FENN (V.O.)**: The far pans run out to the water in white squares. Each one holds a piece of the sky. <sub>rooms/far_pans.adv:33</sub>
+  - **FENN (V.O.)**: Quill is at the end of the boardwalk with her glass up. She does not turn round. <sub>rooms/far_pans.adv:34</sub>
 
-**the sky** `sky` <sub>rooms/far_pans.adv:34</sub>
+**the sky** `sky` <sub>rooms/far_pans.adv:36</sub>
 
-- **Look at:** The sky, the colour of the inside of a shell. Out here that passes for weather. <sub>rooms/far_pans.adv:37</sub>
+- **Look at:** The sky, the colour of the inside of a shell. Out here that passes for weather. <sub>rooms/far_pans.adv:39</sub>
 
-**the pans** `pans` <sub>rooms/far_pans.adv:39</sub>
+**the pans** `pans` <sub>rooms/far_pans.adv:41</sub>
 
-- **Look at:** Flooded pans, flat as glass. The salt is still in rows, waiting for someone to rake it. <sub>rooms/far_pans.adv:42</sub>
+- **Look at:** Flooded pans, flat as glass. The salt is still in rows, waiting for someone to rake it. <sub>rooms/far_pans.adv:44</sub>
 
-**the fog** `fog` <sub>rooms/far_pans.adv:44</sub>
+**the fog** `fog` <sub>rooms/far_pans.adv:46</sub>
 
-- **Look at:** The fog is a white line along the water. It does not look big enough to take a ship. <sub>rooms/far_pans.adv:47</sub>
+- **Look at:** The fog is a white line along the water. It does not look big enough to take a ship. <sub>rooms/far_pans.adv:49</sub>
 
-**the wreck** `wreck` <sub>rooms/far_pans.adv:49</sub>
+**the wreck** `wreck` <sub>rooms/far_pans.adv:51</sub>
 
-- **Look at:** A ship on the reef, three masts and a broken back. She has been there longer than the fog. <sub>rooms/far_pans.adv:52</sub>
+- **Look at:** A ship on the reef, three masts and a broken back. She has been there longer than the fog. <sub>rooms/far_pans.adv:54</sub>
 
-**the boardwalk** `boardwalk` <sub>rooms/far_pans.adv:54</sub>
+**the boardwalk** `boardwalk` <sub>rooms/far_pans.adv:56</sub>
 
-- **Look at:** A boardwalk on stilts, running out over the pans and stopping short. It lost its nerve. <sub>rooms/far_pans.adv:57</sub>
-- **Use:** The planks are warm. I stand on the last one and look at the fog. <sub>rooms/far_pans.adv:59</sub>
-- **Walk to:** It goes out over the water and stops. I know the feeling. <sub>rooms/far_pans.adv:58</sub>
+- **Look at:** A boardwalk on stilts, running out over the pans and stopping short. It lost its nerve. <sub>rooms/far_pans.adv:59</sub>
+- **Use:** The planks are warm. I stand on the last one and look at the fog. <sub>rooms/far_pans.adv:61</sub>
+- **Walk to:** It goes out over the water and stops. I know the feeling. <sub>rooms/far_pans.adv:60</sub>
 
-**the rake** `rakes` <sub>rooms/far_pans.adv:61</sub>
+**the rake** `rakes` <sub>rooms/far_pans.adv:63</sub>
 
-- **Look at:** A rake, left in the salt. The handle is bleached white. <sub>rooms/far_pans.adv:64</sub>
+- **Look at:** A rake, left in the salt. The handle is bleached white. <sub>rooms/far_pans.adv:66</sub>
 
-**the heron** `heron` <sub>rooms/far_pans.adv:66</sub>
+**the heron** `heron` <sub>rooms/far_pans.adv:68</sub>
 
-- **Look at:** A heron, standing in a salt pan like it owns the place. It probably does. <sub>rooms/far_pans.adv:69</sub>
+- **Look at:** A heron, standing in a salt pan like it owns the place. It probably does. <sub>rooms/far_pans.adv:71</sub>
 
-**the salt heap** `salt` <sub>rooms/far_pans.adv:71</sub>
+**the salt heap** `salt` <sub>rooms/far_pans.adv:73</sub>
 
-- **Look at:** A heap of salt, raked and left. The wind has smoothed the top. <sub>rooms/far_pans.adv:74</sub>
+- **Look at:** A heap of salt, raked and left. The wind has smoothed the top. <sub>rooms/far_pans.adv:76</sub>
 
-**the gull** `gull` <sub>rooms/far_pans.adv:76</sub>
+**the gull** `gull` <sub>rooms/far_pans.adv:78</sub>
 
-- **Look at:** A gull on the salt heap, watching me. It has the look of a landlord. <sub>rooms/far_pans.adv:79</sub>
+- **Look at:** A gull on the salt heap, watching me. It has the look of a landlord. <sub>rooms/far_pans.adv:81</sub>
 
-**the camp path** `camp` <sub>rooms/far_pans.adv:83</sub>
+**the camp path** `camp` <sub>rooms/far_pans.adv:85</sub>
 
-- **Look at:** The camp, back along the shore. Tents, and a fence of stakes. <sub>rooms/far_pans.adv:87</sub>
-- **Use / Walk to:** *[→ goes to The Castaway Camp]* <sub>rooms/far_pans.adv:86</sub>
-- **Open:** I walk back along the shore to the camp. <sub>rooms/far_pans.adv:88</sub>
-  - *[→ goes to The Castaway Camp]* <sub>rooms/far_pans.adv:86</sub>
+- **Look at:** The camp, back along the shore. Tents, and a fence of stakes. <sub>rooms/far_pans.adv:89</sub>
+- **Use / Walk to:** *[→ goes to The Castaway Camp]* <sub>rooms/far_pans.adv:88</sub>
+- **Open:** I walk back along the shore to the camp. <sub>rooms/far_pans.adv:90</sub>
+  - *[→ goes to The Castaway Camp]* <sub>rooms/far_pans.adv:88</sub>
 
-**Quill** `quill` <sub>rooms/far_pans.adv:90</sub>
+**Quill** `quill` <sub>rooms/far_pans.adv:92</sub>
 
-- **Look at:** Quill, with her glass up and the wind in her coat. She is looking at the fog. <sub>rooms/far_pans.adv:93</sub>
-- **Talk to:** She lowers the glass when she hears me. <sub>rooms/far_pans.adv:94</sub>
-  - *[→ conversation* [quill at pans](#dlg-quill-pans) *— see Act I › The Shipwright's]* <sub>rooms/far_pans.adv:95</sub>
+- **Look at:** Quill, with her glass up and the wind in her coat. She is looking at the fog. <sub>rooms/far_pans.adv:95</sub>
+- **Talk to:** She lowers the glass when she hears me. <sub>rooms/far_pans.adv:96</sub>
+  - *[→ conversation* [quill at pans](#dlg-quill-pans) *— see Act I › The Shipwright's]* <sub>rooms/far_pans.adv:97</sub>
 
 **Combinations here**
 
-- **Use Elias's compass on the fog:** The needle points at the fog and stays there. It has found something it likes. <sub>rooms/far_pans.adv:98</sub>
-- **Use Elias's compass on Quill:** She holds it up. "Still the fog," she says. "Good. We are not lost yet." <sub>rooms/far_pans.adv:100</sub>
+- **Use Elias's compass on the fog:** The needle points at the fog and stays there. It has found something it likes. <sub>rooms/far_pans.adv:100</sub>
+- **Use Elias's compass on Quill:** She holds it up. "Still the fog," she says. "Good. We are not lost yet." <sub>rooms/far_pans.adv:102</sub>
 
 <a id="act4"></a>
 # Act IV: The Grey Lantern
@@ -4040,130 +4040,134 @@
 
 **On arrival**
 
-- *Once,* *[if lantern_deck_boarded = false]* <sub>rooms/lantern_deck.adv:25</sub>
-  - *[sets lantern_deck_boarded]* <sub>rooms/lantern_deck.adv:26</sub>
-  - **FENN (V.O.)**: The Grey Lantern's deck is wet. The fog stands around it like a wall with no top. <sub>rooms/lantern_deck.adv:27</sub>
-  - **FENN (V.O.)**: Behind us, the longboat knocks against the hull. Nobody has spoken since we climbed aboard. <sub>rooms/lantern_deck.adv:28</sub>
-  - **FENN (V.O.)**: Hobb is at the mast with his ear turned up. Quill is watching the great lantern. <sub>rooms/lantern_deck.adv:29</sub>
-  - **FENN (V.O.)**: Elias holds his chart to his chest and looks at the cabin door. <sub>rooms/lantern_deck.adv:30</sub>
-  - **FENN (V.O.)**: Vex has his hands in his pockets. "Three jobs," he says. "I'll watch the boat." <sub>rooms/lantern_deck.adv:31</sub>
-- *Once,* *[if bell_cut and lantern_doused and name_spoken = false and lantern_deck_ready = false]* <sub>rooms/lantern_deck.adv:33</sub>
-  - *[sets lantern_deck_ready]* <sub>rooms/lantern_deck.adv:34</sub>
-  - **FENN (V.O.)**: The bell is quiet. The great lantern is out. The fog has stopped pressing at the rail. <sub>rooms/lantern_deck.adv:35</sub>
-  - **FENN (V.O.)**: There is one rule left, and it is below, in the captain's cabin. <sub>rooms/lantern_deck.adv:36</sub>
-- *Once,* *[if name_spoken and bell_cut and lantern_doused and lantern_deck_final = false]* <sub>rooms/lantern_deck.adv:38</sub>
-  - *[sets lantern_deck_final]* <sub>rooms/lantern_deck.adv:39</sub>
-  - **FENN (V.O.)**: The deck is very quiet. Somewhere below, the cabin is waiting. <sub>rooms/lantern_deck.adv:40</sub>
-- *Once,* *[Act IV, if lantern_deck_boarded and name_spoken = false and nudge_cabin_door = false]* <sub>rooms/lantern_deck.adv:44</sub>
-  - *[sets nudge_cabin_door]* <sub>rooms/lantern_deck.adv:45</sub>
-  - **FENN (V.O.)**: The cabin door is under the carved stern gallery, at the far end of the deck. <sub>rooms/lantern_deck.adv:46</sub>
-  - **FENN (V.O.)**: Elias holds his chart against his chest. "The name is down there," he says. "Go on." <sub>rooms/lantern_deck.adv:47</sub>
+- *Once,* *[if lantern_deck_boarded = false]* <sub>rooms/lantern_deck.adv:35</sub>
+  - *[sets lantern_deck_boarded]* <sub>rooms/lantern_deck.adv:36</sub>
+  - **FENN (V.O.)**: The Grey Lantern's deck is wet. The fog stands around it like a wall with no top. <sub>rooms/lantern_deck.adv:37</sub>
+  - **FENN (V.O.)**: Behind us, the longboat knocks against the hull. Nobody has spoken since we climbed aboard. <sub>rooms/lantern_deck.adv:38</sub>
+  - **FENN (V.O.)**: Hobb is at the mast with his ear turned up. Quill is watching the great lantern. <sub>rooms/lantern_deck.adv:39</sub>
+  - **FENN (V.O.)**: Elias holds his chart to his chest and looks at the cabin door. <sub>rooms/lantern_deck.adv:40</sub>
+  - **FENN (V.O.)**: Vex has his hands in his pockets. "Three jobs," he says. "I'll watch the boat." <sub>rooms/lantern_deck.adv:41</sub>
+- *Once,* *[if bell_cut and lantern_doused and name_spoken = false and lantern_deck_ready = false]* <sub>rooms/lantern_deck.adv:43</sub>
+  - *[sets lantern_deck_ready]* <sub>rooms/lantern_deck.adv:44</sub>
+  - **FENN (V.O.)**: The bell is quiet. The great lantern is out. The fog has stopped pressing at the rail. <sub>rooms/lantern_deck.adv:45</sub>
+  - **FENN (V.O.)**: There is one rule left, and it is below, in the captain's cabin. <sub>rooms/lantern_deck.adv:46</sub>
+- *Once,* *[if name_spoken and bell_cut and lantern_doused and lantern_deck_final = false]* <sub>rooms/lantern_deck.adv:48</sub>
+  - *[sets lantern_deck_final]* <sub>rooms/lantern_deck.adv:49</sub>
+  - **FENN (V.O.)**: The deck is very quiet. Somewhere below, the cabin is waiting. <sub>rooms/lantern_deck.adv:50</sub>
+- *Once,* *[Act IV, if lantern_deck_boarded and name_spoken = false and nudge_cabin_door = false]* <sub>rooms/lantern_deck.adv:54</sub>
+  - *[sets nudge_cabin_door]* <sub>rooms/lantern_deck.adv:55</sub>
+  - **FENN (V.O.)**: The cabin door is under the carved stern gallery, at the far end of the deck. <sub>rooms/lantern_deck.adv:56</sub>
+  - **FENN (V.O.)**: Elias holds his chart against his chest. "The name is down there," he says. "Go on." <sub>rooms/lantern_deck.adv:57</sub>
 
-**the great lantern** `great_lantern` <sub>rooms/lantern_deck.adv:64</sub>
+**the great lantern** `great_lantern` <sub>rooms/lantern_deck.adv:74</sub>
 
-- **Look at:** The great lantern, green and swollen with light. It hangs from the stern, and the fog leans in to look at it. <sub>rooms/lantern_deck.adv:67</sub>
-- **Use:** The canvas is wet and heavy in my hands. Quill holds out her hand for it. <sub>rooms/lantern_deck.adv:68</sub>
-  - **FENN (V.O.)**: I pass it up. Quill climbs the stern without hurrying. <sub>rooms/lantern_deck.adv:69</sub>
-  - **FENN (V.O.)**: She drapes the canvas over the glass. The green light fights her, then gives up. <sub>rooms/lantern_deck.adv:70</sub>
-  - **FENN (V.O.)**: "No air, no flame," she says. "No flame, no fog. Simple." <sub>rooms/lantern_deck.adv:71</sub>
-  - **FENN (V.O.)**: The deck goes dark. Out past the rail, the fog is only fog. <sub>rooms/lantern_deck.adv:72</sub>
-  - *[sets lantern_doused]* *[Fenn hands over: oiled canvas]* *[sound: click]* <sub>rooms/lantern_deck.adv:73</sub>
-- *When* *[if lantern_doused]* *— called “the dark lantern”* <sub>rooms/lantern_deck.adv:76</sub>
-  - **Look at:** The great lantern, wrapped in wet canvas. The green light is out, and the fog has lost interest. <sub>rooms/lantern_deck.adv:78</sub>
-  - **Use:** The canvas is tied down and the glass is dark. There is nothing left to put out. <sub>rooms/lantern_deck.adv:79</sub>
+- **Look at:** The great lantern, green and swollen with light. It hangs from the stern, and the fog leans in to look at it. <sub>rooms/lantern_deck.adv:77</sub>
+- **Use:** The canvas is wet and heavy in my hands. Quill holds out her hand for it. <sub>rooms/lantern_deck.adv:78</sub>
+  - **FENN (V.O.)**: I pass it up. Quill climbs the stern without hurrying. <sub>rooms/lantern_deck.adv:79</sub>
+  - **FENN (V.O.)**: She drapes the canvas over the glass. The green light fights her, then gives up. <sub>rooms/lantern_deck.adv:80</sub>
+  - **FENN (V.O.)**: "No air, no flame," she says. "No flame, no fog. Simple." <sub>rooms/lantern_deck.adv:81</sub>
+  - **FENN (V.O.)**: The deck goes dark. Out past the rail, the fog is only fog. <sub>rooms/lantern_deck.adv:82</sub>
+  - *[sets lantern_doused]* *[Fenn hands over: oiled canvas]* *[sound: click]* <sub>rooms/lantern_deck.adv:83</sub>
+- *When* *[if lantern_doused]* *— called “the dark lantern”* <sub>rooms/lantern_deck.adv:86</sub>
+  - **Look at:** The great lantern, wrapped in wet canvas. The green light is out, and the fog has lost interest. <sub>rooms/lantern_deck.adv:88</sub>
+  - **Use:** The canvas is tied down and the glass is dark. There is nothing left to put out. <sub>rooms/lantern_deck.adv:89</sub>
     - *[nothing: cancels the usual effects]*
-- *When* *[if doesn't have oiled canvas]* <sub>rooms/lantern_deck.adv:81</sub>
-  - **Use:** The lantern is high, and the canvas is not in my hands. Quill is the one with the wet cloth. <sub>rooms/lantern_deck.adv:82</sub>
-    - *[nothing: cancels the usual effects]*
-
-**the mast and rigging** `rigging` <sub>rooms/lantern_deck.adv:86</sub>
-
-- **Look at:** The mast and the shrouds, black against the fog. Somewhere up there a rope is moving. <sub>rooms/lantern_deck.adv:89</sub>
-- **Talk to:** I call up into the rigging. It creaks and does not answer. <sub>rooms/lantern_deck.adv:90</sub>
-- **Use:** I put a hand on a shroud. It is wet, and warm, as if someone has just let go of it. <sub>rooms/lantern_deck.adv:91</sub>
-
-**the bell** `bell` <sub>rooms/lantern_deck.adv:94</sub>
-
-- **Look at:** A bell, high in the rigging. I cannot see it. I hear it: three notes, then one, slow. <sub>rooms/lantern_deck.adv:97</sub>
-- **Talk to:** I call up. The bell keeps its time and does not answer. <sub>rooms/lantern_deck.adv:98</sub>
-- **Use:** Hobb is already climbing. He does not ask what I heard. <sub>rooms/lantern_deck.adv:99</sub>
-  - **FENN (V.O.)**: He goes up the shrouds hand over hand, the crowbar through his belt. <sub>rooms/lantern_deck.adv:100</sub>
-  - **FENN (V.O.)**: At the top he stops. Then he says one word, very quietly: "Tam." <sub>rooms/lantern_deck.adv:101</sub>
-  - **FENN (V.O.)**: There is a man in the rigging with one hand on the bell rope. He is thin, and tired, and alive. <sub>rooms/lantern_deck.adv:102</sub>
-  - **FENN (V.O.)**: "I have to keep the watch," Tam says. "Somebody has to keep the watch." <sub>rooms/lantern_deck.adv:103</sub>
-  - **FENN (V.O.)**: Hobb cuts the rope. The clapper comes away in his hand. The bell hangs dumb. <sub>rooms/lantern_deck.adv:104</sub>
-  - **FENN (V.O.)**: Tam looks at his empty hand like a man waking up. <sub>rooms/lantern_deck.adv:105</sub>
-  - *[sets bell_cut]* *[sets tam_freed]* *[sound: chime]* <sub>rooms/lantern_deck.adv:106</sub>
-- *When* *[if bell_cut]* *— called “the silent bell”* <sub>rooms/lantern_deck.adv:109</sub>
-  - **Look at:** The bell hangs quiet above the deck, its rope cut. Tam is by the rail with the salt rake, looking at his hands. <sub>rooms/lantern_deck.adv:111</sub>
-  - **Talk to:** The rigging is empty. Whatever was ringing has stopped. <sub>rooms/lantern_deck.adv:114</sub>
-    - *[nothing: cancels the usual effects]*
-  - **Use:** Hobb has cut it. There is nothing left to cut. <sub>rooms/lantern_deck.adv:112</sub>
+- *When* *[if doesn't have oiled canvas]* <sub>rooms/lantern_deck.adv:91</sub>
+  - **Use:** The lantern is high, and the canvas is not in my hands. Quill is the one with the wet cloth. <sub>rooms/lantern_deck.adv:92</sub>
     - *[nothing: cancels the usual effects]*
 
-**the cabin door** `cabin_door` <sub>rooms/lantern_deck.adv:119</sub>
+**the mast and rigging** `rigging` <sub>rooms/lantern_deck.adv:98</sub>
 
-- **Look at:** A low door under the carved gallery. The dark behind it is not empty. <sub>rooms/lantern_deck.adv:123</sub>
-- **Talk to:** I knock. The door is already open. <sub>rooms/lantern_deck.adv:126</sub>
-- **Use:** I duck under the carved beam and go in. <sub>rooms/lantern_deck.adv:125</sub>
-  - *[→ goes to The Grey Lantern — Captain's Cabin]* <sub>rooms/lantern_deck.adv:122</sub>
-- **Open:** I duck under the carved beam and go in. <sub>rooms/lantern_deck.adv:124</sub>
-  - *[→ goes to The Grey Lantern — Captain's Cabin]* <sub>rooms/lantern_deck.adv:122</sub>
-- **Walk to:** *[→ goes to The Grey Lantern — Captain's Cabin]* <sub>rooms/lantern_deck.adv:122</sub>
-- *When* *[if name_spoken]* <sub>rooms/lantern_deck.adv:127</sub>
-  - **Look at:** The cabin door, and the cold coming out of it. <sub>rooms/lantern_deck.adv:128</sub>
+- **Look at:** The mast and the shrouds, black against the fog. Somewhere up there a rope is moving. <sub>rooms/lantern_deck.adv:101</sub>
+- **Talk to:** I call up into the rigging. It creaks and does not answer. <sub>rooms/lantern_deck.adv:102</sub>
+- **Use:** I put a hand on a shroud. It is wet, and warm, as if someone has just let go of it. <sub>rooms/lantern_deck.adv:103</sub>
 
-**the rail** `rail` <sub>rooms/lantern_deck.adv:131</sub>
+**the bell** `bell` <sub>rooms/lantern_deck.adv:106</sub>
 
-- **Look at:** The rail, and the fog past it. The sea is flat and grey, and there is no horizon. <sub>rooms/lantern_deck.adv:134</sub>
-- **Talk to:** I lean over the rail and say nothing. The fog keeps that too. <sub>rooms/lantern_deck.adv:135</sub>
-- **Use:** I put my hand on the rail. It is wet, and it is not cold. <sub>rooms/lantern_deck.adv:136</sub>
-
-**Elias Fenn** `elias` <sub>rooms/lantern_deck.adv:138</sub>
-
-- **Look at:** My father, coat buttoned wrong, chart under one arm. He is looking at the cabin door. <sub>rooms/lantern_deck.adv:141</sub>
-- **Talk to:** He says, "The name is in there. I've said everyone else's for three months." <sub>rooms/lantern_deck.adv:142</sub>
-  - **FENN (V.O.)**: "I never had his," he says. "I would like to finish this one." <sub>rooms/lantern_deck.adv:143</sub>
-
-**Quill** `quill` <sub>rooms/lantern_deck.adv:145</sub>
-
-- **Look at:** Quill, with her boots off and her sleeves up. She is measuring the climb with her eyes. <sub>rooms/lantern_deck.adv:148</sub>
-- **Talk to:** She does not look at me. "The lantern needs something wet, and a hand that can reach it." <sub>rooms/lantern_deck.adv:149</sub>
-  - **FENN (V.O.)**: She puts a wad of oiled canvas in my hands. It is soaked through and cold. <sub>rooms/lantern_deck.adv:150</sub>
-  - **FENN (V.O.)**: "Hold that. Don't wring it out. When I'm up, pass it." <sub>rooms/lantern_deck.adv:151</sub>
-  - *[Fenn receives: oiled canvas]* <sub>rooms/lantern_deck.adv:152</sub>
-- *When* *[if lantern_doused]* <sub>rooms/lantern_deck.adv:153</sub>
-  - **Look at:** Quill is wringing the canvas out over the rail. She looks pleased with herself. <sub>rooms/lantern_deck.adv:154</sub>
-  - **Talk to:** She says, "One light down. Hobb's still up the mast, so the bell is his." <sub>rooms/lantern_deck.adv:155</sub>
+- **Look at:** A bell, high in the rigging. I cannot see it. I hear it: three notes, then one, slow. <sub>rooms/lantern_deck.adv:109</sub>
+- **Talk to:** I call up. The bell keeps its time and does not answer. <sub>rooms/lantern_deck.adv:110</sub>
+- **Use:** Hobb is already climbing. He does not ask what I heard. <sub>rooms/lantern_deck.adv:111</sub>
+  - **FENN (V.O.)**: He goes up the shrouds hand over hand, the crowbar through his belt. <sub>rooms/lantern_deck.adv:112</sub>
+  - **FENN (V.O.)**: At the top he stops. Then he says one word, very quietly: "Tam." <sub>rooms/lantern_deck.adv:113</sub>
+  - **FENN (V.O.)**: There is a man in the rigging with one hand on the bell rope. He is thin, and tired, and alive. <sub>rooms/lantern_deck.adv:114</sub>
+  - **FENN (V.O.)**: "I have to keep the watch," Tam says. "Somebody has to keep the watch." <sub>rooms/lantern_deck.adv:115</sub>
+  - **FENN (V.O.)**: Hobb cuts the rope. The clapper comes away in his hand. The bell hangs dumb. <sub>rooms/lantern_deck.adv:116</sub>
+  - **FENN (V.O.)**: Tam looks at his empty hand like a man waking up. <sub>rooms/lantern_deck.adv:117</sub>
+  - *[sets bell_cut]* *[sets tam_freed]* *[sound: chime]* <sub>rooms/lantern_deck.adv:118</sub>
+- *When* *[if bell_cut]* *— called “the silent bell”* <sub>rooms/lantern_deck.adv:121</sub>
+  - **Look at:** The bell hangs quiet above the deck, its rope cut. Tam is by the rail with the salt rake, looking at his hands. <sub>rooms/lantern_deck.adv:123</sub>
+  - **Talk to:** The rigging is empty. Whatever was ringing has stopped. <sub>rooms/lantern_deck.adv:126</sub>
     - *[nothing: cancels the usual effects]*
-- *When* *[if has oiled canvas]* <sub>rooms/lantern_deck.adv:157</sub>
-  - **Talk to:** She nods at the great lantern. "Go on. I'll go up with you." <sub>rooms/lantern_deck.adv:158</sub>
+  - **Use:** Hobb has cut it. There is nothing left to cut. <sub>rooms/lantern_deck.adv:124</sub>
     - *[nothing: cancels the usual effects]*
 
-**Hobb** `hobb` <sub>rooms/lantern_deck.adv:161</sub>
+**the cabin door** `cabin_door` <sub>rooms/lantern_deck.adv:131</sub>
 
-- **Look at:** Hobb, at the foot of the mast with the crowbar through his belt. He is listening upward. <sub>rooms/lantern_deck.adv:164</sub>
-- **Talk to:** He says, "Three notes, then one. That is Tam's hand on the rope." <sub>rooms/lantern_deck.adv:165</sub>
-  - **FENN (V.O.)**: He does not say how he knows. He does not have to. <sub>rooms/lantern_deck.adv:166</sub>
-- *When* *[if bell_cut]* <sub>rooms/lantern_deck.adv:167</sub>
-  - **Look at:** Hobb is standing very still, looking up at the cut rope. He is not a man who celebrates. <sub>rooms/lantern_deck.adv:168</sub>
-  - **Talk to:** He looks at me. "He is alive," he says. "That is all I asked." <sub>rooms/lantern_deck.adv:169</sub>
+- **Look at:** A low door under the carved gallery. The dark behind it is not empty. <sub>rooms/lantern_deck.adv:135</sub>
+- **Talk to:** I knock. The door is already open. <sub>rooms/lantern_deck.adv:138</sub>
+- **Use:** I duck under the carved beam and go in. <sub>rooms/lantern_deck.adv:137</sub>
+  - *[→ goes to The Grey Lantern — Captain's Cabin]* <sub>rooms/lantern_deck.adv:134</sub>
+- **Open:** I duck under the carved beam and go in. <sub>rooms/lantern_deck.adv:136</sub>
+  - *[→ goes to The Grey Lantern — Captain's Cabin]* <sub>rooms/lantern_deck.adv:134</sub>
+- **Walk to:** *[→ goes to The Grey Lantern — Captain's Cabin]* <sub>rooms/lantern_deck.adv:134</sub>
+- *When* *[if name_spoken]* <sub>rooms/lantern_deck.adv:139</sub>
+  - **Look at:** The cabin door, and the cold coming out of it. <sub>rooms/lantern_deck.adv:140</sub>
 
-**Captain Vex** `vex` <sub>rooms/lantern_deck.adv:171</sub>
+**the rail** `rail` <sub>rooms/lantern_deck.adv:143</sub>
 
-- **Look at:** Vex, coat buttoned to the chin, hands in his pockets. He is standing where the rail is highest. <sub>rooms/lantern_deck.adv:174</sub>
-- **Talk to:** He does not turn round. "I'm not going below. Ghosts and I have an understanding." <sub>rooms/lantern_deck.adv:175</sub>
-  - **FENN (V.O.)**: "You cut the bell, I take the credit," Vex says. "That's a good deal. For me." <sub>rooms/lantern_deck.adv:176</sub>
-  - **FENN (V.O.)**: "I'll hold the boat," he says. "Somebody has to keep the way out open. That's me being useful." <sub>rooms/lantern_deck.adv:177</sub>
-- *When* *[if bell_cut and lantern_doused]* <sub>rooms/lantern_deck.adv:178</sub>
-  - **Look at:** Vex is watching the cabin door and trying not to. He has one hand on the rail. <sub>rooms/lantern_deck.adv:179</sub>
-  - **Talk to:** He says, "Whatever is down there, it isn't salvage. I'm not carrying it." <sub>rooms/lantern_deck.adv:180</sub>
+- **Look at:** The rail, and the fog past it. The sea is flat and grey, and there is no horizon. <sub>rooms/lantern_deck.adv:146</sub>
+- **Talk to:** I lean over the rail and say nothing. The fog keeps that too. <sub>rooms/lantern_deck.adv:147</sub>
+- **Use:** I put my hand on the rail. It is wet, and it is not cold. <sub>rooms/lantern_deck.adv:148</sub>
 
-**Tam Hobb** `tamhobb` *[present if tam_freed]* <sub>rooms/lantern_deck.adv:182</sub>
+**Elias Fenn** `elias` <sub>rooms/lantern_deck.adv:150</sub>
 
-- **Look at:** Tam Hobb, with the camp's salt rake still in one hand. He has not put it down. <sub>rooms/lantern_deck.adv:186</sub>
-- **Talk to:** He says, "I rang it for three months. I don't know what I was counting." <sub>rooms/lantern_deck.adv:187</sub>
-  - **FENN (V.O.)**: Hobb looks over at his brother. Neither of them says anything else. <sub>rooms/lantern_deck.adv:188</sub>
+- **Look at:** My father, coat buttoned wrong, chart under one arm. He is looking at the cabin door. <sub>rooms/lantern_deck.adv:153</sub>
+- **Talk to:** He says, "The name is in there. I've said everyone else's for three months." <sub>rooms/lantern_deck.adv:154</sub>
+  - **FENN (V.O.)**: "I never had his," he says. "I would like to finish this one." <sub>rooms/lantern_deck.adv:155</sub>
+
+**Quill** `quill` <sub>rooms/lantern_deck.adv:157</sub>
+
+- **Look at:** Quill, with her boots off and her sleeves up. She is measuring the climb with her eyes. <sub>rooms/lantern_deck.adv:160</sub>
+- **Talk to:** She does not look at me. "The lantern needs something wet, and a hand that can reach it." <sub>rooms/lantern_deck.adv:161</sub>
+  - **FENN (V.O.)**: She puts a wad of oiled canvas in my hands. It is soaked through and cold. <sub>rooms/lantern_deck.adv:162</sub>
+  - **FENN (V.O.)**: "Hold that. Don't wring it out. When I'm up, pass it." <sub>rooms/lantern_deck.adv:163</sub>
+  - *[Fenn receives: oiled canvas]* <sub>rooms/lantern_deck.adv:164</sub>
+- *When* *[if lantern_doused]* <sub>rooms/lantern_deck.adv:165</sub>
+  - **Look at:** Quill is wringing the canvas out over the rail. She looks pleased with herself. <sub>rooms/lantern_deck.adv:166</sub>
+  - **Talk to:** She says, "One light down. Hobb's still up the mast, so the bell is his." <sub>rooms/lantern_deck.adv:167</sub>
+    - *[nothing: cancels the usual effects]*
+- *When* *[if has oiled canvas]* <sub>rooms/lantern_deck.adv:169</sub>
+  - **Talk to:** She nods at the great lantern. "Go on. I'll go up with you." <sub>rooms/lantern_deck.adv:170</sub>
+    - *[nothing: cancels the usual effects]*
+
+**Hobb** `hobb` <sub>rooms/lantern_deck.adv:173</sub>
+
+- **Look at:** Hobb, at the foot of the mast with the crowbar through his belt. He is listening upward. <sub>rooms/lantern_deck.adv:176</sub>
+- **Talk to:** He says, "Three notes, then one. That is Tam's hand on the rope." <sub>rooms/lantern_deck.adv:177</sub>
+  - **FENN (V.O.)**: He does not say how he knows. He does not have to. <sub>rooms/lantern_deck.adv:178</sub>
+- *When* *[if bell_cut]* <sub>rooms/lantern_deck.adv:179</sub>
+  - **Look at:** Hobb is standing very still, looking up at the cut rope. He is not a man who celebrates. <sub>rooms/lantern_deck.adv:180</sub>
+  - **Talk to:** He looks at me. "He is alive," he says. "That is all I asked." <sub>rooms/lantern_deck.adv:181</sub>
+
+**Captain Vex** `vex` <sub>rooms/lantern_deck.adv:183</sub>
+
+- **Look at:** Vex, coat buttoned to the chin, hands in his pockets. He is standing where the rail is highest. <sub>rooms/lantern_deck.adv:186</sub>
+- **Talk to:** He does not turn round. "I'm not going below. Ghosts and I have an understanding." <sub>rooms/lantern_deck.adv:187</sub>
+  - **FENN (V.O.)**: "You cut the bell, I take the credit," Vex says. "That's a good deal. For me." <sub>rooms/lantern_deck.adv:188</sub>
+  - **FENN (V.O.)**: "I'll hold the boat," he says. "Somebody has to keep the way out open. That's me being useful." <sub>rooms/lantern_deck.adv:189</sub>
+- *When* *[if bell_cut and lantern_doused]* <sub>rooms/lantern_deck.adv:190</sub>
+  - **Look at:** Vex is watching the cabin door and trying not to. He has one hand on the rail. <sub>rooms/lantern_deck.adv:191</sub>
+  - **Talk to:** He says, "Whatever is down there, it isn't salvage. I'm not carrying it." <sub>rooms/lantern_deck.adv:192</sub>
+
+**Tam Hobb** `tamhobb` *[present if tam_freed]* <sub>rooms/lantern_deck.adv:194</sub>
+
+- **Look at:** Tam Hobb, with the camp's salt rake still in one hand. He has not put it down. <sub>rooms/lantern_deck.adv:198</sub>
+- **Talk to:** He says, "I rang it for three months. I don't know what I was counting." <sub>rooms/lantern_deck.adv:199</sub>
+  - **FENN (V.O.)**: Hobb looks over at his brother. Neither of them says anything else. <sub>rooms/lantern_deck.adv:200</sub>
+
+**Combinations here**
+
+- **Use oiled canvas on the great lantern:** The canvas is for the lantern itself. Quill is already holding out her hand. <sub>rooms/lantern_deck.adv:96</sub>
 
 <a id="act4-arcadia_cabin"></a>
 ## The Grey Lantern — Captain's Cabin
@@ -4172,70 +4176,74 @@
 
 **On arrival**
 
-- *Once,* *[if arcadia_cabin_entered = false]* <sub>rooms/arcadia_cabin.adv:24</sub>
-  - *[sets arcadia_cabin_entered]* <sub>rooms/arcadia_cabin.adv:25</sub>
-  - **FENN (V.O.)**: The cabin is dry, which is the first wrong thing. The ink on the desk is still wet. <sub>rooms/arcadia_cabin.adv:26</sub>
-  - **FENN (V.O.)**: Elias is at the desk with his chart rolled tight in one hand. <sub>rooms/arcadia_cabin.adv:27</sub>
-  - **FENN (V.O.)**: "This is where he kept his name," he says. "A captain keeps it where he sits." <sub>rooms/arcadia_cabin.adv:28</sub>
-  - **FENN (V.O.)**: He holds out his hand for the plate. Then he lets it fall. "You read it. I'll say it." <sub>rooms/arcadia_cabin.adv:29</sub>
+- *Once,* *[if arcadia_cabin_entered = false]* <sub>rooms/arcadia_cabin.adv:28</sub>
+  - *[sets arcadia_cabin_entered]* <sub>rooms/arcadia_cabin.adv:29</sub>
+  - **FENN (V.O.)**: The cabin is dry, which is the first wrong thing. The ink on the desk is still wet. <sub>rooms/arcadia_cabin.adv:30</sub>
+  - **FENN (V.O.)**: Elias is at the desk with his chart rolled tight in one hand. <sub>rooms/arcadia_cabin.adv:31</sub>
+  - **FENN (V.O.)**: "This is where a captain answers to his name," he says. "Put it on the desk." <sub>rooms/arcadia_cabin.adv:32</sub>
+  - **FENN (V.O.)**: He holds out his hand for the plate, then lets it fall to his side. "You read it. I'll say it." <sub>rooms/arcadia_cabin.adv:33</sub>
 
-**the nameplate** `nameplate` <sub>rooms/arcadia_cabin.adv:40</sub>
+**the nameplate** `nameplate` <sub>rooms/arcadia_cabin.adv:43</sub>
 
-- **Look at:** Mordant's desk. A log, a dry inkpot, and the brass plate set in the clean oval in the dust. <sub>rooms/arcadia_cabin.adv:43</sub>
-- **Use:** I set the plate down. The brass catches the light from the broken planks. <sub>rooms/arcadia_cabin.adv:44</sub>
-  - **FENN (V.O.)**: GREY LANTERN. M. MORDANT, MASTER. <sub>rooms/arcadia_cabin.adv:45</sub>
-  - **FENN (V.O.)**: "Mordant," Elias says. He says it like a bell, once. <sub>rooms/arcadia_cabin.adv:46</sub>
-  - **FENN (V.O.)**: "I've said everyone else's name," he says. "I never had his." <sub>rooms/arcadia_cabin.adv:47</sub>
-  - *[sets name_spoken]* *[→ conversation* [mordant](#dlg-mordant) *— below]* <sub>rooms/arcadia_cabin.adv:48</sub>
-- *When* *[if name_spoken]* *— called “the nameplate”* <sub>rooms/arcadia_cabin.adv:50</sub>
-  - **Look at:** The plate lies where I set it. The name has been said, and the cabin is colder. <sub>rooms/arcadia_cabin.adv:52</sub>
-  - **Use:** I put my hand on the plate. Something is waiting at the end of the cabin. <sub>rooms/arcadia_cabin.adv:53</sub>
-    - *[→ conversation* [mordant](#dlg-mordant) *— below]* <sub>rooms/arcadia_cabin.adv:54</sub>
-- *When* *[if doesn't have Mordant's nameplate]* <sub>rooms/arcadia_cabin.adv:55</sub>
-  - **Look at:** Mordant's desk. A log, a dry inkpot, and a clean oval in the dust where a plate should sit. <sub>rooms/arcadia_cabin.adv:56</sub>
-  - **Use:** There is nothing on the desk to read. The plate is in a coat, and not mine. <sub>rooms/arcadia_cabin.adv:57</sub>
+- **Look at:** Mordant's desk. A log, a dry inkpot, and a clean oval in the dust where a plate should sit. <sub>rooms/arcadia_cabin.adv:46</sub>
+- **Use:** I set the plate down. The brass catches the light from the broken planks. <sub>rooms/arcadia_cabin.adv:47</sub>
+  - **FENN (V.O.)**: GREY LANTERN — M. MORDANT, MASTER. <sub>rooms/arcadia_cabin.adv:48</sub>
+  - **FENN (V.O.)**: "Mordant," Elias says. He says it like a bell, once. <sub>rooms/arcadia_cabin.adv:49</sub>
+  - **FENN (V.O.)**: "I've said everyone else's name," he says. "I never had his." <sub>rooms/arcadia_cabin.adv:50</sub>
+  - *[sets name_spoken]* *[→ conversation* [mordant](#dlg-mordant) *— below]* <sub>rooms/arcadia_cabin.adv:51</sub>
+- *When* *[if name_spoken]* *— called “the nameplate”* <sub>rooms/arcadia_cabin.adv:53</sub>
+  - **Look at:** The plate lies where I set it. The name has been said, and the cabin is colder. <sub>rooms/arcadia_cabin.adv:55</sub>
+  - **Use:** I put my hand on the plate. Something is waiting at the end of the cabin. <sub>rooms/arcadia_cabin.adv:56</sub>
+    - *[→ conversation* [mordant](#dlg-mordant) *— below]* <sub>rooms/arcadia_cabin.adv:57</sub>
+- *When* *[if doesn't have Mordant's nameplate]* <sub>rooms/arcadia_cabin.adv:58</sub>
+  - **Look at:** Mordant's desk. A log, a dry inkpot, and a clean oval in the dust. The plate is in a coat, and not mine. <sub>rooms/arcadia_cabin.adv:59</sub>
+  - **Use:** There is nothing on the desk to read. The plate is in a coat, and not mine. <sub>rooms/arcadia_cabin.adv:60</sub>
     - *[nothing: cancels the usual effects]*
 
-**Mordant** `mordant` *[present if name_spoken]* <sub>rooms/arcadia_cabin.adv:60</sub>
+**Mordant** `mordant` *[present if name_spoken]* <sub>rooms/arcadia_cabin.adv:63</sub>
 
-- **Look at:** A cold place at the end of the cabin. The green light comes from nowhere I can see. <sub>rooms/arcadia_cabin.adv:64</sub>
-- **Talk to:** I say his name again. The cold turns toward me. <sub>rooms/arcadia_cabin.adv:65</sub>
-  - *[→ conversation* [mordant](#dlg-mordant) *— below]* <sub>rooms/arcadia_cabin.adv:66</sub>
-- *When* *[if bell_cut and lantern_doused]* *— called “Mordant, waiting”* <sub>rooms/arcadia_cabin.adv:67</sub>
-  - **Look at:** Mordant is there, in the cold. He is waiting for me to finish it. <sub>rooms/arcadia_cabin.adv:69</sub>
-  - **Talk to:** He does not move. "When you are ready," he says, "say it again." <sub>rooms/arcadia_cabin.adv:70</sub>
-    - *[→ conversation* [mordant](#dlg-mordant) *— below]* <sub>rooms/arcadia_cabin.adv:71</sub>
+- **Look at:** A cold place at the end of the cabin. The green light comes from nowhere I can see. <sub>rooms/arcadia_cabin.adv:67</sub>
+- **Talk to:** I say his name again. The cold turns toward me. <sub>rooms/arcadia_cabin.adv:68</sub>
+  - *[→ conversation* [mordant](#dlg-mordant) *— below]* <sub>rooms/arcadia_cabin.adv:69</sub>
+- *When* *[if bell_cut and lantern_doused]* *— called “Mordant, waiting”* <sub>rooms/arcadia_cabin.adv:70</sub>
+  - **Look at:** Mordant is there, in the cold. He is waiting for me to finish it. <sub>rooms/arcadia_cabin.adv:72</sub>
+  - **Talk to:** He does not move. "When you are ready," he says, "say it again." <sub>rooms/arcadia_cabin.adv:73</sub>
+    - *[→ conversation* [mordant](#dlg-mordant) *— below]* <sub>rooms/arcadia_cabin.adv:74</sub>
 
-**the hammock** `hammock` <sub>rooms/arcadia_cabin.adv:73</sub>
+**the bunk** `hammock` <sub>rooms/arcadia_cabin.adv:76</sub>
 
-- **Look at:** A rope hammock, still hung. Nobody has slept in it for eighty years. <sub>rooms/arcadia_cabin.adv:76</sub>
-- **Use:** I put a hand on it. It swings as if someone has just got out. <sub>rooms/arcadia_cabin.adv:77</sub>
+- **Look at:** A built-in bunk, still made, the blanket folded as if the cabin were expecting its captain back. <sub>rooms/arcadia_cabin.adv:79</sub>
+- **Use:** I put a hand on the blanket. It is dry, and cold enough to feel like it has just been left. <sub>rooms/arcadia_cabin.adv:80</sub>
 
-**the pigeonholes** `pigeonholes` <sub>rooms/arcadia_cabin.adv:79</sub>
+**the books** `pigeonholes` <sub>rooms/arcadia_cabin.adv:82</sub>
 
-- **Look at:** Pigeonholes stuffed with paper. Every sheet is blank. A captain's name is on the ones he signed. <sub>rooms/arcadia_cabin.adv:82</sub>
-- **Use:** I pull one out. Blank. The next is blank. The ship stopped needing paper a long time ago. <sub>rooms/arcadia_cabin.adv:83</sub>
+- **Look at:** A shelf of books and bundles, salt-stained and swollen. Every loose sheet is blank. A captain's name is on the ones he signed. <sub>rooms/arcadia_cabin.adv:85</sub>
+- **Use:** I pull one out. Blank. The next is blank. The ship stopped needing paper a long time ago. <sub>rooms/arcadia_cabin.adv:86</sub>
 
-**the portrait** `portrait` <sub>rooms/arcadia_cabin.adv:85</sub>
+**the stern windows** `portrait` <sub>rooms/arcadia_cabin.adv:88</sub>
 
-- **Look at:** A woman's portrait, hung crooked. She is laughing at whoever is painting her. <sub>rooms/arcadia_cabin.adv:88</sub>
-- **Talk to:** I say nothing. The cabin does not need me to. <sub>rooms/arcadia_cabin.adv:89</sub>
+- **Look at:** Three stern windows, their curtains torn to rags, and past them the ship's own carved gallery and the fog. <sub>rooms/arcadia_cabin.adv:91</sub>
+- **Talk to:** I say nothing. The cabin does not need me to. <sub>rooms/arcadia_cabin.adv:92</sub>
 
-**the ladder to the deck** `ladder` <sub>rooms/arcadia_cabin.adv:93</sub>
+**the ladder to the deck** `ladder` <sub>rooms/arcadia_cabin.adv:96</sub>
 
-- **Look at:** A ladder up through the broken deck. The fog comes down the opening. <sub>rooms/arcadia_cabin.adv:97</sub>
-- **Use / Walk to:** *[→ goes to The Grey Lantern — Deck]* <sub>rooms/arcadia_cabin.adv:96</sub>
-- **Open:** I go up. <sub>rooms/arcadia_cabin.adv:98</sub>
-  - *[→ goes to The Grey Lantern — Deck]* <sub>rooms/arcadia_cabin.adv:96</sub>
+- **Look at:** A ladder up through the broken deck. The fog comes down the opening. <sub>rooms/arcadia_cabin.adv:100</sub>
+- **Use / Walk to:** *[→ goes to The Grey Lantern — Deck]* <sub>rooms/arcadia_cabin.adv:99</sub>
+- **Open:** I go up. <sub>rooms/arcadia_cabin.adv:101</sub>
+  - *[→ goes to The Grey Lantern — Deck]* <sub>rooms/arcadia_cabin.adv:99</sub>
 
-**Elias Fenn** `elias` <sub>rooms/arcadia_cabin.adv:100</sub>
+**Elias Fenn** `elias` <sub>rooms/arcadia_cabin.adv:103</sub>
 
-- **Look at:** My father, with salt in his beard and ink on his fingers. He is waiting for me to read it. <sub>rooms/arcadia_cabin.adv:103</sub>
-- **Talk to:** He says, "Go on. I'll say the name. You just have to read it." <sub>rooms/arcadia_cabin.adv:104</sub>
-  - **FENN (V.O.)**: "And then we finish it," he says. "All of us." <sub>rooms/arcadia_cabin.adv:105</sub>
-- *When* *[if name_spoken]* <sub>rooms/arcadia_cabin.adv:106</sub>
-  - **Look at:** My father, standing very still. He has said the name. He looks lighter. <sub>rooms/arcadia_cabin.adv:107</sub>
-  - **Talk to:** He says, "Whatever happens next, I'm here for it." <sub>rooms/arcadia_cabin.adv:108</sub>
+- **Look at:** My father, with salt in his beard and ink on his fingers. He is waiting for me to read it. <sub>rooms/arcadia_cabin.adv:106</sub>
+- **Talk to:** He says, "Go on. I'll say the name. You just have to read it." <sub>rooms/arcadia_cabin.adv:107</sub>
+  - **FENN (V.O.)**: "And then we finish it," he says. "All of us." <sub>rooms/arcadia_cabin.adv:108</sub>
+- *When* *[if name_spoken]* <sub>rooms/arcadia_cabin.adv:109</sub>
+  - **Look at:** My father, standing very still. He has said the name. He looks lighter. <sub>rooms/arcadia_cabin.adv:110</sub>
+  - **Talk to:** He says, "Whatever happens next, I'm here for it." <sub>rooms/arcadia_cabin.adv:111</sub>
+
+**Combinations here**
+
+- **Use Mordant's nameplate on the nameplate:** The plate belongs on the desk, where a captain answers for it. <sub>rooms/arcadia_cabin.adv:37</sub>
 
 <a id="dlg-mordant"></a>
 ### Conversation: mordant (Captain Mordant)
@@ -4364,7 +4372,7 @@
 <a id="dlg-ending-root"></a>`root` **FENN (V.O.)**: Mordant waits beside the desk. The cabin is quiet enough to hear the ship move. <sub>dialogue/ending.adv:13</sub>
 - *→ continues at* [vex_rail](#dlg-ending-vex_rail)
 
-<a id="dlg-ending-vex_rail"></a>`vex_rail` **FENN (V.O.)**: Vex is in the cabin doorway with the longboat's rope in his hands. He is looking at the fog, not at the dead. <sub>dialogue/ending.adv:16</sub>
+<a id="dlg-ending-vex_rail"></a>`vex_rail` **FENN (V.O.)**: Vex's voice comes down the companionway. He is on the deck above, with the longboat's rope in his hands. <sub>dialogue/ending.adv:16</sub>
 - *→ continues at* [vex_ask](#dlg-ending-vex_ask)
 
 <a id="dlg-ending-vex_ask"></a>`vex_ask` **CAPTAIN VEX**: The boat. The rope. Your word. Give me one of them, and I'll know where I stand. <sub>dialogue/ending.adv:19</sub>
@@ -4423,7 +4431,7 @@
 <a id="dlg-ending-rest4"></a>`rest4` **FENN (V.O.)**: The fog goes out like a tide. The Grey Lantern settles, slow and easy, and the sea takes her. <sub>dialogue/ending.adv:75</sub>
 - *→ continues at* [rest5](#dlg-ending-rest5)
 
-<a id="dlg-ending-rest5"></a>`rest5` **FENN (V.O.)**: A man in a grey coat takes off his hat. Then there is only water, and light, and the way home. <sub>dialogue/ending.adv:78</sub>
+<a id="dlg-ending-rest5"></a>`rest5` **FENN (V.O.)**: A man in a grey coat takes off his hat. My father puts a hand on my shoulder, and we watch the sea take her. <sub>dialogue/ending.adv:78</sub>
 - *[→ the ending]* <sub>dialogue/ending.adv:79</sub>
 - *[ends]*
 
@@ -4439,7 +4447,7 @@
 <a id="dlg-ending-run4"></a>`run4` **FENN (V.O.)**: Ahead, the harbour light. Behind, the bell, ringing for a crew that cannot leave. <sub>dialogue/ending.adv:91</sub>
 - *→ continues at* [run5](#dlg-ending-run5)
 
-<a id="dlg-ending-run5"></a>`run5` **FENN (V.O.)**: I count the living. I count them twice. <sub>dialogue/ending.adv:94</sub>
+<a id="dlg-ending-run5"></a>`run5` **FENN (V.O.)**: I count the living. My father is not in the boat. He is on the fog rock with the chart, and he does not wave. <sub>dialogue/ending.adv:94</sub>
 - *[→ the ending]* <sub>dialogue/ending.adv:95</sub>
 - *[ends]*
 
@@ -4464,17 +4472,6 @@
 - **Use Elias's compass on Mordant's nameplate:** *[Act IV, if name_spoken = false]* The needle swings between the plate and the captain's cabin. The name is here. The captain is not. <sub>combos.adv:23</sub>
 - **Use Elias's compass on Mordant's nameplate:** *[Act IV only]* The needle points at the deck. The name has already done its work. <sub>combos.adv:25</sub>
 
-<a id="orphan-trees"></a>
-# Conversations not opened from any room
-
-<a id="dlg-regulars"></a>
-### Conversation: regulars
-
-*[source:* `dialogue regulars`*, starts at* `root`*]* <sub>dialogue/regulars.adv:1</sub>
-
-<a id="dlg-regulars-root"></a>`root` **FENN (V.O.)**: … <sub>dialogue/regulars.adv:2</sub>
-- *[ends]*
-
 <a id="items"></a>
 # Items
 
@@ -4489,7 +4486,7 @@
 - *[Act II, if marrow_lost]* The needle swings once and points down at the water. It has never done that before. <sub>items.adv:21</sub>
 - *[Act II, if vex_exposed]* The needle points at Vex, then at the fog. It cannot decide which is worse. <sub>items.adv:23</sub>
 - *[Act II, if salvage_seen]* The needle points at the quarterdeck, where Vex is pretending the hold is empty. <sub>items.adv:25</sub>
-- *[Act II, if in The Shroud]* The needle points over the bow and will not come back. Ahead is not north. <sub>items.adv:27</sub>
+- *[Act II, if in The Marrow — Bow]* The needle points over the bow and will not come back. Ahead is not north. <sub>items.adv:27</sub>
 - *[Act II, if fog_tried]* The needle points at the deck hatch. It would rather go below than look at the water. <sub>items.adv:29</sub>
 - *[Act II, if in The Marrow — Helm]* The needle points at Vex. It has stopped trusting the weather. <sub>items.adv:31</sub>
 - *[Act II only]* The needle points at the quarterdeck, where Vex is steering us to the edge of the Shroud. <sub>items.adv:33</sub>
@@ -4501,7 +4498,7 @@
 **Quill's spyglass** `spyglass` — Quill's spyglass. She says she doesn't need it. She cleans it every morning. <sub>items.adv:45</sub>
 
 - *[Act II, if marrow_lost]* Quill's spyglass. It is wet, and the fog through it is empty. That is worse than a shape. <sub>items.adv:48</sub>
-- *[Act II, if fog_tried and in The Shroud]* Quill's spyglass. Through it, the fog has a shape, and the shape is keeping pace. <sub>items.adv:50</sub>
+- *[Act II, if fog_tried and in The Marrow — Bow]* Quill's spyglass. Through it, the fog has a shape, and the shape is keeping pace. <sub>items.adv:50</sub>
 - *[Act II, if salvage_seen]* Quill's spyglass. The names on the crates below are still in my head. The glass can't help with those. <sub>items.adv:52</sub>
 - *[Act II, if fog_tried]* Quill's spyglass. The fog does not get closer through it. It gets further away. <sub>items.adv:54</sub>
 - *[Act II only]* Quill's spyglass. She lent it to me for the bow. She did not say what to look for. <sub>items.adv:56</sub>
@@ -4521,10 +4518,10 @@
 - *[Act III only]* My father's chart of the Shroud. Out here, the blank half is the water under my feet. <sub>items.adv:81</sub>
 - *[if rook_story]* My father's chart of the Shroud, with the fog's edge drawn in Rook's hand. <sub>items.adv:83</sub>
 
-**Mordant's nameplate** `nameplate` — Brass, green with salt: GREY LANTERN — M. MORDANT, MASTER. <sub>items.adv:86</sub>
+**Mordant's nameplate** `nameplate` — A brass plate from the Grey Lantern's bow, green with salt: GREY LANTERN — M. MORDANT, MASTER. <sub>items.adv:86</sub>
 
 - *[Act III, if rule_name]* *called “Mordant's nameplate”* The name on the plate is the one Elias says the Lantern cannot take. MORDANT. <sub>items.adv:90</sub>
-- *[Act III only]* *called “the nameplate”* A brass plate off the wreck. GREY LANTERN — M. MORDANT, MASTER. I cannot place the captain. <sub>items.adv:93</sub>
+- *[Act III only]* *called “the nameplate”* A brass plate from the Grey Lantern's bow, lodged in the wreck. GREY LANTERN — M. MORDANT, MASTER. I cannot place the captain. <sub>items.adv:93</sub>
 - *[Act IV, if name_spoken]* The name on the plate has been said aloud. It is only brass again. <sub>items.adv:96</sub>
 - *[Act IV only]* The brass plate from the Grey Lantern. MORDANT. The name is the last thing we need. <sub>items.adv:98</sub>
 
@@ -4579,7 +4576,7 @@
 
 - *(then)* Confront Vex at the helm about the salvage. <sub>tips.adv:73</sub>
 
-**12.** *[Act II, if fog_tried and rule_light and in The Shroud]* *(nudge)* The bow is quiet. The bell is quiet. That is not the same as safe. <sub>tips.adv:77</sub>
+**12.** *[Act II, if fog_tried and rule_light and in The Marrow — Bow]* *(nudge)* The bow is quiet. The bell is quiet. That is not the same as safe. <sub>tips.adv:77</sub>
 
 - *(then)* Go aft to the main deck. <sub>tips.adv:78</sub>
 
@@ -4629,7 +4626,7 @@
 
 **24.** *[Act IV, if name_spoken]* *(nudge)* Mordant is in his cabin, and he has not raised his voice once. <sub>tips.adv:143</sub>
 
-- *(then)* Talk to Mordant on the deck of the Grey Lantern. <sub>tips.adv:144</sub>
+- *(then)* Talk to Mordant in the captain's cabin. <sub>tips.adv:144</sub>
 
 **25.** *[Act IV, if bell_cut and lantern_doused and name_spoken = false]* *(nudge)* The bell is quiet and the great lantern is out. One thing is left. <sub>tips.adv:148</sub>
 
@@ -4666,22 +4663,28 @@
 - *[if ending_fog_lifts]* I say the name once more, quietly. Mordant. It sounds like a man now, not a curse. <sub>acts.adv:58</sub>
 - *[if ending_fog_lifts]* Marta hangs a new story over the Salty Keel's fire. For once, it has an ending. <sub>acts.adv:60</sub>
 - *[if ending_fog_lifts]* My father and I draw the new coast together. The chart is honest now. <sub>acts.adv:62</sub>
-- *[if ending_fog_lifts]* The bell hangs in the harbour. On the first clear morning of the year, it rings for the dead. <sub>acts.adv:64</sub>
-- *[if ending_fog_lifts and tam_freed]* Tam Hobb rings it at noon. I tell him his brother kept counting. Tam says he knows, and rings it again. <sub>acts.adv:66</sub>
-- *[if ending_fog_lifts]* Old Onn comes down to the quay to hear the story. I tell her the truth. She says it will do, and goes back to her step. <sub>acts.adv:68</sub>
-- *[if ending_long_way and vex_trust]* Vex takes the salvage and leaves Dreadwater. He leaves the longboat at the reef for my father, and calls it a debt worth collecting. <sub>acts.adv:72</sub>
-- *[if ending_long_way and vex_trust]* My father comes home a month later, in that boat, with the rest of the chart. <sub>acts.adv:74</sub>
-- *[if ending_long_way and vex_trust = false]* Vex takes the salvage and the credit. He tells the island he saved us. The ones we left are not in his story. <sub>acts.adv:76</sub>
-- *[if ending_long_way and vex_trust = false]* My father stays on the fog rock to finish the chart. He sends a note once a month, and it is always a map. <sub>acts.adv:78</sub>
-- *[if ending_long_way]* Quill brings us out with a heading she made up on the spot. It works. She never says how close it was. <sub>acts.adv:80</sub>
-- *[if ending_long_way and tam_freed]* Hobb comes home with Tam. He does not speak for a day, and then he does not stop. <sub>acts.adv:82</sub>
-- *[if ending_long_way and tam_freed = false]* Hobb comes home alone. He keeps Tam's tally in his coat and adds to it every morning. <sub>acts.adv:84</sub>
-- *[if ending_long_way]* Dorrit keeps the galley going all the way home. Nobody goes hungry, not even Vex. <sub>acts.adv:86</sub>
-- *[if ending_long_way]* The island takes us back. The fog is still out there, and the fishing boats still do not go past the reef. <sub>acts.adv:88</sub>
-- *[if ending_long_way]* The Shroud keeps its crews. On quiet nights the bell rings across the water, and the island has learned to call it weather. <sub>acts.adv:90</sub>
-- *[if ending_long_way]* The blank half of the chart hangs in the Salty Keel. Marta says that is the honest part. <sub>acts.adv:92</sub>
-- *[if ending_long_way]* I go back to Dreadwater with a boat, a crew, and no father. Some mornings the fog looks like a road. <sub>acts.adv:94</sub>
-- *[if ending_long_way]* The Grey Lantern is still out there. Some nights I hear the bell, and I answer it. That is not the same as going back. <sub>acts.adv:96</sub>
+- *[if ending_fog_lifts]* His compass lies open on the table between us. The needle points north, and stays there. <sub>acts.adv:64</sub>
+- *[if ending_fog_lifts]* Old Rook hears the bell is quiet. He orders a drink, then pushes it away. He has somewhere to be. <sub>acts.adv:66</sub>
+- *[if ending_fog_lifts]* The bell hangs in the harbour. On the first clear morning of the year, it rings for the dead. <sub>acts.adv:68</sub>
+- *[if ending_fog_lifts and tam_freed]* Tam Hobb rings it at noon. I tell him his son kept counting. Tam says he knows, and rings it again. <sub>acts.adv:70</sub>
+- *[if ending_fog_lifts]* Old Onn comes down to the quay to hear the story. I tell her the truth. She says it will do, and goes back to her step. <sub>acts.adv:72</sub>
+- *[if ending_long_way and vex_trust]* Vex takes the salvage and leaves Dreadwater. He leaves the longboat at the reef for my father, and calls it a debt worth collecting. <sub>acts.adv:76</sub>
+- *[if ending_long_way and vex_trust]* My father comes home a month later, in that boat, with the rest of the chart. <sub>acts.adv:78</sub>
+- *[if ending_long_way and vex_trust = false]* Vex takes the salvage and the credit. He tells the island he saved us. The ones we left are not in his story. <sub>acts.adv:80</sub>
+- *[if ending_long_way and vex_trust = false]* My father stays on the fog rock to finish the chart. He sends a note once a month, and it is always a map. <sub>acts.adv:82</sub>
+- *[if ending_long_way]* Quill brings us out with a heading she made up on the spot. It works. She never says how close it was. <sub>acts.adv:84</sub>
+- *[if ending_long_way and tam_freed]* Hobb comes home with Tam. He does not speak for a day, and then he does not stop. <sub>acts.adv:86</sub>
+- *[if ending_long_way and tam_freed = false]* Hobb comes home alone. He keeps Tam's tally in his coat and adds to it every morning. <sub>acts.adv:88</sub>
+- *[if ending_long_way]* Dorrit keeps the galley going all the way home. Nobody goes hungry, not even Vex. <sub>acts.adv:90</sub>
+- *[if ending_long_way]* The island takes us back. The fog is still out there, and the fishing boats still do not go past the reef. <sub>acts.adv:92</sub>
+- *[if ending_long_way]* The Shroud keeps its crews. On quiet nights the bell rings across the water, and the island has learned to call it weather. <sub>acts.adv:94</sub>
+- *[if ending_long_way]* The blank half of the chart hangs in the Salty Keel. Marta says that is the honest part. <sub>acts.adv:96</sub>
+- *[if ending_long_way and vex_trust]* My father's compass points at the fog until the month he comes home. Then it points at the harbour, and stays. <sub>acts.adv:98</sub>
+- *[if ending_long_way and vex_trust = false]* I keep my father's compass in my coat. It still points at the fog, and some mornings I follow it as far as the quay. <sub>acts.adv:100</sub>
+- *[if ending_long_way]* Old Rook does not ask how it went. He puts a glass in front of me and one in front of himself. <sub>acts.adv:102</sub>
+- *[if ending_long_way and vex_trust]* I go back to Dreadwater with a boat, a crew, and a father a month behind me. <sub>acts.adv:104</sub>
+- *[if ending_long_way and vex_trust = false]* I go back to Dreadwater with a boat, a crew, and no father. Some mornings the fog looks like a road. <sub>acts.adv:106</sub>
+- *[if ending_long_way]* The Grey Lantern is still out there. Some nights I hear the bell, and I answer it. That is not the same as going back. <sub>acts.adv:108</sub>
 
 <a id="fallback"></a>
 # Appendix: Fallback Lines
@@ -4785,7 +4788,7 @@
 
 - I can't see how to use ⟨target⟩ on its own. <sub>game/lines.ts:148</sub>
 - I fiddle with ⟨target⟩. It's patient with me, which is worse. <sub>game/lines.ts:149</sub>
-- ⟨target⟩ doesn't do anything by itself. Neither did I, for three years. <sub>game/lines.ts:150</sub>
+- ⟨target⟩ doesn't do anything by itself. Neither did I, before this voyage. <sub>game/lines.ts:150</sub>
 - I'd need a reason, or at least something to use it with. <sub>game/lines.ts:151</sub>
 - I've crossed a reef by compass, and I still can't see what ⟨target⟩ is for. <sub>game/lines.ts:152</sub>
 
@@ -4842,29 +4845,29 @@
 
 **rooms:** 25/25
 
-**conversations:** 15/15
+**conversations:** 14/14
 
 **nodes:** 480/480
 
-**room blocks (hotspots, states, scenes, combos):** 354/354
+**room blocks (hotspots, states, scenes, combos):** 352/352
 
-**hotspot verb lines:** 581/581
+**hotspot verb lines:** 576/576
 
-**choices:** 478
+**choices:** 480
 
 **narrated lines (say):** 149
 
-**chart notes:** 17
+**chart notes:** 18
 
-**combinations:** 33 (6 global)
+**combinations:** 35 (6 global)
 
 **items:** 6/6
 
 **tips:** 28/28
 
-**ending lines:** 31
+**ending lines:** 37
 
 **fallback lines:** 80
 
-**total lines with a source:** 1950
+**total lines with a source:** 1956
 

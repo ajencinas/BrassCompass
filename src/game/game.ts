@@ -8,7 +8,7 @@ import { drawText, typewriterSlice, wrap } from "../engine/text";
 import { WalkMesh, pointInPoly, clampToFloor, type Poly, type Pt } from "../engine/walkbox";
 import {
   drawPanel, hitTestPanel, drawCursor, drawDialogue, dialogueHit, dialogueLayout, DialogueStage, inventorySlotRect,
-  INV_PER_PAGE, COLORS, PAGE_FOCUS, isPageFocus, fitText,
+  INV_PER_PAGE, inventoryPages, COLORS, PAGE_FOCUS, isPageFocus, fitText,
   type PanelModel, type DialogueModel, type Chip, type Spot,
 } from "./ui";
 import { Settings } from "./settings";
@@ -23,9 +23,10 @@ import { CinematicPlayer } from "./cinematic";
 import { VERBS } from "./verbs";
 import { characterOf } from "../content/characters";
 import type {
-  Room, Hotspot, VerbId, Effect, Cond, DialogueTree, DialogueNode, Area, Combo, DialogueChoice, SceneSprite, DoorSound,
+  Room, Hotspot, VerbId, Effect, Cond, DialogueTree, DialogueNode, Area, Combo, DialogueChoice, SceneSprite, DoorSound, Rect,
 } from "./types";
 import { ROOMS, START_ROOM, START_POS } from "../content/rooms";
+import { roomImageKeys } from "../content/room-assets";
 import { ACTS, ENDING, FIRST_ACT, LAST_ACT } from "../content/acts";
 import { defaultLine, noComboLine, itemAloneLine, targetOf, phrase, type Target } from "./lines";
 import { personHeightAt } from "./scale";
@@ -36,16 +37,22 @@ import { DeedsPage, deedTally, fileDeeds } from "./deeds";
 import { Recap } from "./recap";
 import {
   readSave, writeSave, clearSave, backupCorrupt, takeOldSave, hasAnySave,
+  archiveSave, stashCurrentSave, hasStashedSave, restoreStashedSave,
+  ENDING_FLAGS, ENDING_RESET_FLAGS, FINAL_CHOICE_FLAGS, withoutEndingFlags,
   SAVE_VERSION, type SaveData, type SaveKnown,
 } from "./save";
+import { SaveTabGuard } from "./tabguard";
 import { drawDebugOverlay } from "./debug";
 import { drawTitle, titleButtons, hitTitleButton, defaultTitleButton, type TitleId } from "./title";
 import { drawFigure, drawSprite, drawShadow } from "./figures";
 import { Transition } from "./transition";
+import { Connector } from "./connector";
+import {
+  entrySideFor, linkOf, passageOf,
+  type ExitLink, type ExitSide, type PassageKind,
+} from "./connect";
 import { Fx } from "./fx";
 import { EndingScreen, type EndingCard } from "./ending";
-// next-level: coldopen
-import { Prologue } from "./prologue";
 import { Ambient, type AmbientView } from "./ambient";
 import { PAINT_PASS, Paint, figureWrap, type FigureWrap } from "./paint";
 import { ITEMS } from "../content/items";
@@ -55,6 +62,11 @@ import { TIPS } from "../content/hints";
 import { MANIFEST } from "../content/assets";
 import { TipLadder } from "./tips";
 import { drawGlyph, roundRectPath, type BarGlyph } from "./cues";
+import {
+  MobileUI, type MobileBridge, type MobileButton, type MobileState,
+} from "./mobile";
+import { FirstWatch, readLessons, writeLessons, LESSONS, LESSON_KEY, type LessonId } from "./onboarding";
+import { SHORTCUTS } from "./controls";
 
 /**
  * The top bar is icon-only and quiet: small square plates, right-aligned, with no words on the
@@ -66,7 +78,14 @@ const BAR_IDS: BarId[] = ["reveal", "log", "tip", "casebook", "map", "pause"];
 const BAR_LABELS: Record<BarId, string> = {
   reveal: "Reveal interactive things", log: "Line history", tip: "Tip", casebook: "Chart", map: "Map", pause: "Pause",
 };
-const BAR_KEYS: Record<BarId, string> = { reveal: "Q", log: "L", tip: "H", casebook: "J", map: "A", pause: "Escape" };
+const BAR_KEYS: Record<BarId, string> = {
+  reveal: SHORTCUTS.reveal, log: SHORTCUTS.history, tip: SHORTCUTS.tip,
+  casebook: SHORTCUTS.chart, map: SHORTCUTS.map, pause: SHORTCUTS.pause,
+};
+/** The one or two words a plate may show under the pointer or a finger. */
+const BAR_SHORT: Record<BarId, string> = {
+  reveal: "Reveal", log: "History", tip: "Tip", casebook: "Chart", map: "Map", pause: "Pause",
+};
 const BAR_GLYPHS: Record<BarId, BarGlyph> = {
   reveal: "eye", log: "scroll", tip: "candle", casebook: "chart", map: "compass", pause: "pause",
 };
@@ -84,8 +103,13 @@ function barLayout(): Record<BarId, { x: number; y: number; w: number; h: number
   }
   return out;
 }
-/** Below the top bar: where the tip-mode line and other banners sit, clear of the buttons. */
-const BANNER_Y = 76;
+/** Below the top bar: where a plate's name, the tip-mode line and other banners sit. */
+const BANNER_Y = 100;
+/**
+ * The icon bar's floor. It still fades when nobody has touched it, but a resting plate must stay
+ * readable over the darkest and the brightest paintings, so it never goes below this.
+ */
+const BAR_IDLE_ALPHA = 0.62;
 
 const TIPS_KEY = "brasscompass.tips.v1";
 
@@ -100,6 +124,11 @@ function actionKey(k: string): boolean {
 }
 /** A confirmation armed this recently is a double-click or a bounce, not a decision. */
 const CONFIRM_GRACE_MS = 400;
+/**
+ * A touch action is armed by the first tap and confirmed by a later one. A second tap sooner
+ * than this is the same gesture bouncing (a double tap), not a decision.
+ */
+const TOUCH_CONFIRM_MS = 400;
 /** Keyboard focus moves between these with Tab, and within one with the arrows. */
 type FocusGroup = "hotspot" | "verb" | "item";
 /** Tab order: the scene first (what the player came to touch), then the verbs, then the satchel. */
@@ -114,6 +143,24 @@ function areaBox(area: Area): { x: number; y: number; w: number; h: number } {
     x: Math.min(...xs), y: Math.min(...ys),
     w: Math.max(...xs) - Math.min(...xs), h: Math.max(...ys) - Math.min(...ys),
   };
+}
+
+/** Whether a point is on a rectangle (the little hit-test the scene chrome keeps reusing). */
+function insideBox(x: number, y: number, r: Rect): boolean {
+  return x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h;
+}
+
+/** A chapter column in Chapter select: one act, its rooms, one line of the chart. */
+interface SceneColumn {
+  act: number;
+  title: string;
+  x: number;
+  rooms: { index: number; id: string }[];
+}
+interface SceneLayout {
+  entries: { id: string; act: number }[];
+  columns: SceneColumn[];
+  rects: Rect[];
 }
 
 /** Items that have art of their own (`item_<id>` in the manifest); the rest are drawn as names. */
@@ -194,6 +241,8 @@ const NARRATION_LINGER = 2.5;
 const NARRATION_FADE = 0.6;
 /** Running is this much quicker than walking (double-click the floor). */
 const RUN_FACTOR = 2.2;
+/** The render loop's target: 60 frames a second, however fast the display refreshes. */
+const FRAME_MS = 1000 / 60;
 /** Effects that hand the screen to something else; nothing after one in a list runs. */
 const TERMINAL: ReadonlySet<Effect["k"]> = new Set(["go", "talk", "act", "win"]);
 /**
@@ -213,6 +262,12 @@ const SAVE_NOTICE_MIN = 8;
 /** How long a pinned note's banner and the chart button's glow last, in seconds. */
 const NOTE_TOAST_TIME = 4;
 
+/** The final-choice flag each ending branch also sets; the other branch's must go. */
+const ENDING_COMPANION: Readonly<Record<string, string>> = {
+  ending_fog_lifts: "curse_broken",
+  ending_long_way: "escaped_fog",
+};
+
 /** What a save may name, checked against the live content. */
 const KNOWN: SaveKnown = {
   room: (id) => id in ROOMS,
@@ -220,6 +275,8 @@ const KNOWN: SaveKnown = {
   act: (n) => n in ACTS,
   firstAct: FIRST_ACT,
   talk: (tree, node) => tree in DIALOGUES && (node === undefined || node in DIALOGUES[tree].nodes),
+  // A save is by design from before the final choice; none of its answers are part of a voyage.
+  endingFlags: ENDING_RESET_FLAGS,
 };
 
 export class Game {
@@ -264,7 +321,15 @@ export class Game {
   private revealToggled = false;
   /** Touch: the hotspot a first tap showed; a second tap on it acts. */
   private touchArmed: string | null = null;
+  /** When that arm was shown (performance.now()); see TOUCH_CONFIRM_MS. */
+  private touchArmedAt = 0;
   private touch = false;
+  /** The phone/tablet layout: canvas scene plus the DOM touch chrome. */
+  private mobile = false;
+  private mobileUI: MobileUI | null = null;
+  /** Mobile play shows the scene alone; title, cold open and ending use the full frame. */
+  private mobileFull = true;
+  private mobileSyncAt = -1e9;
   /** Running (double-click), and where the current walk is headed. */
   private running = false;
   private walkGoal: Pt | null = null;
@@ -293,18 +358,28 @@ export class Game {
   private hoverDirty = false;
   /** Doors lean the view toward them as the curtain falls, and the next room settles in. */
   private transition = new Transition();
+  /** The short passage shot for a cut between two genuinely apart rooms. */
+  private connector = new Connector();
   /** Walk rings, pickup flights and the glow on new items. */
   private fx = new Fx();
   /** The closing card, while it shows. */
   private ending: EndingScreen | null = null;
-  /** next-level: coldopen — the playable prologue at the desk, before the opening film. */
-  private prologue: Prologue | null = null;
   /** next-level: a11y — the ending has been read out, so a repeated effect cannot say it twice. */
   private announcedEnding = false;
   /** Something to do at full black (a change of scene that shouldn't be a hard cut). */
   private curtain: (() => void) | null = null;
   /** The way out being taken, so the transition leans toward it. */
   private exitAt: Pt | null = null;
+  /**
+   * Connectivity for a room change, keyed by its destination. A `go` can be parked in the effect
+   * queue behind a line, so the cue waits here for the room it belongs to rather than on a single
+   * field that a second click could overwrite.
+   */
+  private exitLinks = new Map<string, { from: string; link: ExitLink | null; passage: PassageKind | null; at: Pt }>();
+  /** The side the arriving painting is revealed from, set when the room swaps. */
+  private pendingEntry: ExitSide | null = null;
+  /** The passage shot to play at full black before the room swaps, if this cut needs one. */
+  private pendingPassage: { kind: PassageKind; side: ExitSide } | null = null;
   /** Rooms whose exits have already had their one-time first-entry pulse this session. */
   private exitIntroSeen = new Set<string>();
   /** Seconds left of that pulse; 0 when none is due. */
@@ -317,10 +392,16 @@ export class Game {
   private cursorStyle = "";
   /** Seconds of pointer/key quiet; the icon bar fades when nobody has touched it. */
   private idle = 0;
-  /** Eased visibility of the icon bar: 1 when in use, low and quiet when idle. */
+  /** Eased visibility of the icon bar: 1 when in use, still readable when idle (BAR_IDLE_ALPHA). */
   private barFade = 1;
   /** A button just pressed, so its icon shows a short focus ring even after the key is up. */
   private barFlash: { id: BarId; left: number } | null = null;
+  /** A touch has no hover: the first tap names a plate and this keeps the name up for a moment. */
+  private barLabel: { id: BarId; left: number } | null = null;
+  /** The plate a touch has named but not yet pressed. The second tap does its work. */
+  private touchBarArmed: BarId | null = null;
+  /** Seconds the pointer has rested on the same thing, for the first-watch lessons. */
+  private hoverDwell = 0;
   /** The button under the pointer, for the canvas's hover title. */
   private lastBarHover: BarId | null = null;
   private cameraX = 0;
@@ -328,6 +409,14 @@ export class Game {
   private rejection = 0;
   private time = 0;
   private hasSave = false;
+  /** True while a stashed voyage from before "Begin anew" / "Restart" can be taken up. */
+  private hasPrevious = false;
+  /** Two tabs share one save; once the other one writes, this tab stops writing over it. */
+  private tabGuard = new SaveTabGuard();
+  private foreignSave = false;
+  private foreignSaveWarned = false;
+  /** The closing choice just made, so a corrupted pair of ending flags still resolves to one. */
+  private endingChosen: string | null = null;
   private paused = false;
   private settings: Settings;
   private cinematic: CinematicPlayer;
@@ -349,6 +438,8 @@ export class Game {
   /** The collected casebook, read once when the title comes up (it is written by `win`). */
   private casebookTally: { filed: number; total: number } | null = null;
   private prefs: Prefs = loadPrefs();
+  /** The one-time first-watch lessons this browser has not been given yet. */
+  private watch: FirstWatch;
 
   constructor(
     private view: View,
@@ -356,10 +447,16 @@ export class Game {
     private assets: Assets,
     private audio: AudioEngine
   ) {
+    this.mobile = view.mobile;
+    this.touch = view.mobile;
     this.settings = new Settings({
       resume: () => this.setPaused(false),
       restart: () => {
         this.setPaused(false);
+        // Restart replaces the voyage just as Begin anew does: keep the page it replaced.
+        this.persist();
+        this.hasPrevious = stashCurrentSave() || this.hasPrevious;
+        this.clearForeignSave();
         this.behindCurtain(() => { this.title = false; this.newGame(); });
       },
       title: () => {
@@ -391,6 +488,13 @@ export class Game {
       reduced: () => this.reduced,
       autoTextScale: () => autoTextScale(this.view.scale),
     });
+    const readLesson = (key: string): string | null => {
+      try { return localStorage.getItem(key); } catch { return null; }
+    };
+    const writeLesson = (value: string): void => {
+      try { localStorage.setItem(LESSON_KEY, value); } catch { /* optional */ }
+    };
+    this.watch = new FirstWatch(readLessons(readLesson), (taught) => writeLessons(writeLesson, taught));
     try { this.tipMode = localStorage.getItem(TIPS_KEY) === "on"; } catch { this.tipMode = false; }
     this.cinematic = new CinematicPlayer(() => this.audio);
     const titles: Record<number, string> = {};
@@ -471,7 +575,9 @@ export class Game {
 
   /** Build the screen-reader toolbar once, after the canvas exists. */
   private buildA11yControls(): void {
-    if (typeof document === "undefined" || this.a11y) return;
+    // On a phone the touch HUD is already real DOM with real buttons; the hidden mirror would
+    // only give a screen reader a second, invisible copy.
+    if (this.mobile || typeof document === "undefined" || this.a11y) return;
     const root = document.createElement("div");
     root.className = "a11y-controls sr-only";
     root.setAttribute("role", "toolbar");
@@ -553,6 +659,16 @@ export class Game {
     this.audio.chime();
     this.speak(`Tip: ${this.tipLadder.ask(this.tipMode)}`);
   }
+  /**
+   * One of the five first-watch lessons, offered at the moment it matters. Marked as taught as
+   * soon as it is offered, so a second voyage never repeats it; read out for a screen reader
+   * even though the plate itself is canvas.
+   */
+  private teach(id: LessonId): boolean {
+    if (!this.watch.offer(id)) return false;
+    this.announce(LESSONS[id].text(this.touch));
+    return true;
+  }
 
   // next-level: casebook — the NEXT block and where-line are game state, not casebook state.
   /**
@@ -600,7 +716,11 @@ export class Game {
   start(): void {
     try {
       this.hasSave = hasAnySave();
-    } catch { this.hasSave = false; }
+      this.hasPrevious = hasStashedSave();
+    } catch { this.hasSave = false; this.hasPrevious = false; }
+    // Two tabs share localStorage: the other tab's write arrives here as a storage event. There
+    // is no event in the tab that writes, so every event for this key is genuinely another page.
+    addEventListener("storage", (event) => this.onStorage(event));
     if (import.meta.env.DEV) {
       (window as unknown as Record<string, unknown>).__game = this;
       // Headless browsers can throttle rAF; tests advance the game clock directly.
@@ -614,21 +734,16 @@ export class Game {
         this.flags = {};
         this.startAct(n);
       };
-      // next-level: coldopen — play the cold open from a test, without the title in the way.
-      (window as unknown as Record<string, unknown>).__coldopen = () => {
-        if (this.prologue) return;
-        this.enterColdOpen(() => this.playIntro());
-      };
     }
     // A tab being closed or hidden writes whatever is still waiting for the next save.
     addEventListener("pagehide", () => this.flushAutosave());
     document.addEventListener("visibilitychange", () => { if (document.hidden) this.flushAutosave(); });
     this.input.onDown((x, y, button, info) => {
-      this.touch = info.kind !== "mouse";
+      this.touch = info.kind !== "mouse" || this.mobile;
       this.onClick(x, y, button, info.clicks);
     });
     this.input.onMove((x, y, _b, info) => {
-      if (info.kind === "mouse") this.touch = false;
+      if (info.kind === "mouse" && !this.mobile) this.touch = false;
       this.onMove(x, y);
     });
     this.input.onKey((k, event) => this.onKey(k, event));
@@ -640,14 +755,50 @@ export class Game {
     this.buildA11yControls(); // next-level: a11y — the screen-reader toolbar
     this.loadRoom(START_ROOM, START_POS);
     this.enterTitle();
+    if (this.mobile) {
+      this.mobileUI = new MobileUI(this.mobileBridge());
+      this.mobileUI.sync(this.mobileState());
+    }
     requestAnimationFrame((t) => this.frame(t));
   }
 
   private frame(t: number): void {
-    const dt = Math.min(0.05, (t - (this.lastT || t)) / 1000);
+    // The next frame is scheduled in `finally`: one bad update or render must never stop the
+    // clock forever. A failure that repeats is surfaced as a recoverable overlay instead of a
+    // silent freeze.
+    try {
+      if (this.fatal) return;
+      this.step(t);
+      this.frameFailures = 0;
+    } catch (error) {
+      this.frameFailures++;
+      console.error("The Brass Compass: frame failed", error);
+      if (this.frameFailures >= 3) this.showFrameFailure(error);
+    } finally {
+      requestAnimationFrame((tt) => this.frame(tt));
+    }
+  }
+
+  private step(t: number): void {
+    // Target 60 fps even on a 120/144 Hz panel. The elapsed time since the last rendered
+    // frame is accumulated, so skipped callbacks do not slow the game clock down.
+    const elapsed = this.lastT ? t - this.lastT : 0;
     this.lastT = t;
+    this.frameAccum += elapsed;
+    this.pendingDt += elapsed;
+    // A 1 ms tolerance keeps a 60 Hz panel's jitter from skipping alternate frames.
+    if (this.frameAccum < FRAME_MS - 1) return;
+    // Keep at most one frame of backlog: a throttled tab should not spiral to catch up.
+    this.frameAccum = Math.min(this.frameAccum - FRAME_MS, FRAME_MS);
+    const dt = Math.min(0.05, this.pendingDt / 1000);
+    this.pendingDt = 0;
     if (!this.paused) this.time += dt;
     this.update(dt);
+    // The touch HUD only needs to match the game about ten times a second; the scene keeps 60.
+    if (this.mobileUI && t - this.mobileSyncAt > 100) {
+      this.mobileSyncAt = t;
+      this.mobileUI.sync(this.mobileState());
+    }
     // Under the pause menu, a cinematic or the casebook the canvas barely shows: draw it a few
     // times a second, not sixty. A resize clears the canvas, so that draws at once.
     // next-level: casebook
@@ -660,12 +811,60 @@ export class Game {
       this.drawnW = this.view.canvas.width;
       this.drawnH = this.view.canvas.height;
     }
-    requestAnimationFrame((tt) => this.frame(tt));
   }
   private lastT = 0;
+  private frameAccum = 0;
+  private pendingDt = 0;
   private drawnAt = -1e9;
   private drawnW = 0;
   private drawnH = 0;
+  /** Consecutive frame exceptions since the last clean frame. */
+  private frameFailures = 0;
+  /** The repeated-failure overlay is up; the loop still runs, but skips update/render. */
+  private fatal = false;
+
+  /**
+   * A failure path after the frame loop has thrown three times in a row. The loop keeps
+   * scheduling frames (so a one-off fault recovers on its own if the player closes this), and
+   * the overlay offers the two honest recoveries: try again, or reload and rebuild from the
+   * save. Nothing in the voyage is written or erased here.
+   */
+  private showFrameFailure(error: unknown): void {
+    if (this.fatal) return;
+    this.fatal = true;
+    this.frameFailures = 0;
+    try { this.announce("The game hit a problem. Choose Try again, or reload the page."); } catch { /* DOM gone */ }
+    if (typeof document === "undefined") return;
+    const el = document.createElement("div");
+    el.id = "fatal";
+    el.setAttribute("role", "alertdialog");
+    el.setAttribute("aria-modal", "true");
+    el.setAttribute("aria-labelledby", "fatal-title");
+    // Keep stray keys out of the frozen game behind the dialog.
+    el.addEventListener("keydown", (event) => event.stopPropagation());
+    const detail = error instanceof Error && error.message ? escapeHtml(error.message) : "";
+    el.innerHTML = `
+      <div class="fatal-inner">
+        <h1 id="fatal-title">The game hit a problem</h1>
+        <p>Something failed three frames running${detail ? `: ${detail}` : ""}.</p>
+        <p>The voyage is still in the log. Try again, or reload the page to rebuild it from your save.</p>
+        <div class="fatal-actions">
+          <button type="button" id="fatal-retry">Try again</button>
+          <button type="button" id="fatal-reload">Reload page</button>
+        </div>
+      </div>`;
+    document.body.append(el);
+    el.querySelector<HTMLButtonElement>("#fatal-retry")?.addEventListener("click", () => {
+      el.remove();
+      this.fatal = false;
+      this.frameFailures = 0;
+      // The clock is deliberately reset, so a giant `dt` from time spent in the dialog cannot
+      // itself throw the first frame back into the fault.
+      this.lastT = 0;
+    });
+    el.querySelector<HTMLButtonElement>("#fatal-reload")?.addEventListener("click", () => location.reload());
+    el.querySelector<HTMLButtonElement>("#fatal-retry")?.focus();
+  }
 
   /** Fade to black, do `then` there, and fade back up: a change of scene without a hard cut. */
   private behindCurtain(then: () => void): void {
@@ -680,8 +879,6 @@ export class Game {
    * clicks and keys then could act on a room that is about to go, or trigger a door twice.
    */
   private inputLocked(): boolean {
-    // next-level: coldopen
-    if (this.prologue?.active) return true;
     if (this.curtain) return true;
     // next-level: casebook
     if (this.deeds.open) return true;
@@ -698,10 +895,15 @@ export class Game {
     // next-level: a11y — the screen-reader toolbar is real DOM: its buttons get their own keys
     // (Tab moves between them, Enter and Space press them). Escape still belongs to the game.
     if (this.a11y && k !== "Escape" && event.target instanceof Node && this.a11y.root.contains(event.target)) return;
+    // The touch chrome is real DOM too: a focused verb, satchel or title button owns Enter,
+    // Space and Tab; the canvas's shortcuts must not fire a second action behind it.
+    if (this.mobileUI && k !== "Escape" && event.target instanceof Node && this.mobileUI.contains(event.target)) return;
     // A modifier on its own, an F-key or a media key means nothing here, and must not skip a line.
     if (!actionKey(k)) return;
-    // Any key the game takes counts as use: the icon bar wakes for it.
+    // Any key the game takes counts as use: the icon bar wakes for it. A touch's first tap on
+    // a plate no longer needs its second: the keyboard has taken over.
     this.idle = 0;
+    this.touchBarArmed = null;
     // A held key acts once. Only movement repeats (Tab and the arrows walk focus along a row): a
     // held Enter, letter or Escape would confirm twice, flicker the pause menu, reopen and close
     // the casebook, or race through lines the player hasn't read.
@@ -709,12 +911,6 @@ export class Game {
     const nav = k === "Tab" || k.startsWith("Arrow") || k === "PageUp" || k === "PageDown";
     if (event.repeat && !nav) {
       if (k === "Enter" || k === " " || k === "Escape") event.preventDefault();
-      return;
-    }
-    // next-level: coldopen — the cold open takes Enter and Space to skip, and nothing else.
-    if (this.prologue?.active) {
-      this.audio.unlock();
-      this.prologue.key(k, event);
       return;
     }
     if (this.areaCardBusy) { this.clearAreaCard(); return; }
@@ -1147,15 +1343,18 @@ export class Game {
     this.hoverHotspot = null;
     this.hoverChoice = -1;
 
-    // next-level: coldopen
-    if (this.prologue?.active) {
-      this.prologue.move(x, y);
-      return;
-    }
-
     if (this.title) {
       const over = this.titleButtons().find((b) => this.hitTitle(b.y, x, y))?.id ?? null;
       if (over !== this.titleFocus) this.setTitleFocus(over);
+      return;
+    }
+
+    if (this.roomMenu) {
+      // The scene list is pointer and keyboard together: hovering moves the same marker the
+      // arrows move, so Enter always goes where the eye is.
+      const layout = this.roomMenuLayout();
+      const i = layout.rects.findIndex((r) => insideBox(x, y, r));
+      if (i >= 0) this.roomMenuFocus = i;
       return;
     }
 
@@ -1196,7 +1395,7 @@ export class Game {
   private showAreaCard(areaId: string, then: () => void): void {
     const area = ATLAS.find((a) => a.id === areaId);
     if (!area) { then(); return; }
-    this.assets.prioritize([area.image]);
+    void this.assets.ensure([area.image]);
     this.clearAreaCard();
     const card = document.createElement("div");
     card.className = "area-card";
@@ -1244,6 +1443,12 @@ export class Game {
   /** The atlas: chart of the island, then the area, then the rooms. */
   private showAtlas(): void {
     if (this.title || this.won || this.paused || this.cinematic.active || this.dialogue || this.queue || this.atlas.open) return;
+    // The chart is a full-screen hand-over: opening it while a door is already fading, a room
+    // is still swapping, or Fenn is walking to an effect would let that walk (or its `onArrive`)
+    // play out unseen behind the chart and leave a queue when it closes. Wait for the scene to
+    // settle instead; nothing is cancelled or lost.
+    if (this.areaCardBusy || this.pendingRoom !== null || this.curtain || this.fade > 0) return;
+    if (this.path.length > 0 || this.onArrive || this.walkGoal || this.running) return;
     this.audio.page();
     this.atlas.show({
       act: this.act,
@@ -1265,6 +1470,7 @@ export class Game {
 
   private barAction(id: BarId): void {
     if (this.cinematic.active) return;
+    this.clearTouchArm();
     this.flashBar(id);
     if (id === "pause") {
       if (!this.paused) this.setPaused(true);
@@ -1344,17 +1550,36 @@ export class Game {
     }
     if (this.areaCardBusy) { this.clearAreaCard(); return; }
     if (this.paused || this.cinematic.active || this.casebook.open || this.history.open) return;
-    // next-level: coldopen
-    if (this.prologue?.active) { this.audio.unlock(); this.prologue.click(x, y, button); return; }
-    if (this.roomMenu) { this.roomMenuClick(x, y); return; }
+    if (this.roomMenu) {
+      // On a phone the scene list is a DOM sheet; a click on the canvas behind it goes nowhere.
+      if (!this.mobile) this.roomMenuClick(x, y);
+      return;
+    }
     this.audio.unlock();
     this.lastInput = "pointer";
     this.idle = 0;
     this.keyboardFocus = null;
     this.focusCameraX = null;
 
-    const bar = this.barHit(x, y);
-    if (bar) { this.barAction(bar); return; }
+    // The canvas top bar is not drawn on a phone; the DOM one is. Its old boxes lie over the
+    // scene, so a tap near the picture's top must not quietly press Pause.
+    const bar = this.mobile ? null : this.barHit(x, y);
+    if (bar) {
+      // A finger has no hover. The first tap names the plate and the second does its work, the
+      // same two-tap grammar a touch player already uses on the scene.
+      if (this.touch && this.touchBarArmed !== bar) {
+        this.touchBarArmed = bar;
+        this.barLabel = { id: bar, left: 3.2 };
+        this.idle = 0;
+        this.announce(`${BAR_LABELS[bar]} (${BAR_KEYS[bar]}). Tap again.`);
+        return;
+      }
+      this.touchBarArmed = null;
+      this.barAction(bar);
+      return;
+    }
+    this.touchBarArmed = null;
+    this.barLabel = null;
     if (this.inputLocked()) return;
 
     if (this.won) {
@@ -1363,6 +1588,11 @@ export class Game {
     }
 
     if (this.title) {
+      // Right-click is never a menu choice. On the title it must not answer "Begin anew", nor
+      // even dismiss the question: the destructive answer has to be a deliberate left click.
+      if (button === 2) return;
+      // The mobile title menu is DOM; a tap on the painting is not an answer.
+      if (this.mobile) return;
       // The second click of a double-click (or a double tap) belongs to the first: it must never
       // answer the question the first one asked.
       if (clicks >= 2) return;
@@ -1412,7 +1642,7 @@ export class Game {
     if (button === 2) {
       // Right-click looks at a thing (in the scene or the satchel). Mid-sentence, or on
       // anything else, it cancels.
-      this.touchArmed = null;
+      this.clearTouchArm();
       const fresh = !this.sentence.verb && !this.sentence.a;
       if (fresh && hit?.kind === "item") {
         this.audio.click();
@@ -1432,16 +1662,18 @@ export class Game {
     }
 
     if (hit) {
-      this.touchArmed = null;
+      this.clearTouchArm();
       this.onPanelHit(hit);
       return;
     }
 
     if (y >= SCENE_H) return;
 
-    const hs = this.hotspotAt(x + this.cameraX, y);
+    // A finger is not a pixel: a small painted thing still gets a 24 CSS-pixel halo to be
+    // tapped in, without changing what a mouse hits.
+    const hs = (y < SCENE_H ? this.hotspotAt(x + this.cameraX, y) : null) ??
+      (this.touch && y < SCENE_H ? this.nearestHotspotAt(x + this.cameraX, y) : null);
     if (!hs) {
-      this.touchArmed = null;
       // Walk-off: floor clicked in the last few pixels beside an exit that meets this edge is
       // that exit's own click. Without this, a painted path running off the frame ends in a
       // walk to the edge and no way through. Respect a sentence being built (the click means
@@ -1449,9 +1681,18 @@ export class Game {
       const edge = this.edgeExitAt(x, y);
       const onFloor = this.room.walk.some((poly) => pointInPoly({ x: x + this.cameraX, y }, poly));
       if (edge && onFloor && !this.sentence.verb && !this.sentence.a && !this.sentence.b) {
+        if (this.touch) {
+          if (this.touchArmed !== edge.id) this.armTouch(edge);
+          else if (performance.now() - this.touchArmedAt >= TOUCH_CONFIRM_MS) {
+            this.clearTouchArm();
+            this.onHotspotClick(edge, 1);
+          }
+          return;
+        }
         this.onHotspotClick(edge, clicks);
         return;
       }
+      this.clearTouchArm();
       const target = clampToFloor({ x: x + this.cameraX, y }, this.room.walk);
       // A double-click, or a second click on where Fenn is already headed, runs.
       const again = this.path.length > 0 && this.walkGoal !== null &&
@@ -1462,17 +1703,244 @@ export class Game {
       return;
     }
 
-    // Touch has no hover: a first tap on a thing names it and lights up what a tap would do;
-    // a second tap does it. With a verb already chosen the player has said what they want.
-    if (this.touch && !this.sentence.verb && this.touchArmed !== hs.id && clicks < 2) {
-      this.touchArmed = hs.id;
+    // Touch has no hover: the first tap inspects a thing and lights what a tap would do; a
+    // later, separate tap confirms it. A verb already chosen means the player has said what
+    // they want. Double taps are never treated as a confirmation: the same gesture that armed
+    // the action cannot also spend it.
+    if (this.touch && !this.sentence.verb) {
       this.hoverHotspot = hs.id;
-      const what = this.suggestion();
-      this.announce(`${sentenceEnd(hs.name)} Tap again: ${sentenceEnd(what.suggestLine ?? "act")}`);
+      this.hoverDirty = false;
+      this.teach("look");
+      if (this.touchArmed === hs.id) {
+        if (performance.now() - this.touchArmedAt < TOUCH_CONFIRM_MS) return;
+        this.clearTouchArm();
+        this.onHotspotClick(hs, 1);
+        return;
+      }
+      this.armTouch(hs);
       return;
     }
-    this.touchArmed = null;
-    this.onHotspotClick(hs, clicks);
+    this.clearTouchArm();
+    this.onHotspotClick(hs, this.touch ? 1 : clicks);
+  }
+
+
+  // ------------------------------------------------------------ touch / mobile
+
+  /**
+   * Confirm the action a first tap armed. Used by the DOM action plate as well as the second
+   * tap; it re-checks the hotspot is still on screen and that no verb has taken over.
+   */
+  private confirmTouchArm(): void {
+    const id = this.touchArmed;
+    if (!id) return;
+    if (this.inputLocked() || this.dialogue) { this.clearTouchArm(); return; }
+    const hs = this.visibleHotspots().find((candidate) => candidate.id === id);
+    this.clearTouchArm();
+    if (!hs) return;
+    this.hoverHotspot = hs.id;
+    this.onHotspotClick(hs, 1);
+  }
+
+  /** Show what a first tap on `hs` would do, and wait for a separate confirmation. */
+  private armTouch(hs: Hotspot): void {
+    this.hoverHotspot = hs.id;
+    this.hoverDirty = false;
+    this.touchArmed = hs.id;
+    this.touchArmedAt = performance.now();
+    const what = this.suggestion();
+    this.announce(`${sentenceEnd(hs.name)} Tap again: ${sentenceEnd(what.suggestLine ?? "act")}`);
+  }
+
+  /** Let go of an armed action or a half-built sentence from the touch HUD. */
+  private cancelTouch(): void {
+    this.clearTouchArm();
+    this.sentence = { verb: null, a: null, b: null };
+    this.committed = null;
+    this.hoverHotspot = null;
+    this.hoverVerb = null;
+    this.hoverItem = null;
+  }
+
+  /** The DOM's Continue: reveal a typing line, or let a parked scene run on. */
+  private continueStory(): void {
+    if (this.narration && this.narration.shown < this.narration.text.length) {
+      this.narration.shown = this.narration.text.length;
+      this.narrationClock = this.typeTime(this.narration.text.length);
+      return;
+    }
+    if (this.queue) this.flushQueue();
+  }
+
+  /** A tap on the conversation sheet: first reveal the line, then advance when it is done. */
+  private mobileDialogueTap(): void {
+    if (!this.dialogue) return;
+    const node = this.currentNode();
+    if (node && this.dialogue.shown < node.text.length) {
+      this.dialogue.shown = node.text.length;
+      return;
+    }
+    if (this.visibleChoices().length === 0) {
+      this.advanceDialogue();
+      if (!this.dialogue) this.dialogueClosedAt = performance.now();
+    }
+  }
+
+  private mobileDialogueChoice(index: number): void {
+    if (!this.dialogue) return;
+    this.pickChoice(index);
+    if (!this.dialogue) this.dialogueClosedAt = performance.now();
+  }
+
+  /** "Look at Dock": the same grammar the desktop sentence line uses. */
+  private sentenceText(): string {
+    const { verb, a, b } = this.sentence;
+    if (!verb) return "";
+    const def = VERBS.find((v) => v.id === verb);
+    const line = [def?.label ?? "", a?.name ?? ""].filter(Boolean).join(" ");
+    if (!line) return "";
+    const link = verb === "give" ? "to" : "with";
+    if (b) return `${line} ${link} ${b.name}`;
+    if (def?.twoObject && a) return `${line} ${link} …`;
+    return line;
+  }
+
+  /** The mobile stage: scene alone in play, the full 16:9 frame for title/cold open/ending. */
+  private syncMobileLayout(): void {
+    if (!this.mobile || typeof document === "undefined") return;
+    const full = this.title || this.won;
+    document.body.classList.toggle("m-full", full);
+    if (full !== this.mobileFull) {
+      this.mobileFull = full;
+      this.view.setSceneOnly(!full);
+    }
+  }
+
+  /** Canvas type for the full-frame screens (the ending) at a phone-readable size. */
+  private get mobileTextScale(): number {
+    if (!this.mobile) return this.textScale;
+    return Math.max(this.textScale, Math.min(3, 15 / Math.max(1, 27 * this.view.scale)));
+  }
+
+  /** Everything the touch HUD paints, as plain data: no private methods cross the boundary. */
+  private mobileState(): MobileState {
+    // The title's buttons are only built while the title is up: `chaptersUnlocked` reads
+    // localStorage, and the HUD asks for this state ten times a second during play.
+    const menu = this.title ? this.titleButtons() : [];
+    const defaultId = menu.length ? defaultTitleButton(menu) : null;
+    const confirmWait = this.title && this.confirmNew && performance.now() - this.confirmArmedAt < CONFIRM_GRACE_MS;
+    const titleButtons: MobileButton[] = menu.map((b) => ({
+      id: b.id,
+      label: b.label,
+      sub: b.sub,
+      kind: b.id === "confirm" ? "danger" : b.id === "explore" ? "quiet" : b.id === defaultId || b.id === "keep" ? "primary" : "quiet",
+      disabled: b.id === "confirm" && confirmWait,
+    }));
+
+    const dialogue = this.dialogue;
+    let dialogueState: MobileState["dialogue"] = null;
+    if (dialogue) {
+      const node = this.currentNode();
+      const choices = this.visibleChoices();
+      dialogueState = {
+        speaker: characterOf(node?.speaker ?? "").name,
+        text: node?.text ?? "",
+        shown: dialogue.shown,
+        choices: choices.map((c) => ({ text: c.text, seen: Boolean(c.seen) })),
+        canAdvance: Boolean(node && dialogue.shown >= node.text.length && choices.length === 0),
+      };
+    }
+
+    const rawArmed = this.touchArmed
+      ? this.visibleHotspots().find((candidate) => candidate.id === this.touchArmed)
+      : undefined;
+    let armed: MobileState["play"]["armed"] = null;
+    if (rawArmed) {
+      const hs = this.hotspotState(rawArmed);
+      const verb = this.isExit(hs) ? "walk" : this.suggestedVerb(hs);
+      const label = VERBS.find((v) => v.id === verb)?.label ?? "";
+      armed = {
+        label: [label, hs.name].filter(Boolean).join(" "),
+        hint: "Tap again in the scene, or tap here",
+      };
+    }
+
+    const pages = inventoryPages(this.inventory.length);
+    const page = Math.min(this.inventoryPage, pages - 1);
+    const selected = new Set([this.sentence.a?.id, this.sentence.b?.id].filter((id): id is string => Boolean(id)));
+    const act = ACTS[this.act];
+
+    return {
+      screen: this.title ? "title" : this.won ? "ending"
+        : dialogueState ? "dialogue" : "play",
+      blocked: this.paused || this.cinematic.active || this.casebook.open || this.history.open ||
+        this.atlas.open || this.deeds.open,
+      title: { buttons: titleButtons },
+      prologue: {
+        text: "", shown: 0, speaker: "", canStamp: false, skippable: false, stamped: false,
+      },
+      dialogue: dialogueState,
+      ending: this.won && this.ending ? { page: this.ending.pageNumber, pages: this.ending.pageCount } : null,
+      play: {
+        act: act ? `Act ${ROMAN[act.n] ?? act.n}` : "",
+        room: this.room?.name ?? "",
+        narration: this.narration?.text ?? "",
+        narrationShown: this.narration?.shown ?? 0,
+        sentence: this.sentenceText(),
+        explore: this.explore,
+        armed,
+        waiting: Boolean(this.queue && this.narration),
+        verbs: VERBS.map((v) => ({
+          id: v.id,
+          label: v.id === "walk" ? "Walk" : v.label,
+          active: this.sentence.verb === v.id,
+          suggested: !this.sentence.verb && this.suggestion().suggestVerb === v.id,
+        })),
+        inventory: this.inventory.map((id) => ({
+          id,
+          name: ITEMS[id]?.name ?? id,
+          selected: selected.has(id),
+        })),
+        page,
+        pages,
+      },
+      reveal: this.revealToggled,
+      tip: this.tipMode,
+      roomMenu: this.roomMenu ? {
+        open: true,
+        rooms: this.exploreRooms().map((r) => ({
+          id: r.id,
+          label: `${r.act ? `Act ${r.act} · ` : ""}${ROOMS[r.id]?.name ?? r.id}`,
+        })),
+      } : null,
+    };
+  }
+
+  /** The touch HUD's every action, in one place. */
+  private mobileBridge(): MobileBridge {
+    return {
+      bar: (id) => this.barAction(id),
+      verb: (id) => { this.audio.click(); this.setVerb(id); },
+      item: (id) => { this.audio.click(); this.pickItem(id); },
+      page: (delta) => this.turnPage(delta),
+      clear: () => this.clearSentence(),
+      confirm: () => this.confirmTouchArm(),
+      cancel: () => this.cancelTouch(),
+      continueStory: () => this.continueStory(),
+      dialogueTap: () => this.mobileDialogueTap(),
+      dialogueChoice: (index) => this.mobileDialogueChoice(index),
+      title: (id) => this.titleActivate(id),
+      prologueStamp: () => {},
+      prologueSkip: () => {},
+      advanceEnding: () => this.advanceEnding(),
+      room: (id) => {
+        const at = this.exploreRooms().findIndex((r) => r.id === id);
+        if (at >= 0) this.exploreGo(at);
+      },
+      openRooms: () => { if (this.explore) this.roomMenu = true; },
+      closeRooms: () => { this.roomMenu = false; },
+      state: () => this.mobileState(),
+    };
   }
 
   private onPanelHit(hit: NonNullable<ReturnType<typeof hitTestPanel>>): void {
@@ -1497,9 +1965,16 @@ export class Game {
   // ------------------------------------------------------------ sentence
 
   private clearSentence(): void {
+    this.clearTouchArm();
     this.sentence = { verb: null, a: null, b: null };
     this.committed = null;
     this.narration = null;
+  }
+
+  /** Forget a touch action that was armed but not confirmed. */
+  private clearTouchArm(): void {
+    this.touchArmed = null;
+    this.touchArmedAt = 0;
   }
 
   /**
@@ -1518,6 +1993,7 @@ export class Game {
   }
 
   private setVerb(verb: VerbId): void {
+    this.clearTouchArm();
     this.startSentence();
     const keepA = this.sentence.a;
     this.sentence = { verb, a: keepA, b: null };
@@ -1531,6 +2007,7 @@ export class Game {
   }
 
   private pickItem(itemId: string): void {
+    this.clearTouchArm();
     this.startSentence();
     this.fx.seen(itemId);
     this.narration = null;
@@ -1550,6 +2027,9 @@ export class Game {
     }
     this.sentence.a = ref;
     this.sentence.b = null;
+    // The first item taken in hand is the moment Use and Give can be explained: item first,
+    // then the thing it acts on. One lesson, once, in the sentence line's own grammar.
+    if (def?.twoObject) this.teach("use");
     if (!def?.twoObject) this.execute();
   }
 
@@ -1627,7 +2107,23 @@ export class Game {
     this.exitAt = this.areaCentre(hs.area);
     const b = areaBox(hs.area);
     const image = this.assets.img(this.room.bg);
-    if (image) this.exitCard = { image, x: b.x, y: b.y, w: b.w, h: b.h };
+    if (image) {
+      // The threshold card is a close-up of the room's own painting held under the fade. It
+      // must wear the same `backdrop` grade as the plate behind it, or a brightened room snaps
+      // back to its raw exposure as the door opens. `plate()` is that grade, baked once.
+      const plate = this.ambient.plate() ?? image;
+      this.exitCard = {
+        image: plate, imageW: image.naturalWidth, imageH: image.naturalHeight,
+        x: b.x, y: b.y, w: b.w, h: b.h,
+      };
+    }
+    // The cue belongs to the room this exit leads to. A `go` may run later, out of the queue,
+    // so it is kept by destination instead of on a field a second click could replace.
+    const link = linkOf(this.room.id, hs.id);
+    const passage = passageOf(this.room.id, hs.id);
+    for (const e of effects) if (e.k === "go") {
+      this.exitLinks.set(e.room, { from: this.room.id, link, passage, at: this.exitAt });
+    }
     this.runEffects(effects);
     this.exitAt = null;
   }
@@ -1843,6 +2339,13 @@ export class Game {
     this.trace?.({ kind: "effect", effect: e });
     switch (e.k) {
       case "flag":
+        // Only one ending can be chosen. If the player left the last choice after setting one
+        // and then came back for the other, the first must not colour the second.
+        if (e.v && ENDING_FLAGS.has(e.id)) {
+          this.onlyEnding(e.id);
+          this.onlyFinalChoice(e.id);
+          this.endingChosen = e.id;
+        }
         this.flags[e.id] = e.v;
         break;
       case "add": {
@@ -1890,6 +2393,17 @@ export class Game {
     return false;
   }
 
+  /** Keep `keep` as the only closing choice; the others belong to a choice not taken. */
+  private onlyEnding(keep: string): void {
+    for (const id of ENDING_FLAGS) if (id !== keep) delete this.flags[id];
+  }
+
+  /** Drop the other branch's marker (`curse_broken` / `escaped_fog`) along with its ending. */
+  private onlyFinalChoice(ending: string): void {
+    const keep = ENDING_COMPANION[ending];
+    for (const id of FINAL_CHOICE_FLAGS) if (id !== keep) delete this.flags[id];
+  }
+
   /** Resume parked effects now, as if the line had been read. */
   private flushQueue(): void {
     const q = this.queue;
@@ -1901,6 +2415,7 @@ export class Game {
 
   private giveItem(id: string): void {
     this.hoverDirty = true;
+    if (ITEM_ICONS.has(id)) void this.assets.ensure([`item_${id}`]);
     if (!this.inventory.includes(id)) {
       this.inventory.push(id);
       this.fx.freshen(id);
@@ -1917,10 +2432,16 @@ export class Game {
     this.syncA11yControls(); // next-level: a11y — pager labels
     this.persist();
   }
+  /** Inventory icons are lazy too: ask for the ones the satchel is about to draw. */
+  private warmInventoryIcons(): void {
+    const keys = this.inventory.filter((id) => ITEM_ICONS.has(id)).map((id) => `item_${id}`);
+    if (keys.length) void this.assets.ensure(keys);
+  }
 
   // ------------------------------------------------------------ dialogue
 
   private startDialogue(treeId: string, nodeId?: string): void {
+    this.clearTouchArm();
     const tree = DIALOGUES[treeId];
     if (!tree) return;
     const start = nodeId && tree.nodes[nodeId] ? nodeId : tree.start;
@@ -2244,15 +2765,36 @@ export class Game {
     // low alpha until the pointer or a key wakes it. Its hit boxes never move or go away.
     this.idle = Math.min(this.idle + dt, 600);
     if (this.barFlash && (this.barFlash.left -= dt) <= 0) this.barFlash = null;
+    if (this.barLabel && (this.barLabel.left -= dt) <= 0) this.barLabel = null;
+    // The first-watch plates ride the game clock, but never under a card, a conversation, a
+    // cutscene, a pause or a curtain: they wait for the moment the screen is plainly playable.
+    const lessonsFrozen = this.title || this.won || this.paused || this.cinematic.active ||
+      this.areaCardBusy || Boolean(this.dialogue) || Boolean(this.queue) || this.explore || this.fade > 0.5;
+    this.watch.tick(dt, lessonsFrozen);
     const barHot = this.barHit(this.input.x, this.input.y);
-    const barWant = this.paused || this.cinematic.active || barHot || this.noteGlow > 0 || this.idle < 3.5 ? 1 : 0.22;
+    // The bar is quiet chrome, not invisible chrome. It drops to BAR_IDLE_ALPHA when untouched,
+    // and wakes for the pointer, a finger, a lesson or a note.
+    const barWant = this.paused || this.cinematic.active || barHot || this.noteGlow > 0 ||
+      this.barLabel || this.touchBarArmed || this.watch.current || this.idle < 3.5 ? 1 : BAR_IDLE_ALPHA;
     this.barFade += (barWant - this.barFade) * Math.min(1, dt * (barWant < this.barFade ? 2.4 : 8));
     this.tickAreaCard(dt);
     // The establishing card holds the scene under it, so no opening line plays unseen.
     if (this.areaCardBusy) return;
     if (this.paused || this.cinematic.active) return;
-    // next-level: coldopen — while the desk is on screen, nothing else in the game ticks.
-    if (this.prologue?.active) { this.prologue.update(dt); return; }
+    // First watch: a pointer that rests on a thing gets taught what a right-click is; resting on
+    // something that can be picked up also names taking. Both are offered once, then never again.
+    const resting = !this.touch && this.lastInput === "pointer" && Boolean(this.hoverHotspot) &&
+      !this.inputLocked() && !this.dialogue;
+    if (resting && (!this.watch.learnt("look") || !this.watch.learnt("take"))) {
+      this.hoverDwell += dt;
+      if (this.hoverDwell > 0.65) {
+        this.teach("look");
+        const raw = this.room.hotspots.find((h) => h.id === this.hoverHotspot);
+        if (raw && this.hotspotState(raw).do?.pickup?.length) this.teach("take");
+      }
+    } else {
+      this.hoverDwell = 0;
+    }
     this.rejection = Math.max(0, this.rejection - dt);
     // fade
     if (this.fade !== this.fadeTarget) {
@@ -2260,14 +2802,21 @@ export class Game {
       this.fade = Math.max(0, Math.min(1, this.fade + dir * dt * 2.2));
     }
 
-    // Room swap happens at full black, driven by the game clock.
+    // Room swap happens at full black, driven by the game clock. A cut with no shared threshold
+    // holds the curtain a little longer for a short passage shot, then swaps at the end of it.
     if (this.pendingRoom && this.fade >= 0.999) {
       const id = this.pendingRoom;
-      this.pendingRoom = null;
-      this.loadRoom(id);
-      this.exitCard = null;
-      this.transition.arrive({ x: this.x, y: this.y - this.personHeight(this.y) * 0.5 });
-      this.fadeTarget = 0;
+      if (this.pendingPassage) {
+        if (!this.connector.active) {
+          this.connector.begin(this.pendingPassage.kind, this.pendingPassage.side, this.room.id, id);
+        }
+        if (this.connector.update(dt)) {
+          this.connector.end();
+          this.enterPendingRoom();
+        }
+      } else {
+        this.enterPendingRoom();
+      }
     }
     if (this.curtain && this.fade >= 0.999) {
       const then = this.curtain;
@@ -2440,9 +2989,10 @@ export class Game {
     this.trace?.({ kind: "room", room: id });
     this.mesh = new WalkMesh(room.walk, room.width ?? LOGICAL_W, SCENE_H);
     this.roomWait = 0;
-    // Rooms entered by Continue or a dialogue transition never went through goRoom's priority
-    // hint, so ask for this room's art explicitly.
-    this.assets.prioritize([room.bg, ...(room.sprites ?? []).map((s) => s.key)]);
+    // Lazy loading: ask for this room's plate, sprites and portraits now. The curtain stays
+    // down until they arrive (roomReady), and the loader retries a flaky image before falling
+    // back, so a slow or missing plate cannot leave the room black.
+    void this.assets.ensure(roomImageKeys(room));
     // Arrive at the door we came through; saved positions may predate a floor change.
     const start = clampToFloor(pos ?? (from ? room.arrive?.[from] : undefined) ?? room.entry, room.walk);
     this.x = start.x;
@@ -2458,17 +3008,24 @@ export class Game {
     this.sentence = { verb: null, a: null, b: null };
     this.keyboardFocus = null;
     this.hoverHotspot = null;
-    this.touchArmed = null;
+    this.clearTouchArm();
     this.walkGoal = null;
     this.running = false;
     if (!this.title) this.announce(`${room.name}.`);
     if (room.music) this.audio.playMusic(room.music);
     this.audio.setRoom({ ambience: room.ambience, footsteps: room.footsteps, emitters: room.emitters });
     this.persist();
-    if (room.onEnter) this.runEffects(room.onEnter);
-    // Story scenes belong to the voyage, not to Explore Scenes.
-    const scene = this.explore || opts.scenes === false ? undefined : room.scenes?.find((sc) => sc.if.every((c) => this.check(c)));
-    if (scene) this.runEffects(scene.do);
+    // The title only borrows the harbour's painting, music and ambience as a backdrop. Its
+    // arrival scene belongs to the voyage: running it here would set `dock_landed`, speak the
+    // boatman's lines to a screen reader (and the log) before the player has chosen anything,
+    // and then skip the scene for the voyage that actually starts. `onEnter` is skipped for the
+    // same reason: the title's backdrop must not change story state.
+    if (!this.title) {
+      if (room.onEnter) this.runEffects(room.onEnter);
+      // Story scenes belong to the voyage, not to Explore Scenes.
+      const scene = this.explore || opts.scenes === false ? undefined : room.scenes?.find((sc) => sc.if.every((c) => this.check(c)));
+      if (scene) this.runEffects(scene.do);
+    }
     // First entry in this session: breathe the ways out once so they are noticed, unless the
     // room has too many to read as a hint or this load is only the title's backdrop. The timer
     // is held by update() while a conversation or cutscene has the screen.
@@ -2490,14 +3047,45 @@ export class Game {
     this.audio.door(sound);
     // Fetch the next room's art while the curtain falls.
     const next = ROOMS[id];
-    if (next) this.assets.prioritize([next.bg, ...(next.sprites ?? []).map((s) => s.key)]);
-    this.transition.leave(this.exitAt);
+    if (next) void this.assets.ensure(roomImageKeys(next));
+    // The exit cue: which side we left by, and whether this cut needs a passage shot. A cue
+    // only applies if it came from the room we are standing in now.
+    const cue = this.exitLinks.get(id) ?? null;
+    this.exitLinks.delete(id);
+    const current = cue && cue.from === this.room.id ? cue : null;
+    this.pendingEntry = entrySideFor(current?.link ?? null);
+    this.pendingPassage = current?.passage && current.link && !this.reduced
+      ? { kind: current.passage, side: current.link.side }
+      : null;
+    // A `go` queued behind a line still knows the threshold it came from.
+    this.transition.leave(current?.at ?? this.exitAt);
     this.fadeTarget = 1;
     this.pendingRoom = id;
   }
+
+  /** The swap itself, at full black: load the room, then start its entry reveal. */
+  private enterPendingRoom(): void {
+    const id = this.pendingRoom;
+    if (!id) return;
+    this.pendingRoom = null;
+    this.pendingPassage = null;
+    this.loadRoom(id);
+    this.exitCard = null;
+    this.transition.arrive(
+      { x: this.x, y: this.y - this.personHeight(this.y) * 0.5 },
+      this.pendingEntry,
+    );
+    this.pendingEntry = null;
+    this.fadeTarget = 0;
+  }
   private pendingRoom: string | null = null;
   /** The painted threshold the player is passing through, held during the curtain. */
-  private exitCard: { image: HTMLImageElement; x: number; y: number; w: number; h: number } | null = null;
+  private exitCard: {
+    image: CanvasImageSource;
+    /** The painting's own pixel size, for clamping the close-up crop. */
+    imageW: number; imageH: number;
+    x: number; y: number; w: number; h: number;
+  } | null = null;
 
   // ------------------------------------------------------------ save
 
@@ -2508,6 +3096,9 @@ export class Game {
   private persist(at?: { room: string; pos?: { x: number; y: number }; actStarted?: boolean }): void {
     this.autosaveIn = 0;
     if (this.title || this.explore || this.won) return;
+    // Another tab owns the notebook now. Writing would silently erase its page; the notice tells
+    // the player to reload instead. An explicit new/continued voyage clears the block.
+    if (this.foreignSave) return;
     const pos = at ? (at.pos ?? ROOMS[at.room].entry) : { x: this.x, y: this.y };
     const data: SaveData = {
       version: SAVE_VERSION,
@@ -2515,7 +3106,9 @@ export class Game {
       x: pos.x,
       y: pos.y,
       facing: this.facing,
-      flags: this.flags,
+      // The save is the moment *before* the last choice. Its answer must be made again on
+      // Continue, so the ending flags never ride along — not even for a second.
+      flags: withoutEndingFlags(this.flags, ENDING_RESET_FLAGS),
       inventory: this.inventory,
       act: this.act,
       notes: this.notes,
@@ -2524,7 +3117,10 @@ export class Game {
       tip: this.tipLadder.shown(),
       at: Date.now(),
     };
-    if (this.queue?.length && !at) data.queue = this.queue;
+    // A pending `win` is not persisted: the save is the moment before the final choice, and a
+    // Continue must make that choice rather than roll credits from a half-played queue.
+    const queue = this.queue?.filter((e) => e.k !== "win");
+    if (queue?.length && !at) data.queue = queue;
     if (writeSave(data)) {
       this.hasSave = true;
       this.saveBroken = false;
@@ -2551,9 +3147,39 @@ export class Game {
     if (this.autosaveIn > 0) this.persist();
   }
 
+  /** Another tab wrote (or removed) shared storage. Only a save write is a conflict. */
+  private onStorage(event: StorageEvent): void {
+    this.hasPrevious = hasStashedSave();
+    if (this.tabGuard.observe(event)) {
+      this.foreignSave = true;
+      if (this.title) {
+        // Nothing is at risk on the title yet; just offer the page they wrote.
+        this.hasSave = hasAnySave();
+        this.continueLabel = this.hasSave ? this.saveLabel(" ·") : null;
+        return;
+      }
+      if (!this.foreignSaveWarned) {
+        this.foreignSaveWarned = true;
+        // Sticky: it must still be up after a conversation or a fade, since from now on this
+        // tab is deliberately not saving.
+        this.showSaveNotice(
+          "Another window has written in this notebook. I won't ink over their page from here — " +
+          "reload this page to take up where they left off.", true);
+      }
+    }
+  }
+
+  /** This tab is deliberately taking up (or starting) a voyage: it may write again. */
+  private clearForeignSave(): void {
+    if (this.foreignSave) this.saveNotice = null;
+    this.foreignSave = false;
+    this.foreignSaveWarned = false;
+    this.tabGuard.clear();
+  }
+
   /** Put a save problem up in its banner; it's in the log (L) and read out too. */
-  private showSaveNotice(text: string): void {
-    this.saveNotice = { text, left: Math.max(SAVE_NOTICE_MIN, (2 * text.length) / READ_CPS) };
+  private showSaveNotice(text: string, sticky = false): void {
+    this.saveNotice = { text, left: sticky ? 1e9 : Math.max(SAVE_NOTICE_MIN, (2 * text.length) / READ_CPS) };
     this.history.add({ speaker: characterOf("fenn").name, text });
     this.announce(text);
   }
@@ -2597,20 +3223,38 @@ export class Game {
 
   private loadGame(): void {
     this.queue = null;
-    const { data: d, raw, corrupt } = readSave(KNOWN);
+    const { data: d, raw, corrupt, future, futureVersion, migratedFrom } = readSave(KNOWN);
+    if (future) {
+      // A newer copy of the game wrote this page. Do not reinterpret it: keep the raw page, then
+      // begin clean. The archive is the only copy, and it is never overwritten.
+      if (raw) archiveSave(raw, "future", undefined, futureVersion);
+      clearSave();
+      this.clearForeignSave();
+      this.newGame();
+      this.showSaveNotice(
+        "This page was written by a newer copy of the game, so I can't read it as mine. I've " +
+        "kept it safe and begun a fresh one.");
+      return;
+    }
     if (!d) {
       if (!corrupt) return this.loadOldSave();
       // Keep the unreadable save instead of overwriting it, and tell the player.
       if (raw) backupCorrupt(raw);
       clearSave();
+      this.clearForeignSave();
       this.newGame();
       this.showSaveNotice(
         "The last page of my notebook is ruined — the save couldn't be read. I've kept it aside " +
         "and started a fresh page.");
       return;
     }
+    // Keep the exact page the old shape was read from; migrating in memory must not lose what
+    // this build doesn't understand.
+    if (raw && migratedFrom !== undefined) archiveSave(raw, "migrated", undefined, migratedFrom);
+    this.clearForeignSave();
     this.resetState();
     this.inventory = d.inventory;
+    this.warmInventoryIcons();
     this.flags = d.flags;
     this.facing = d.facing;
     this.act = d.act;
@@ -2637,36 +3281,27 @@ export class Game {
    */
   private loadOldSave(): void {
     // A save from the previous game (or an older shape) cannot be carried into this voyage:
-    // its rooms, flags and one-shot sources are gone. Keep the page, start the new story.
+    // its rooms, flags and one-shot sources are gone. Archive its raw page, then start the new
+    // story; takeOldSave does both, so the page survives even though the voyage cannot.
     const raw = takeOldSave();
+    this.clearForeignSave();
     this.newGame();
-    if (raw) this.showSaveNotice("The old voyage is over. A new one begins.");
+    if (raw) this.showSaveNotice("The old voyage is over. Its page is kept in the archive; a new one begins.");
   }
 
   private beginNewVoyage(): void {
     // The title is the island chart; the harbour's establishing card plays over the started
     // room (its opening scene waits under the card), then the first line.
+    // Keep the voyage this replaces, so the title can offer it back.
+    this.hasPrevious = stashCurrentSave() || this.hasPrevious;
+    this.clearForeignSave();
     this.playIntro();
     const first = areaOfRoom(ACTS[1]?.start.room ?? "");
     if (first) this.showAreaCard(first.id, () => {});
   }
 
-  /** next-level: coldopen — the cold open needs the plate at boot and nothing of the voyage. */
-  private enterColdOpen(done: () => void): void {
-    if (this.prologue) return;
-    this.audio.setRoom({ footsteps: "wood" });
-    this.audio.playMusic("music_office", 1400);
-    this.prologue = new Prologue({
-      assets: this.assets,
-      audio: this.audio,
-      cps: () => NARRATION_CPS[effectiveTextSpeed(this.prefs, this.reduced)],
-      announce: (text) => this.announce(text),
-    }, done);
-  }
-
   /** The opening film, then a clean voyage. Title stays up (and nothing saves) until it ends. */
   private playIntro(): void {
-    this.prologue = null;
     const intro = ACTS[FIRST_ACT]?.intro;
     const start = (): void => { this.title = false; this.newGame(); };
     if (intro) this.cinematic.play(intro, start);
@@ -2724,6 +3359,7 @@ export class Game {
       this.inventory = [...def.inventory];
       this.inventoryPage = 0;
     }
+    this.warmInventoryIcons();
     this.loadRoom(def.start.room, def.start.pos ?? ROOMS[def.start.room].entry);
     this.fade = 1;
     this.fadeTarget = 0;
@@ -2734,6 +3370,7 @@ export class Game {
 
   /** Drop anything in flight: conversations, parked effects, walks and fades. */
   private resetTransient(): void {
+    this.clearTouchArm();
     this.clearAreaCard();
     this.queue = null;
     this.dialogue = null;
@@ -2741,6 +3378,10 @@ export class Game {
     this.path = [];
     this.onArrive = null;
     this.pendingRoom = null;
+    this.pendingPassage = null;
+    this.pendingEntry = null;
+    this.exitLinks.clear();
+    this.connector.end();
     // A first-entry pulse belongs to the room it was started in, not to whatever comes next.
     this.exitIntro = 0;
     // A curtain still waiting to fire must not outlive the reset: inputLocked() would stay true
@@ -2760,6 +3401,7 @@ export class Game {
     this.roomMenu = false;
     this.won = false;
     this.announcedEnding = false;
+    this.endingChosen = null;
     // next-level: casebook
     this.deedsShown = false;
     this.inventory = [];
@@ -2770,12 +3412,22 @@ export class Game {
     this.noteGlow = 0;
     this.history.clear();
     this.tipLadder.reset();
+    this.watch.clearQueue();
+    this.barLabel = null;
+    this.touchBarArmed = null;
+    this.hoverDwell = 0;
     this.syncA11yControls(); // next-level: a11y — an empty satchel has no second page
   }
 
   private newGame(): void {
     this.resetState();
     this.startAct(FIRST_ACT);
+    // First watch: the satchel and the chart are on screen from the first room, so their names
+    // are the first lessons. They wait for the opening scene to finish (see update()).
+    if (!hasCompleted()) {
+      this.teach("inventory");
+      this.teach("chart");
+    }
   }
 
   /**
@@ -2784,10 +3436,22 @@ export class Game {
    */
   private win(): void {
     this.resetTransient();
+    // One closing card, always. Content sets one flag, but a damaged or hand-edited state may
+    // hold both; the last one set wins, so the two endings' lines can never run together.
+    const chosen = Object.keys(this.flags).filter((id) => ENDING_FLAGS.has(id) && this.flags[id]);
+    if (chosen.length) {
+      const keep = chosen.length === 1
+        ? chosen[0]
+        : (this.endingChosen && chosen.includes(this.endingChosen) ? this.endingChosen : chosen.at(-1)!);
+      this.onlyEnding(keep);
+      this.onlyFinalChoice(keep);
+    }
     this.won = true;
     // next-level: casebook — record the voyage's optional layer as it ends
     this.deedsShown = false;
     const card = this.endingCard();
+    // The ending painting is not a room plate: ask for it as the card rises.
+    void this.assets.ensure([card.image]);
     // next-level: a11y — the card reads its page turns out; the ending itself is read out below.
     this.ending = new EndingScreen(card, this.assets, (text) => this.announce(text));
     if (card.music) this.audio.playMusic(card.music);
@@ -2995,26 +3659,22 @@ export class Game {
   private render(): void {
     const ctx = this.view.ctx;
     ctx.clearRect(0, 0, LOGICAL_W, LOGICAL_H);
+    this.syncMobileLayout();
 
     this.updateCursor();
-    // next-level: coldopen — the desk has the whole screen until the film begins.
-    if (this.prologue?.active) {
-      this.prologue.render(ctx, this.reduced, this.textScale);
-      drawCursor(ctx, this.input.x, this.input.y, null);
-      return;
-    }
+
     if (this.title) {
       this.renderTitle(ctx);
       this.renderFade(ctx);
-      drawCursor(ctx, this.input.x, this.input.y, null);
+      if (!this.mobile) drawCursor(ctx, this.input.x, this.input.y, null);
       return;
     }
 
     if (this.won && this.ending) {
       // The ceremony has the whole screen: no scene, no verbs, no top bar behind it.
-      this.ending.render(ctx, this.reduced, this.textScale);
+      this.ending.render(ctx, this.reduced, this.mobile ? this.mobileTextScale : this.textScale);
       this.renderFade(ctx);
-      drawCursor(ctx, this.input.x, this.input.y, null);
+      if (!this.mobile) drawCursor(ctx, this.input.x, this.input.y, null);
       return;
     }
 
@@ -3035,20 +3695,21 @@ export class Game {
     this.fx.drawWorld(ctx, this.reduced);
     ctx.restore();
     if (zoom) ctx.restore();
-    this.renderTopBar(ctx);
     let narrationBox = null;
-    if (this.dialogue) {
-      drawDialogue(ctx, this.dialogueModel(this.frameChoices()));
-    } else {
-      narrationBox = drawPanel(ctx, this.panelModel()).narrationBox;
-      this.fx.drawScreen(ctx, (id) => this.slotOf(id), this.reduced);
+    if (!this.mobile) {
+      this.renderTopBar(ctx);
+      if (this.dialogue) {
+        drawDialogue(ctx, this.dialogueModel(this.frameChoices()));
+      } else {
+        narrationBox = drawPanel(ctx, this.panelModel()).narrationBox;
+        this.fx.drawScreen(ctx, (id) => this.slotOf(id), this.reduced);
+      }
+      if (this.explore) this.renderExplore(ctx);
+      this.drawSaveNotice(ctx);
+      // The cursor is a shape, not a word chip: hover is answered by the gold rim in the scene.
+      drawCursor(ctx, this.input.x, this.input.y, null, this.rejection > 0, this.textScale, narrationBox);
     }
-    if (this.explore) this.renderExplore(ctx);
-    this.drawSaveNotice(ctx);
-    // next-level: casebook
-
-    // The cursor is a shape, not a word chip: hover is answered by the gold rim in the scene.
-    drawCursor(ctx, this.input.x, this.input.y, null, this.rejection > 0, this.textScale, narrationBox);
+    this.drawFirstWatch(ctx);
     this.renderFade(ctx);
   }
 
@@ -3062,8 +3723,7 @@ export class Game {
   private updateCursor(): void {
     let cursor = "default";
     const x = this.input.x, y = this.input.y;
-    if (this.prologue?.active) cursor = this.prologue.cursor; // next-level: coldopen
-    else if (this.touch || this.paused || this.cinematic.active) cursor = "default";
+    if (this.touch || this.paused || this.cinematic.active) cursor = "default";
     else if (this.title) cursor = this.titleButtons().some((b) => this.hitTitle(b.y, x, y)) ? "pointer" : "default";
     else if (this.roomMenu) cursor = "default";
     else if (this.barHit(x, y)) cursor = "pointer";
@@ -3103,6 +3763,25 @@ export class Game {
       return stand.x < this.x ? "w-resize" : "e-resize";
     }
     return "pointer";
+  }
+
+  /**
+   * The painted thing nearest a touch point, within a finger's halo. The scene is drawn at 390
+   * CSS pixels on a phone, so a 60 px prop is a 12 px target; accepting taps this close makes
+   * the small things usable without moving a mouse's hit test by a pixel.
+   */
+  private nearestHotspotAt(x: number, y: number): Hotspot | null {
+    const reach = 24 / Math.max(0.05, this.view.scale); // 24 CSS px in world units
+    let best: Hotspot | null = null;
+    let bestD = Infinity;
+    for (const raw of this.visibleHotspots()) {
+      const b = areaBox(this.hotspotState(raw).area);
+      const dx = Math.max(b.x - x, 0, x - (b.x + b.w));
+      const dy = Math.max(b.y - y, 0, y - (b.y + b.h));
+      const d = Math.hypot(dx, dy);
+      if (d <= reach && d < bestD) { bestD = d; best = raw; }
+    }
+    return best;
   }
 
   private areaCentre(area: Area): Pt {
@@ -3224,11 +3903,15 @@ export class Game {
       const focus = hover === id || this.barFlash?.id === id;
       const glow = id === "casebook" && this.noteGlow > 0;
       const k = this.reduced ? 0.8 : 0.5 + 0.5 * Math.sin(this.time * 6);
-      // Quiet: one dark glass plate, a faint edge, one glyph. On or focused is a gold ring.
-      roundRectPath(ctx, b.x, b.y, b.w, b.h, 11);
-      ctx.fillStyle = hover === id ? "rgba(30,48,64,0.94)" : on ? "rgba(8,16,26,0.94)" : "rgba(5,13,22,0.72)";
+      // Quiet, but never lost in the painting: a dark glass plate with a brass edge that keeps
+      // its contrast at rest, a black rim to separate it from the art, one glyph.
+      roundRectPath(ctx, b.x - 1, b.y - 1, b.w + 2, b.h + 2, 12);
+      ctx.fillStyle = "rgba(0,0,0,0.46)";
       ctx.fill();
-      ctx.strokeStyle = "rgba(232,201,138,0.16)";
+      roundRectPath(ctx, b.x, b.y, b.w, b.h, 11);
+      ctx.fillStyle = hover === id ? "rgba(27,46,62,0.97)" : on ? "rgba(7,15,25,0.96)" : "rgba(3,9,16,0.9)";
+      ctx.fill();
+      ctx.strokeStyle = hover === id ? "rgba(255,231,172,0.62)" : on ? "rgba(232,201,138,0.42)" : "rgba(232,201,138,0.3)";
       ctx.lineWidth = 1;
       ctx.stroke();
       if (on || focus || glow) {
@@ -3243,10 +3926,39 @@ export class Game {
         ctx.stroke();
         ctx.restore();
       }
-      const color = on || focus || glow ? "#fff3cf" : "#e8c98a";
-      drawGlyph(ctx, BAR_GLYPHS[id], b.x + b.w / 2, b.y + b.h / 2, focus ? 27 : 26, color, 0.96);
+      const color = on || focus || glow ? "#fff6df" : "#ffe2a6";
+      ctx.save();
+      ctx.shadowColor = "rgba(255,204,120,0.28)";
+      ctx.shadowBlur = 6;
+      drawGlyph(ctx, BAR_GLYPHS[id], b.x + b.w / 2, b.y + b.h / 2, focus ? 28 : 27, color, 1);
+      ctx.restore();
     }
     ctx.restore();
+    // A name for the plate: under the pointer on a mouse, or under a finger's first tap, since a
+    // finger has no hover. Short enough for the rail; the shortcut rides with it.
+    const named = this.touch ? (this.touchBarArmed ?? this.barLabel?.id ?? null) : hover;
+    if (named) {
+      const label = `${BAR_SHORT[named]} · ${BAR_KEYS[named]}`;
+      const size = Math.round(15 * Math.min(this.textScale, 1.3));
+      const box = boxes[named];
+      ctx.save();
+      ctx.globalAlpha = Math.max(0.86, this.barFade);
+      ctx.font = `${size}px Georgia, "Times New Roman", serif`;
+      const w = ctx.measureText(label).width + 20;
+      const h = size + 10;
+      const x = Math.max(8, Math.min(LOGICAL_W - w - 8, box.x + box.w / 2 - w / 2));
+      const y = box.y + box.h + 5;
+      roundRectPath(ctx, x, y, w, h, 6);
+      ctx.fillStyle = "rgba(3,8,14,0.94)";
+      ctx.fill();
+      ctx.strokeStyle = "rgba(232,201,138,0.38)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      drawText(ctx, label, x + w / 2, y + 5, {
+        size, color: "#ffe9bb", align: "center", shadow: false,
+      });
+      ctx.restore();
+    }
     if (this.tipMode && !this.dialogue && !this.won) {
       // Its own row under the bar, so it never covers the buttons.
       const text = "Tip: " + this.tipLadder.shown();
@@ -3263,6 +3975,63 @@ export class Game {
       ctx.fillRect(24, BANNER_Y, 3, h);
       lines.forEach((line, i) => drawText(ctx, line, 44, BANNER_Y + Math.round(10 * this.textScale) + i * lh, { size, color: "#dcebf2", shadow: false }));
     }
+  }
+
+  /**
+   * The first-watch plate: one line, once, at the thing it belongs to. It is not a footer and
+   * not a legend — it appears when the interface is first met, sits in the same glass and brass
+   * as the rest of the chrome, and is gone for good after a few seconds.
+   */
+  private drawFirstWatch(ctx: CanvasRenderingContext2D): void {
+    if (this.title || this.won || this.explore || this.dialogue || this.cinematic.active ||
+        this.areaCardBusy || this.paused || this.fade > 0.5) return;
+    const lesson = this.watch.current;
+    if (!lesson) return;
+    const alpha = this.watch.alpha;
+    if (alpha <= 0.01) return;
+    const def = LESSONS[lesson.id];
+    const text = def.text(this.touch);
+    const size = Math.round(20 * Math.min(this.textScale, 1.3));
+    const maxW = def.anchor === "satchel" ? 640 : 900;
+    const fitted = fitText(ctx, text, maxW, size, 14);
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.font = `${fitted.size}px Georgia, "Times New Roman", serif`;
+    const w = ctx.measureText(fitted.text).width + 52;
+    const h = fitted.size + 22;
+    const top = BANNER_Y + (this.tipMode ? this.tipBannerHeight(ctx) + 6 : 0);
+    let x = 40, y = top;
+    if (def.anchor === "satchel") {
+      // Over the empty quay, just above the satchel's leather head.
+      const slot = inventorySlotRect(0);
+      x = slot.x - 4;
+      y = slot.y - 92;
+    } else if (def.anchor === "bar") {
+      // Under the chart plate itself: the one icon the lesson is naming.
+      const box = barLayout().casebook;
+      x = box.x + box.w - w;
+    }
+    x = Math.max(24, Math.min(LOGICAL_W - w - 24, x));
+    y = Math.max(24, Math.min(LOGICAL_H - h - 24, y));
+    roundRectPath(ctx, x, y, w, h, 7);
+    ctx.fillStyle = "rgba(4,10,18,0.94)";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(232,201,138,0.5)";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.fillStyle = COLORS.gold;
+    ctx.fillRect(x, y, 3, h);
+    // A small brass diamond, the same mark the chart uses for a fix.
+    ctx.save();
+    ctx.translate(x + 22, y + h / 2);
+    ctx.rotate(Math.PI / 4);
+    ctx.fillStyle = "#e8c98a";
+    ctx.fillRect(-3.5, -3.5, 7, 7);
+    ctx.restore();
+    drawText(ctx, fitted.text, x + 38, y + 10, {
+      size: fitted.size, color: "#f2e6cb", shadow: false,
+    });
+    ctx.restore();
   }
 
   /** The scene's vignette: one gradient for the life of the context, not one a frame. */
@@ -3791,8 +4560,10 @@ export class Game {
     const room = ROOMS[s.room];
     if (this.room !== room) { this.room = room; this.mesh = new WalkMesh(room.walk, room.width ?? LOGICAL_W, SCENE_H); }
     this.roomWait = 0;
+    void this.assets.ensure(roomImageKeys(room));
     this.x = s.x; this.y = s.y; this.facing = s.facing; this.moveDirection = s.moveDirection; this.act = s.act;
     this.flags = structuredClone(s.flags); this.inventory = [...s.inventory]; this.inventoryPage = s.inventoryPage;
+    this.warmInventoryIcons();
     this.notes = structuredClone(s.notes);
     this.cameraX = s.cameraX; this.focusCameraX = null;
     this.path = []; this.onArrive = null; this.walkGoal = null; this.running = false;
@@ -3835,9 +4606,10 @@ export class Game {
     this.ambient.setRoom(room);
     this.mesh = new WalkMesh(room.walk, room.width ?? LOGICAL_W, SCENE_H);
     this.roomWait = 0;
-    // Rooms entered by Continue or a dialogue transition never went through goRoom's priority
-    // hint, so ask for this room's art explicitly.
-    this.assets.prioritize([room.bg, ...(room.sprites ?? []).map((s) => s.key)]);
+    // Lazy loading: ask for this room's plate, sprites and portraits now. The curtain stays
+    // down until they arrive (roomReady), and the loader retries a flaky image before falling
+    // back, so a slow or missing plate cannot leave the room black.
+    void this.assets.ensure(roomImageKeys(room));
     const at = clampToFloor({ x: this.x, y: this.y }, room.walk);
     this.x = at.x;
     this.y = at.y;
@@ -3930,6 +4702,9 @@ export class Game {
     this.act = FIRST_ACT;
     this.loadRoom(ACTS[FIRST_ACT].start.room);
     this.roomMenu = true;
+    this.focusCurrentScene();
+    this.announce("Chapter select.");
+    this.announceSceneFocus();
   }
 
   private exploreGo(index: number): void {
@@ -3941,70 +4716,201 @@ export class Game {
     this.roomMenu = false;
   }
 
+  /**
+   * The scene list as a chart: one column per act, the acts left to right, the scenes down each
+   * column. The shape says "chapters" before a word is read, which a flat grid of equal boxes
+   * never did.
+   */
+  private roomMenuLayout(): SceneLayout {
+    const entries = this.exploreRooms();
+    const acts = [...new Set(entries.map((e) => e.act))];
+    const cols = Math.max(1, acts.length);
+    const colW = cols <= 4 ? 380 : Math.max(250, Math.floor((LOGICAL_W - 240 - (cols - 1) * 24) / cols));
+    const gap = cols <= 4 ? 36 : 24;
+    const total = cols * colW + (cols - 1) * gap;
+    const left = Math.round((LOGICAL_W - total) / 2);
+    const rects: Rect[] = new Array(entries.length);
+    const columns = acts.map((act, ci) => {
+      const x = left + ci * (colW + gap);
+      const rooms = entries
+        .map((e, index) => ({ ...e, index }))
+        .filter((e) => e.act === act)
+        .map(({ index, id }) => ({ index, id }));
+      rooms.forEach((room, row) => {
+        rects[room.index] = { x, y: 236 + row * 50, w: colW, h: 44 };
+      });
+      return { act, title: ACTS[act]?.title ?? "Elsewhere", x, rooms };
+    });
+    return { entries, columns, rects };
+  }
+
+  /** Put the keyboard's marker on the scene currently being walked. */
+  private focusCurrentScene(): void {
+    const layout = this.roomMenuLayout();
+    const i = layout.entries.findIndex((e) => e.id === this.room?.id);
+    if (i >= 0) this.roomMenuFocus = i;
+  }
+
+  /** Read the focused scene out: the canvas list is invisible to a screen reader otherwise. */
+  private announceSceneFocus(): void {
+    const layout = this.roomMenuLayout();
+    const entry = layout.entries[this.roomMenuFocus];
+    if (!entry) return;
+    const column = layout.columns.find((c) => c.rooms.some((r) => r.index === this.roomMenuFocus));
+    const row = column ? column.rooms.findIndex((r) => r.index === this.roomMenuFocus) + 1 : 1;
+    const total = column?.rooms.length ?? 1;
+    const act = entry.act ? `Act ${ROMAN[entry.act] ?? entry.act}, ` : "";
+    this.announce(`${ROOMS[entry.id].name}. ${act}scene ${row} of ${total}.`);
+  }
+
   /** Returns true when explore mode consumed the key. */
   private exploreKey(k: string, event: KeyboardEvent): boolean {
     if (this.title) return false;
-    if (k === "r" || k === "R") { this.roomMenu = !this.roomMenu; return true; }
+    if (k === "r" || k === "R") {
+      this.roomMenu = !this.roomMenu;
+      if (this.roomMenu) {
+        this.focusCurrentScene();
+        this.announce("Chapter select.");
+        this.announceSceneFocus();
+      } else this.announce("Chapter select closed.");
+      return true;
+    }
     if ((k === "d" || k === "D") && import.meta.env.DEV) { this.debugOverlay = !this.debugOverlay; return true; }
     if (!this.roomMenu) return false;
-    const count = this.exploreRooms().length;
+    const layout = this.roomMenuLayout();
+    const count = layout.entries.length;
+    if (!count) return false;
     event.preventDefault();
-    if (k === "Escape") this.roomMenu = false;
-    else if (k === "ArrowDown" || k === "ArrowRight" || k === "Tab") this.roomMenuFocus = (this.roomMenuFocus + 1) % count;
-    else if (k === "ArrowUp" || k === "ArrowLeft") this.roomMenuFocus = (this.roomMenuFocus - 1 + count) % count;
-    else if (k === "Enter" || k === " ") this.exploreGo(this.roomMenuFocus);
+    const focus = Math.max(0, Math.min(count - 1, this.roomMenuFocus));
+    if (k === "Escape") { this.roomMenu = false; this.announce("Chapter select closed."); return true; }
+    if (k === "Tab") {
+      const delta = event.shiftKey ? -1 : 1;
+      this.roomMenuFocus = (focus + delta + count) % count;
+      this.announceSceneFocus();
+      return true;
+    }
+    if (k === "Enter" || k === " ") { this.exploreGo(focus); return true; }
+    if (k !== "ArrowUp" && k !== "ArrowDown" && k !== "ArrowLeft" && k !== "ArrowRight") return true;
+    // Columns are acts; arrows move like the chart is read, not just along a single list.
+    const ci = layout.columns.findIndex((c) => c.rooms.some((r) => r.index === focus));
+    const column = layout.columns[ci];
+    if (!column) return true;
+    const row = Math.max(0, column.rooms.findIndex((r) => r.index === focus));
+    if (k === "ArrowUp" || k === "ArrowDown") {
+      const next = Math.max(0, Math.min(column.rooms.length - 1, row + (k === "ArrowDown" ? 1 : -1)));
+      this.roomMenuFocus = column.rooms[next].index;
+    } else {
+      const nextColumn = layout.columns[Math.max(0, Math.min(layout.columns.length - 1,
+        ci + (k === "ArrowRight" ? 1 : -1)))];
+      const nextRow = Math.max(0, Math.min(nextColumn.rooms.length - 1, row));
+      if (nextColumn.rooms[nextRow]) this.roomMenuFocus = nextColumn.rooms[nextRow].index;
+    }
+    this.announceSceneFocus();
     return true;
   }
 
-  private roomMenuRect(i: number): { x: number; y: number; w: number; h: number } {
-    const col = i % 3, row = Math.floor(i / 3);
-    return { x: 300 + col * 450, y: 190 + row * 70, w: 430, h: 58 };
-  }
-
   private roomMenuClick(x: number, y: number): void {
-    const rooms = this.exploreRooms();
-    for (let i = 0; i < rooms.length; i++) {
-      const r = this.roomMenuRect(i);
-      if (x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) { this.exploreGo(i); return; }
+    const layout = this.roomMenuLayout();
+    for (let i = 0; i < layout.rects.length; i++) {
+      if (insideBox(x, y, layout.rects[i])) { this.exploreGo(i); return; }
     }
     this.roomMenu = false;
+  }
+
+  /** One small brass mark: the diamond the chart uses for a fix. */
+  private drawChartDiamond(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, color: string): void {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(Math.PI / 4);
+    ctx.fillStyle = color;
+    ctx.fillRect(-r, -r, r * 2, r * 2);
+    ctx.restore();
   }
 
   private renderExplore(ctx: CanvasRenderingContext2D): void {
     // next-level: a11y — chapter select is chrome too: its banner and headings follow the scale,
     // fitted so the fixed plates (and the top bar beside them) are never overflowed.
     const scale = this.textScale;
-    ctx.fillStyle = "rgba(5,13,22,0.8)";
-    ctx.fillRect(440, BAR.y, 670, BAR.h);
-    const bannerText = `CHAPTER SELECT  ·  R scenes${import.meta.env.DEV ? "  ·  D overlay" : ""}  ·  nothing is saved`;
-    const banner = fitText(ctx, bannerText, 670 - 24, Math.round(20 * scale), 13);
-    drawText(ctx, banner.text, 775, BAR.y + Math.round((BAR.h - banner.size) / 2) - 1, {
-      size: banner.size, color: "#9fd3ff", align: "center", shadow: false,
-    });
-    if (!this.roomMenu) return;
-    ctx.fillStyle = "rgba(3,5,12,0.9)";
-    ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
-    const heading = fitText(ctx, "Go to a scene", 1600, Math.round(34 * scale), 20, "bold");
-    drawText(ctx, heading.text, LOGICAL_W / 2, 110, { size: heading.size, color: COLORS.gold, align: "center", weight: "bold" });
-    this.exploreRooms().forEach((r, i) => {
-      const box = this.roomMenuRect(i);
-      const hover = this.input.x >= box.x && this.input.x <= box.x + box.w &&
-        this.input.y >= box.y && this.input.y <= box.y + box.h;
-      const focus = hover || i === this.roomMenuFocus;
-      ctx.fillStyle = focus ? "rgba(232,201,138,0.18)" : "rgba(10,16,28,0.8)";
-      ctx.fillRect(box.x, box.y, box.w, box.h);
-      ctx.strokeStyle = focus ? "rgba(232,201,138,0.9)" : "rgba(201,162,74,0.35)";
-      ctx.strokeRect(box.x + 0.5, box.y + 0.5, box.w - 1, box.h - 1);
-      const roomLabel = fitText(ctx, `${r.act ? "Act " + r.act + " · " : ""}${ROOMS[r.id].name}`,
-        box.w - 36, Math.round(21 * scale), 14);
-      drawText(ctx, roomLabel.text, box.x + 18, box.y + 16 - Math.round((roomLabel.size - 21) / 2), {
-        size: roomLabel.size, color: focus ? "#fff6e0" : "#d9c9a4", shadow: false,
+    if (!this.roomMenu) {
+      // A quiet plate under the top bar while a scene is walked: the way back to the list.
+      ctx.fillStyle = "rgba(4,10,18,0.88)";
+      ctx.fillRect(470, BAR.y, 610, BAR.h);
+      ctx.strokeStyle = "rgba(201,162,74,0.38)";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(470.5, BAR.y + 0.5, 609, BAR.h - 1);
+      this.drawChartDiamond(ctx, 492, BAR.y + BAR.h / 2, 4, "rgba(232,201,138,0.85)");
+      const bannerText = `CHAPTER SELECT  ·  R scenes${import.meta.env.DEV ? "  ·  D overlay" : ""}`;
+      const banner = fitText(ctx, bannerText, 610 - 50, Math.round(20 * scale), 13);
+      drawText(ctx, banner.text, 775, BAR.y + Math.round((BAR.h - banner.size) / 2) - 1, {
+        size: banner.size, color: "#e8c98a", align: "center", weight: "bold", shadow: false,
       });
+      return;
+    }
+    ctx.fillStyle = "rgba(3,5,12,0.92)";
+    ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
+    // The title of the chart, and the one fact worth keeping: nothing here is saved.
+    const heading = fitText(ctx, "CHAPTER SELECT", 900, Math.round(34 * scale), 20, "bold");
+    drawText(ctx, heading.text, LOGICAL_W / 2, 78, {
+      size: heading.size, color: COLORS.gold, align: "center", weight: "bold",
     });
-    const footer = fitText(ctx, "click a scene, or arrows + Enter  ·  R or Escape to close", 1820, Math.round(20 * scale), 14);
-    drawText(ctx, footer.text, LOGICAL_W / 2, 960, {
-      size: footer.size, color: "#d4b064", align: "center",
+    const sub = fitText(ctx, "walk any scene  ·  nothing is saved", 900, Math.round(18 * scale), 12);
+    drawText(ctx, sub.text, LOGICAL_W / 2, 122, {
+      size: sub.size, color: "#a99a7a", align: "center", shadow: false,
     });
+    const layout = this.roomMenuLayout();
+    for (const column of layout.columns) {
+      // The act heading: a roman numeral, the act's own name, and a chart rule under both.
+      const actLabel = column.act ? `ACT ${ROMAN[column.act] ?? column.act}` : "ELSEWHERE";
+      const head = fitText(ctx, actLabel, 180, Math.round(15 * scale), 11, "bold");
+      drawText(ctx, head.text, column.x, 172, {
+        size: head.size, color: "#e8c98a", weight: "bold", shadow: false,
+      });
+      this.drawChartDiamond(ctx, column.x + 200, 180, 3.5, "rgba(232,201,138,0.55)");
+      const title = fitText(ctx, column.title.toUpperCase(), column.rooms.length ? 380 : 380, Math.round(17 * scale), 11);
+      drawText(ctx, title.text, column.x + 216, 170, {
+        size: title.size, color: "#a99a7a", shadow: false,
+      });
+      ctx.strokeStyle = "rgba(201,162,74,0.28)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(column.x, 200);
+      ctx.lineTo(column.x + (layout.rects[column.rooms[0]?.index]?.w ?? 380), 200);
+      ctx.stroke();
+    }
+    for (const column of layout.columns) {
+      for (const room of column.rooms) {
+        const box = layout.rects[room.index];
+        if (!box) continue;
+        const focus = room.index === this.roomMenuFocus;
+        const here = room.id === this.room?.id;
+        // A dark chart slip; focus lifts it with brass and a left rule, "here" with a hollow mark.
+        ctx.fillStyle = focus ? "rgba(232,201,138,0.16)" : "rgba(10,16,28,0.82)";
+        ctx.fillRect(box.x, box.y, box.w, box.h);
+        ctx.strokeStyle = focus ? "rgba(255,231,172,0.9)" : "rgba(201,162,74,0.26)";
+        ctx.lineWidth = focus ? 1.5 : 1;
+        ctx.strokeRect(box.x + 0.5, box.y + 0.5, box.w - 1, box.h - 1);
+        if (focus) {
+          ctx.fillStyle = "#e8c98a";
+          ctx.fillRect(box.x, box.y, 3, box.h);
+          ctx.strokeStyle = "rgba(255,230,168,0.55)";
+          ctx.lineWidth = 1.5;
+          ctx.strokeRect(box.x + 4, box.y + 4, box.w - 8, box.h - 8);
+        }
+        // The scene's name, fitted to the slip; no "Act N ·" here, the column already says it.
+        const label = fitText(ctx, ROOMS[room.id].name, box.w - (here ? 82 : 54), Math.round(20 * scale), 13);
+        drawText(ctx, label.text, box.x + 32, box.y + Math.round((box.h - label.size) / 2) - 1, {
+          size: label.size, color: focus ? "#fff6e0" : here ? "#e8c98a" : "#d9c9a4", shadow: false,
+        });
+        this.drawChartDiamond(ctx, box.x + 17, box.y + box.h / 2, 3.5,
+          focus ? "#ffe6a8" : here ? "rgba(232,201,138,0.9)" : "rgba(201,162,74,0.45)");
+        if (here) {
+          const mark = fitText(ctx, "HERE", 60, Math.round(12 * scale), 9, "bold");
+          drawText(ctx, mark.text, box.x + box.w - 16, box.y + Math.round((box.h - mark.size) / 2) - 1, {
+            size: mark.size, color: "#e8c98a", align: "right", weight: "bold", shadow: false,
+          });
+        }
+      }
+    }
   }
   // ------------------------------------------------------------ title
 
@@ -4014,7 +4920,8 @@ export class Game {
 
   private titleButtons() {
     // next-level: recap — Continue's sub-label
-    return titleButtons(this.hasSave, this.chaptersUnlocked(), this.confirmNew, this.continueLabel);
+    return titleButtons(this.hasSave, this.chaptersUnlocked(), this.confirmNew, this.continueLabel,
+      this.hasPrevious);
   }
   /** Chapter select: for players once they have finished; always on the dev server. */
   private chaptersUnlocked(): boolean {
@@ -4030,9 +4937,14 @@ export class Game {
   }
   /** Show the title, with focus on what Enter would do: Continue when there's a voyage. */
   private enterTitle(): void {
+    this.clearTouchArm();
     this.title = true;
     this.confirmNew = false;
     this.titleClock = 0;
+    // Storage can have changed while the voyage was running (another tab, a cleared save): read
+    // both facts once here rather than every frame the title is drawn.
+    try { this.hasSave = hasAnySave(); this.hasPrevious = hasStashedSave(); }
+    catch { this.hasSave = false; this.hasPrevious = false; }
     const buttons = this.titleButtons();
     // next-level: recap — read the act once, here, not every frame the title is drawn.
     this.continueLabel = this.hasSave ? this.saveLabel(" ·") : null;
@@ -4075,17 +4987,18 @@ export class Game {
   private renderTitle(ctx: CanvasRenderingContext2D): void {
     drawTitle(ctx, {
       bg: this.assets.img("bg_title"),
-      buttons: this.titleButtons(),
-      focus: this.titleFocus,
+      // On a phone the menu is the DOM's, at 52 CSS pixels a line; the painting keeps the name.
+      buttons: this.mobile ? [] : this.titleButtons(),
+      focus: this.mobile ? null : this.titleFocus,
       dev: import.meta.env.DEV,
-      confirmNew: this.confirmNew,
+      confirmNew: this.mobile ? false : this.confirmNew,
       saveLabel: this.confirmLabel,
       time: this.titleClock,
       reduced: this.reduced,
       scale: this.textScale, // next-level: a11y — the title's chrome follows the text scale
       needle: this.needle,
       // next-level: casebook — "Chart: N of M notes" under the menu
-      casebook: this.casebookTally,
+      casebook: this.mobile ? null : this.casebookTally,
       decorate: this.titleDecor ?? undefined,
     });
   }
@@ -4095,6 +5008,20 @@ export class Game {
    */
   titleDecor: ((ctx: CanvasRenderingContext2D) => void) | null = null;
   private titleActivate(id: TitleId): void {
+    if (id === "previous") {
+      // The undo of Begin anew / Restart: put back the page that was replaced.
+      if (restoreStashedSave()) {
+        this.hasSave = true;
+        this.hasPrevious = false;
+        this.clearForeignSave();
+        this.enterTitle();
+        this.announce("Your earlier voyage is back. Continue takes it up.");
+      } else {
+        this.hasPrevious = false;
+        this.announce("There is no earlier voyage to take up.");
+      }
+      return;
+    }
     if (id === "start" && this.hasSave) {
       // A new voyage replaces the save: ask first, the way Restart does.
       if (this.confirmNew) return;
@@ -4103,7 +5030,8 @@ export class Game {
       this.confirmLabel = this.saveLabel();
       this.setTitleFocus("keep");
       this.audio.deny();
-      this.announce("Start a new voyage? It replaces your saved one. Keep my voyage, or Yes, start anew.");
+      this.announce("Start a new voyage? It replaces your saved one, which you can take up again " +
+        "from the title. Keep my voyage, or Yes, start anew.");
       return;
     }
     if (id === "keep") {
@@ -4131,22 +5059,31 @@ export class Game {
   }
 
   private renderFade(ctx: CanvasRenderingContext2D): void {
+    // A cut with no shared threshold gets the short passage shot at full black.
+    if (this.connector.active) {
+      this.connector.draw(ctx, this.reduced);
+      return;
+    }
     if (this.fade <= 0.001) return;
     const f = this.fade;
     const eased = f * f * (3 - 2 * f);
-    ctx.fillStyle = `rgba(0,0,0,${eased})`;
-    ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
+    const entry = this.transition.entrySide();
+    if (entry && !this.reduced) this.renderEntryFade(ctx, eased, entry);
+    else {
+      ctx.fillStyle = `rgba(0,0,0,${eased})`;
+      ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
+    }
     // Hold on the painted door/hatch/stair being used while the curtain falls. It is the
-    // Monkey Island continuity cue: the cut happens through something you can see, not
+    // painted-threshold continuity cue: the cut happens through something you can see, not
     // between two unrelated paintings. The card appears after the first darkening.
-    if (this.exitCard && f > 0.28) {
+    if (this.exitCard && f > 0.28 && !entry) {
       const card = this.exitCard;
       const a = Math.min(1, (f - 0.28) / 0.22);
       const zoom = 1.06 + eased * 0.18;
-      const sw = Math.max(1, Math.min(card.image.width, card.w * 1.25));
-      const sh = Math.max(1, Math.min(card.image.height, card.h * 1.25));
-      const sx = Math.max(0, Math.min(card.image.width - sw, card.x + card.w / 2 - sw / 2));
-      const sy = Math.max(0, Math.min(card.image.height - sh, card.y + card.h / 2 - sh / 2));
+      const sw = Math.max(1, Math.min(card.imageW, card.w * 1.25));
+      const sh = Math.max(1, Math.min(card.imageH, card.h * 1.25));
+      const sx = Math.max(0, Math.min(card.imageW - sw, card.x + card.w / 2 - sw / 2));
+      const sy = Math.max(0, Math.min(card.imageH - sh, card.y + card.h / 2 - sh / 2));
       ctx.save();
       ctx.globalAlpha = a;
       ctx.fillStyle = "#020406";
@@ -4168,5 +5105,42 @@ export class Game {
       ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
       ctx.restore();
     }
+  }
+
+  /**
+   * The arriving room is revealed from the side the way out points at: leave left, enter from
+   * the right; go up a stair, come up from below. The black is a soft directional wash rather
+   * than a hard wipe, so the painting arrives under a moving edge of darkness. It changes only
+   * the reveal, never Fenn's landing point, so story entries and walkable ground are untouched.
+   */
+  private renderEntryFade(ctx: CanvasRenderingContext2D, eased: number, side: ExitSide): void {
+    if (eased >= 0.999) {
+      ctx.fillStyle = "#000";
+      ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
+      return;
+    }
+    const horizontal = side === "left" || side === "right";
+    const dim = horizontal ? LOGICAL_W : LOGICAL_H;
+    const band = dim * 0.22;
+    const fromFarEnd = side === "right" || side === "below";
+    const edge = fromFarEnd ? dim * eased : dim * (1 - eased);
+    const a = Math.max(0, Math.min(1, (edge - band) / dim));
+    const b = Math.max(0.0001, Math.min(1, edge / dim));
+    const g = horizontal
+      ? ctx.createLinearGradient(0, 0, LOGICAL_W, 0)
+      : ctx.createLinearGradient(0, 0, 0, LOGICAL_H);
+    if (fromFarEnd) {
+      g.addColorStop(0, `rgba(0,0,0,${eased})`);
+      g.addColorStop(a, `rgba(0,0,0,${eased})`);
+      g.addColorStop(Math.min(1, b + 0.0001), "rgba(0,0,0,0)");
+      g.addColorStop(1, "rgba(0,0,0,0)");
+    } else {
+      g.addColorStop(0, "rgba(0,0,0,0)");
+      g.addColorStop(a, "rgba(0,0,0,0)");
+      g.addColorStop(Math.min(1, b + 0.0001), `rgba(0,0,0,${eased})`);
+      g.addColorStop(1, `rgba(0,0,0,${eased})`);
+    }
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
   }
 }

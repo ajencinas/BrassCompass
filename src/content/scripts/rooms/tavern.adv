@@ -72,7 +72,7 @@ room tavern "The Salty Keel"
     talk "I ask about the stores. He turns before I finish."
       set met_dorrit
       talk dorrit
-    give "He looks at my hands. 'I've no use for it. I've no use for any of it.'"
+    give "He looks at my hands. \"I've no use for it. I've no use for any of it.\""
     state if met_dorrit
       look "Dorrit, still furious and still cooking. The spoon has not been put down."
 
@@ -105,11 +105,11 @@ room tavern "The Salty Keel"
     pull "The net is tied off. Everything in this room is tied off."
 
   use compass on rook
-    "He turns it over once. 'Your father's. It still points at the fog.'"
+    "He turns it over once. \"Your father's. It still points at the fog.\""
   use compass on marta
-    "She looks at it and gives it back. 'Keep it. It's the only thing of his you have.'"
+    "She looks at it and gives it back. \"Keep it. It's the only thing of his you have.\""
   use compass on dorrit
-    "She squints at it. 'Your father's? Then keep it dry.'"
+    "He squints at it. \"Your father's? Then keep it dry.\""
   use chart on marta if has chart
     "She reads it upside down and doesn't ask."
   use chart on rook if has chart

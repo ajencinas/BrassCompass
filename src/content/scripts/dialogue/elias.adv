@@ -168,6 +168,7 @@ dialogue elias
     > "What are the three rules?" if not rule_name -> rules_again
     > "What's the plan?" if rule_name -> plan_again
     > "Whose camp is this?" -> camp_hub
+    > "The slate says the bell called them." if looked:salt_camp.hut -> camp_slate
     > "Are you all right?" -> allright
     > "I'll be back." -> END
 
@@ -197,6 +198,9 @@ dialogue elias
     -> hub
 
   node camp_hub3 elias "No. It isn't. I've had three months to make one up, and I can't."
+    -> hub
+
+  node camp_slate elias "I heard it too. Every night. I stopped going to the door."
     -> hub
 
   node allright elias "I'm alive. I'm drawing. I'm not hungry. That's three more than I expected."

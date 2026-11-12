@@ -18,7 +18,7 @@ screenplay is [`docs/FULL_SCRIPT.md`](docs/FULL_SCRIPT.md).
 
 ## What's new in v0.2
 
-- **A new voyage** — *The Father and the Fog*: four acts on Dreadwater Isle, 24 painted rooms,
+- **A new voyage** — *The Father and the Fog*: four acts on Dreadwater Isle, 25 painted rooms,
   two endings, and a ghost ship that has been taking crews for eighty years.
 - **A new captain and a new ghost** — Vex, the only captain still sailing, and Mordant of the
   Grey Lantern, with new painted portraits and bodies; the Grey Lantern's deck, the longboat and
@@ -54,7 +54,9 @@ npm test           # script lint, editor test, then the browser playthrough in C
 npm run test:scripts   # just the .adv scripts: compile, round trip (a second)
 npm run test:unit  # the unit tests (save, recap, reach, prefs, tips, compile, fuzz helpers, scale)
 npm run test:scale # every character's size, screen height and reachable stand, all 25 rooms
-npm run test:all   # scale + exit audit + npm test + fuzz + unit + build, the full battery
+npm run test:all   # asset audit + scale + exit audit + npm test + fuzz + unit + build
+npm run test:assets # manifest/weight audit: no dead entries, no stray public files, budget
+npm run assets     # regenerate src/content/active-assets.json from the live content
 npm run test:fuzz  # the state-machine fuzzer's regression suite in Chromium (about a minute)
 ```
 
@@ -92,14 +94,21 @@ pull request, and refuses a build whose HTML has root-absolute URLs.
 ## Art and audio
 
 The generated art — scene backgrounds, character sprites, portraits and props — is **not in this
-repository**. It is a little over 80 MB of WebP and PNG, which belongs in a shared folder rather
-than in git history alongside the code.
+repository**. The shared shelf is about 125 MiB of WebP, PNG and old films; only the ~63 MiB the
+live story actually names is copied into a build.
 
 New for the reboot: **Vex** (portrait and body), **Mordant** (portrait and body), the **Grey
-Lantern deck** plate (`bg_lantern_deck_wide`), the **longboat** prop, and the **bell-clapper** and
-**oiled-canvas** inventory icons. Quill's and Marta's portraits were refreshed; Elias reuses the
-existing father portrait and body, renamed. The old cinematics are not part of this story; the
-new acts have no opening or closing films.
+Lantern deck** plate (`bg_lantern_deck_restart_b_wide`), the **longboat** prop, and the
+**bell-clapper** and **oiled-canvas** inventory icons. Quill's and Marta's portraits were
+refreshed; Elias reuses the existing father portrait and body, renamed. The old cinematics are
+not part of this story; the new acts have no opening or closing films.
+
+`src/content/active-assets.json` is the active allowlist: generated from the live rooms, acts,
+dialogue, items, characters and runtime references by `tools/asset-manifest.mjs`. The Vite build
+emits exactly its `files` (the dev server still serves the whole shelf), so archived plates,
+earlier character studies, dead item icons and the old MP4s stay on disk but never enter `dist/`
+or the itch zip. `npm run test:assets` fails on an unreferenced manifest entry, a stale allowlist,
+a missing active file, or an over-budget build.
 
 To be precise: the art is no longer *tracked*, but earlier commits did contain it, so a clone still
 downloads it as part of the history. Removing it from history means rewriting every commit with
@@ -120,9 +129,14 @@ Drop the folders into `public/assets/` and the game runs unchanged — the asset
 `src/content/assets.ts` are relative to that directory. Music and the code to regenerate both
 live here, so the folder only needs to supply the painted art.
 
-Missing images fail soft: the asset loader warns and continues, and the renderer skips absent
-images rather than crashing, so the game still boots and can be walked around. (The test suite
-has not been run against a tree with the art removed.)
+A clone without the art folder still builds — Vite warns and produces a code-only bundle — but the
+game cannot start: the boot screen names the missing first-room painting and offers a retry rather
+than leaving a black canvas. The browser tests/playthrough need the art shelf.
+
+At runtime art is lazy by room. The loader fetches a room's plate, sprites and portraits when the
+player enters it, four at a time, retries a failed request three times with a timeout, and paints
+a quiet fallback if a background still fails; the curtain is released after at most eight seconds.
+If the title/first-room art fails at boot, the boot failure screen appears instead.
 
 To regenerate any asset from its prompt, see `tools/generate.py` (requires `RUNCOMFY_API`).
 
@@ -150,23 +164,23 @@ To regenerate any asset from its prompt, see `tools/generate.py` (requires `RUNC
 | Mute music | `M` |
 | Start / continue from title | With a save, Continue comes first and `Enter` continues (`C` too); otherwise `Enter` starts. New Voyage over a save asks first: "Keep my voyage" sits where the button was, and "Yes — start anew" only counts as a separate, later choice |
 | Dialogue choices | Click, number keys, or arrows and `Enter` |
-| Touch | Tap a thing to see its name and verb, tap again to act; long-press to look; tap the floor to walk, double-tap to run |
+| Touch | Tap a thing to see its name and verb, tap again to act; long-press to look; tap the floor to walk, double-tap to run. Tap a top-bar icon once to name it, again to open it |
 
 The pause menu holds the settings, remembered per browser: master, music and effects volume;
-text speed (Slow / Normal / Fast / Instant); **Wait for click** (lines that something is waiting
-on stay up until you click, instead of moving on once read); text size (Automatic, which is 125%
-when the game is drawn small, as at 1366×768, or 100 / 125 / 150%); reduced motion (follows the
-OS unless set; it shows text at once, so the speed setting is disabled while it's on, and it
-stills breathing, camera glides, door zooms and the title's drift); fullscreen; and a controls
-reference. Restart asks first, the same way New Voyage does. Escape, H and L work from the pause
-menu as its footer says.
+text speed (Slow / Normal / Fast / Instant); **Wait for click** (on by default: a line that
+something is waiting on stays up until you click, press a key or tap, instead of moving on at a
+fixed reading rate); text size (Automatic, which is 125% when the game is drawn small, as at
+1366×768, or 100 / 125 / 150%); reduced motion (follows the OS unless set; it shows text at
+once, so the speed setting is disabled while it's on, and it stills breathing, camera glides,
+door zooms and the title's drift); fullscreen; and a controls reference. Restart asks first, the
+same way New Voyage does. Escape, H and L work from the pause menu as its footer says.
 
 Hovering anything interactive draws a soft outline, the cursor shows its name, and the pointer
 changes over things and exits. Keyboard focus uses a steady high-contrast outline and works
 independently of pointer hover; focus changes, rooms and lines are announced to screen readers.
 
-Finishing the voyage unlocks **Chapter select** on the title screen (walk any scene; nothing is
-saved). The final save is kept, so Continue returns you to just before the last choice. The
+Finishing the voyage unlocks **Chapter select** on the title screen: a chart plate under Begin
+that opens the scenes as one column per act, walkable by pointer or arrows (nothing is saved). The final save is kept, so Continue returns you to just before the last choice. The
 closing card rises line by line over the voyage's last painting: a click or `Enter` shows it all,
 the next returns to the title.
 
@@ -315,14 +329,22 @@ skip, transcript and audio-duck paths work unchanged.
 These exist because headless test browsers throttle `requestAnimationFrame` to ~1 fps, which
 makes timing-dependent playtests impossible otherwise.
 
-Save data lives in `localStorage` under `brasscompass.save.v4` (save shape 3) and is written after
+Save data lives in `localStorage` under `brasscompass.save.v4` (save shape 4) and is written after
 every action, room change and conversation; a `seen:` or `looked:` flag with nothing else to save
-follows within half a second, or at once when the tab is hidden or closed. Saves from the old
-voyage are not migrated: the game starts the new voyage at Act I and says "The old voyage is over.
-A new one begins." A save that can't be read, or storage that refuses to write, is reported in a
+follows within half a second, or at once when the tab is hidden or closed. Older shapes are
+migrated field by field, and the exact page they came from is kept under
+`brasscompass.save.archive`; saves from the old story are archived there too before their key is
+removed (the game starts the new voyage at Act I and says "The old voyage is over. Its page is
+kept in the archive; a new one begins."). A save written by a newer build is archived, never
+reinterpreted. A save that can't be read, or storage that refuses to write, is reported in a
 banner under the top bar until it has been on screen long enough to read. The ending keeps the
 save (Continue returns to just before the final choice) and sets `brasscompass.completed`, which
-unlocks Chapter select. Dev hooks (`__game`, `__ff`, `__act(n)`) exist only under `npm run dev`.
+unlocks Chapter select. Ending-choice flags are never written to a save, so a replayed choice
+starts clean and one ending's lines can't appear beside the other's. `Begin anew` and `Restart`
+stash the replaced voyage under `brasscompass.save.previous`; the title then offers "Take up last
+voyage" as a one-step undo. If another tab writes the save, this tab stops writing, says so, and
+asks for a reload instead of clobbering it. Dev hooks (`__game`, `__ff`, `__act(n)`) exist only
+under `npm run dev`.
 
 **Chapter select** on the title screen (always under `npm run dev`; for players once they have
 finished) lets you walk any room without solving anything: R opens a menu of every scene, D (dev

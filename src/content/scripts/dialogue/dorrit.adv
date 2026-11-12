@@ -57,40 +57,40 @@ dialogue dorrit
   node spoons dorrit "One for each year I've cooked here. I'm not leaving them for Pike."
     -> END
 
-  node wen2 dorrit "He can sleep in my kitchen till the Marrow sails. Pike won't look there."
+  node wen2 dorrit "The man in the shed? He can sleep in my kitchen. Pike won't look there."
     -> END
 
   # The thief in the boat shed. Dorrit is not there; the voice is the whole scene.
   node thief narrator "I knock on the top crate. The breathing stops."
     -> voice
 
-  node voice narrator "A man's voice, behind the crates. 'Don't call Pike. Please.'"
+  node voice narrator "A man's voice, behind the crates. \"Don't call Pike. Please.\""
     > "I'm not Pike." -> notpike
     > "You're the one who took the stores." -> took
     > "Come out where I can see you." -> come
 
-  node notpike narrator "'They all say that,' he says. 'Then they call Pike.'"
+  node notpike narrator "\"They all say that,\" he says. \"Then they call Pike.\""
     -> come
 
-  node took narrator "'I moved them,' he says. 'I didn't take them. There's a difference.'"
+  node took narrator "\"I moved them,\" he says. \"I didn't take them. There's a difference.\""
     -> come
 
   node come narrator "A man stands up from behind the crates. His coat is stiff with salt."
     -> confess
 
-  node confess narrator "'Pike paid me,' he says. 'Two crowns and a meal. I moved the stores to his shed.'"
+  node confess narrator "\"Pike paid me,\" he says. \"Two crowns and a meal. I moved the stores to his shed.\""
     note pike_rudder "Pike paid the man in the boat shed to move the stores. Vex's spare rudder is in Pike's shed."
     > "And the Marrow's rudder?" -> rudder
     > "Why did you do it?" -> why2
     > "You stole from Dorrit." -> stole
 
-  node rudder narrator "'The rudder's in Pike's shed. He took it himself. He said it was owed.'"
+  node rudder narrator "\"The rudder's in Pike's shed. He took it himself. He said it was owed.\""
     -> end
 
-  node why2 narrator "'I hadn't eaten in three days,' he says. 'I only wanted work.'"
+  node why2 narrator "\"I hadn't eaten in three days,\" he says. \"I only wanted work.\""
     -> end
 
-  node stole narrator "'I know,' he says. 'I'm sorry.' He says it like he's said it a lot."
+  node stole narrator "\"I know,\" he says. \"I'm sorry.\" He says it like he's said it a lot."
     -> end
 
   node end narrator "When I look back, the gap behind the crates is empty. He has gone."
@@ -101,6 +101,7 @@ dialogue dorrit
   # the Cormorant is one of Marta's island stories, and Dorrit is the one who has heard them.
   node galley dorrit "Mind the pot. It has been on since the anchor came up."
     > "What's in it?" -> pot
+    > "Anything new?" if seen:dorrit.galley -> galley_after
     > "You've seen the hold." if salvage_seen -> hold2
     > "Why did you come aboard?" -> why3
     > "Later." -> END

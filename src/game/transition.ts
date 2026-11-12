@@ -7,6 +7,7 @@
 
 import { LOGICAL_W, SCENE_H } from "../engine/view";
 import type { Pt } from "../engine/walkbox";
+import type { ExitSide } from "./connect";
 
 /** How far the view leans toward the way out at full black. */
 const LEAN = 0.06;
@@ -20,21 +21,35 @@ export class Transition {
   private toward: Pt | null = null;
   /** World point the new room settles about (where Fenn arrives), while it lifts. */
   private from: Pt | null = null;
+  /** The side the next painting should be revealed from, following the way out. */
+  private entry: ExitSide | null = null;
 
   /** Going through a way out at `at` (world coordinates). Without one, a plain fade. */
   leave(at: Pt | null): void {
     this.toward = at;
     this.from = null;
+    this.entry = null;
   }
 
-  /** The new room is in. It settles about `at` only if we left through a way out. */
-  arrive(at: Pt): void {
+  /**
+   * The new room is in. It settles about `at` only if we left through a way out, and reveals
+   * from `entry` (the opposite of the side the way out was on) when the exit continues in a
+   * direction a player can read.
+   */
+  arrive(at: Pt, entry: ExitSide | null = null): void {
     this.from = this.toward ? at : null;
+    this.entry = this.from ? entry : null;
     this.toward = null;
+  }
+
+  /** The side the arriving painting should slide in from; null for a plain settle. */
+  entrySide(): ExitSide | null {
+    return this.entry;
   }
 
   clear(): void {
     this.toward = this.from = null;
+    this.entry = null;
   }
 
   /**

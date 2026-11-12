@@ -179,6 +179,10 @@ export async function waitForGame(page, { allAssets = true, timeout = 120000 } =
   await until(() => page.evaluate("Boolean(window.__game)"), "game", timeout);
   await until(() => page.evaluate("!document.getElementById('boot')"), "boot overlay", timeout);
   if (allAssets) {
+    // The live game loads art lazily by room. Fuzz/screenshot harnesses drive the clock
+    // synchronously, so load the manifest first; otherwise a room jump cannot wait for a
+    // network response and looks like a stuck curtain.
+    await page.evaluate("window.__prefetchAll ? window.__prefetchAll() : Promise.resolve()");
     await until(() => page.evaluate(`(() => { const a = window.__game.assets;
       return a.queue.length === 0 && a.running === 0; })()`), "assets", timeout, 250);
   }

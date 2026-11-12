@@ -118,14 +118,22 @@ try {
    */
   async function settle() {
     await evaluate(`(() => { const g = window.__game;
-      for (let i = 0; i < 400 && ((g.narration && g.narration.shown < g.narration.text.length) || g.queue); i++) window.__ff(1);
+      for (let i = 0; i < 400 && ((g.narration && g.narration.shown < g.narration.text.length) || g.queue); i++) {
+        // Lines wait for the player by default now: read to the end, then click it on, as a
+        // player would. Clicks on an empty patch of scene only advance the line.
+        if (g.queue && g.narration && g.narration.shown >= g.narration.text.length) g.onClick(960, 300, 0, 1);
+        else window.__ff(1);
+      }
     })()`);
   }
   /** Advance the game clock until `expression` holds (used for queued scenes and act changes). */
   async function advanceUntil(expression, label, tries = 200, frames = 100) {
     for (let i = 0; i < tries; i++) {
       if (await evaluate(expression)) return;
-      await evaluate(`window.__ff(${frames})`);
+      const waiting = await evaluate(`(() => { const g = window.__game;
+        return Boolean(g.queue && g.narration && g.narration.shown >= g.narration.text.length); })()`);
+      if (waiting) await evaluate("window.__game.onClick(960, 300, 0, 1)");
+      else await evaluate(`window.__ff(${frames})`);
     }
     throw new Error("Never satisfied: " + label + "\n" + await state());
   }
@@ -134,13 +142,15 @@ try {
    * finished and nothing is parked. Returns early when a conversation opens, which is where
    * the player takes over.
    */
-  async function readScene(label, max = 200) {
+  async function readScene(label, max = 400) {
     for (let i = 0; i < max; i++) {
       const s = await evaluate(`(() => { const g = window.__game; return {
         queue: Boolean(g.queue), dialogue: Boolean(g.dialogue),
         typing: Boolean(g.narration && g.narration.shown < g.narration.text.length) }; })()`);
       if (s.dialogue || (!s.queue && !s.typing)) return;
-      await evaluate("window.__ff(50)");
+      // A waiting line is the player's to move on: finish the typewriter, then click it on.
+      if (s.queue && !s.typing) await evaluate("window.__game.onClick(960, 300, 0, 1)");
+      else await evaluate("window.__ff(50)");
     }
     throw new Error("Scene never finished: " + label + "\n" + await state());
   }
@@ -196,6 +206,9 @@ try {
       return { x: best.x - g.cameraX, y: best.y };
     })()`);
     await click(point.x, point.y, button, frames);
+    // A talk hotspot says one line before its conversation opens, and that line now waits for
+    // the player. Click it on so the caller sees the conversation, not a parked queue.
+    await settle();
   }
   async function shot(name) {
     await evaluate("window.__game.render()");
@@ -331,9 +344,17 @@ try {
 
   await send("Page.enable");
   await send("Runtime.enable");
-  await send("Page.navigate", { url: `http://127.0.0.1:${port}/` });
+  // The test drives a clock; use the old automatic text pace so a queued talk effect is not
+  // held for a click the test does not mean to make. The player-facing default stays wait-for-click.
+  await send("Page.addScriptToEvaluateOnNewDocument", { source: `localStorage.setItem("brasscompass.prefs.v1", JSON.stringify({ v: 3, waitForClick: false }));` });
+  await send("Page.navigate", { url: `http://127.0.0.1:${port}/?nomobile=1` });
   await until(() => evaluate("Boolean(window.__game)"), "game");
   await until(() => evaluate('!document.getElementById("boot")'), "loading overlay");
+  // The production build lazy-loads rooms; the synthetic clock cannot wait for the network, so
+  // pull the active art once before the test starts driving frames.
+  await until(() => evaluate("typeof window.__prefetchAll === \"function\""), "the dev prefetch hook");
+  await evaluate("window.__prefetchAll()");
+  await until(() => evaluate("window.__game.assets.queue.length === 0 && window.__game.assets.running === 0"), "assets");
   /**
    * The test drives the game with __ff, and only renders when it means to. Stop the real-time
    * loop after boot; the explicit renders still draw.
@@ -453,13 +474,32 @@ try {
   assert.equal(await evaluate("window.__game.title"), true);
   assert.deepEqual(await evaluate("window.__game.titleButtons().map((b) => b.id)"), ["start", "explore"]);
   assert.equal(await evaluate("localStorage.getItem('brasscompass.save.v4')"), null);
-  // New Voyage: no cold open any more, and no opening film for Act I; the harbour is the first
-  // thing on screen.
+  // next-level: a11y — the hidden DOM toolbar names every plate, and the Map plate keeps its key.
+  const toolbar = await evaluate(`[...document.querySelectorAll(".a11y-controls button")].map((b) => ({
+    label: b.getAttribute("aria-label"), keys: b.getAttribute("aria-keyshortcuts"), pressed: b.getAttribute("aria-pressed"),
+  }))`);
+  assert.equal(toolbar.length, 8);
+  const mapPlate = toolbar.find((b) => /^Map/.test(b.label ?? ""));
+  assert.ok(mapPlate, "the Map plate is in the screen-reader toolbar");
+  assert.equal(mapPlate.keys, "A");
+  assert.match(mapPlate.label, /Map \(A\)/);
+  for (const name of ["Reveal interactive things", "Tip", "Line history", "Chart", "Pause"]) {
+    assert.ok(toolbar.some((b) => (b.label ?? "").startsWith(name)), `${name} is named in the toolbar`);
+  }
+  assert.equal(toolbar.filter((b) => b.pressed !== null).length, 2, "Reveal and Tip expose their state");
+  // New Voyage: no cold open and no opening film for Act I; the harbour is the first thing on screen.
   await key("Enter");
   await until(() => evaluate("window.__game.title === false && window.__game.room.id === 'dock'"), "a new voyage at the dock");
   assert.equal(await evaluate("window.__game.act"), 1);
-  assert.equal(await evaluate("window.__game.prologue?.active === true"), false);
+  assert.equal(await evaluate("window.__coldopen === undefined"), true);
   await readScene("the dock arrival");
+  // The icon rail fades when idle, but never below a readable floor (the old 22% was a rumour
+  // of a button). Park the pointer off the bar, spend the first-watch plates, and let it settle.
+  await evaluate(`(() => { const g = window.__game; g.watch.clearQueue(); g.input.x = 960; g.input.y = 500; g.idle = 0; })()`);
+  await evaluate("window.__ff(300)");
+  const barFade = await evaluate("window.__game.barFade");
+  assert.ok(barFade >= 0.6, `the idle bar stayed readable (${barFade})`);
+  assert.ok(barFade <= 0.9, `the idle bar still fades (${barFade})`);
   // The atlas: island chart -> harbour -> back into the room. This is the map/macro/close-up
   // hierarchy the whole visual structure hangs from.
   await key("a");
@@ -492,6 +532,7 @@ try {
   await readScene("the harbourmaster's house");
   await click(70, 960); // Talk to
   await clickHotspot("bramwick");
+  await until(() => evaluate("window.__game.dialogue !== null || window.__game.narration === null"), "Bramwick to look up");
   await chooseThrough("window.__game.dialogue === null", "Bramwick at his desk");
   assert.equal(await flag("seen:bramwick.ship2"), true);
   await shot("reboot-act1-office.png");
@@ -815,6 +856,10 @@ try {
   assert.equal(card.lines.at(-1), "Old Onn comes down to the quay to hear the story. I tell her the truth. She says it will do, and goes back to her step.");
   // The save keeps the last choice, and the voyage marks the collection complete.
   assert.notEqual(await evaluate("localStorage.getItem('brasscompass.save.v4')"), null);
+  const savedAtEnding = await evaluate("JSON.parse(localStorage.getItem('brasscompass.save.v4')).flags");
+  for (const f of ["ending_fog_lifts", "ending_long_way", "curse_broken", "escaped_fog"]) {
+    assert.equal(savedAtEnding[f], undefined, `${f} was written into the pre-choice save`);
+  }
   assert.equal(await evaluate("localStorage.getItem('brasscompass.completed')"), "1");
   assert.match(await evaluate("document.getElementById('sr').textContent"), /THE FOG LIFTS/);
   const cardPages = await evaluate("window.__game.ending.pageCount");
@@ -856,14 +901,17 @@ try {
   await until(() => evaluate("window.__game.recap.open === true"), "the recap after the ending");
   await key("Enter"); // Set sail, back to the last choice
   await advanceUntil("window.__game.title === false && window.__game.act === 4", "the saved last choice");
+  // The first voyage's final choice must not colour the second: no ending flag and no branch
+  // marker may have ridden along in the save.
+  const leftover = await evaluate(`(() => { const f = window.__game.flags; return {
+    fog: f.ending_fog_lifts === true, long: f.ending_long_way === true,
+    cursed: f.curse_broken === true, escaped: f.escaped_fog === true }; })()`);
+  assert.deepEqual(leftover, { fog: false, long: false, cursed: false, escaped: false });
   // Put the voyage in the state the last choice expects (the save may have landed a line
   // either side of it), then drive the choice itself through the real dialogue.
   await evaluate(`(() => { const g = window.__game;
     g.flags.bell_cut = true; g.flags.lantern_doused = true; g.flags.name_spoken = true;
     g.flags.tam_freed = true;
-    // A fresh last choice: the first voyage's ending must not colour the second.
-    delete g.flags.ending_fog_lifts; delete g.flags.curse_broken;
-    delete g.flags.escaped_fog; delete g.flags.ending_long_way;
     g.dialogue = null; g.queue = null; g.narration = null;
     g.runEffects([{ k: "talk", tree: "ending" }]); })()`);
   await advanceUntil("window.__game.dialogue?.tree.id === 'ending'", "the ending again");
@@ -891,6 +939,24 @@ try {
   assert.equal(await evaluate("window.__game.deeds.open"), true);
   await key("Enter");
   await advanceUntil("window.__game.title === true", "the title after the long way home");
+
+  // ------------------------------------------------------------------ chapter select
+  // The second way in is a real control now: a chart plate on the title and an act-columned
+  // scene list that the keyboard can walk.
+  assert.deepEqual(await evaluate("window.__game.titleButtons().map((b) => b.id)"), ["continue", "start", "explore"]);
+  await key("e");
+  await until(() => evaluate("window.__game.explore && window.__game.roomMenu"), "Chapter select from the title");
+  const chapterFocus = await evaluate("window.__game.roomMenuFocus");
+  assert.equal(chapterFocus, 0, "the marker starts on the scene being walked");
+  await key("ArrowRight");
+  assert.notEqual(await evaluate("window.__game.roomMenuFocus"), chapterFocus, "arrows move between act columns");
+  await pause(60);
+  assert.match(await evaluate("document.getElementById('sr').textContent"), /The Marrow/, "the focused scene is read out");
+  await shot("reboot-chapter-select.png");
+  await key("Enter");
+  await until(() => evaluate("window.__game.roomMenu === false && window.__game.room.id === 'marrow_deck'"),
+    "a scene chosen in Chapter select");
+  assert.equal(await evaluate("window.__game.explore"), true);
 
   assert.deepEqual(runtimeErrors, []);
   assert.deepEqual(consoleErrors, []);

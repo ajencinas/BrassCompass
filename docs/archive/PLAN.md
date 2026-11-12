@@ -6,7 +6,7 @@
 
 ## 1. Deconstruction of the reference
 
-Verified frame-by-frame from the *Secret of Monkey Island* longplay, not from memory:
+Verified frame-by-frame from a reference adventure-game playthrough, not from memory:
 
 | Element | Finding |
 |---|---|
@@ -21,9 +21,9 @@ Verified frame-by-frame from the *Secret of Monkey Island* longplay, not from me
 | Audio | MT-32 / AdLib FM, short looping themes per location, no voice |
 
 **Legal:** we build in the genre, not a clone. Original title, world, characters, puzzles and
-dialogue. No LucasArts assets, names or text are reused. Genre conventions (a verb interface, a
-comedy pirate setting, a duel minigame) are not protectable; Guybrush, Melee Island and the
-rubber chicken are.
+dialogue. No assets, names or text from existing adventure games are reused. Genre conventions
+(a verb interface, a comedy pirate setting, a duel minigame) are not protectable; specific
+characters, places and props from existing games are.
 
 ---
 
@@ -176,9 +176,7 @@ The engine needs no new systems for any of this except the duel.
 
 ---
 
-### Reference files
-- `reference/mi1_deconstruction_montage.png` — 24 frames across the reference playthrough
-- `reference/mi1_ui_verbs.png` — the 12-verb panel, dialogue and inventory in detail
+### Further reading
 - `README.md` — how to run, play, and add content
 
 ---

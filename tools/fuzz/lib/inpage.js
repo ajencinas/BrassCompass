@@ -202,8 +202,10 @@
       if (g.title) return "title";
       if (g.dialogue) return "dialogue";
       if (fz.isIdle()) return "idle";
-      // "Wait for click" players click once a waiting line is fully shown.
-      if (fz.opts.clicker && g.queue && g.narration && g.narration.shown >= g.narration.text.length && !g.inputLocked()) {
+      // A waiting line is the player's (the default now), and a "clicker" player clicks once
+      // it is fully shown either way.
+      if ((fz.opts.clicker || g.prefs.waitForClick) && g.queue && g.narration &&
+          g.narration.shown >= g.narration.text.length && !g.inputLocked()) {
         try { g.onClick(960, 300, 0, 1); } catch (e) { err(P, "onClick(flush)", e); return "exception"; }
         continue;
       }
@@ -218,7 +220,7 @@
         walking += DT;
         if (walking > fz.opts.walkLimit && !P._f.walk) { P._f.walk = 1; anom(P, "walk-never-arrives", fz.brief()); }
       } else walking = 0;
-      if (g.queue && !g.prefs.waitForClick) {
+      if (g.queue && !g.prefs.waitForClick && !fz.opts.clicker) {
         // A long scene is not a stuck one: the stall clock only runs while the queue and the
         // line on screen are unchanged. (New Act II/III arrival scenes are a dozen lines long,
         // which takes longer than the stall limit at a normal reading speed.)
@@ -262,6 +264,13 @@
   fz.checkPersist = (P, where) => {
     const d = fz.persistGap();
     if (d.noSave) { anom(P, "no-save", where); return; }
+    // The save deliberately omits the closing-choice and ending flags: Continue must replay
+    // the final choice with clean flags. Those are not persistence gaps.
+    const ENDING_RESET = new Set(["ending_fog_lifts", "ending_long_way", "ending_pirate", "ending_desk", "curse_broken", "escaped_fog"]);
+    if (d.flags) {
+      d.flags = Object.fromEntries(Object.entries(d.flags).filter(([k]) => !ENDING_RESET.has(k)));
+      if (!Object.keys(d.flags).length) delete d.flags;
+    }
     if (!Object.keys(d).length) return;
     const onlyAuto = !d.act && !d.room && !d.inventory && !d.notes && Object.keys(d.flags ?? {}).every(AUTO);
     anom(P, onlyAuto ? "persist-gap-auto" : "persist-gap", { where, diff: d, at: fz.brief() });
@@ -734,15 +743,37 @@
     }
   };
 
-  /** Meaningful actions only: verbs with effects or a pickup, and item pairs a combination names. One per identical exit. */
+  /**
+   * Effects that can change the state the softlock graph is made of: flags, items, room and
+   * act. Narration-only verbs (a Look with just a `say`, a sound, a music cue) leave every key
+   * in `skey` unchanged, so exploring them only wastes the budget and buries the story edges.
+   */
+  const STATE_EFFECTS = new Set(["flag", "add", "give", "take", "go", "talk", "act", "win"]);
+  const changesState = (list, consume) => Boolean(consume) ||
+    (list ?? []).some((e) => STATE_EFFECTS.has(e.k));
+  const comboFor = (item, withId) => [...(g.room.combos ?? []), ...M().GLOBAL_COMBOS].find((c) =>
+    (((c.item === item && c.with === withId) || (c.item === withId && c.with === item))) &&
+    (!c.if || c.if.every((cond) => g.check(cond))));
+
+  /**
+   * State-changing actions only: a verb whose effects alter a flag, item, room or act (or a
+   * pickup), and an item pair the room or global combos answer with a real change. One per
+   * identical effect.
+   */
   fz.bActions = (snap) => {
     const acts = fz.actionsFor(snap, { meaningfulOnly: true });
     fz.restore(snap, { persist: false });
     const seenDo = new Set();
     return acts.filter((a) => {
+      if (a.kind === "itemOn" || a.kind === "itemItem") {
+        const c = comboFor(a.item, a.kind === "itemOn" ? a.hs : a.item2);
+        return Boolean(c) && changesState(c.do, c.consume);
+      }
       if (a.kind !== "verb") return true;
       const st = g.hotspotState(g.room.hotspots.find((h) => h.id === a.hs));
-      const sig = a.hs + JSON.stringify(st.do?.[a.verb] ?? null) + (a.verb === "pickup" ? st.item : "");
+      const pickup = a.verb === "pickup" && Boolean(st.item);
+      if (!pickup && !changesState(st.do?.[a.verb])) return false;
+      const sig = a.hs + JSON.stringify(st.do?.[a.verb] ?? null) + (pickup ? st.item : "");
       if (seenDo.has(sig)) return false;
       seenDo.add(sig);
       return true;
@@ -754,10 +785,11 @@
    * meaningful actions (and every way through a conversation they open). When the search
    * finishes, every state that cannot reach the act's end is a softlock candidate.
    */
-  fz.phaseB = (act, { maxStates = 600, maxMs = 240000, rootSnap = null } = {}) => {
+  fz.phaseB = (act, { maxStates = 600, maxMs = 240000, rootSnap = null, order = "bfs" } = {}) => {
     const t0 = performance.now();
     const states = new Map();
     const edges = new Map();
+    const expanded = new Set();
     const goalVia = new Map();
     const frontier = [];
     const findings = [];
@@ -781,8 +813,11 @@
     if (P0.anomalies.length || P0.errors.length) findings.push({ id: P0.id, anomalies: P0.anomalies, errors: P0.errors });
     while (frontier.length && performance.now() - t0 < maxMs) {
       if (states.size >= maxStates) break;
-      const k = frontier.shift();
+      // Breadth-first proves reachability level by level; depth-first reaches an act's end
+      // much sooner in a wide act (Act I's crew chain), so the caller can choose.
+      const k = order === "dfs" ? frontier.pop() : frontier.shift();
       const S = states.get(k);
+      expanded.add(k);
       for (const a of fz.bActions(S.snap)) {
         const P = fz.newProbe(`B${act}:${k}:${a.id}`);
         fz.cur = P;
@@ -819,13 +854,25 @@
     const q = [...can];
     while (q.length) { const b = q.shift(); for (const a of rev.get(b) ?? []) if (!can.has(a)) { can.add(a); q.push(a); } }
     const pathTo = (k) => { const p = []; let cur = k; for (let i = 0; cur && i < 60; i++) { const s = states.get(cur); if (!s || s.via === "start") break; p.unshift(s.via); cur = s.from; } return p; };
-    const stuck = [...states.keys()].filter((k) => !can.has(k));
+    // A budget-limited search cannot call every state left on the frontier a softlock: it was
+    // never expanded, so its own way out is unknown. Walk backwards from those unexpanded
+    // states; everything that can reach one is unresolved too. What remains is a state whose
+    // explored exits all dead-end: a genuine stuck state, even in a partial search.
+    const unresolved = new Set();
+    for (const k of states.keys()) if (!expanded.has(k)) unresolved.add(k);
+    const uq = [...unresolved];
+    while (uq.length) {
+      const b = uq.shift();
+      for (const a of rev.get(b) ?? []) if (!can.has(a) && !unresolved.has(a)) { unresolved.add(a); uq.push(a); }
+    }
+    const stuck = [...expanded].filter((k) => !can.has(k) && !unresolved.has(k));
     // The shallowest stuck states, each with the path that got there.
     stuck.sort((a, b) => states.get(a).depth - states.get(b).depth);
     return {
       act, states: states.size, complete, probes, ms: Math.round(performance.now() - t0),
       goals: [...goalVia.entries()].slice(0, 10), goalStates: goalVia.size, reachEnd: can.size,
       stuck: stuck.length, stuckExamples: stuck.slice(0, 25).map((k) => ({ key: k, depth: states.get(k).depth, path: pathTo(k), exits: [...edges.get(k)].length })),
+      unresolved: unresolved.size, expanded: expanded.size,
       findings, gapCounts, kindCounts, frontierLeft: frontier.length,
       // A goal state of this act, to seed the next act's search with real carried flags.
       firstGoal: goalVia.size ? [...goalVia.keys()][0] : null,
@@ -852,7 +899,20 @@
   });
 
   const step = (n = 1) => { for (let i = 0; i < n; i++) g.update(0.05); };
-  const stepUntil = (pred, max = 2000) => { for (let i = 0; i < max; i++) { if (pred()) return true; g.update(0.05); } return pred(); };
+  const stepUntil = (pred, max = 2000) => {
+    for (let i = 0; i < max; i++) {
+      if (pred()) return true;
+      // A waiting line is the player's now: a scripted "wait until" means read on, so click
+      // it on instead of relying on the old automatic pace.
+      if (g.prefs.waitForClick && g.queue && g.narration &&
+          g.narration.shown >= g.narration.text.length && !g.inputLocked()) {
+        g.onClick(960, 300, 0, 1);
+        continue;
+      }
+      g.update(0.05);
+    }
+    return pred();
+  };
   fz.stepUntil = stepUntil;
   const hs = (id) => g.room.hotspots.find((h) => h.id === id);
   const click = (id, n = 1) => g.onHotspotClick(g.hotspotState(hs(id)), n);

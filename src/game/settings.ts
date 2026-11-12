@@ -1,6 +1,7 @@
 /** Native controls keep settings usable with mouse, touch, and keyboard. */
 
 import { effectiveTextSpeed, type Prefs, type TextScale, type TextSpeed } from "./prefs";
+import { CONTROLS } from "./controls";
 
 export interface SettingsActions {
   resume: () => void; restart: () => void; title: () => void;
@@ -19,28 +20,6 @@ export interface SettingsActions {
   /** The text size "Automatic" picks on this screen. */
   autoTextScale: () => TextScale;
 }
-
-/** The controls, shared with README "How to play" in spirit; kept short enough to scan. */
-export const CONTROLS: [string, string][] = [
-  ["Left-click a thing", "Do the obvious: talk, take, open, look (the lit-up verb)"],
-  ["Right-click a thing", "Look at it"],
-  ["Right-click elsewhere", "Cancel the sentence, or leave a conversation"],
-  ["Click a verb, then a thing", "Do exactly that (Use and Give take two)"],
-  ["Click the floor", "Walk; double-click to run"],
-  ["Double-click a doorway", "Leave at once"],
-  ["Hold Q, or the Reveal button", "Show everything you can interact with"],
-  ["Tab / Shift+Tab", "Keyboard play: move between the scene, the verbs and the inventory"],
-  ["Arrows, then Enter", "Move within the scene, verbs or inventory, and act"],
-  ["1–9, or arrows and Enter", "Choose in a conversation"],
-  ["Click, Enter or Space", "Skip a line that is typing"],
-  ["H", "A tip for what to do next"],
-  ["J", "Chart — what you have learned"],
-  ["L", "Line history — the last 30 lines"],
-  ["M", "Mute"],
-  ["Escape", "Pause and settings"],
-  ["Touch: tap a thing", "Shows its name; tap again to act"],
-  ["Touch: long-press", "Look at (like right-click)"],
-];
 
 /** The mark in the corner: a compass, the game's own signature on an instrument panel. */
 function compassMark(): string {
@@ -89,36 +68,38 @@ export class Settings {
         <button data-action="resume" class="primary"><span class="resume-glyph" aria-hidden="true"></span>Resume</button>
       </header>
       <div class="settings-grid">
-        <div class="group">
-          <h2><span class="group-icon">${groupIcon("sound")}</span>Sound</h2>
+        <div class="group" data-group="text" role="group" aria-labelledby="text-heading">
+          <h2 id="text-heading"><span class="group-icon">${groupIcon("text")}</span>Reading</h2>
+          <div class="reading">
+            <label class="row stacked"><span>Text speed</span><select data-pref="textSpeed" aria-describedby="speed-note">
+              <option value="slow">Slow</option><option value="normal">Normal</option>
+              <option value="fast">Fast</option><option value="instant">Instant</option>
+            </select></label>
+            <label class="row stacked"><span>Text size</span><select data-pref="textScale">
+              <option value="auto">Automatic</option>
+              <option value="1">100%</option><option value="1.25">125%</option><option value="1.5">150%</option>
+            </select></label>
+            <button data-action="wait" aria-pressed="false"></button>
+          </div>
+          <p class="note" id="speed-note" hidden>Reduced motion is on, so lines appear at once.</p>
+        </div>
+        <div class="group" data-group="sound" role="group" aria-labelledby="sound-heading">
+          <h2 id="sound-heading"><span class="group-icon">${groupIcon("sound")}</span>Sound</h2>
           <button data-action="mute"></button>
           <label class="row"><span>Master volume</span><input data-volume="master" type="range" min="0" max="1" step="0.05"></label>
           <label class="row"><span>Music</span><input data-volume="music" type="range" min="0" max="1" step="0.05"></label>
           <label class="row"><span>Effects</span><input data-volume="sfx" type="range" min="0" max="1" step="0.05"></label>
         </div>
-        <div class="group">
-          <h2><span class="group-icon">${groupIcon("text")}</span>Text</h2>
-          <label class="row"><span>Text speed</span><select data-pref="textSpeed" aria-describedby="speed-note">
-            <option value="slow">Slow</option><option value="normal">Normal</option>
-            <option value="fast">Fast</option><option value="instant">Instant</option>
-          </select></label>
-          <p class="note" id="speed-note" hidden>Reduced motion is on, so lines appear at once.</p>
-          <label class="row"><span>Text size</span><select data-pref="textScale">
-            <option value="auto">Automatic</option>
-            <option value="1">100%</option><option value="1.25">125%</option><option value="1.5">150%</option>
-          </select></label>
-          <button data-action="wait" aria-pressed="false"></button>
-          <button data-action="tips" aria-pressed="false"></button>
-        </div>
-        <div class="group">
-          <h2><span class="group-icon">${groupIcon("display")}</span>Display</h2>
+        <div class="group" data-group="display" role="group" aria-labelledby="display-heading">
+          <h2 id="display-heading"><span class="group-icon">${groupIcon("display")}</span>Display</h2>
           <label class="row"><span>Reduced motion</span><select data-pref="reducedMotion">
             <option value="auto">Follow system</option><option value="on">On</option><option value="off">Off</option>
           </select></label>
           <button data-action="fullscreen" aria-pressed="false"></button>
+          <button data-action="tips" aria-pressed="false"></button>
         </div>
-        <div class="group">
-          <h2><span class="group-icon">${groupIcon("voyage")}</span>Voyage</h2>
+        <div class="group" data-group="voyage" role="group" aria-labelledby="voyage-heading">
+          <h2 id="voyage-heading"><span class="group-icon">${groupIcon("voyage")}</span>Voyage</h2>
           <button data-action="restart"></button>
           <div class="confirm" role="group" aria-labelledby="restart-question" hidden>
             <p id="restart-question">Begin again?</p>

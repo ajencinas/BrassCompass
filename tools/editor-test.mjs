@@ -67,6 +67,9 @@ try {
   await send("Emulation.setDeviceMetricsOverride", { width: 1920, height: 1080, deviceScaleFactor: 1, mobile: false });
   await send("Page.navigate", { url: base + "/" });
   await until(() => evaluate("Boolean(window.__game && window.__editor) && !document.getElementById('boot')"), "game and editor");
+  // The editor test jumps rooms with __ff; finish the lazy load once up front.
+  await evaluate("window.__prefetchAll ? window.__prefetchAll() : Promise.resolve()");
+  await until(() => evaluate("window.__game.assets.queue.length === 0 && window.__game.assets.running === 0"), "assets");
 
   // ---- F2 opens the panel and narrows the stage
   await evaluate("window.__game.devAct(1)");

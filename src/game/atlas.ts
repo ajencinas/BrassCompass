@@ -53,7 +53,7 @@ export const ATLAS: AtlasArea[] = [
       { id: "office", name: "The Harbourmaster's House", x: 0.39, y: 0.48, note: "Bramwick, his desk, and the harbour's book." },
       { id: "alley", name: "Wreckers' Lane", x: 0.49, y: 0.53, note: "The lane between the warehouses." },
       { id: "warehouse", name: "The Boat Shed", x: 0.60, y: 0.55, note: "A boat on its cradle, and someone hiding." },
-      { id: "counting_house", name: "Vex's Warehouse", x: 0.70, y: 0.52, note: "Green lamps, cubbies, and Vex's ledger." },
+      { id: "counting_house", name: "Vex's Warehouse", x: 0.70, y: 0.52, note: "Green lamps, cubbies, and Vex's charts." },
       { id: "chandlery", name: "The Shipwright's", x: 0.86, y: 0.56, note: "Quill's counter, and Hobb's mast." },
     ],
   },

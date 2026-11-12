@@ -54,9 +54,9 @@ room tavern "The Salty Keel"
 
   on enter                         # every time the room loads
     music music_tavern
-  scene if act 4 and not cray_toast   # arrival scenes: the first that holds runs
-    set cray_toast
-    say "Silas Cray is at the bar..."
+  scene if act 1 and not tavern_arrived   # arrival scenes: the first that holds runs
+    set tavern_arrived
+    say "The Salty Keel. Warm light, and the sound of people carefully not saying something."
 ```
 
 `perspective`: a standing adult whose feet are at `ref` is `height` pixels tall, shrinking to
@@ -118,9 +118,9 @@ handle.
     show if not marta_gone         # optional: only there while this holds
     area 1890,460 140x125          # or a polygon: area (0,0) (650,0) (700,550)
     stand 1500,800                 # where Fenn walks to first
-    look "Marta, who runs the Salty Keel and, by most accounts, Port Vela."
+    look "Marta, who runs the Salty Keel and, by most accounts, Dreadwater."
     talk "I catch Marta's eye. It takes some catching."
-      talk tavernkeeper            # effects nested under a verb run after its line
+      talk marta                   # effects nested under a verb run after its line
     give "She only takes things worth trading."
     open: say "Not a door."        # one effect can go on the verb's own line
 ```
@@ -182,18 +182,22 @@ room reef_wreck "..."              # in each room that wants them
 ## Conversations
 
 ```
-dialogue tavernkeeper
-  node root marta "Clerk! Here for a drink?"
-    > "What's everyone celebrating?" -> marrow
-    > "I need a favour." if not knows_key -> favour
-    > "I've got one right here." if has lemon -> traded
-      take lemon                   # effects of choosing this
-      give drawer_key
-    > "Nothing. Goodnight." -> END
-  node marrow marta "The Marrow sails at dawn."
+dialogue marta
+  node root marta "Elias Fenn's boy. Everyone on this island knows whose son you are."
+    > "I need a ship." -> ship
+    > "What happened to my father?" -> father
+    > "Tell me about Rook." -> rook
+      note rook_lead "Marta says Old Rook navigated for my father and came back alone."
+    > "Nothing. I'll stand." -> END
+  node ship marta "There's one seaworthy ship in this harbour. The Marrow, and Captain Vex has her."
     -> crew                        # no choices: carry on to the next node
-  node traded narrator "She bites the lemon."
-    set marta_paid                 # effects when the node is read
+  node crew marta "A cook, a navigator, a carpenter. Most of them are in this room or hiding from it."
+    -> END
+  node father marta "He kept a room above the back door. I haven't touched it."
+    -> END
+  node rook marta "He came back from the fog alone. He drinks in the corner."
+    set heard_of_rook              # effects when the node is read
+    -> END
 ```
 
 `node <id> <speaker> "<line>"`: the speaker is a character id or `narrator`. The first node
@@ -225,32 +229,35 @@ choice to make, closing the conversation there.
 ## Items, tips, acts
 
 ```
-item lemon "lemon"
-  look "A lemon from the Marrow's galley stores."
-  state if act 3                   # name and look can change with the story
-    look "Still a lemon. Somehow."
+item compass "Elias's compass"
+  look "My father's compass. Brass, scratched, and it points at the fog instead of north."
+  state if act 4 and name_spoken     # name and look can change with the story
+    look "The needle points down at the deck. Mordant is standing there."
 
-tip if act 1 and has lemon         # the first tip that holds is the current one
-  nudge "Somebody in the Salty Keel would kill for a lemon."   # optional: shown first
-  "Give the lemon to Marta in the Salty Keel."
+tip if act 1 and met_vex and not rudder_back   # the first tip that holds is the current one
+  nudge "Vex wants his rudder. One shed in Wreckers' Lane answers it."   # optional: shown first
+  "Search the boat shed for the real thief, then take his word to Pike."
 
-act 2 "The Vela Straits"
+act 2 "The Crew"
   start marrow_deck                # or: start dock at 880,830
-  intro "/assets/video/act-ii-intro.mp4"
-  outro "/assets/video/act-ii-outro.mp4"
-  inventory compass stamp manifest crowbar
-  caption "Dawn, and the Marrow is mine to stand on."
+  inventory compass spyglass crowbar
+  caption "The Marrow is ours, for what that's worth. Vex at the helm, Quill aloft, Dorrit below, Hobb at the mast. The fog is waiting."
   on start
     give crowbar
 
-ending "ALL HANDS RETURNED"
-  title if ending_pirate
-    "THE PURSER OF THE MARROW"
-  painting bg_deck_wide focus 1250,300 music music_sea if ending_pirate
-  line if ending_pirate and aff >= 14
-    "Her hand is in mine before the Liar has even set."
-  line
-    "ARCADIA: returned. All hands."
+ending "THE FATHER AND THE FOG"
+  title if ending_fog_lifts
+    "THE FOG LIFTS"
+  title if ending_long_way
+    "THE LONG WAY HOME"
+  painting bg_shore_wide focus 1280,420 music music_sea if ending_fog_lifts
+  painting bg_deck_wide focus 1250,300 music music_fog if ending_long_way
+  line if ending_fog_lifts
+    "My father comes home with the chart under his arm and salt in his beard."
+  line if ending_long_way and vex_trust
+    "My father comes home a month later, in that boat, with the rest of the chart."
+  line if ending_long_way and not vex_trust
+    "My father stays on the fog rock to finish the chart."
 ```
 
 `painting <image>` names the painting the closing card rises over; the first whose condition
@@ -274,13 +281,14 @@ Conditions follow `if` and are joined with `and`. `or` goes in parentheses.
 | `knows_key = true` | the flag is exactly `true` (likewise `= 3`, `= "red"`) |
 | `knows_key = unset` | the flag was never set |
 | `aff >= 14` | a counter (raised by `add`) has reached 14 |
-| `has lemon` / `not has lemon` | in the inventory, or not |
+| `has compass` / `not has compass` | in the inventory, or not |
 | `room tavern` | the player is in that room |
 | `act 4` / `act 3,4` | the current act is 4 / is 3 or 4 |
 | `(a or b or c)` | at least one holds |
 | `not (aff >= 14)` / `not act 1` | the opposite |
 
-Example: `if has lemon and not knows_key and act 1 and (aff >= 14 or night_watch)`.
+Example: `if has compass and not rudder_back and act 1 and (met_vex or seen:bramwick.root)`. (Use
+a flag that exists in `REBOOT.md`; invented flags fail the set/read lint.)
 
 ## Effects
 
@@ -290,9 +298,9 @@ Example: `if has lemon and not knows_key and act 1 and (aff >= 14 or night_watch
 | `note id "text"` | add an entry to the casebook (J), once per id |
 | `set flag` / `set flag = false` | set a flag (to `true`, or any value) |
 | `add aff 1` | raise a counter (`-1` lowers it) |
-| `give lemon` / `take lemon` | add to or remove from the inventory |
+| `give compass` / `take compass` | add to or remove from the inventory |
 | `go tavern` | walk out to another room (`go tavern sound none`: how the way sounds, as for `exit`) |
-| `talk tavernkeeper` / `talk marta4 at cards` | open a conversation, at its start or a node |
+| `talk marta` / `talk vex at shore` | open a conversation, at its start or a node |
 | `act 2` | finish act 2 (outro, then the next act) |
 | `win` | the ending card |
 | `sound chime` | one of `click pickup chime deny door gulls` |

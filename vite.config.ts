@@ -41,6 +41,12 @@ function advScripts(): Plugin {
           res.setHeader("Content-Type", "application/json");
           res.end(JSON.stringify(body));
         };
+        // The editor can write game scripts, so keep it on this machine. `npm run dev` binds
+        // 127.0.0.1; this still rejects a LAN client or proxy that reaches the port.
+        const remote = req.socket.remoteAddress;
+        if (remote !== "127.0.0.1" && remote !== "::1" && remote !== "::ffff:127.0.0.1") {
+          return reply(403, { error: "the editor is available on loopback only" });
+        }
         if (req.method === "GET" && req.url === "/files") return reply(200, listScripts());
         if (req.method !== "POST" || req.url !== "/save") return reply(404, { error: "not found" });
         let body = "";
@@ -69,10 +75,62 @@ function advScripts(): Plugin {
   };
 }
 
+
+/**
+ * Copy only the active art into the build.
+ *
+ * `public/` is also the source shelf, so the automatic publicDir copy would ship the archived
+ * plates, earlier character studies, superseded item icons and the previous story's films —
+ * tens of megabytes the live game never asks for. `active-assets.json` is generated from the
+ * content by tools/asset-manifest.mjs (`prebuild`); this emits exactly its files. The dev
+ * server still serves the whole folder, so artists can inspect source art.
+ */
+function activePublicAssets(): Plugin {
+  return {
+    name: "active-public-assets",
+    apply: "build",
+    generateBundle() {
+      const manifestPath = resolve(__dirname, "src/content/active-assets.json");
+      if (!existsSync(manifestPath)) {
+        this.error("src/content/active-assets.json is missing — run npm run assets.");
+        return;
+      }
+      const manifest = JSON.parse(readFileSync(manifestPath, "utf8")) as { files?: unknown };
+      const files = Array.isArray(manifest.files) ? manifest.files : [];
+      const publicDir = resolve(__dirname, "public");
+      const artShelf = existsSync(join(publicDir, "assets"));
+      if (!artShelf) {
+        this.warn("public/assets is absent — building a code-only bundle. Copy the shared art folder to include the game's paintings and music.");
+      }
+      for (const file of files) {
+        if (typeof file !== "string" || file.startsWith("/") || file.includes("..")) {
+          this.error(`active-assets.json has an unsafe path: ${String(file)}`);
+          continue;
+        }
+        const full = resolve(publicDir, file);
+        if (!full.startsWith(publicDir + sep)) {
+          this.error(`active-assets.json has a path outside public/: ${file}`);
+          continue;
+        }
+        if (!existsSync(full)) {
+          // A code-only clone has no art shelf at all; anything else missing is a broken build.
+          if (artShelf) this.error(`active asset is missing from public/: ${file}`);
+          continue;
+        }
+        this.emitFile({ type: "asset", fileName: file, source: readFileSync(full) });
+      }
+    },
+  };
+}
+
 export default defineConfig({
   // Relative base: the build works at a domain root, in a subdirectory (itch.io serves a
   // packaged game under /html/…/index.html), or opened from the filesystem. Runtime asset
   // URLs are resolved against it too — see `assetUrl` in src/content/assets.ts.
   base: "./",
-  plugins: [advScripts()],
+  plugins: [advScripts(), activePublicAssets()],
+  build: {
+    // The active-art plugin above is the only thing that writes public files into dist.
+    copyPublicDir: false,
+  },
 });

@@ -5,9 +5,9 @@ room counting_house "Vex's Warehouse"
   music music_office
   grade "saturate(0.85) brightness(0.95)"
   # Vex's counting house as a full-bleed painting, strict side-on: the tall lane door open on
-  # cold blue night at the left, the pigeonholed ledger wall and the clerks' desks under three
+  # cold blue night at the left, the pigeonholed chart wall and the empty desks under three
   # green glass lamps, the shuttered window and the portrait high on the right wall, and the
-  # black safe beside them. No lettering on the ledgers, papers or frames; the green lamps and
+  # black safe beside them. No lettering on the charts, papers or frames; the green lamps and
   # the open door are the room's two lights.
   perspective horizon 300 ref 875 height 360
   # Measured from the painted lane door (y 50-800, 750 px tall): an adult at its floor plane is
@@ -56,11 +56,11 @@ room counting_house "Vex's Warehouse"
     look "Rolled charts in every hole, one for each ship that didn't come home."
     use "Vex calls this his library. The sea calls it salvage."
 
-  # The row of desks, their brass scales and inkwells, and the ledger stacks between.
+  # The row of desks, their brass scales and inkwells, and the chart stacks between.
   hotspot desks "the desks"
     area 740,560 1360x250
     stand 1200,820
-    look "The tall desks, pens out, no clerks. Vex does his own accounts and enjoys it."
+    look "The tall desks, pens out, nobody at them. Vex does his own accounts and enjoys it."
     open "The drawers are locked. The keys are on a ring in Vex's pocket, alphabetised."
     use "I straighten a pen. It was already straight."
 
@@ -75,7 +75,7 @@ room counting_house "Vex's Warehouse"
   hotspot window "the shuttered window"
     area 1990,0 260x430
     nowalk
-    look "The shutters are barred, and cold moonlight falls through the slats across the ledgers."
+    look "The shutters are barred, and cold moonlight falls through the slats across the charts."
     use "The shutters are bolted from the inside. Vex does not like the view."
 
   hotspot vex "Captain Vex"

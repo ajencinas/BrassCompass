@@ -115,20 +115,20 @@ dialogue hobb
   node others hobb "Every lost ship has a hand on a rope. Somebody is ringing for all of them."
     -> plate
 
-  node plate narrator "Hobb works a broken bow timber out of the deck. It does not belong to this ship."
+  node plate narrator "Hobb works a broken bow timber out of the wreck. The wood is grey, and it does not belong to this ship."
     -> plate2
 
-  node plate2 hobb "M. Mordant. Master."
+  node plate2 hobb "M. Mordant. Master. Torn off her bow and jammed in another ship's ribs."
     give nameplate
     note mordant_name "M. MORDANT, MASTER, on a brass plate from the Grey Lantern's bow."
     > "The Grey Lantern's bow." -> bow
     > "Who is Mordant?" -> mordant
     > "Then we have a name." -> name2
 
-  node bow hobb "Aye. Grey paint under the salt. The old ship has been shedding pieces for eighty years."
+  node bow hobb "Aye. Grey paint under the salt. The old ship has been shedding pieces for eighty years. This one still has her name on it."
     -> plan
 
-  node mordant hobb "Her master. It is the one thing the wreck held on to."
+  node mordant hobb "Her master. It is the one thing the sea gave back."
     -> plan
 
   node name2 hobb "We have a name. What we do with it is your business."

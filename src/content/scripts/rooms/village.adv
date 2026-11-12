@@ -131,6 +131,6 @@ room village "Upper Town"
     open "He is not a cupboard. He'd probably fit in one."
 
   use compass on tam
-    "He holds it to his ear like a shell. 'It doesn't point north.'"
+    "He holds it to his ear like a shell. \"It doesn't point north.\""
   use compass on onn
-    "She doesn't take it. 'Keep your father's things, child.'"
+    "She doesn't take it. \"Keep your father's things, child.\""

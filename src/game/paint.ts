@@ -14,7 +14,7 @@
  * Toggle: PAINT_PASS. Off restores the old vignette-only finish, exactly.
  *
  * UI: the pass is drawn inside the scene, before the top bar, panel, narration and cursor, and
- * only in gameplay — the title, prologue and ending are untouched, so type is never grained.
+ * only in gameplay — the title and ending are untouched, so type is never grained.
  */
 
 import { LOGICAL_W, SCENE_H } from "../engine/view";

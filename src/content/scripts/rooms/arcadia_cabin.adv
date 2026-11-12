@@ -1,7 +1,7 @@
 room arcadia_cabin "The Grey Lantern — Captain's Cabin"
   # A side-on close-up of the stern cabin under the great lantern: the bunk and books at the
-  # left, the open companionway climbing through the broken deck, the desk with its blank brass
-  # plate at the right, the stern windows and the green lantern. The lower third is clear floor.
+  # left, the open companionway climbing through the broken deck, the desk with its empty brass
+  # oval at the right, the stern windows and the green lantern. The lower third is clear floor.
   bg bg_arcadia_cabin_restart_b_wide
   width 2560
   music music_fog
@@ -29,21 +29,36 @@ room arcadia_cabin "The Grey Lantern — Captain's Cabin"
     set arcadia_cabin_entered
     say "The cabin is dry, which is the first wrong thing. The ink on the desk is still wet."
     say "Elias is at the desk with his chart rolled tight in one hand."
-    say "\"This is where he kept his name,\" he says. \"A captain keeps it where he sits.\""
-    say "He holds out his hand for the plate. Then he lets it fall. \"You read it. I'll say it.\""
+    say "\"This is where a captain answers to his name,\" he says. \"Put it on the desk.\""
+    say "He holds out his hand for the plate, then lets it fall to his side. \"You read it. I'll say it.\""
 
   sprite npc_ansel_body at 1800,852 size 1 idle speaker elias for elias grade "saturate(0.88) brightness(0.95)"
+  # Setting the plate down works exactly as the desk's own Use does: the name is read, Elias
+  # says it, and Mordant answers.
+  use nameplate on nameplate if not name_spoken
+    "I set the plate down. The brass catches the light from the broken planks."
+    say "GREY LANTERN. M. MORDANT, MASTER."
+    say "\"Mordant,\" Elias says. He says it like a bell, once."
+    say "\"I've said everyone else's name,\" he says. \"I never had his.\""
+    set name_spoken
+    talk mordant
+  use nameplate on nameplate
+    "The plate lies where I set it. The name has been said, and the cabin is colder."
+  use crowbar on nameplate
+    "The plate is brass, not a crate. The desk would not thank me."
+  use lantern on nameplate
+    "The canvas is wet, and the ink on the desk is still wet. I keep them apart."
   # The ghost captain, in the dark corner, once Elias has spoken his name.
   sprite npc_mordant_body at 250,850 size 1 idle speaker mordant for mordant if name_spoken
 
-  # The desk. The plate comes in from the wreck and is set down in the clean oval in the dust;
-  # the painted plate above shows it there, and the hotspot covers the desk itself.
+  # The desk. The plate comes from the Grey Lantern's bow, lodged in the wreck, and is set
+  # down in the clean oval in the dust; the painted oval is empty until it is put there.
   hotspot nameplate "the nameplate"
     area 1200,520 580x280
     stand 1450,858
-    look "Mordant's desk. A log, a dry inkpot, and the brass plate set in the clean oval in the dust."
+    look "Mordant's desk. A log, a dry inkpot, and a clean oval in the dust where a plate should sit."
     use "I set the plate down. The brass catches the light from the broken planks."
-      say "GREY LANTERN. M. MORDANT, MASTER."
+      say "GREY LANTERN — M. MORDANT, MASTER."
       say "\"Mordant,\" Elias says. He says it like a bell, once."
       say "\"I've said everyone else's name,\" he says. \"I never had his.\""
       set name_spoken
@@ -54,7 +69,7 @@ room arcadia_cabin "The Grey Lantern — Captain's Cabin"
       use "I put my hand on the plate. Something is waiting at the end of the cabin."
         talk mordant
     state if not has nameplate
-      look "Mordant's desk. A log, a dry inkpot, and a clean oval in the dust where a plate should sit."
+      look "Mordant's desk. A log, a dry inkpot, and a clean oval in the dust. The plate is in a coat, and not mine."
       use "There is nothing on the desk to read. The plate is in a coat, and not mine."
         nothing
 

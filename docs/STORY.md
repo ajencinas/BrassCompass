@@ -93,7 +93,9 @@ Elias's discovery, and the spine of the last two acts:
 2. **The lantern.** The great lantern shows it where the ship is. Light draws it, and darkness
    blinds it. Put the great lantern out and the fog cannot see you.
 3. **The name.** The Lantern cannot take a ship whose crew speaks her captain's name. The name is
-   **Mordant**, cut into a brass plate in the captain's cabin: `GREY LANTERN — M. MORDANT, MASTER`.
+   **Mordant**, cut into a brass plate from the Grey Lantern's bow:
+   `GREY LANTERN — M. MORDANT, MASTER`. Hobb works the plate out of a grey bow timber lodged in
+   an older wreck on the reef; in Act IV Elias sets it on Mordant's desk and speaks the name.
 
 Breaking the curse means all three: cut the bell loose, douse the great lantern, and speak
 Mordant's name. Then the choice is what to do with the dead.
@@ -208,13 +210,16 @@ yard. The regulars, the well and the father's room are texture, not gates.
    saw Elias on the reef, waving a lantern, and turned away. The crew wants answers; he has none
    that help.
 2. **The sunken wreck.** An old victim of the Lantern, heeled over on the reef. Hobb hears a bell
-   across the flats — three notes, then one — and knows it is Tam. On the wreck he works a broken
-   bow timber free: a brass plate, `M. MORDANT, MASTER`. **The name.** He also sets the plan for
-   the bell.
+   across the flats — three notes, then one — and knows it is Tam. On the wreck he works a grey
+   bow timber free; it is a piece of the Grey Lantern, and it still carries her brass plate,
+   `M. MORDANT, MASTER`. **The name.** He also sets the plan for the bell.
 3. **The castaway camp.** Tents, a washing line, a hut locked from the outside, salt pans raked
-   into squares — and Elias, alive, with his chart. The reunion is quiet. Elias gives the three
-   rules, the Lantern's route and the plan: cut the bell, douse the great lantern, speak the name.
-   Hobb hears the bell again. His brother Tam is the one ringing it.
+   into squares — and Elias, alive, with his chart. The tents are tied shut from the outside and
+   a ship's slate by the hut reads `THE BELL CALLED. WE WENT.` The camp was a survivor camp; the
+   bell called its people out, and they did not come back. Elias heard it too and stopped going
+   to the door. The reunion is quiet. Elias gives the three rules, the Lantern's route and the
+   plan: cut the bell, douse the great lantern, speak the name. Hobb hears the bell again. His
+   brother Tam is the one ringing it.
 4. **The far flats.** Optional: Quill at the end of the boardwalk, with her glass and the truth
    about the fog's edge.
 5. **The reef gate.** Vex holds the gate until the plan is real: Elias found, the name known,
@@ -229,14 +234,15 @@ Three objectives, in any order:
   thin, tired and alive, still keeping the watch. The clapper comes away; the bell hangs dumb.
 - **The lantern** (Quill). Carry the wet oiled canvas up the stern and smother the great green
   lantern. No air, no flame; no flame, no fog.
-- **The name** (Elias). In the captain's cabin, set the brass plate on the desk and read it. Elias
-  says the name: **Mordant**. The cold at the end of the cabin turns toward them.
+- **The name** (Elias). In the captain's cabin, set the brass plate from the Lantern's bow into
+  the clean oval on Mordant's desk and read it. Elias says the name: **Mordant**. The cold at the
+  end of the cabin turns toward them.
 
 Then Mordant. He is courteous, tired and territorial. He explains what he has done to keep his
 ship afloat and why the crews stay at their posts. He does not threaten; he waits.
 
-Before the last choice, Vex asks for something to hold on to — the boat, the rope, or Fenn's word.
-The answer sets `vex_trust`.
+Before the last choice, Vex asks for something to hold on to — the boat, the rope, or Fenn's word —
+from the companionway above; he does not come below. The answer sets `vex_trust`.
 
 ## The ghost's rules (player-facing)
 
@@ -258,18 +264,23 @@ Both endings are earned and neither is a fail state. One is mercy; one is surviv
 
 Ring the bell for the dead, speak Mordant's name, and let the crews go. The Grey Lantern settles
 into the sea like a tired sail; the fog thins to mist and then to weather. Elias comes home with
-the chart under his arm. Quill charts the Shroud and calls the first clear channel Quill's Run.
-Hobb and his brother Tam come home together; Dorrit feeds every crew that comes in; Bramwick meets every boat
-at the pier; Marta hangs a new story over the Salty Keel's fire, and this one has an ending. The
-bell hangs in the harbour and rings for the dead on the first clear morning of the year.
+the chart under his arm, and his compass finally points north. Quill charts the Shroud and calls
+the first clear channel Quill's Run. Hobb's brother Tam comes home; young Tam's tally is paid when
+Fenn tells Tam Hobb his son kept counting. Dorrit feeds every crew that comes in; Bramwick meets
+every boat at the pier; Marta hangs a new story over the Salty Keel's fire, and this one has an
+ending. Old Rook hears the bell is quiet and finally has somewhere to be. The bell hangs in the
+harbour and rings for the dead on the first clear morning of the year.
 
 ### The Long Way Home (`ending_long_way`)
 
 Take the living and run. The longboat gets out; the dead stay at their posts and the fog remains.
 Quill brings them home on a heading she invents on the spot and never says how close it was. The
 island takes them back; the fishing boats still do not go past the reef. The blank half of the
-chart hangs in the Salty Keel, and Marta says that is the honest part. On quiet nights the bell
-rings across the water, and Fenn answers it — which is not the same as going back.
+chart hangs in the Salty Keel, and Marta says that is the honest part. Old Rook does not ask how it
+went. Elias's fate follows `vex_trust`: with trust, Vex leaves the longboat at the reef and Elias
+comes home a month later, the rest of the chart under his arm; without it, Elias stays on the fog
+rock to finish the chart. The compass follows him. On quiet nights the bell rings across the
+water, and Fenn answers it — which is not the same as going back.
 
 ### Vex's fate (`vex_trust`)
 
@@ -305,18 +316,20 @@ Keep the existing engine identifiers where the code needs them; the player-facin
 
 | Planted | Paid off |
 |---|---|
-| Fenn's compass points at the fog, not north | In the Shroud the needle finally has somewhere to point |
+| Fenn's compass points at the fog, not north | In the Shroud the needle finally has somewhere to point; the closing card says where it points after the choice |
 | Elias's chart stops at the edge of the Shroud | The needle points straight past it; the rest is drawn at the camp |
 | Quill's compass held by Vex against a debt | Vex returns it as part of the deal; Quill navigates |
 | Dorrit's forty spoons | He packs them and comes aboard; he is still furious about the ones lost at the camp |
 | Hobb's crowbar | Frees the mast in Act I, then cuts the bell in Act IV |
-| Young Tam's tally: "tell him I kept counting" | Tam Hobb is the hand on the bell; Hobb brings him home |
-| Rook's old log and the list of names | Rule one, and the chart folded in the back |
+| Young Tam's tally: "tell him I kept counting" | Tam Hobb is the hand on the bell; Fenn tells his son's tally to him when he comes home |
+| Rook's old log and the list of names | Rule one, and the chart folded in the back; Rook's ending is the quiet drink he finally does not need |
 | Vex's coat and his salvage | The hold; the confrontation; his ending |
+| Vex's confession on the fog flats | The Act III conversation adds what he would not say on the sand; the camp scene does not repeat it |
 | The bell rings three notes, then one | Tam's watch on the *Arcadia*; Hobb knows the hand |
-| `M. MORDANT, MASTER` on the brass | Elias says the name in the cabin; the curse can break |
+| `M. MORDANT, MASTER` on the brass | Hobb takes it from the Lantern's grey bow timber in Act III; Elias sets it on the cabin desk and says the name |
 | The great green lantern | Quill smothers it with wet canvas |
-| The longboat | Act II escape; Act III boarding; Act IV way out |
+| The longboat | Act II escape; Act III boarding; Act IV way out; Vex's debt to Elias in the long-way ending |
+| The camp's slate: `THE BELL CALLED. WE WENT.` | The tents were tied shut from the outside; the camp's people went to the bell and did not come back |
 
 Facts:
 
@@ -328,8 +341,11 @@ Facts:
 - 25 rooms. The *Quay* links the harbour to the harbour mouth; the *Marrow* is Vex's ship; the Grey Lantern is Mordant's.
 - Elias has been gone three months and four days. The *Arcadia* went down out past the reef.
 - The Grey Lantern is eighty years old. Its crew are the vanished sailors, still at their posts.
-- The name is **Mordant**. The plate reads `GREY LANTERN — M. MORDANT, MASTER`.
+- The name is **Mordant**. The plate reads `GREY LANTERN — M. MORDANT, MASTER`. It comes from a
+  grey bow timber of the Lantern lodged in an old wreck, and Elias sets it on the cabin desk.
 - The fog is the Lantern's wake and grows with every ship it takes.
 - Vex saw Elias and did not help. He is never redeemed and never the hero.
+- The camp on the fog rock was a survivor camp. Its slate says the bell called and the people
+  went; how much of them the bell kept is deliberately left to the fog.
 - The dead are sad and strange, never disgusting. No one is eaten; nothing is gory.
 - There is no bureaucracy plot and no fail state. The only clock is the one the player brings.

@@ -4,9 +4,9 @@
   "version": "0.2.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
+    "dev": "vite --host 127.0.0.1",
     "build": "tsc && vite build",
-    "preview": "vite preview --host 0.0.0.0",
+    "preview": "vite preview --host 127.0.0.1",
     "test": "node tools/test-scripts.mjs && node tools/editor-test.mjs && node tools/playthrough.mjs",
     "gen": "python3 tools/generate.py",
     "test:scripts": "node tools/test-scripts.mjs",
@@ -15,12 +15,18 @@
     "test:unit": "node --test tests/unit/*.test.mjs",
     "test:scale": "node tools/audit_scale.mjs",
     "test:exit": "node tools/exit-audit.mjs",
-    "test:all": "npm run test:scale && npm run test:exit && npm test && npm run test:fuzz && npm run test:unit && npm run build",
+    "test:connect": "node tools/connect-audit.mjs",
+    "test:all": "npm run test:assets && npm run test:scale && npm run test:exit && npm run test:connect && npm test && npm run test:fuzz && npm run test:unit && npm run build",
     "test:fuzz": "node tools/fuzz/regression.mjs",
     "to-adv": "node tools/to-adv.mjs",
     "test:editor": "node tools/editor-test.mjs",
     "script:export": "node tools/export-script.mjs",
-    "package:itch": "node tools/package-itch.mjs"
+    "package:itch": "node tools/package-itch.mjs",
+    "assets": "node tools/asset-manifest.mjs --write",
+    "prebuild": "npm run assets",
+    "postbuild": "node tools/audit-assets.mjs --dist",
+    "test:assets": "node tools/audit-assets.mjs",
+    "test:mobile": "node tools/mobile-test.mjs"
   },
   "devDependencies": {
     "typescript": "^5.6.0",

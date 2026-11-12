@@ -11,8 +11,8 @@ then read `PLAN.md` and `README.md`, then explore the code before changing anyth
 
 A point-and-click adventure game in the SCUMM tradition — twelve verbs, a sentence line,
 inventory puzzles, dialogue trees — rendered at 1920×1080 with AI-generated painted artwork.
-Original IP (pirate comedy set in Port Vela); it is *inspired by* Monkey Island but shares no
-characters, text, or assets with it. Keep it that way.
+Original IP (pirate comedy set in Port Vela); it is *inspired by* classic point-and-click
+adventures but shares no characters, text, or assets with them. Keep it that way.
 
 **Act I is complete and finishable.** Your job is to make it better, not to start over.
 
@@ -48,7 +48,7 @@ tools/          generate.py, normalize_sheet.py
    `REPROCESS=1 python3 tools/generate.py <name>` — it post-processes the cached raw render at
    zero cost. Never delete `.gencache.json` entries casually.
 3. **Keep the playthrough completable.** The Act I chain must still work end to end.
-4. **No copyrighted content.** No LucasArts names, dialogue, art, or puzzle solutions.
+4. **No copyrighted content.** No third-party names, dialogue, art, or puzzle solutions.
 5. Keep TypeScript strict and the build clean.
 
 ## Verify every change — this is not optional

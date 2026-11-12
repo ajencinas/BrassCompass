@@ -18,8 +18,8 @@ function storage() {
 }
 beforeEach(() => { globalThis.localStorage = storage(); });
 
-test("defaults follow the OS and fit the screen", () => {
-  assert.deepEqual(loadPrefs(), { textSpeed: null, waitForClick: false, textScale: null, reducedMotion: null });
+test("defaults wait for the player, and fit the screen", () => {
+  assert.deepEqual(loadPrefs(), { textSpeed: null, waitForClick: true, textScale: null, reducedMotion: null });
 });
 
 test("an unchosen text size grows on a small screen; a chosen one is kept", () => {
@@ -28,6 +28,17 @@ test("an unchosen text size grows on a small screen; a chosen one is kept", () =
   assert.equal(effectiveTextScale({ textScale: null }, 0.667), 1.25); // 1280x720
   assert.equal(effectiveTextScale({ textScale: 1 }, 0.667), 1);
   assert.equal(effectiveTextScale({ textScale: 1.5 }, 1), 1.5);
+});
+
+test("a pre-version-3 auto-advance was a default, not a choice", () => {
+  // The old shipped default let lines move on by themselves. Version 3 asks the player first,
+  // so a stored `false` from an older save joins the new default; a version-3 `false` is kept.
+  localStorage.setItem("brasscompass.prefs.v1", JSON.stringify({ v: 2, waitForClick: false, textScale: 1.25 }));
+  assert.equal(loadPrefs().waitForClick, true);
+  localStorage.setItem("brasscompass.prefs.v1", JSON.stringify({ v: 3, waitForClick: false, textScale: 1.25 }));
+  assert.equal(loadPrefs().waitForClick, false);
+  localStorage.setItem("brasscompass.prefs.v1", JSON.stringify({ v: 3, waitForClick: true }));
+  assert.equal(loadPrefs().waitForClick, true);
 });
 
 test("an old save's 100% was only the default; a new one was chosen", () => {
@@ -52,8 +63,8 @@ test("preferences round-trip", () => {
 });
 
 test("junk in storage falls back to defaults, field by field", () => {
-  localStorage.setItem("brasscompass.prefs.v1", JSON.stringify({ textSpeed: "ludicrous", textScale: 3, waitForClick: "yes", reducedMotion: true }));
-  assert.deepEqual(loadPrefs(), { textSpeed: null, waitForClick: false, textScale: null, reducedMotion: true });
+  localStorage.setItem("brasscompass.prefs.v1", JSON.stringify({ v: 3, textSpeed: "ludicrous", textScale: 3, waitForClick: "yes", reducedMotion: true }));
+  assert.deepEqual(loadPrefs(), { textSpeed: null, waitForClick: true, textScale: null, reducedMotion: true });
   localStorage.setItem("brasscompass.prefs.v1", "{not json");
   assert.equal(loadPrefs().textScale, null);
 });

@@ -59,7 +59,7 @@ room marrow_deck "The Marrow — Deck"
     stand 470,820
     look "The sea, going gold at the edge. It looked bigger from the quay. Or I was smaller."
     talk "I say hello to the sea. It has heard better."
-    use "The sea has nothing to say to a clerk with a compass."
+    use "The sea has nothing to say to a cartographer with a compass."
 
   hotspot shrouds "the ladder to the crow's nest"
     area (210,0) (430,0) (430,410) (290,410)

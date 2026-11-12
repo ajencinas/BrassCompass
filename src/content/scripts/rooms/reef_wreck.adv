@@ -30,7 +30,8 @@ room reef_wreck "The Sunken Wreck"
   emit creak at 1500,500
 
   # Act III: an old victim of the Grey Lantern, still on the reef. Hobb hears the bell across
-  # the flats on the way in; the broken stern timber with Mordant's plate is on her hull.
+  # the flats on the way in; a grey bow timber from the Lantern is jammed in the wreck, with
+  # Mordant's brass plate still on it.
   scene if act 3 and not wreck_bell
     set wreck_bell
     say "The wreck leans out of the water, older than anything I have sailed past."
@@ -85,8 +86,8 @@ room reef_wreck "The Sunken Wreck"
     show if act 3
     area 1518,412 165x105
     stand 1450,840
-    look "A brass plate on the wreck's broken stern timber, green with salt. The engraving is worn too smooth to read from this distance."
-    use "The plate is nailed fast. Hobb has the knife and the patience."
+    look "A brass plate on a grey bow timber jammed in the wreck, green with salt. The engraving is worn too smooth to read from this distance."
+    use "The plate is nailed fast. Hobb has the hands and the patience."
     talk "I spell out what I can. Hobb does not need me to read it."
     state if has nameplate
       name "the bare timber"
@@ -146,6 +147,7 @@ room reef_wreck "The Sunken Wreck"
     stand 1700,846
     look "Vex, on the rocks with his coat around him. He is in no hurry to move."
     talk "He says, \"I have been in worse. Not often, and not with this crew.\""
+      talk vex at wreck
     give "He waves it away. \"I have a coat and a bad reputation. That is luggage enough.\""
 
   use compass on wreck

@@ -77,7 +77,7 @@ dialogue vex
 
   # Act II — the helm. Vex sends Fenn to the bow; later the crew brings the hold
   # back to him, and he answers it by sailing deeper.
-  node helm vex "You're on my quarterdeck, clerk. Say your piece."
+  node helm vex "You're on my quarterdeck, cartographer. Say your piece."
     > "What are we doing out here?" -> edge
     > "Why the bow?" -> bow
     > "Nothing." -> END
@@ -233,12 +233,12 @@ dialogue vex
   node shore_give vex "I have a boat, a coat, and a good story. Two of those are useful."
     -> END
 
-  node shore_saw vex "You want the part I didn't say on the Marrow."
+  node shore_saw vex "You want the rest. The part I didn't say on the sand."
     > "Tell me." if not seen:vex.saw_elias -> saw_elias
     > "Tell me again." if seen:vex.saw_elias -> saw_again
     > "Not now." -> END
 
-  node saw_elias vex "I saw him. Off the reef, standing on a rock, waving a lantern. I turned the wheel and my light away."
+  node saw_elias vex "I keep seeing it. A lantern going up and down off the reef. I told myself it was a buoy. It wasn't."
     > "You left him there." -> saw_left
     > "Why?" -> saw_why
     > "You're telling me now." -> saw_now
@@ -270,7 +270,7 @@ dialogue vex
   node saw_regret vex "I make everyone regret something. You'll fit right in."
     -> END
 
-  node saw_again vex "A light, off the reef. I told myself it was a lamp on a buoy. It wasn't."
+  node saw_again vex "I have said it. The lantern still goes up and down in my head."
     -> END
 
   # The wreck: the Arcadia, the nameplate, and Vex's eye for what the sea gives back.

@@ -2,7 +2,9 @@ node_modules/
 dist/
 # Uploads from `npm run package:itch` (see docs/STORE.md).
 dist-itch/
-/*.mp4
+# Stray recordings and longplays anywhere in the tree. The game's own films under
+# public/assets/video and cinematic/ are generated and ignored separately below.
+*.mp4
 # Scratch screenshots at the repo root.
 /*.png
 # Screenshots written by the browser tests (npm test, test:editor).
@@ -22,6 +24,9 @@ __pycache__/
 .DS_Store
 .genraw/
 reference/screens/cal/
+# Third-party reference art (published-game stills, UI captures) is not ours to ship.
+reference/mi1_*
+*Monkey Island*
 cinematic/.thumbnails/
 cinematic/.waveform-cache/
 

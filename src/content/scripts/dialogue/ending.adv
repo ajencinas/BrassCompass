@@ -1,8 +1,8 @@
-# Act IV: Mordant on the Grey Lantern's deck, and the last choice of the voyage.
+# Act IV: Mordant in the Grey Lantern's cabin, and the last choice of the voyage.
 #
-# The deck room opens `ending` when Mordant has appeared and his name has been spoken. The
-# player gives Vex something to hold on to, or does not, and then decides whether to lay the
-# crews to rest or take the living and run.
+# Mordant's conversation opens `ending` once his name has been spoken. The player gives Vex
+# something to hold on to, or does not, and then decides whether to lay the crews to rest or
+# take the living and run.
 #
 # Read here, set by the deck and the captain's cabin: bell_cut, lantern_doused, name_spoken,
 # tam_freed. This file sets vex_trust, curse_broken, ending_fog_lifts, escaped_fog and
@@ -13,7 +13,7 @@ dialogue ending
   node root narrator "Mordant waits beside the desk. The cabin is quiet enough to hear the ship move."
     -> vex_rail
 
-  node vex_rail narrator "Vex is in the cabin doorway with the longboat's rope in his hands. He is looking at the fog, not at the dead."
+  node vex_rail narrator "Vex's voice comes down the companionway. He is on the deck above, with the longboat's rope in his hands."
     -> vex_ask
 
   node vex_ask vex "The boat. The rope. Your word. Give me one of them, and I'll know where I stand."
@@ -75,7 +75,7 @@ dialogue ending
   node rest4 narrator "The fog goes out like a tide. The Grey Lantern settles, slow and easy, and the sea takes her."
     -> rest5
 
-  node rest5 narrator "A man in a grey coat takes off his hat. Then there is only water, and light, and the way home."
+  node rest5 narrator "A man in a grey coat takes off his hat. My father puts a hand on my shoulder, and we watch the sea take her."
     win
 
   # Take the living and run: the dead stay, and so does the fog.
@@ -91,5 +91,5 @@ dialogue ending
   node run4 narrator "Ahead, the harbour light. Behind, the bell, ringing for a crew that cannot leave."
     -> run5
 
-  node run5 narrator "I count the living. I count them twice."
+  node run5 narrator "I count the living. My father is not in the boat. He is on the fog rock with the chart, and he does not wave."
     win

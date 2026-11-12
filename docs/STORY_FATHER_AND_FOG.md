@@ -1,4 +1,8 @@
-# The Father and the Fog — story bible (proposal)
+# The Father and the Fog — story bible (archived proposal)
+
+> **Archived.** This was the proposal that replaced the Port Vela / insurance-ledger story.
+> [`STORY.md`](STORY.md) is the canon now; where this file and the scripts disagree, the scripts
+> and `STORY.md` win. Kept for the reboot's history, not as a writing reference.
 
 A simpler replacement for the Port Vela / insurance-ledger story. Same engine, same painted
 world where it fits, same dry voice — one want, one obstacle, one twist.
@@ -52,7 +56,7 @@ Freeing them (speaking the name, ringing the bell for the dead) breaks the fog.
 | **Captain Vex** | The only captain still sailing | Theatrical, vain, selfish, more competent than he looks | Stay alive and stay rich |
 | **Elias Fenn** | Fenn's father, 50s | Cheerful about catastrophe; obsessed with the chart | Finish the map, get everyone home |
 | **Quill** | Navigator, 22 | Blunt, quick, competitive | Prove she's more than a lookout |
-| **Dorrit** | Cook, 60s | Fussy, superstitious | Clear her name |
+| **Dorrit** | Cook, 60s | Fussy, superstitious | Clear his name |
 | **Hobb** | Carpenter/bosun | Few words, big feelings | Find his brother in the fog |
 | **Marta** | Tavern keeper | Warm, sharp, keeps the island's stories | Keep the island alive |
 | **Bramwick** | Harbourmaster | Pompous, guilty | Not lose another ship |
@@ -70,7 +74,7 @@ Jobs (each is a character scene, not a fetch):
 1. **The rudder.** Wreckers have taken Vex's spare rudder. Recover it by out-talking them, not
    fighting.
 2. **Dorrit's name.** The cook is accused of selling ships' stores to the wreckers. Find the real
-   thief and clear her; she joins.
+   thief and clear him; he joins.
 3. **Quill's compass.** Vex holds her lucky compass as a debt. Win it back and she'll navigate.
 4. **Marta's story.** Marta will lend the island's boat only if Fenn hears the whole story of the
    last ship that tried the fog — Rook's account.

@@ -87,7 +87,7 @@ room below_decks "The Marrow — Crew Deck"
     area 440,480 220x360
     stand 760,868
     look "Hobb, by the chest, reading the barrel head like it's a letter."
-    talk "He doesn't turn round. He says, 'Come and look at this.'"
+    talk "He doesn't turn round. He says, \"Come and look at this.\""
       talk hobb at hold
     state if seen:hobb.hold
       talk "He has not moved from the barrel."
@@ -98,7 +98,7 @@ room below_decks "The Marrow — Crew Deck"
     area 1710,480 190x370
     stand 1680,868
     look "Dorrit at the stove, stirring a pot he has stopped believing in."
-    talk "He keeps stirring. 'You've seen the barrels, then.'"
+    talk "He keeps stirring. \"You've seen the barrels, then.\""
       talk dorrit at galley
     state if not salvage_seen
       talk "He is watching the pot. He is not watching me."

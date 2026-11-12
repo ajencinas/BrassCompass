@@ -10,8 +10,8 @@ import { LOGICAL_W, LOGICAL_H } from "../engine/view";
 import { drawText } from "../engine/text";
 import { fitText } from "./ui";
 
-/** Menu buttons, and the two answers of the new-voyage question. */
-export type TitleId = "continue" | "start" | "explore" | "keep" | "confirm";
+/** Menu buttons, the two answers of the new-voyage question, and the undo of a replaced voyage. */
+export type TitleId = "previous" | "continue" | "start" | "explore" | "keep" | "confirm";
 
 export interface TitleButton {
   id: TitleId;
@@ -24,6 +24,9 @@ export interface TitleButton {
 
 /** The hit box shared by every answer: wide enough for the compass plate and for a quiet line. */
 export const TITLE_BUTTON = { width: 520, height: 68, left: 700, right: 1220 };
+
+/** Act marks on the Chapter select plate. */
+const ROMAN = ["I", "II", "III", "IV"];
 
 const FIRST_Y = 796;
 const STEP = 82;
@@ -39,15 +42,23 @@ const CONFIRM_DROP = 104;
  * voyage" takes the new voyage's place, under the pointer that just chose it, and "Begin anew"
  * sits well below: a second click, a double-click or an impatient re-click lands on the safe
  * answer.
+ *
+ * `hasPrevious` adds one quiet line above the menu when a replaced voyage is stashed: the undo
+ * of "Begin anew" / "Restart". It is not the default, and it sits clear of the buttons below.
  */
-export function titleButtons(hasSave: boolean, chapters: boolean, confirmNew = false, saveLabel: string | null = null): TitleButton[] {
+export function titleButtons(hasSave: boolean, chapters: boolean, confirmNew = false,
+  saveLabel: string | null = null, hasPrevious = false): TitleButton[] {
   const list: { id: TitleId; label: string; sub?: string }[] = [
     ...(hasSave ? [{ id: "continue" as const, label: "Continue", sub: saveLabel ?? undefined }] : []),
     { id: "start", label: "Begin" },
-    ...(chapters ? [{ id: "explore" as const, label: "Chapter select" }] : []),
+    ...(chapters ? [{ id: "explore" as const, label: "Chapter select", sub: "walk any scene · nothing is saved" }] : []),
   ];
   const menu = list.map((b, i) => ({ ...b, y: FIRST_Y + i * STEP }));
-  if (!confirmNew) return menu;
+  if (!confirmNew) {
+    return hasPrevious
+      ? [{ id: "previous", label: "Take up last voyage", y: FIRST_Y - STEP }, ...menu]
+      : menu;
+  }
   const at = menu.find((b) => b.id === "start")!.y;
   return [
     { id: "keep", label: "Keep my voyage", y: at },
@@ -330,6 +341,9 @@ export function drawTitle(ctx: CanvasRenderingContext2D, view: TitleView): void 
     if (b.id === "confirm") {
       // The dangerous answer is quiet, underlined, and well below the safe one.
       drawQuietButton(ctx, b.label, b.y, view.focus === b.id, scale, true);
+    } else if (b.id === "explore") {
+      // A chart plate: the second way in, quieter than the compass but unmistakably a control.
+      drawChartButton(ctx, b, t, view.focus === b.id, still, scale);
     } else if (b.id === defaultTitleButton(view.buttons) || b.id === "keep") {
       drawCompassButton(ctx, b, t, view.focus === b.id, still, scale);
     } else {
@@ -390,6 +404,68 @@ function drawCompassButton(ctx: CanvasRenderingContext2D, b: TitleButton, t: num
     drawText(ctx, sub.text, cx, y + h - sub.size - 13, {
       size: sub.size, color: focus ? "#e8d6ae" : "#a99a7a", align: "center", shadow: false,
     });
+  }
+}
+
+/**
+ * Chapter select: a low chart plate under the main way in. A rose in its own square, the name,
+ * a line saying plainly that it walks scenes without saving, and four small act marks — the
+ * shape of the thing it opens, not a bare line of type. Still secondary to Continue and Begin.
+ */
+function drawChartButton(ctx: CanvasRenderingContext2D, b: TitleButton, t: number, focus: boolean,
+  still: boolean, scale: number): void {
+  const w = TITLE_BUTTON.width, h = TITLE_BUTTON.height;
+  const x = LOGICAL_W / 2 - w / 2, y = b.y;
+  const grad = ctx.createLinearGradient(0, y, 0, y + h);
+  grad.addColorStop(0, focus ? "rgba(34,40,38,0.94)" : "rgba(12,24,31,0.82)");
+  grad.addColorStop(1, focus ? "rgba(19,22,18,0.95)" : "rgba(5,12,18,0.9)");
+  ctx.fillStyle = grad;
+  ctx.fillRect(x, y, w, h);
+  ctx.strokeStyle = focus ? "rgba(255,231,172,0.9)" : "rgba(201,162,74,0.42)";
+  ctx.lineWidth = focus ? 1.8 : 1;
+  ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
+  // Two faint chart rules inside the plate: plotting lines, not a box around the box.
+  ctx.save();
+  ctx.strokeStyle = focus ? "rgba(232,201,138,0.22)" : "rgba(232,201,138,0.1)";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(x + 84, y + 14); ctx.lineTo(x + w - 108, y + 14);
+  ctx.moveTo(x + 84, y + h - 14); ctx.lineTo(x + w - 108, y + h - 14);
+  ctx.stroke();
+  ctx.restore();
+  // The rose, in its own square: the same instrument as the compass button, one size down.
+  drawRose(ctx, x + 40, y + h / 2, 18, still ? 0 : t * 0.12, focus ? "#ffe6a8" : "#c9a24a", 0.86);
+  ctx.strokeStyle = focus ? "rgba(255,230,168,0.4)" : "rgba(201,162,74,0.24)";
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(x + 78, y + 11); ctx.lineTo(x + 78, y + h - 11); ctx.stroke();
+  const label = fitText(ctx, b.label.toUpperCase(), w - 212, Math.round(18 * scale), 13, "bold");
+  drawSpaced(ctx, label.text, x + (w - 30) / 2, y + 12, label.size, focus ? "#fff6e0" : "#e0cfa6", 3.6, "bold");
+  if (b.sub) {
+    const sub = fitText(ctx, b.sub, w - 212, Math.round(14 * scale), 11);
+    drawText(ctx, sub.text, x + (w - 30) / 2, y + h - sub.size - 11, {
+      size: sub.size, color: focus ? "#e3d2ad" : "#b8a98a", align: "center", shadow: false,
+    });
+  }
+  // Four act marks: the chapters that are behind the plate.
+  ctx.save();
+  ctx.font = `600 ${Math.round(11 * scale)}px Georgia, serif`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillStyle = focus ? "rgba(255,231,172,0.95)" : "rgba(201,162,74,0.62)";
+  for (let i = 0; i < 4; i++) ctx.fillText(ROMAN[i + 1], x + w - 86 + i * 19, y + h / 2);
+  ctx.restore();
+  if (focus) {
+    // Corner ticks, the same grammar as the compass plate's focus.
+    ctx.strokeStyle = "#ffe6a8";
+    ctx.lineWidth = 2;
+    const k = 13;
+    for (const [cx, cy, dx, dy] of [[x, y, 1, 1], [x + w, y, -1, 1], [x, y + h, 1, -1], [x + w, y + h, -1, -1]]) {
+      ctx.beginPath();
+      ctx.moveTo(cx + dx * 2, cy + dy * 2 + dy * k);
+      ctx.lineTo(cx + dx * 2, cy + dy * 2);
+      ctx.lineTo(cx + dx * 2 + dx * k, cy + dy * 2);
+      ctx.stroke();
+    }
   }
 }
 
@@ -469,7 +545,8 @@ function drawConfirmCard(ctx: CanvasRenderingContext2D, view: TitleView): void {
     size: heading.size, color: "#ffd9b8", align: "center", weight: "bold", shadow: false,
   });
   const what = view.saveLabel ? `your saved voyage (${view.saveLabel})` : "your saved voyage";
-  const body = fitText(ctx, `This replaces ${what}.`, w - 60, Math.round(20 * scale), 15);
+  const body = fitText(ctx, `This replaces ${what}; it can be taken up again from the title.`,
+    w - 60, Math.round(20 * scale), 15);
   drawText(ctx, body.text, LOGICAL_W / 2, top + 118, {
     size: body.size, color: "#e6d3bf", align: "center", shadow: false,
   });

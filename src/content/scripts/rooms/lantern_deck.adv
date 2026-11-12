@@ -92,6 +92,22 @@ room lantern_deck "The Grey Lantern — Deck"
       use "The lantern is high, and the canvas is not in my hands. Quill is the one with the wet cloth."
         nothing
 
+  # The canvas in hand works exactly as the lantern's own Use does: Quill takes it, climbs,
+  # and the great lantern goes out.
+  use lantern on great_lantern
+    "The canvas is wet and heavy in my hands. Quill holds out her hand for it."
+    say "I pass it up. Quill climbs the stern without hurrying."
+    say "She drapes the canvas over the glass. The green light fights her, then gives up."
+    say "\"No air, no flame,\" she says. \"No flame, no fog. Simple.\""
+    say "The deck goes dark. Out past the rail, the fog is only fog."
+    set lantern_doused
+    take lantern
+    sound click
+
+  use crowbar on great_lantern
+    "The lantern is glass and rope, high above the deck. The crowbar is for the bell."
+  use lantern on bell
+    "The canvas would smother the bell, not ring it. Hobb has the rope."
   # The mast and rigging, painted from the deck to the top of the frame. The bell is a sound in it.
   hotspot rigging "the mast and rigging"
     area 900,0 900x600
@@ -99,6 +115,9 @@ room lantern_deck "The Grey Lantern — Deck"
     look "The mast and the shrouds, black against the fog. Somewhere up there a rope is moving."
     talk "I call up into the rigging. It creaks and does not answer."
     use "I put a hand on a shroud. It is wet, and warm, as if someone has just let go of it."
+
+  use crowbar on rigging
+    "The iron is for the bell, and the rigging is rope. Hobb is already climbing."
 
   # The bell: heard, never seen. Three notes, then one, the way Tam rang the Arcadia's watch.
   hotspot bell "the bell"
@@ -123,6 +142,22 @@ room lantern_deck "The Grey Lantern — Deck"
         nothing
       talk "The rigging is empty. Whatever was ringing has stopped."
         nothing
+
+  # Hobb's iron on the bell is the same job as the bell's own Use: the rope parts, Tam is
+  # freed, and the bell hangs dumb.
+  use crowbar on bell if not bell_cut
+    "I wedge the bar under the clapper and pull. Hobb is already climbing."
+    say "He goes up the shrouds hand over hand, the crowbar through his belt."
+    say "At the top he stops. Then he says one word, very quietly: \"Tam.\""
+    say "There is a man in the rigging with one hand on the bell rope. He is thin, and tired, and alive."
+    say "\"I have to keep the watch,\" Tam says. \"Somebody has to keep the watch.\""
+    say "Hobb cuts the rope. The clapper comes away in his hand. The bell hangs dumb."
+    say "Tam looks at his empty hand like a man waking up."
+    set bell_cut
+    set tam_freed
+    sound chime
+  use crowbar on bell
+    "Hobb has cut the bell already. The iron has done its work."
 
   # The low door under the carved gallery at the stern, below the great lantern, standing open
   # with warm lamplight across the deck.

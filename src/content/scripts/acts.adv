@@ -1,7 +1,7 @@
 # The Father and the Fog — four acts. Act I is the return, Act II the crew and the first fog.
 # Act III runs from the fog flats to the reef gate; Act IV is the Grey Lantern's deck, its
-# captain's cabin, and the last choice. No opening film: the old Port Vela cinematics are the
-# old story. The closing card is at the bottom of this file and follows that choice.
+# captain's cabin, and the last choice. No opening film: the voyage starts on the harbour at
+# the dock. The closing card is at the bottom of this file and follows that choice.
 
 act 1 "The Return"
   start dock
@@ -61,9 +61,13 @@ ending "THE FATHER AND THE FOG"
   line if ending_fog_lifts
     "My father and I draw the new coast together. The chart is honest now."
   line if ending_fog_lifts
+    "His compass lies open on the table between us. The needle points north, and stays there."
+  line if ending_fog_lifts
+    "Old Rook hears the bell is quiet. He orders a drink, then pushes it away. He has somewhere to be."
+  line if ending_fog_lifts
     "The bell hangs in the harbour. On the first clear morning of the year, it rings for the dead."
   line if ending_fog_lifts and tam_freed
-    "Tam Hobb rings it at noon. I tell him his brother kept counting. Tam says he knows, and rings it again."
+    "Tam Hobb rings it at noon. I tell him his son kept counting. Tam says he knows, and rings it again."
   line if ending_fog_lifts
     "Old Onn comes down to the quay to hear the story. I tell her the truth. She says it will do, and goes back to her step."
 
@@ -90,7 +94,15 @@ ending "THE FATHER AND THE FOG"
     "The Shroud keeps its crews. On quiet nights the bell rings across the water, and the island has learned to call it weather."
   line if ending_long_way
     "The blank half of the chart hangs in the Salty Keel. Marta says that is the honest part."
+  line if ending_long_way and vex_trust
+    "My father's compass points at the fog until the month he comes home. Then it points at the harbour, and stays."
+  line if ending_long_way and not vex_trust
+    "I keep my father's compass in my coat. It still points at the fog, and some mornings I follow it as far as the quay."
   line if ending_long_way
+    "Old Rook does not ask how it went. He puts a glass in front of me and one in front of himself."
+  line if ending_long_way and vex_trust
+    "I go back to Dreadwater with a boat, a crew, and a father a month behind me."
+  line if ending_long_way and not vex_trust
     "I go back to Dreadwater with a boat, a crew, and no father. Some mornings the fog looks like a road."
   line if ending_long_way
     "The Grey Lantern is still out there. Some nights I hear the bell, and I answer it. That is not the same as going back."
