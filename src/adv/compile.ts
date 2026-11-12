@@ -72,14 +72,14 @@ export const DOOR_SOUNDS = members<DoorSound>({ door: true, hatch: true, stairs:
  * browser's canvas applies and which figures.ts can apply by hand where it doesn't (Safari
  * before 18). Each takes one number (or percentage); hue-rotate takes an angle.
  */
-const FILTERS = new Set(["brightness", "contrast", "saturate", "sepia", "grayscale", "hue-rotate", "invert", "opacity"]);
+const FILTERS = new Set(["brightness", "contrast", "saturate", "sepia", "grayscale", "hue-rotate", "invert", "opacity", "tone", "lift", "tint"]);
 
 /**
  * Why a CSS filter string won't work, or null if it will. A canvas silently ignores a filter
  * it can't parse (a missing unit, a misspelt function), so a typo would otherwise just leave
  * the scene ungraded.
  */
-export function filterProblem(css: string): string | null {
+export function filterProblem(css: string, field: "grade" | "backdrop" = "grade"): string | null {
   const text = css.trim();
   if (text === "" || text === "none") return null;
   const re = /\s*([a-z-]+)\(\s*([^)]*?)\s*\)\s*/gy;
@@ -89,6 +89,17 @@ export function filterProblem(css: string): string | null {
     const [, fn, arg] = m;
     if (!FILTERS.has(fn)) {
       return `'${fn}' isn't a colour filter (${[...FILTERS].join(", ")})`;
+    }
+    // `tone` is the backdrop's split-tone, `lift` its shadow lift and `tint` the figures' wash: each is read by exactly one
+    // painter (ambient.ts, figures.ts), takes a plain number, and anywhere else is silently ignored.
+    if (fn === "tone" || fn === "lift" || fn === "tint") {
+      const owner = fn === "tint" ? "grade" : "backdrop";
+      if (field !== owner) return `${fn}(...) only works in a ${owner}, not in a ${field}`;
+      if (!/^-?(?:\d+(?:\.\d+)?|\.\d+)$/.test(arg)) {
+        return `${fn}(${arg}) needs a plain number${fn !== "tint" ? ` from 0 to 1, like ${fn}(0.3)` : " (a hue in degrees), like tint(160)"}, with no unit`;
+      }
+      if (fn !== "tint" && (Number(arg) < 0 || Number(arg) > 1)) return `${fn}(${arg}) must be between 0 and 1`;
+      continue;
     }
     const v = /^(-?\d+(?:\.\d+)?|-?\.\d+)(%|deg|rad|turn|grad)?$/.exec(arg);
     if (!v) return `${fn}(${arg}) needs one number, like ${fn === "hue-rotate" ? "hue-rotate(195deg)" : `${fn}(0.8)`}`;
@@ -428,10 +439,10 @@ export function compile(files: SourceFile[], options: CompileOptions = {}): Comp
   };
 
   /** A CSS colour filter in quotes, checked: a canvas ignores one it can't read, silently. */
-  const filter = (c: Cur): string => {
+  const filter = (c: Cur, field: "grade" | "backdrop" = "grade"): string => {
     const t = c.peek();
     const v = c.str("a CSS filter in quotes");
-    const problem = filterProblem(v);
+    const problem = filterProblem(v, field);
     if (problem) c.fail(problem, t);
     return v;
   };
@@ -610,7 +621,7 @@ export function compile(files: SourceFile[], options: CompileOptions = {}): Comp
           room.ambience = a as Room["ambience"]; leaf(); break;
         }
         case "grade": room.grade = filter(cc); leaf(); break;
-        case "backdrop": room.backdrop = filter(cc); leaf(); break;
+        case "backdrop": room.backdrop = filter(cc, "backdrop"); leaf(); break;
         case "stars": room.stars = { y: cc.num() }; leaf(); break;
         case "light": (room.lights ??= []).push(lightLine(cc)); leaf(); break;
         case "water": {
@@ -1214,7 +1225,12 @@ function validate(out: Compiled, options: CompileOptions): void {
   // Flags the game sets by itself.
   const auto = (f: string): boolean => f.startsWith("seen:") || f.startsWith("looked:");
   for (const [f, where] of flagRead) if (!flagSet.has(f) && !auto(f)) err(where, `flag '${f}' is read but never set`);
-  for (const [f, where] of flagSet) if (!flagRead.has(f)) err(where, `flag '${f}' is set but never read`, true);
+  // These two are closing-choice companion markers: save cleanup reads them as a group, and the
+  // ending branches are terminal, so no room/tip condition can ever read them. Keep them valid.
+  const finalChoice = new Set(["curse_broken", "escaped_fog"]);
+  for (const [f, where] of flagSet) {
+    if (!flagRead.has(f) && !finalChoice.has(f)) err(where, `flag '${f}' is set but never read`, true);
+  }
 }
 
 /** Effects that hand the screen to something else; nothing after one in a list runs. */

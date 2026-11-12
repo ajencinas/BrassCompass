@@ -7,6 +7,7 @@ import { loader } from "../../tools/adv-lib.mjs";
 const vite = await loader();
 after(() => vite.close());
 const F = await vite.load("/src/engine/foley.ts");
+const A = await vite.load("/src/engine/audio.ts");
 const RATE = 48000;
 
 /** ITU-R BS.1770 K-weighting at 48 kHz: the usual stand-in for how loud something sounds. */
@@ -248,8 +249,10 @@ test("act-break cue: covers the whole video, never a silent gap, and rings out i
     const tail = rmsDb(x, x.length - Math.floor(RATE * 0.35));
     assert.ok(tail < body - 22, `act ${act} ${seconds}s tail ${tail.toFixed(1)} vs body ${body.toFixed(1)} dBFS`);
     // The cue is score, not a fanfare: at its level, cue plus the loudest ducked bed sample
-    // still leaves room at the default master (0.55).
-    const sum = (F.LEVEL.actBreak + 0.35 * 1.4) * 0.55;
+    // still leaves room at the default master and Music slider (both buses share the music
+    // trim); the loudest bed peaks at -0.7 dBFS (0.92) and is ducked to 0.35 under the cue.
+    const chain = A.MASTER_DEFAULT * A.MUSIC_TRIM;
+    const sum = (F.LEVEL.actBreak + 0.35 * 0.92) * chain;
     assert.ok(sum < 0.5, `cue + bed peaks at ${sum.toFixed(2)} of full scale`);
   }
   // A longer video gets a longer cue, and the acts are in different keys.

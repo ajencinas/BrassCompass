@@ -11,6 +11,20 @@ function scriptPath(path: unknown): string | null {
   return full.startsWith(SCRIPTS + sep) ? full : null;
 }
 
+const LOOPBACK_NAMES = new Set(["localhost", "127.0.0.1", "[::1]"]);
+
+/** `host[:port]` of the Host header names this machine. */
+function loopbackHost(host: string | undefined): boolean {
+  if (!host) return false;
+  const name = host.startsWith("[") ? host.slice(0, host.indexOf("]") + 1) : host.split(":")[0];
+  return LOOPBACK_NAMES.has(name.toLowerCase());
+}
+
+/** An Origin header (`http://localhost:5173`) that is this machine. */
+function loopbackOrigin(origin: string): boolean {
+  try { return LOOPBACK_NAMES.has(new URL(origin).hostname.toLowerCase()); } catch { return false; }
+}
+
 function listScripts(dir = SCRIPTS): { path: string; text: string }[] {
   const out: { path: string; text: string }[] = [];
   for (const f of readdirSync(dir).sort()) {
@@ -47,8 +61,21 @@ function advScripts(): Plugin {
         if (remote !== "127.0.0.1" && remote !== "::1" && remote !== "::ffff:127.0.0.1") {
           return reply(403, { error: "the editor is available on loopback only" });
         }
+        // Loopback is not enough on its own: any web page the author has open can make their
+        // browser POST to 127.0.0.1, and a rebinding DNS name can read it. So the Host header
+        // and any Origin must be loopback too, a browser that says the request came from another
+        // site is refused, and a save must be application/json (which a cross-site form cannot
+        // send, and a cross-site fetch can send only after a CORS preflight this server never allows).
+        if (!loopbackHost(req.headers.host)) return reply(403, { error: "the editor answers only to a loopback host name" });
+        const origin = req.headers.origin;
+        if (origin !== undefined && !loopbackOrigin(origin)) return reply(403, { error: "cross-site request refused" });
+        const site = req.headers["sec-fetch-site"];
+        if (site !== undefined && site !== "same-origin" && site !== "none") return reply(403, { error: "cross-site request refused" });
         if (req.method === "GET" && req.url === "/files") return reply(200, listScripts());
         if (req.method !== "POST" || req.url !== "/save") return reply(404, { error: "not found" });
+        if (!/^application\/json\s*(;|$)/i.test(String(req.headers["content-type"] ?? ""))) {
+          return reply(415, { error: "save requires Content-Type: application/json" });
+        }
         let body = "";
         req.setEncoding("utf8");
         req.on("data", (chunk: string) => {
@@ -98,9 +125,11 @@ function activePublicAssets(): Plugin {
       const manifest = JSON.parse(readFileSync(manifestPath, "utf8")) as { files?: unknown };
       const files = Array.isArray(manifest.files) ? manifest.files : [];
       const publicDir = resolve(__dirname, "public");
-      const artShelf = existsSync(join(publicDir, "assets"));
+      // The painted folders are gitignored; public/assets/audio is tracked, so the bare
+      // `assets` folder proves nothing. Same rule as hasArtShelf() in tools/asset-manifest.mjs.
+      const artShelf = existsSync(join(publicDir, "assets/scenes")) && existsSync(join(publicDir, "assets/characters"));
       if (!artShelf) {
-        this.warn("public/assets is absent — building a code-only bundle. Copy the shared art folder to include the game's paintings and music.");
+        this.warn("public/assets/scenes and /characters are absent — building a CODE-ONLY bundle (no paintings; the game will not start). Copy the shared art folder to ship the real game.");
       }
       for (const file of files) {
         if (typeof file !== "string" || file.startsWith("/") || file.includes("..")) {
@@ -113,7 +142,7 @@ function activePublicAssets(): Plugin {
           continue;
         }
         if (!existsSync(full)) {
-          // A code-only clone has no art shelf at all; anything else missing is a broken build.
+          // A code-only clone has no art shelf; with one present, anything missing is a broken build.
           if (artShelf) this.error(`active asset is missing from public/: ${file}`);
           continue;
         }

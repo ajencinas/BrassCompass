@@ -44,6 +44,8 @@ export class Input {
     down: [],
     move: [],
   };
+  /** A finger sliding across the scene (a look-around drag): CSS pixels moved since the last call. */
+  private pans: ((dxCss: number) => void)[] = [];
   private keys: ((k: string, event: KeyboardEvent) => void)[] = [];
   private keysUp: ((k: string, event: KeyboardEvent | null) => void)[] = [];
 
@@ -76,10 +78,20 @@ export class Input {
       press = null;
     };
     /** Compatibility mouse events trail a touch; ignore them for a moment. */
-    const settleTouch = () => window.setTimeout(() => { this.touching = false; }, 400);
+    let settle = 0;
+    const clearSettle = () => { if (settle) window.clearTimeout(settle); settle = 0; };
+    const settleTouch = () => {
+      // One timer at a time: a new touch must not be cut short by the last touch's timer.
+      clearSettle();
+      settle = window.setTimeout(() => { settle = 0; this.touching = false; }, 400);
+    };
     const inside = (x: number, y: number): boolean => {
       const r = view.canvas.getBoundingClientRect();
-      return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+      // A portrait crop makes the canvas wider than the stage that clips it: only the part
+      // the stage shows can be touched.
+      const s = view.canvas.parentElement?.getBoundingClientRect();
+      const l = s ? Math.max(r.left, s.left) : r.left, rr = s ? Math.min(r.right, s.right) : r.right;
+      return x >= l && x <= rr && y >= r.top && y <= r.bottom;
     };
 
     view.canvas.addEventListener("pointerdown", (e) => {
@@ -87,6 +99,7 @@ export class Input {
       e.preventDefault();
       view.canvas.focus({ preventScroll: true });
       cancelPress();
+      clearSettle();
       this.touching = true;
       const kind: PointerKind = e.pointerType === "pen" ? "pen" : "touch";
       this.lastKind = kind;
@@ -107,10 +120,25 @@ export class Input {
 
     // The window owns movement, release and cancellation: a finger that slides off the canvas
     // (or lets go over the HUD) must not turn into a tap or a late long press.
+    // A press that slides past the tap slop is no longer a tap; on a touch screen it becomes a
+    // look-around drag (the portrait crop follows the finger, see View.dragCrop).
+    let drag: { id: number; x: number } | null = null;
     window.addEventListener("pointermove", (e) => {
+      if (drag && e.pointerId === drag.id) {
+        const dx = e.clientX - drag.x;
+        drag.x = e.clientX;
+        if (dx !== 0) this.pans.forEach((h) => h(dx));
+        return;
+      }
       if (!press || e.pointerId !== press.id) return;
-      if (Math.hypot(e.clientX - press.x, e.clientY - press.y) > TAP_SLOP) cancelPress();
+      if (Math.hypot(e.clientX - press.x, e.clientY - press.y) > TAP_SLOP) {
+        if (press.kind === "touch" && !press.long) drag = { id: press.id, x: e.clientX };
+        cancelPress();
+      }
     });
+    const endDrag = (e: PointerEvent) => { if (drag && e.pointerId === drag.id) { drag = null; settleTouch(); } };
+    window.addEventListener("pointerup", endDrag);
+    window.addEventListener("pointercancel", endDrag);
     window.addEventListener("pointerup", (e) => {
       if (e.pointerType === "mouse") return;
       if (!press || e.pointerId !== press.id) return;
@@ -125,11 +153,11 @@ export class Input {
     });
     window.addEventListener("pointercancel", (e) => {
       if (e.pointerType === "mouse") return;
-      if (press && e.pointerId === press.id) { cancelPress(); this.touching = false; }
+      if (press && e.pointerId === press.id) { cancelPress(); clearSettle(); this.touching = false; }
     });
     // Releasing outside the browser, switching tabs, or opening a system menu: every one of
     // these ends the gesture, and none of them should leave a timer behind.
-    const releaseAll = () => { cancelPress(); this.touching = false; };
+    const releaseAll = () => { cancelPress(); clearSettle(); this.touching = false; };
     window.addEventListener("blur", releaseAll);
     document.addEventListener("visibilitychange", () => { if (document.hidden) releaseAll(); });
     window.addEventListener("contextmenu", releaseAll);
@@ -152,6 +180,10 @@ export class Input {
   }
   onMove(h: PointerHandler): void {
     this.handlers.move.push(h);
+  }
+  /** Touch only: the finger dragged `dxCss` CSS pixels sideways across the scene. */
+  onPan(h: (dxCss: number) => void): void {
+    this.pans.push(h);
   }
   onKey(h: (k: string, event: KeyboardEvent) => void): void {
     this.keys.push(h);

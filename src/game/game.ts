@@ -24,6 +24,7 @@ import { Atlas, ATLAS, areaOfRoom, atlasImageUrl, escapeHtml } from "./atlas";
 import {
   loadPrefs, savePrefs, hasCompleted, markCompleted, reducedMotion, onOsReducedMotion,
   effectiveTextSpeed, effectiveTextScale, autoTextScale,
+  highContrast, onOsHighContrast, setHudContrast, hudHighContrast, READING_FACTOR,
   NARRATION_CPS, DIALOGUE_CPS, type Prefs,
 } from "./prefs";
 import { CinematicPlayer } from "./cinematic";
@@ -35,27 +36,29 @@ import type {
 import { ROOMS, START_ROOM, START_POS } from "../content/rooms";
 import { roomImageKeys } from "../content/room-assets";
 import { ACTS, ENDING, FIRST_ACT, LAST_ACT } from "../content/acts";
-import { defaultLine, noComboLine, itemAloneLine, targetOf, phrase, type Target } from "./lines";
+import { defaultLine, emptyLookLine, noComboLine, itemAloneLine, targetOf, phrase, type Target } from "./lines";
 import { personHeightAt } from "./scale";
 import { Casebook, type CaseNote } from "./casebook";
-// next-level: casebook
 import { DeedsPage, deedTally, fileDeeds } from "./deeds";
-// next-level: recap — the Continue card
+// The Continue card
 import { Recap } from "./recap";
 import {
   readSave, writeSave, clearSave, backupCorrupt, takeOldSave, hasAnySave,
   archiveSave, stashCurrentSave, hasStashedSave, restoreStashedSave,
+  recoverablePages, restoreArchivedSave, unreadableSave, setAsideNotice, storedSaveAt, savedQueue, openNodeTerminals, actKnowledge,
   ENDING_FLAGS, ENDING_RESET_FLAGS, FINAL_CHOICE_FLAGS, withoutEndingFlags,
-  SAVE_VERSION, type SaveData, type SaveKnown,
+  SAVE_VERSION, type SaveData, type SaveKnown, type RecoverablePage,
 } from "./save";
+import { actReach } from "./reach";
 import { SaveTabGuard } from "./tabguard";
 import { drawDebugOverlay } from "./debug";
-import { drawTitle, titleButtons, hitTitleButton, defaultTitleButton, type TitleId } from "./title";
-import { drawFigure, drawSprite, drawShadow } from "./figures";
+import { drawTitle, titleButtons, hitTitleButton, defaultTitleButton, recoverStart, RECOVER_SHOWN, type TitleId, type TitleRecover } from "./title";
+import { drawFigure, drawSprite, drawShadow, shadowTintOf } from "./figures";
+import { brassInset } from "./plate";
 import { Transition } from "./transition";
 import { Connector } from "./connector";
 import { FrameLoop } from "./frame";
-import { drawFade, type ExitCardSource } from "./fade";
+import { drawFade, LOADING_CUE_AFTER, ROOM_WAIT_CAP, type ExitCardSource } from "./fade";
 import {
   entrySideFor, linkOf, passageOf,
   type ExitLink, type ExitSide, type PassageKind,
@@ -68,16 +71,18 @@ import { ITEMS } from "../content/items";
 import { DIALOGUES } from "../content/dialogue";
 import { GLOBAL_COMBOS } from "../content/combos";
 import { TIPS } from "../content/hints";
-import { MANIFEST } from "../content/assets";
+import { MANIFEST, assetUrl } from "../content/assets";
 import { TipLadder } from "./tips";
 import { drawGlyph, roundRectPath, type BarGlyph } from "./cues";
 import {
   MobileUI, type MobileBridge, type MobileButton, type MobileState,
 } from "./mobile";
+import { GamepadInput, deliverPadKey, type PadEvent } from "./gamepad";
+import { SeenLines, readSeen, writeSeen, SEEN_KEY, SKIP_DELAY, shouldSkip } from "./seen";
 import { FirstWatch, readLessons, writeLessons, LESSONS, LESSON_KEY, type LessonId } from "./onboarding";
 import { SHORTCUTS } from "./controls";
 import { restoreFocus } from "./focus";
-import { roomToneFor } from "./soundscape";
+import { roomToneFor, isLockedLine } from "./soundscape";
 import { cuePlays } from "../engine/roomtone";
 
 /**
@@ -129,7 +134,7 @@ const TIPS_KEY = "brasscompass.tips.v1";
  * Keys that mean something to the game. Anything else (a modifier on its own, F-keys, media
  * keys, an IME's "Process") must not skip a line or flush what is waiting on it.
  */
-// next-level: a11y — PageUp/PageDown are the satchel's pages.
+// PageUp/PageDown are the satchel's pages.
 function actionKey(k: string): boolean {
   return k.length === 1 || k === "Enter" || k === "Escape" || k === "Tab" ||
     k === "PageUp" || k === "PageDown" || k.startsWith("Arrow");
@@ -147,14 +152,43 @@ type FocusGroup = "hotspot" | "verb" | "item";
 const FOCUS_GROUPS: FocusGroup[] = ["hotspot", "verb", "item"];
 const ROMAN = ["", "I", "II", "III", "IV", "V", "VI"];
 
+/** A hotspot wider than this share of the screen, or taller than REVEAL_TALL, is drawn as corner marks by Q, not a box (a standing figure is tall, not big). */
+const REVEAL_BIG = 0.25;
+const REVEAL_TALL = 0.46;
+
 /** The painted bounds of a hotspot's area, in world coordinates. */
 function areaBox(area: Area): { x: number; y: number; w: number; h: number } {
-  if ("rect" in area) return { x: area.rect.x, y: area.rect.y, w: area.rect.w, h: area.rect.h };
-  const xs = area.map((p) => p.x), ys = area.map((p) => p.y);
-  return {
-    x: Math.min(...xs), y: Math.min(...ys),
-    w: Math.max(...xs) - Math.min(...xs), h: Math.max(...ys) - Math.min(...ys),
-  };
+  // Asked every frame for the same few areas (the hover glow, the exit light, Q): measured once
+  // per area object, so a frame allocates no arrays and spreads nothing. Callers only read it.
+  let box = areaBoxes.get(area);
+  if (box) return box;
+  if ("rect" in area) {
+    box = { x: area.rect.x, y: area.rect.y, w: area.rect.w, h: area.rect.h };
+  } else {
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    for (const p of area) {
+      if (p.x < x0) x0 = p.x;
+      if (p.x > x1) x1 = p.x;
+      if (p.y < y0) y0 = p.y;
+      if (p.y > y1) y1 = p.y;
+    }
+    box = { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
+  }
+  areaBoxes.set(area, box);
+  return box;
+}
+const areaBoxes = new WeakMap<object, { x: number; y: number; w: number; h: number }>();
+
+/** The four corners of a box as signs (dx, dy) pointing inward: the little brackets use them. */
+const CORNERS: readonly (readonly [number, number])[] = [[0, 0], [1, 0], [0, 1], [1, 1]];
+/** Marks in the four corners of a box, one path: no per-frame arrays of corners. */
+function cornerMarks(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, k: number): void {
+  for (const [fx, fy] of CORNERS) {
+    const cx = x + fx * w, cy = y + fy * h, dx = fx ? -1 : 1, dy = fy ? -1 : 1;
+    ctx.moveTo(cx, cy + dy * k);
+    ctx.lineTo(cx, cy);
+    ctx.lineTo(cx + dx * k, cy);
+  }
 }
 
 /** Whether a point is on a rectangle (the little hit-test the scene chrome keeps reusing). */
@@ -224,7 +258,13 @@ interface Sentence {
 // Movement is measured in body heights so it reads the same at every depth: a figure half as
 // tall (twice as far away) covers half the screen distance in the same time.
 const WALK_SPEED = 1.15; // body heights per second
-const STRIDE = 0.85; // body heights per full walk cycle (two steps)
+// The side strip (elias_walk_v2_painted_r2.png, six cells = one two-step cycle: contact, down,
+// passing, contact, down, passing) plays straight through. Its feet are ~0.31 body heights apart
+// at contact (measured on the cells: heel centres 295 px apart on a 937 px figure), so a step is
+// ~0.31 body heights; the old 0.76 (0.38 a step) slid the planted foot a fifth too far.
+const STRIDE = 0.62; // body heights per full walk cycle (two steps)
+/** The front/back sheets hold three poses per direction; this is the order they play in one cycle. */
+const VERTICAL_STEP = [0, 1, 2, 1] as const;
 // Floor seen from eye height is foreshortened: a stride toward the camera covers far fewer screen
 // pixels than a stride across it. Physically ~0.25 here; 0.45 keeps depth walks from dragging.
 const DEPTH_SPEED = 0.45;
@@ -248,6 +288,10 @@ const EXIT_INTRO_TIME = 2.5;
 const EXIT_INTRO_MAX = 4; // a first-entry breath of light at up to four thresholds
 /** How near the pointer must be to a threshold for its light to answer. */
 const EXIT_POINTER_RANGE = 120;
+/** Fenn this close to a threshold has arrived: its chevron is gone by HIDE and full by SHOW. */
+const EXIT_CHEVRON_HIDE_R = 55;
+const EXIT_CHEVRON_SHOW_R = 120;
+interface ExitChevron { x: number; y: number; angle: number; strength: number; edge: boolean; floor: number }
 /** A read line lingers this long, then its box fades away over NARRATION_FADE seconds. */
 const NARRATION_LINGER = 2.5;
 const NARRATION_FADE = 0.6;
@@ -268,14 +312,20 @@ const STATE: ReadonlySet<Effect["k"]> = new Set(["flag", "add", "give", "take", 
 const AUTOSAVE_DELAY = 0.5;
 /** A save notice stays up at least this long, and long enough to be read twice. */
 const SAVE_NOTICE_MIN = 8;
-// next-level: casebook
 /** How long a pinned note's banner and the chart button's glow last, in seconds. */
 const NOTE_TOAST_TIME = 4;
+/** The "Wait a moment." line is spoken at most this often (ms). */
+const BUSY_REPEAT_MS = 2000;
 
 /** The final-choice flag each ending branch also sets; the other branch's must go. */
 const ENDING_COMPANION: Readonly<Record<string, string>> = {
   ending_fog_lifts: "curse_broken",
   ending_long_way: "escaped_fog",
+};
+
+/** How the recover list says why a page was set aside. */
+const ARCHIVE_WORDS: Record<string, string> = {
+  migrated: "older save", replaced: "replaced voyage", corrupt: "damaged page", future: "newer page", "old-key": "earlier voyage",
 };
 
 /** What a save may name, checked against the live content. */
@@ -287,6 +337,9 @@ const KNOWN: SaveKnown = {
   talk: (tree, node) => tree in DIALOGUES && (node === undefined || node in DIALOGUES[tree].nodes),
   // A save is by design from before the final choice; none of its answers are part of a voyage.
   endingFlags: ENDING_RESET_FLAGS,
+  // Which rooms each act reaches (static, from the content): a save in a room its act cannot be
+  // in is moved to the act's start rather than loaded into a broken state.
+  ...actKnowledge(actReach({ rooms: ROOMS, dialogues: DIALOGUES, acts: ACTS, combos: GLOBAL_COMBOS }), ACTS),
 };
 
 export class Game {
@@ -376,7 +429,7 @@ export class Game {
   private fx = new Fx();
   /** The closing card, while it shows. */
   private ending: EndingScreen | null = null;
-  /** next-level: a11y — the ending has been read out, so a repeated effect cannot say it twice. */
+  /** The ending has been read out, so a repeated effect cannot say it twice. */
   private announcedEnding = false;
   /** Something to do at full black (a change of scene that shouldn't be a hard cut). */
   private curtain: (() => void) | null = null;
@@ -426,6 +479,15 @@ export class Game {
   /** Two tabs share one save; once the other one writes, this tab stops writing over it. */
   private tabGuard = new SaveTabGuard();
   private foreignSave = false;
+  /** The page on disk could not be put aside, so this session must not write over it. */
+  private keepPage = false;
+  /** Archived pages this build can load again (the title's "Recover an older page"). */
+  private recoverable: RecoverablePage[] = [];
+  private recoverOpen = false;
+  /** First archived page the open Recover list shows (the list pages through the whole archive). */
+  private recoverOffset = 0;
+  /** One line on the title: an unreadable page was just set aside, or a new voyage was refused. */
+  private titleNotice: string | null = null;
   private foreignSaveWarned = false;
   /** The closing choice just made, so a corrupted pair of ending flags still resolves to one. */
   private endingChosen: string | null = null;
@@ -433,7 +495,6 @@ export class Game {
   private settings: Settings;
   private cinematic: CinematicPlayer;
   private casebook: Casebook;
-  // next-level: recap
   private recap: Recap;
   private history: History;
   private atlas: Atlas;
@@ -442,7 +503,6 @@ export class Game {
   private areaCardLeft = 0;
   private areaCardFading = false;
   private areaCardThen: (() => void) | null = null;
-  // next-level: casebook
   /** The deeds page after the ending card: the voyage's entered and unfiled optional layer. */
   private deeds: DeedsPage;
   /** The deeds page has been offered for this voyage; `advanceEnding` only offers it once. */
@@ -461,13 +521,14 @@ export class Game {
   ) {
     this.mobile = view.mobile;
     this.touch = view.mobile;
+    this.view.setQuality(this.prefs.quality);
     this.settings = new Settings({
       resume: () => this.setPaused(false),
       restart: () => {
         this.setPaused(false);
         // Restart replaces the voyage just as Begin anew does: keep the page it replaced.
         this.persist();
-        this.hasPrevious = stashCurrentSave() || this.hasPrevious;
+        if (!this.stashBeforeNewVoyage()) return;
         this.clearForeignSave();
         this.behindCurtain(() => { this.title = false; this.newGame(); });
       },
@@ -493,12 +554,42 @@ export class Game {
       toggleTips: () => this.setTipMode(!this.tipMode),
       prefs: () => this.prefs,
       setPrefs: (change) => {
+        const was = this.prefs;
         this.prefs = { ...this.prefs, ...change };
         savePrefs(this.prefs);
         this.syncDocument();
+        // The controls say their own state to a screen reader; the live region confirms what the
+        // change means for play, since the dialog is the only thing the reader is looking at.
+        if ("highContrast" in change && highContrast(was) !== highContrast(this.prefs)) {
+          this.announce(highContrast(this.prefs) ? "High contrast on." : "High contrast off.");
+        }
+        if (change.revealMode && change.revealMode !== was.revealMode) {
+          this.revealToggled = false;
+          this.revealHeld = false;
+          this.syncA11yControls();
+          this.announce(change.revealMode === "toggle" ? "Reveal key: press Q to switch on and off."
+            : "Reveal key: hold Q to show.");
+        }
+        if (change.quality && change.quality !== was.quality) {
+          this.view.setQuality(change.quality);
+          this.announce(`Graphics quality: ${change.quality}.`);
+        }
+        if (change.readingTime && change.readingTime !== was.readingTime) {
+          this.announce(`Reading time: ${{ normal: "normal", long: "long", xlong: "very long" }[change.readingTime]}.`);
+        }
+        if (change.skipRead !== undefined && change.skipRead !== was.skipRead) {
+          this.announce(change.skipRead ? "Skip read text on." : "Skip read text off.");
+        }
+        if (change.waitForClick !== undefined && change.waitForClick !== was.waitForClick) {
+          this.announce(change.waitForClick ? "Lines stay until you click." : "Lines move on by themselves.");
+        }
+        if ("textScale" in change && change.textScale !== was.textScale) {
+          this.announce(`Text size ${Math.round(this.textScale * 100)} percent.`);
+        }
       },
       reduced: () => this.reduced,
       autoTextScale: () => autoTextScale(this.view.scale),
+      contrast: () => highContrast(this.prefs),
     });
     const readLesson = (key: string): string | null => {
       try { return localStorage.getItem(key); } catch { return null; }
@@ -506,13 +597,16 @@ export class Game {
     const writeLesson = (value: string): void => {
       try { localStorage.setItem(LESSON_KEY, value); } catch { /* optional */ }
     };
-    this.watch = new FirstWatch(readLessons(readLesson), (taught) => writeLessons(writeLesson, taught));
+    // A lesson is read out when it takes the screen, not when it is queued behind another or
+    // offered and later dropped.
+    this.watch = new FirstWatch(readLessons(readLesson), (taught) => writeLessons(writeLesson, taught),
+      (id) => this.announce(LESSONS[id].text(this.touch)));
     try { this.tipMode = localStorage.getItem(TIPS_KEY) === "on"; } catch { this.tipMode = false; }
     this.cinematic = new CinematicPlayer(() => this.audio);
     const titles: Record<number, string> = {};
     for (const [n, a] of Object.entries(ACTS)) titles[Number(n)] = `${a.title}`;
     this.casebook = new Casebook(titles, () => { this.audio.page(); this.persist(); });
-    // next-level: recap — Continue says what the voyage was before it resumes it.
+    // Continue says what the voyage was before it resumes it.
     this.recap = new Recap({
       actTitle: (n) => this.actTitle(n),
       roomName: (id) => ROOMS[id]?.name ?? id,
@@ -525,11 +619,8 @@ export class Game {
     });
     this.history = new History(() => this.audio.page());
     this.atlas = new Atlas({ onTravel: (room) => this.travelTo(room), onDismiss: () => this.audio.chart(false) });
-    // next-level: casebook — after the closing card: the voyage's deeds, then home.
+    // After the closing card: the voyage's deeds, then home.
     this.deeds = new DeedsPage(() => this.leaveDeeds());
-    // The harbour under the title: the dock's lanterns and moving water, inside the drift.
-    // The title is the island chart now; the old harbour-water decoration belongs to the dock plate.
-    this.titleDecor = null;
     // Timing, scheduling and failure recovery live in frame.ts; the game lends it one callback.
     this.loop = new FrameLoop({
       step: (dt, t) => this.step(t, dt),
@@ -538,6 +629,40 @@ export class Game {
   }
   /** Tip mode keeps the current tip on screen. Remembered per browser, separate from saves. */
   private tipMode = false;
+  /** The controller: its buttons arrive as the keys the game already answers. */
+  private pad = new GamepadInput({
+    announce: (text) => this.announce(text),
+    press: (event) => this.padPress(event),
+  });
+  /** One key from the controller. Start is the pause toggle; the rest are keyboard keys. */
+  private padPress(event: PadEvent): void {
+    if (event.key === "Pause") {
+      if (event.type !== "down" || event.repeat || this.cinematic.active) return;
+      // Resuming is always fine; pausing is not, while the screen is changing hands (setPaused
+      // saves, and the half-moved scene would be what it saved).
+      if (this.paused) this.setPaused(false);
+      else if (!this.pauseBlocked()) this.barAction("pause");
+      return;
+    }
+    this.idle = 0;
+    deliverPadKey(event, this.settings.open);
+  }
+  /** Playable seconds before the shortcut lesson, and whether the player has acted yet. */
+  private keysClock = 0;
+  private keysActed = false;
+  /** Narration lines already read (remembered per browser), for "Skip read text". */
+  private seenLines = new SeenLines(
+    readSeen((key) => { try { return localStorage.getItem(key); } catch { return null; } }),
+    (keys) => writeSeen((value) => { try { localStorage.setItem(SEEN_KEY, value); } catch { /* optional */ } }, keys)
+  );
+  /** The line on screen was read before, and has not yet been counted as read now. */
+  private narrationRepeat = false;
+  private narrationCounted = false;
+  /** Seconds a skippable line has been fully shown. */
+  private skipClock = 0;
+  /** Ctrl or ] held: fast-forward lines already read. */
+  private ctrlHeld = false;
+  private bracketHeld = false;
   /** Nudge first, then the full line: which rung each tip is on (tips.ts). */
   private tipLadder = new TipLadder(() => TIPS, (c) => this.check(c));
   private saveBroken = false;
@@ -560,7 +685,11 @@ export class Game {
   /** When (on the narration clock) the line on screen has been up long enough to replace. */
   private lineDue(kind: Effect["k"]): number {
     const chars = this.narration?.text.length ?? 0;
-    return this.typeTime(chars) + Math.max(HOLD[kind] ?? 0, chars / READ_CPS);
+    return this.typeTime(chars) + Math.max(HOLD[kind] ?? 0, chars / READ_CPS) * this.readingFactor;
+  }
+  /** What the "Reading time" setting multiplies every automatic hold and fade by. */
+  private get readingFactor(): number {
+    return READING_FACTOR[this.prefs.readingTime] ?? 1;
   }
   /** The text size in effect: the player's choice, else what suits this screen. */
   private get textScale(): number {
@@ -575,10 +704,14 @@ export class Game {
     if (typeof document === "undefined") return;
     document.body.classList.toggle("reduced-motion", this.reduced);
     document.documentElement.style.setProperty("--text-scale", String(this.prefs.textScale ?? 1));
+    // High contrast: the canvas HUD reads the module flag, the DOM overlays read the class.
+    const contrast = highContrast(this.prefs);
+    setHudContrast(contrast);
+    document.body.classList.toggle("high-contrast", contrast);
   }
   private live: HTMLElement | null = null;
   /**
-   * next-level: a11y — the canvas top bar and the inventory pager, mirrored as real DOM buttons.
+   * The canvas top bar and the inventory pager, mirrored as real DOM buttons.
    * A screen reader cannot see or press a canvas plate; it can name, reach and press these. They
    * are visually hidden (the drawn chrome is unchanged) and do exactly what the plates do.
    */
@@ -664,8 +797,7 @@ export class Game {
    * A problem with the save, in a banner under the top bar until it has been on screen long
    * enough to read (`left` seconds): a narration line would be replaced by whatever came next.
    */
-  private saveNotice: { text: string; left: number } | null = null;
-  // next-level: casebook
+  private saveNotice: { text: string; left: number; keep?: boolean } | null = null;
   /**
    * A note just filed: a small banner under the top bar for a few seconds, and (separately) the
    * casebook button glowing for the same while. The banner waits for a conversation or a
@@ -679,7 +811,7 @@ export class Game {
   private setTipMode(on: boolean): void {
     this.tipMode = on;
     try { localStorage.setItem(TIPS_KEY, on ? "on" : "off"); } catch { /* ignore */ }
-    this.syncA11yControls(); // next-level: a11y — the DOM Tip button's aria-pressed
+    this.syncA11yControls(); // The DOM Tip button's aria-pressed
   }
 
   /** The plain next-step hint for the current state: the current tip's full line (the tests read it). */
@@ -697,12 +829,10 @@ export class Game {
    * even though the plate itself is canvas.
    */
   private teach(id: LessonId): boolean {
-    if (!this.watch.offer(id)) return false;
-    this.announce(LESSONS[id].text(this.touch));
-    return true;
+    return this.watch.offer(id);
   }
 
-  // next-level: casebook — the NEXT block and where-line are game state, not casebook state.
+  // The NEXT block and where-line are game state, not casebook state.
   /**
    * Open the casebook. Every open from play brings the next step and where Fenn is standing; the
    * title, Chapter select and the ending don't, because there is no voyage to be standing in.
@@ -731,6 +861,10 @@ export class Game {
     return "look";
   }
 
+  /** Pausing mid-transition would persist a half-moved scene: the curtain and a room change refuse it. */
+  private pauseBlocked(): boolean {
+    return Boolean(this.curtain) || this.pendingRoom !== null;
+  }
   private setPaused(value: boolean): void {
     this.paused = value;
     if (value) { this.persist(); this.settings.show(); } else this.settings.hide();
@@ -750,7 +884,7 @@ export class Game {
 
   start(): void {
     try {
-      this.hasSave = hasAnySave();
+      this.hasSave = hasAnySave(KNOWN);
       this.hasPrevious = hasStashedSave();
     } catch { this.hasSave = false; this.hasPrevious = false; }
     // Two tabs share localStorage: the other tab's write arrives here as a storage event. There
@@ -774,6 +908,7 @@ export class Game {
     addEventListener("pagehide", () => this.flushAutosave());
     document.addEventListener("visibilitychange", () => { if (document.hidden) this.flushAutosave(); });
     this.input.onDown((x, y, button, info) => {
+      if (!this.title) this.keysActed = true;
       this.touch = info.kind !== "mouse" || this.mobile;
       this.onClick(x, y, button, info.clicks);
     });
@@ -783,13 +918,24 @@ export class Game {
       this.touch = info.kind !== "mouse" || this.mobile;
       this.onMove(x, y);
     });
-    this.input.onKey((k, event) => this.onKey(k, event));
+    // A portrait phone shows a crop of the scene: a finger dragging across it looks around.
+    this.input.onPan((dx) => { if (!this.title && !this.paused && !this.inputLocked()) this.view.dragCrop(dx); });
+    this.input.onKey((k, event) => { if (!this.title && actionKey(k)) this.keysActed = true; this.onKey(k, event); });
+    // Fast-forward: hold Ctrl (or ]) to move past narration already read. Modifier keys never
+    // reach `onKey`, so this watches the raw stream.
+    this.input.onKey((k) => {
+      if (k === "Control") this.ctrlHeld = true;
+      else if (k === "]") this.bracketHeld = true;
+    });
     this.input.onKeyUp((k) => {
       if (k === "" || k.toLowerCase() === "q") this.revealHeld = false;
+      if (k === "" || k === "Control") this.ctrlHeld = false;
+      if (k === "" || k === "]") this.bracketHeld = false;
     });
     onOsReducedMotion(() => this.syncDocument());
+    onOsHighContrast(() => this.syncDocument());
     this.syncDocument();
-    this.buildA11yControls(); // next-level: a11y — the screen-reader toolbar
+    this.buildA11yControls(); // The screen-reader toolbar
     this.loadRoom(START_ROOM, START_POS);
     this.enterTitle();
     if (this.mobile) {
@@ -805,6 +951,8 @@ export class Game {
 
   /** One due frame: advance the game clock, the touch HUD and the canvas. */
   private step(t: number, dt: number): void {
+    // A controller is read once a frame, and only while one is plugged in.
+    if (this.pad.connected) this.pad.poll(t);
     if (!this.paused) this.time += dt;
     this.update(dt);
     // The touch HUD only needs to match the game about ten times a second; the scene keeps 60.
@@ -814,7 +962,6 @@ export class Game {
     }
     // Under the pause menu, a cinematic or the casebook the canvas barely shows: draw it a few
     // times a second, not sixty. A resize clears the canvas, so that draws at once.
-    // next-level: casebook
     const covered = this.paused || this.cinematic.active || this.casebook.open || this.history.open ||
       this.deeds.open;
     const sized = this.view.canvas.width === this.drawnW && this.view.canvas.height === this.drawnH;
@@ -832,8 +979,15 @@ export class Game {
 
   /** Fade to black, do `then` there, and fade back up: a change of scene without a hard cut. */
   private behindCurtain(then: () => void): void {
-    this.curtain = then;
+    // One curtain at a time: a second request while one is pending must not drop the first
+    // (its work would never run), so the new one runs right after it.
+    const pending = this.curtain;
+    this.curtain = pending ? () => { pending(); then(); } : then;
     this.fadeTarget = 1;
+    // This curtain has no door to lean toward and no side to be revealed from: forget any
+    // wipe left over from the last door arrival, and any threshold card that never opened.
+    this.transition.leave(null);
+    this.exitCard = null;
   }
 
   // ------------------------------------------------------------ input
@@ -844,10 +998,10 @@ export class Game {
    */
   private inputLocked(): boolean {
     if (this.curtain) return true;
-    // next-level: casebook
     if (this.deeds.open) return true;
     if (this.atlas?.open) return true;
     if (this.areaCardBusy) return true;
+    if (this.recap.open) return true;
     if (this.title || this.won) return false;
     // Past half-way back from black the new room is plainly there to be clicked.
     return this.paused || this.cinematic.active || this.pendingRoom !== null || this.fade > 0.5;
@@ -856,7 +1010,9 @@ export class Game {
   private onKey(k: string, event: KeyboardEvent): void {
     // Browser and system shortcuts (Ctrl+L, Cmd+1, Alt+Tab) are not the game's: let them through.
     if (event.ctrlKey || event.metaKey || event.altKey) return;
-    // next-level: a11y — the screen-reader toolbar is real DOM: its buttons get their own keys
+    // ] only fast-forwards (see the key stream in the constructor); it must not also skip a line.
+    if (k === "]") { event.preventDefault(); return; }
+    // The screen-reader toolbar is real DOM: its buttons get their own keys
     // (Tab moves between them, Enter and Space press them). Escape still belongs to the game.
     if (this.a11y && k !== "Escape" && event.target instanceof Node && this.a11y.root.contains(event.target)) return;
     // The touch chrome is real DOM too: a focused verb, satchel or title button owns Enter,
@@ -880,13 +1036,13 @@ export class Game {
     // A held key acts once. Only movement repeats (Tab and the arrows walk focus along a row): a
     // held Enter, letter or Escape would confirm twice, flicker the pause menu, reopen and close
     // the casebook, or race through lines the player hasn't read.
-    // next-level: a11y — PageUp/PageDown may repeat, like the arrows.
+    // PageUp/PageDown may repeat, like the arrows.
     const nav = k === "Tab" || k.startsWith("Arrow") || k === "PageUp" || k === "PageDown";
     if (event.repeat && !nav) {
       if (k === "Enter" || k === " " || k === "Escape") event.preventDefault();
       return;
     }
-    if (this.areaCardBusy) { this.clearAreaCard(); return; }
+    if (this.areaCardBusy) { this.clearAreaCard(true); return; }
     if (this.paused) {
       // Focus can leave the pause dialog (a click on its backdrop); its keys still work from here.
       this.pausedKey(k, event);
@@ -900,7 +1056,7 @@ export class Game {
     }
     if (nav || k === "Enter" || k === " ") this.lastInput = "keyboard";
     if (this.explore && this.exploreKey(k, event)) return;
-    // next-level: casebook — the deeds page too
+    // The deeds page too
     if (this.casebook.open || this.history.open || this.deeds.open) {
       // The overlay has focus of its own; never let a stray key reach the game behind it.
       event.preventDefault();
@@ -916,8 +1072,19 @@ export class Game {
       this.cancelConfirmNew();
       return;
     }
+    if (this.title && this.recoverOpen && k === "Escape") {
+      event.preventDefault();
+      this.closeRecover();
+      return;
+    }
+    if (k === "Escape" && !this.won && this.curtain) {
+      // The screen is changing hands behind a curtain: Escape would pause or cancel a room
+      // that is about to go.
+      event.preventDefault();
+      return;
+    }
     if (k === "Escape" && !this.won) {
-      // next-level: a11y — back out of what is being built or read before pausing. A second
+      // Back out of what is being built or read before pausing. A second
       // Escape, with nothing left to cancel, opens the pause menu as it always has.
       event.preventDefault();
       if (this.dialogue) {
@@ -956,7 +1123,7 @@ export class Game {
       event.preventDefault();
       this.flashBar("casebook");
       this.audio.page();
-      // next-level: casebook — pass the plan from the J key too
+      // Pass the plan from the J key too
       this.showCasebook();
       return;
     }
@@ -968,9 +1135,14 @@ export class Game {
       return;
     }
     if (k.toLowerCase() === "q" && !this.title && !this.won) {
-      // Held, not toggled: let go and the outlines go with it.
       event.preventDefault();
       this.flashBar("reveal");
+      if (this.prefs.revealMode === "toggle") {
+        // Press to switch on, press again to switch off: the button does exactly the same.
+        this.toggleReveal();
+        return;
+      }
+      // Held, not toggled: let go and the outlines go with it.
       if (!this.revealHeld) this.announce(this.revealSummary());
       this.revealHeld = true;
       return;
@@ -1013,6 +1185,15 @@ export class Game {
         this.cueHover(`choice:${this.hoverChoice}`);
         const c = choices[this.hoverChoice];
         this.announce(`${this.hoverChoice + 1} of ${choices.length}: ${sentenceEnd(c.text)}${c.seen ? " Asked before." : ""}`);
+      } else if (k === "Tab" && choices.length &&
+          (event.shiftKey ? this.hoverChoice > 0 : this.hoverChoice < choices.length - 1)) {
+        // Tab walks the answers too, but only to either end: past the last (or before the
+        // first) it is the browser's, so the toolbar and the page stay reachable.
+        event.preventDefault();
+        this.hoverChoice = event.shiftKey ? this.hoverChoice - 1 : this.hoverChoice + 1;
+        this.cueHover(`choice:${this.hoverChoice}`);
+        const c = choices[this.hoverChoice];
+        this.announce(`${this.hoverChoice + 1} of ${choices.length}: ${sentenceEnd(c.text)}${c.seen ? " Asked before." : ""}`);
       } else if (k === "Enter" || k === " ") {
         event.preventDefault();
         const node = this.currentNode();
@@ -1023,9 +1204,9 @@ export class Game {
         } else {
           this.advanceDialogue();
         }
-      } else if (k === "Tab") {
-        event.preventDefault();
       }
+      // Any other Tab (the ends of the answers, or a line with none) is left alone: the
+      // browser carries focus out to the toolbar, as it does from the scene.
       return;
     }
     if (k === "Tab") {
@@ -1038,7 +1219,7 @@ export class Game {
       event.preventDefault();
       this.moveFocusGrid(k);
     } else if (k === "PageUp" || k === "PageDown") {
-      // next-level: a11y — the satchel's pages from anywhere in play, no pointer needed.
+      // The satchel's pages from anywhere in play, no pointer needed.
       event.preventDefault();
       this.turnPage(k === "PageUp" ? -1 : 1);
     } else if (k === "Enter" || k === " ") {
@@ -1086,7 +1267,7 @@ export class Game {
   private groupIds(group: FocusGroup): string[] {
     if (group === "verb") return VERBS.map((v) => v.id);
     if (group === "item") {
-      // next-level: a11y — the pager is part of the satchel for keyboard focus, so a page turn
+      // The pager is part of the satchel for keyboard focus, so a page turn
       // is reachable (and announced) without a pointer.
       const items = this.pageInventory();
       return this.pageCount() > 1 ? [...items, PAGE_FOCUS.prev, PAGE_FOCUS.next] : items;
@@ -1184,7 +1365,7 @@ export class Game {
   }
 
   /**
-   * next-level: a11y — arrows in the satchel. The grid is four columns; the pager sits below it
+   * Arrows in the satchel. The grid is four columns; the pager sits below it
    * (Down from the last row), and Left/Right there turn the page. At a row's ends Left/Right also
    * turn the page, landing on the same row of the next one.
    */
@@ -1242,10 +1423,12 @@ export class Game {
     if (pages < 2) return;
     this.inventoryPage = (Math.min(this.inventoryPage, pages - 1) + delta + pages) % pages;
     this.hoverItem = null;
+    // Turning the satchel's page: the flap lifted going forward, let fall going back.
+    if (cuePlays("inventory", this.reduced)) this.audio.inventory(delta > 0);
     // A page control keeps the keyboard where the player put it; anything else lets go.
     if (!(this.keyboardFocus?.kind === "item" && isPageFocus(this.keyboardFocus.id))) this.keyboardFocus = null;
     this.syncA11yControls();
-    // next-level: a11y — the page is a thing that changed; say so.
+    // The page is a thing that changed; say so.
     this.announce(`Page ${Math.min(this.inventoryPage, pages - 1) + 1} of ${pages}`);
   }
 
@@ -1263,7 +1446,7 @@ export class Game {
       const i = VERBS.findIndex((v) => v.id === f.id);
       this.announce(`Verb: ${VERBS[i]?.label ?? f.id}, ${i + 1} of ${VERBS.length}`);
     } else if (f.kind === "item") {
-      // next-level: a11y — the pager is a control of its own.
+      // The pager is a control of its own.
       if (isPageFocus(f.id)) {
         const pages = this.pageCount();
         const page = Math.min(this.inventoryPage, pages - 1) + 1;
@@ -1305,7 +1488,7 @@ export class Game {
       this.audio.click();
       this.setVerb(focus.id);
     } else if (focus.kind === "item" && isPageFocus(focus.id)) {
-      // next-level: a11y — Enter on a pager button turns the page.
+      // Enter on a pager button turns the page.
       this.audio.click();
       this.turnPage(focus.id === PAGE_FOCUS.prev ? -1 : 1);
     } else if (focus.kind === "item" && this.inventory.includes(focus.id)) {
@@ -1383,7 +1566,7 @@ export class Game {
     this.audio.hover();
   }
 
-  /** next-level: a11y — which top-bar button a point is on, in the same layout it is drawn with. */
+  /** Which top-bar button a point is on, in the same layout it is drawn with. */
   private barHit(x: number, y: number): BarId | null {
     if (this.title || this.won || y < BAR.y || y > BAR.y + BAR.h) return null;
     const boxes = barLayout();
@@ -1395,7 +1578,7 @@ export class Game {
   }
 
   /**
-   * next-level: a11y — what a top-bar button does, whether the pointer pressed its plate or a
+   * What a top-bar button does, whether the pointer pressed its plate or a
    * screen reader pressed the matching DOM button. (The plates are canvas; the DOM is the labels.)
    */
   /** A short establishing card of the area, before its rooms. Title -> macro -> room. */
@@ -1431,20 +1614,33 @@ export class Game {
       this.areaCard?.classList.remove("in");
     }
     if (this.areaCardLeft <= 0) {
-      const then = this.areaCardThen;
-      this.areaCardThen = null;
-      this.clearAreaCard();
-      then?.();
+      this.clearAreaCard(true);
     }
   }
 
-  private clearAreaCard(): void {
+  /**
+   * Take the establishing card down. `finish` runs what was waiting on it (a card that ended or
+   * was skipped has done its job); a reset or a replacement drops it, as the state it belonged
+   * to is gone.
+   */
+  private clearAreaCard(finish = false): void {
+    const then = this.areaCardThen;
     this.areaCardLeft = 0;
     this.areaCardFading = false;
     this.areaCardThen = null;
     this.areaCard?.remove();
     this.areaCard = null;
     this.areaCardBusy = false;
+    if (finish) then?.();
+  }
+
+  /** "Wait a moment.", at most once every couple of seconds however often the key is pressed. */
+  private busyAnnouncedAt = -Infinity;
+  private announceBusy(): void {
+    const now = performance.now();
+    if (now - this.busyAnnouncedAt < BUSY_REPEAT_MS) return;
+    this.busyAnnouncedAt = now;
+    this.announce("Wait a moment.");
   }
 
   /** The atlas: chart of the island, then the area, then the rooms. */
@@ -1454,8 +1650,11 @@ export class Game {
     // is still swapping, or Fenn is walking to an effect would let that walk (or its `onArrive`)
     // play out unseen behind the chart and leave a queue when it closes. Wait for the scene to
     // settle instead; nothing is cancelled or lost.
-    if (this.areaCardBusy || this.pendingRoom !== null || this.curtain || this.fade > 0) return;
-    if (this.path.length > 0 || this.onArrive || this.walkGoal || this.running) return;
+    if (this.areaCardBusy || this.pendingRoom !== null || this.curtain || this.fade > 0 ||
+        this.path.length > 0 || this.onArrive || this.walkGoal || this.running) {
+      this.announceBusy();
+      return;
+    }
     this.audio.chart(true);
     this.atlas.show({
       act: this.act,
@@ -1472,7 +1671,9 @@ export class Game {
     this.walkGoal = null;
     this.running = false;
     this.clearSentence();
-    this.goRoom(roomId, "stairs");
+    // The atlas has its own sound for a course being laid in, not a flight of steps.
+    if (cuePlays("travel", this.reduced)) this.audio.travel();
+    this.goRoom(roomId, "none");
   }
 
   private barAction(id: BarId): void {
@@ -1480,23 +1681,25 @@ export class Game {
     this.clearTouchArm();
     this.flashBar(id);
     if (id === "pause") {
-      if (!this.paused) this.setPaused(true);
+      if (!this.paused && !this.pauseBlocked()) this.setPaused(true);
       return;
     }
     if (this.title || this.won) return;
     if (id === "map") { this.showAtlas(); return; }
     if (id === "casebook") { this.audio.page(); this.showCasebook(); return; }
     if (id === "log") { this.audio.page(); this.history.show(); return; }
-    if (id === "reveal") {
-      this.revealToggled = !this.revealToggled;
-      this.announce(this.revealToggled ? this.revealSummary() : "Reveal off.");
-      this.syncA11yControls();
-      return;
-    }
+    if (id === "reveal") { this.toggleReveal(); return; }
     if (id === "tip") {
       // Like H: a tip would talk over a conversation or a line still waiting its turn.
       if (!this.dialogue && !this.queue && !this.inputLocked()) this.showTip();
     }
+  }
+
+  /** Switch the reveal outlines on or off (the button always; the Q key in toggle mode). */
+  private toggleReveal(): void {
+    this.revealToggled = !this.revealToggled;
+    this.announce(this.revealToggled ? this.revealSummary() : "Reveal off.");
+    this.syncA11yControls();
   }
 
   /** Whether the reveal outlines are showing (Q held, or the button toggled on). */
@@ -1547,15 +1750,29 @@ export class Game {
     return best;
   }
 
+  /** Nothing but floor (or ground close by) under the pointer: no panel, thing, or way-out to act on. */
+  private isBareScene(x: number, y: number): boolean {
+    if (y >= SCENE_H) return false;
+    if (hitTestPanel(x, y, this.panelModel())) return false;
+    if (this.hotspotAt(x + this.cameraX, y)) return false;
+    if (this.touch && this.nearestHotspotAt(x + this.cameraX, y)) return false;
+    if (this.edgeExitAt(x, y)) return false;
+    // Only a click meant for the ground walks; one up in the sky or out on the water is just
+    // the reader moving the text along.
+    const spot = { x: x + this.cameraX, y };
+    const near = clampToFloor(spot, this.room.walk);
+    return Math.hypot(near.x - spot.x, near.y - spot.y) < 90;
+  }
+
   private onClick(x: number, y: number, button: number, clicks = 1): void {
-    // next-level: casebook — the deeds page takes the pointer too
+    // The deeds page takes the pointer too
     if (this.deeds.open) {
       // It handles its own clicks; a click delivered to the canvas (a dev tool, a scripted
       // playtest) means the same as one on the page: go home.
       this.deeds.hide();
       return;
     }
-    if (this.areaCardBusy) { this.clearAreaCard(); return; }
+    if (this.areaCardBusy) { this.clearAreaCard(true); return; }
     if (this.paused || this.cinematic.active || this.casebook.open || this.history.open) return;
     if (this.roomMenu) {
       // On a phone the scene list is a DOM sheet; a click on the canvas behind it goes nowhere.
@@ -1607,17 +1824,25 @@ export class Game {
       const hit = this.titleButtons().find((b) => this.hitTitle(b.y, x, y));
       if (hit) this.titleActivate(hit.id);
       else if (this.confirmNew) this.cancelConfirmNew();
+      else if (this.recoverOpen) this.closeRecover();
       return;
     }
 
+    // A click on bare floor is a walk even while a line is being told. The opening is six
+    // lines long, and with each costing two clicks (finish it, then move on) before Fenn would
+    // step at all, the game read as ignoring you. So that click still does the text's next step
+    // (finish the line, or bring up the next one) and ALSO sets Fenn walking: no click is
+    // wasted, and the story still arrives one beat at a time. A click on anything else (a
+    // thing, the satchel, the bar) only moves the text on, as before.
+    const textUp = Boolean(this.narration || this.queue) && !this.dialogue;
+    const alsoWalk = textUp && button !== 2 && this.isBareScene(x, y);
     if (this.narration && this.narration.shown < this.narration.text.length) {
       this.narration.shown = this.narration.text.length;
       this.narrationClock = this.typeTime(this.narration.text.length);
-      return;
-    }
-    if (this.queue) {
+      if (!alsoWalk) return;
+    } else if (this.queue) {
       this.flushQueue();
-      return;
+      if (!alsoWalk) return;
     }
 
     if (this.dialogue) {
@@ -1701,6 +1926,12 @@ export class Game {
         return;
       }
       this.clearTouchArm();
+      if (this.sentence.verb === "look" && !this.sentence.a && !this.sentence.b) {
+        // Looking at nothing is not a walk: say what Fenn sees, and let the verb go.
+        this.clearSentence();
+        this.speak(emptyLookLine(this.act));
+        return;
+      }
       const target = clampToFloor({ x: x + this.cameraX, y }, this.room.walk);
       // A double-click, or a second click on where Fenn is already headed, runs.
       const again = this.path.length > 0 && this.walkGoal !== null &&
@@ -1819,10 +2050,45 @@ export class Game {
     if (!this.mobile || typeof document === "undefined") return;
     const full = this.title || this.won;
     document.body.classList.toggle("m-full", full);
+    document.body.classList.toggle("m-title", this.title);
     if (full !== this.mobileFull) {
       this.mobileFull = full;
       this.view.setSceneOnly(!full);
     }
+    this.view.setTitleCover(this.title);
+    this.panMobileCrop();
+  }
+
+  private mobileCropAt = 0;
+  private mobileCropKey = "";
+
+  /**
+   * Portrait phones show a tall crop of the scene (or the title painting), not the whole wide
+   * frame: slide that window after Fenn (or the conversation, or a camera focus). A new room,
+   * screen or orientation cuts to its position instead of gliding from the old one.
+   */
+  private panMobileCrop(): void {
+    const now = performance.now();
+    const dt = Math.min(0.1, Math.max(0, (now - this.mobileCropAt) / 1000));
+    this.mobileCropAt = now;
+    const key = `${this.title ? "t" : this.won ? "w" : this.room?.id}|${window.innerWidth}x${window.innerHeight}`;
+    const snap = key !== this.mobileCropKey || this.reduced;
+    this.mobileCropKey = key;
+    let world = this.title ? this.cameraX + LOGICAL_W / 2 : this.focusCameraX ?? this.x;
+    if (!this.title && this.focusCameraX === null && this.dialogue) {
+      // A conversation: the speaker, with Fenn if the two fit in the window together.
+      const who = this.currentNode()?.speaker ?? "";
+      const sprite = who && who !== "fenn" ? this.speakerSprite(who) : null;
+      if (sprite) world = Math.abs(sprite.x - this.x) < this.view.visible.w * 0.8 ? (sprite.x + this.x) / 2 : sprite.x;
+    }
+    this.view.panTo(world - this.cameraX, dt, snap);
+  }
+
+  /** The speaker's painted portrait as a URL the touch chrome can load, or null. */
+  private portraitUrl(speaker: string): string | null {
+    const key = characterOf(speaker).portrait;
+    const path = key ? (MANIFEST.images as Record<string, string>)[key] : undefined;
+    return path ? assetUrl(path) : null;
   }
 
   /** Canvas type for the full-frame screens (the ending) at a phone-readable size. */
@@ -1853,6 +2119,7 @@ export class Game {
       const choices = this.visibleChoices();
       dialogueState = {
         speaker: characterOf(node?.speaker ?? "").name,
+        portrait: this.portraitUrl(node?.speaker ?? ""),
         text: node?.text ?? "",
         shown: dialogue.shown,
         choices: choices.map((c) => ({ text: c.text, seen: Boolean(c.seen) })),
@@ -1878,6 +2145,8 @@ export class Game {
     const page = Math.min(this.inventoryPage, pages - 1);
     const selected = new Set([this.sentence.a?.id, this.sentence.b?.id].filter((id): id is string => Boolean(id)));
     const act = ACTS[this.act];
+    // One lookup per sync, not one per verb button.
+    const suggestedVerb = this.sentence.verb ? null : this.suggestion().suggestVerb;
 
     return {
       screen: this.title ? "title" : this.won ? "ending"
@@ -1885,9 +2154,6 @@ export class Game {
       blocked: this.paused || this.cinematic.active || this.casebook.open || this.history.open ||
         this.atlas.open || this.deeds.open,
       title: { buttons: titleButtons },
-      prologue: {
-        text: "", shown: 0, speaker: "", canStamp: false, skippable: false, stamped: false,
-      },
       dialogue: dialogueState,
       ending: this.won && this.ending ? { page: this.ending.pageNumber, pages: this.ending.pageCount } : null,
       play: {
@@ -1903,18 +2169,20 @@ export class Game {
           id: v.id,
           label: v.id === "walk" ? "Walk" : v.label,
           active: this.sentence.verb === v.id,
-          suggested: !this.sentence.verb && this.suggestion().suggestVerb === v.id,
+          suggested: suggestedVerb === v.id,
         })),
         inventory: this.inventory.map((id) => ({
           id,
           name: ITEMS[id]?.name ?? id,
           selected: selected.has(id),
+          icon: ITEM_ICONS.has(id) ? assetUrl((MANIFEST.images as Record<string, string>)[`item_${id}`]) : null,
         })),
         page,
         pages,
       },
       reveal: this.revealToggled,
       tip: this.tipMode,
+      lesson: this.lessonShowing() ? LESSONS[this.watch.current!.id].text(true) : null,
       roomMenu: this.roomMenu ? {
         open: true,
         rooms: this.exploreRooms().map((r) => ({
@@ -1939,8 +2207,8 @@ export class Game {
       dialogueTap: () => this.mobileDialogueTap(),
       dialogueChoice: (index) => this.mobileDialogueChoice(index),
       title: (id) => this.titleActivate(id),
-      prologueStamp: () => {},
-      prologueSkip: () => {},
+      unlockAudio: () => this.audio.unlock(),
+      drawer: (open) => { if (cuePlays("inventory", this.reduced)) this.audio.inventory(open); },
       advanceEnding: () => this.advanceEnding(),
       room: (id) => {
         const at = this.exploreRooms().findIndex((r) => r.id === id);
@@ -2165,7 +2433,6 @@ export class Game {
 
     if (a.kind === "item") {
       if (verb === "look") {
-        // next-level: audio
         if (a.id === "compass") this.audio.compass(this.act);
         this.speak(this.itemLook(a.id));
       } else this.reject(itemAloneLine(verb, this.itemTarget(a.id)));
@@ -2220,6 +2487,8 @@ export class Game {
       }
 
       const fallback = defaultLine(verb, this.hotspotTarget(hs), verb + hs.id, this.act);
+      // A refused open or use on something shut: the thud of a door that will not give.
+      if (line && !effects && (verb === "open" || verb === "use") && isLockedLine(line) && cuePlays("locked", this.reduced)) this.audio.locked();
       if (line || effects) this.speak(line ?? fallback);
       else this.reject(fallback);
 
@@ -2245,10 +2514,10 @@ export class Game {
     this.committed = key;
     const act = (): void => {
       this.trace?.({ kind: "combo", text: `${VERBS.find((v) => v.id === verb)?.label ?? verb} ${ITEMS[itemId]?.name ?? itemId} ${verb === "give" ? "to" : "with"} ${target.name}`, combo });
-      // next-level: audio
       if (itemId === "compass") this.audio.compass(this.act);
       if (combo) {
         this.speak(combo.say);
+        if (cuePlays("combine", this.reduced)) this.audio.combine();
         if (combo.consume) this.takeItem(itemId);
         if (combo.do) this.runEffects(combo.do);
       } else {
@@ -2401,7 +2670,6 @@ export class Game {
       case "note":
         if (!this.notes.some((n) => n.id === e.id)) {
           this.notes.push({ id: e.id, text: e.text, act: this.act });
-          // next-level: audio + casebook
           this.audio.note();
           this.noteFiled();
         }
@@ -2439,14 +2707,14 @@ export class Game {
       // Flip to the page holding the new item rather than making the player hunt for it.
       this.inventoryPage = Math.floor((this.inventory.length - 1) / INV_PER_PAGE);
     }
-    this.syncA11yControls(); // next-level: a11y — pager labels
+    this.syncA11yControls(); // Pager labels
     this.persist();
   }
   private takeItem(id: string): void {
     this.hoverDirty = true;
     this.inventory = this.inventory.filter((i) => i !== id);
     this.inventoryPage = Math.min(this.inventoryPage, this.pageCount() - 1);
-    this.syncA11yControls(); // next-level: a11y — pager labels
+    this.syncA11yControls(); // Pager labels
     this.persist();
   }
   /** Inventory icons are lazy too: ask for the ones the satchel is about to draw. */
@@ -2688,6 +2956,10 @@ export class Game {
     this.trace?.({ kind: "say", text });
     this.narration = { text, shown: this.textSpeed === "instant" ? text.length : 0 };
     this.narrationClock = 0;
+    // A tip is asked for, not read once: only real narration counts as seen.
+    this.narrationRepeat = !/^Tip: /.test(text) && this.seenLines.has(text);
+    this.narrationCounted = false;
+    this.skipClock = 0;
     const tip = /^Tip: /.test(text);
     this.history.add({ speaker: tip ? "Tip" : characterOf("fenn").name, text: tip ? text.slice(5) : text });
     this.announce(text);
@@ -2794,7 +3066,8 @@ export class Game {
     // The bar is quiet chrome, not invisible chrome. It drops to BAR_IDLE_ALPHA when untouched,
     // and wakes for the pointer, a finger, a lesson or a note.
     const barWant = this.paused || this.cinematic.active || barHot || this.noteGlow > 0 ||
-      this.barLabel || this.touchBarArmed || this.watch.current || this.idle < 3.5 ? 1 : BAR_IDLE_ALPHA;
+      this.barLabel || this.touchBarArmed || this.watch.current || this.idle < 3.5 ||
+      hudHighContrast() ? 1 : BAR_IDLE_ALPHA; // high contrast: full-opacity icons, never faded
     this.barFade += (barWant - this.barFade) * Math.min(1, dt * (barWant < this.barFade ? 2.4 : 8));
     this.tickAreaCard(dt);
     // The establishing card holds the scene under it, so no opening line plays unseen.
@@ -2813,6 +3086,12 @@ export class Game {
       }
     } else {
       this.hoverDwell = 0;
+    }
+    // The shortcut lesson (Q, H, J, A, Esc): once, early in play, a moment after the player's
+    // first move, or after a few seconds of looking around, whichever comes first.
+    if (!this.watch.learnt("keys") && !lessonsFrozen && !this.inputLocked()) {
+      this.keysClock += dt;
+      if (this.keysClock > (this.keysActed ? 2.5 : 9)) this.teach("keys");
     }
     this.rejection = Math.max(0, this.rejection - dt);
     // fade
@@ -2847,13 +3126,18 @@ export class Game {
     this.fx.update(dt);
     this.ending?.update(dt);
 
-    // Hold the curtain while a room's art is still streaming in, but never forever: a missing
-    // file must not lock the screen black.
+    // Hold the curtain while a room's art is still streaming in, and show a small "loading"
+    // cue once the wait is noticeable; but never forever: after ROOM_WAIT_CAP the room is shown
+    // on the painted fallback plate, and the real art swaps in if it still arrives.
     if (!this.title && !this.curtain && !this.roomReady()) {
+      const before = this.roomWait;
       this.roomWait += dt;
-      if (this.roomWait < 8) {
+      if (this.roomWait < ROOM_WAIT_CAP) {
         this.fade = 1;
         this.fadeTarget = 0;
+        if (before < LOADING_CUE_AFTER && this.roomWait >= LOADING_CUE_AFTER) this.announce("Loading.");
+      } else if (before < ROOM_WAIT_CAP) {
+        this.assets.giveUp([this.room.bg]);
       }
     } else {
       this.roomWait = 0;
@@ -2877,7 +3161,7 @@ export class Game {
     // A save notice counts down only while it can be read; flags with nothing else to save get
     // a save of their own shortly.
     if (this.saveNotice && this.saveNoticeShown() && (this.saveNotice.left -= dt) <= 0) this.saveNotice = null;
-    // next-level: casebook — the filed-note banner and the button's glow
+    // The filed-note banner and the button's glow
     // The filed-note banner counts down only while it can be read; the glow counts down on the
     // chrome, which is on screen even under a conversation (but not under a cutscene or pause).
     if (this.noteToast && this.noteToastShown() && (this.noteToast.left -= dt) <= 0) this.noteToast = null;
@@ -2893,6 +3177,18 @@ export class Game {
       this.narration.shown = !Number.isFinite(cps)
         ? this.narration.text.length
         : Math.min(this.narration.text.length, Math.floor(this.narrationClock * cps) + 1);
+      // Skip read text: a line already read shows at once and moves on after a moment, whether
+      // the setting is on or the fast-forward key is held. A new line is never skipped.
+      if (shouldSkip(this.narrationRepeat, this.prefs.skipRead, this.ctrlHeld || this.bracketHeld)) {
+        this.narration.shown = this.narration.text.length;
+        this.narrationClock = Math.max(this.narrationClock, this.typeTime(this.narration.text.length));
+        this.skipClock += dt;
+        if (this.queue && this.skipClock >= SKIP_DELAY) this.flushQueue();
+      }
+      if (!this.narrationCounted && this.narration && this.narration.shown >= this.narration.text.length) {
+        this.narrationCounted = true;
+        if (!/^Tip: /.test(this.narration.text)) this.seenLines.add(this.narration.text);
+      }
     }
 
     // dialogue typewriter
@@ -3005,6 +3301,8 @@ export class Game {
     const room = ROOMS[id];
     if (!room) return;
     const from = opts.atEntry ? undefined : this.room?.id;
+    // Cues recorded for a `go` that never ran belong to the room we are leaving, not this one.
+    for (const [dest, cue] of this.exitLinks) if (cue.from !== id) this.exitLinks.delete(dest);
     this.room = room;
     if (!this.title) this.flags[`visited:${id}`] = true;
     this.ambient.setRoom(room);
@@ -3121,7 +3419,14 @@ export class Game {
     if (this.title || this.explore || this.won) return;
     // Another tab owns the notebook now. Writing would silently erase its page; the notice tells
     // the player to reload instead. An explicit new/continued voyage clears the block.
-    if (this.foreignSave) return;
+    if (this.foreignSave || this.keepPage) return;
+    // A storage event can lag (or be missed by a frozen tab): the stored page's own stamp says
+    // whether another tab wrote since this one last looked, before this write erases it.
+    if (this.tabGuard.checkStored(storedSaveAt())) {
+      this.foreignSave = true;
+      this.warnForeignSave();
+      return;
+    }
     const pos = at ? (at.pos ?? ROOMS[at.room].entry) : { x: this.x, y: this.y };
     const data: SaveData = {
       version: SAVE_VERSION,
@@ -3136,15 +3441,19 @@ export class Game {
       act: this.act,
       notes: this.notes,
       actStarted: at?.actStarted ?? true,
-      // next-level: recap — what the Continue card remembers: the hint he had, and when.
+      // What the Continue card remembers: the hint he had, and when.
       tip: this.tipLadder.shown(),
       at: Date.now(),
     };
     // A pending `win` is not persisted: the save is the moment before the final choice, and a
     // Continue must make that choice rather than roll credits from a half-played queue.
-    const queue = this.queue?.filter((e) => e.k !== "win");
-    if (queue?.length && !at) data.queue = queue;
+    // An open conversation node has already set its `seen:` flag, but its go/talk/act effects run
+    // only when the player leaves it: the save carries them, or a closed tab would lose them.
+    const openNode = this.dialogue ? openNodeTerminals(this.currentNode()) : undefined;
+    const queue = savedQueue(this.queue, openNode);
+    if (queue && !at) data.queue = queue;
     if (writeSave(data)) {
+      this.tabGuard.remember(data.at ?? 0);
       this.hasSave = true;
       this.saveBroken = false;
       this.audio.saved();
@@ -3178,19 +3487,24 @@ export class Game {
       this.foreignSave = true;
       if (this.title) {
         // Nothing is at risk on the title yet; just offer the page they wrote.
-        this.hasSave = hasAnySave();
+        this.hasSave = hasAnySave(KNOWN);
         this.continueLabel = this.hasSave ? this.saveLabel(" ·") : null;
+        this.recoverable = recoverablePages(KNOWN);
         return;
       }
-      if (!this.foreignSaveWarned) {
-        this.foreignSaveWarned = true;
-        // Sticky: it must still be up after a conversation or a fade, since from now on this
-        // tab is deliberately not saving.
-        this.showSaveNotice(
-          "Another window has written in this notebook. I won't ink over their page from here — " +
-          "reload this page to take up where they left off.", true);
-      }
+      this.warnForeignSave();
     }
+  }
+
+  /** Tell the player, once, that another window owns the notebook now. */
+  private warnForeignSave(): void {
+    if (this.foreignSaveWarned) return;
+    this.foreignSaveWarned = true;
+    // Sticky: it must still be up after a conversation or a fade, since from now on this
+    // tab is deliberately not saving.
+    this.showSaveNotice(
+      "Another window has written in this notebook. I won't ink over their page from here — " +
+      "reload this page to take up where they left off.", true);
   }
 
   /** This tab is deliberately taking up (or starting) a voyage: it may write again. */
@@ -3201,19 +3515,51 @@ export class Game {
     this.tabGuard.clear();
   }
 
+  /** Writing is allowed again: the page that was being protected is safe in the archive or stash. */
+  private clearKeepPage(): void {
+    if (!this.keepPage) return;
+    this.keepPage = false;
+    if (this.saveNotice?.keep) this.saveNotice = null;
+  }
+
+  /**
+   * A new voyage (Begin anew, Restart) is about to replace the live save: keep a copy first.
+   * False when the copy could not be made, and the new voyage must not go ahead over the only
+   * copy; the player is told why, on the title or in the banner.
+   */
+  private stashBeforeNewVoyage(): boolean {
+    const stashed = stashCurrentSave();
+    if (stashed === "failed") {
+      const text = "I couldn't set my current page aside, so I won't begin a new voyage over it. " +
+        "Free some browser storage and try again.";
+      if (this.title) {
+        this.titleNotice = text;
+        this.audio.error();
+        this.setTitleFocus(defaultTitleButton(this.titleButtons()));
+        this.announce(text);
+      } else this.showSaveNotice(text);
+      return false;
+    }
+    if (stashed === "ok") this.hasPrevious = true;
+    this.clearKeepPage();
+    return true;
+  }
+
   /** Put a save problem up in its banner; it's in the log (L) and read out too. */
   private showSaveNotice(text: string, sticky = false): void {
     this.audio.error();
-    this.saveNotice = { text, left: sticky ? 1e9 : Math.max(SAVE_NOTICE_MIN, (2 * text.length) / READ_CPS) };
+    this.saveNotice = { text, left: sticky ? 1e9 : Math.max(SAVE_NOTICE_MIN, (2 * text.length) / READ_CPS) * this.readingFactor };
     this.history.add({ speaker: characterOf("fenn").name, text });
     this.announce(text);
   }
+  /** A non-blocking notice from outside the game (the loader's "the music could not be loaded"). */
+  notify(text: string): void { this.showSaveNotice(text); }
   /** Whether the save banner can be seen: not under a conversation, the ending or the curtain. */
   private saveNoticeShown(): boolean {
     return !this.title && !this.dialogue && !this.won && this.fade < 0.5 &&
       !this.casebook.open && !this.history.open;
   }
-  // next-level: casebook — note toast, drawn in the save notice's geometry in gold
+  // Note toast, drawn in the save notice's geometry in gold
   /** A note effect filed something new: the paper sound, the banner, and the button's glow. */
   private noteFiled(): void {
     this.noteToast = { left: NOTE_TOAST_TIME };
@@ -3228,35 +3574,45 @@ export class Game {
   /** The save banner: the tip line's style under the top bar (below the tip line when it's on). */
   private drawSaveNotice(ctx: CanvasRenderingContext2D): void {
     if (!this.saveNotice || !this.saveNoticeShown()) return;
-    const size = Math.round(20 * this.textScale), lh = Math.round(27 * this.textScale);
-    const style = { size, color: "#f3e6cf", weight: "normal", shadow: false };
     let y = BANNER_Y;
     if (this.tipMode) y += this.tipBannerHeight(ctx);
-    const lines = wrap(ctx, this.saveNotice.text, 1830, style);
-    const h = lines.length * lh + Math.round(17 * this.textScale);
+    this.drawNoticeBox(ctx, this.saveNotice.text, y, Math.min(1, this.saveNotice.left / 0.4));
+  }
+  /** The title's one-line save notice, low on the painting (the top is the lettering's). */
+  private drawTitleNotice(ctx: CanvasRenderingContext2D): void {
+    if (!this.titleNotice || this.confirmNew || this.recoverOpen) return;
+    this.drawNoticeBox(ctx, this.titleNotice, null, Math.min(1, this.titleClock / 0.6));
+  }
+  /** The notice box in the tip line's style; `y` null pins it to the bottom edge. */
+  private drawNoticeBox(ctx: CanvasRenderingContext2D, text: string, at: number | null, alpha: number): void {
+    // Pinned to the bottom edge (the title), the box stops growing at 150%: any taller and its
+    // second line would cover the last plate of the menu (Chapter select).
+    const scale = at === null ? Math.min(this.textScale, 1.5) : this.textScale;
+    const size = Math.round(20 * scale), lh = Math.round(27 * scale);
+    const style = { size, color: "#f3e6cf", weight: "normal", shadow: false };
+    const lines = wrap(ctx, text, 1830, style);
+    const h = lines.length * lh + Math.round(17 * scale);
+    const y = at ?? LOGICAL_H - h - 24;
     ctx.save();
-    ctx.globalAlpha = Math.min(1, this.saveNotice.left / 0.4);
+    ctx.globalAlpha = alpha;
     ctx.font = `${size}px Georgia, serif`;
     const w = Math.min(1872, Math.max(...lines.map((l) => ctx.measureText(l).width)) + 40);
     ctx.fillStyle = "rgba(5,13,22,0.92)";
     ctx.fillRect(24, y, w, h);
     ctx.fillStyle = "#d9785a";
     ctx.fillRect(24, y, 3, h);
-    lines.forEach((line, i) => drawText(ctx, line, 44, y + Math.round(10 * this.textScale) + i * lh, style));
+    lines.forEach((line, i) => drawText(ctx, line, 44, y + Math.round(10 * scale) + i * lh, style));
     ctx.restore();
   }
 
   private loadGame(): void {
     this.queue = null;
-    const { data: d, raw, corrupt, future, futureVersion, migratedFrom } = readSave(KNOWN);
+    const { data: d, raw, corrupt, future, futureVersion, migratedFrom, repaired } = readSave(KNOWN);
     if (future) {
       // A newer copy of the game wrote this page. Do not reinterpret it: keep the raw page, then
-      // begin clean. The archive is the only copy, and it is never overwritten.
-      if (raw) archiveSave(raw, "future", undefined, futureVersion);
-      clearSave();
-      this.clearForeignSave();
-      this.newGame();
-      this.showSaveNotice(
+      // begin clean. The archive is the only copy; the live key is cleared only once it is there.
+      const kept = !raw || archiveSave(raw, "future", undefined, futureVersion);
+      this.beginAfterUnreadable(kept,
         "This page was written by a newer copy of the game, so I can't read it as mine. I've " +
         "kept it safe and begun a fresh one.");
       return;
@@ -3264,11 +3620,8 @@ export class Game {
     if (!d) {
       if (!corrupt) return this.loadOldSave();
       // Keep the unreadable save instead of overwriting it, and tell the player.
-      if (raw) backupCorrupt(raw);
-      clearSave();
-      this.clearForeignSave();
-      this.newGame();
-      this.showSaveNotice(
+      const kept = !raw || backupCorrupt(raw);
+      this.beginAfterUnreadable(kept,
         "The last page of my notebook is ruined — the save couldn't be read. I've kept it aside " +
         "and started a fresh page.");
       return;
@@ -3277,6 +3630,8 @@ export class Game {
     // this build doesn't understand.
     if (raw && migratedFrom !== undefined) archiveSave(raw, "migrated", undefined, migratedFrom);
     this.clearForeignSave();
+    this.clearKeepPage();
+    if (d.at !== undefined) this.tabGuard.remember(d.at);
     this.resetState();
     this.inventory = d.inventory;
     this.warmInventoryIcons();
@@ -3298,6 +3653,29 @@ export class Game {
       // Lines and transitions that were still waiting when the game was saved.
       this.runEffects(d.queue);
     }
+    if (repaired?.length) {
+      // The page named something this build can't place: it was mended, not dropped. Say so.
+      console.warn("save repaired:", repaired.join("; "));
+      this.showSaveNotice(
+        "A line of my notebook had smudged, so I've set myself down at the start of this chapter. " +
+        "Everything I was carrying and had learned is still with me.");
+    }
+  }
+
+  /**
+   * An unreadable (corrupt or newer-build) page is being left behind for a fresh voyage. Only
+   * when it is safely in the archive is the live key cleared; otherwise it stays exactly where it
+   * is, this session does not write at all, and the player is told why.
+   */
+  private beginAfterUnreadable(kept: boolean, notice: string): void {
+    if (kept) clearSave();
+    else this.keepPage = true;
+    this.clearForeignSave();
+    this.newGame();
+    this.showSaveNotice(kept ? notice :
+      "The last page of my notebook is unreadable, and I couldn't set it aside, so I won't write " +
+      "over it. This voyage will not be saved: free some browser storage and reload.", !kept);
+    if (!kept && this.saveNotice) this.saveNotice.keep = true;
   }
 
   /**
@@ -3318,7 +3696,23 @@ export class Game {
     // The title is the island chart; the harbour's establishing card plays over the started
     // room (its opening scene waits under the card), then the first line.
     // Keep the voyage this replaces, so the title can offer it back.
-    this.hasPrevious = stashCurrentSave() || this.hasPrevious;
+    const stuck = unreadableSave(KNOWN);
+    if (stuck) {
+      // An unreadable page is not a voyage to take up again: it goes to the archive (Recover),
+      // and if that fails, nothing this session writes may replace it.
+      if (archiveSave(stuck.raw, stuck.reason, undefined, stuck.version)) this.clearKeepPage();
+      else {
+        this.keepPage = true;
+        this.titleNotice = null;
+        this.clearForeignSave();
+        // Sticky: from here on this session deliberately does not save, and the player must know.
+        this.showSaveNotice(setAsideNotice(stuck.reason, false) + " This voyage will not be saved.", true);
+        if (this.saveNotice) this.saveNotice.keep = true;
+      }
+    } else if (!this.stashBeforeNewVoyage()) {
+      return;
+    }
+    this.titleNotice = null;
     this.clearForeignSave();
     this.playIntro();
     const first = areaOfRoom(ACTS[1]?.start.room ?? "");
@@ -3406,6 +3800,7 @@ export class Game {
     this.pendingPassage = null;
     this.pendingEntry = null;
     this.exitLinks.clear();
+    this.exitCard = null;
     this.connector.end();
     // A first-entry pulse belongs to the room it was started in, not to whatever comes next.
     this.exitIntro = 0;
@@ -3427,7 +3822,6 @@ export class Game {
     this.won = false;
     this.announcedEnding = false;
     this.endingChosen = null;
-    // next-level: casebook
     this.deedsShown = false;
     this.inventory = [];
     this.inventoryPage = 0;
@@ -3441,7 +3835,7 @@ export class Game {
     this.barLabel = null;
     this.touchBarArmed = null;
     this.hoverDwell = 0;
-    this.syncA11yControls(); // next-level: a11y — an empty satchel has no second page
+    this.syncA11yControls(); // An empty satchel has no second page
   }
 
   private newGame(): void {
@@ -3472,24 +3866,26 @@ export class Game {
       this.onlyFinalChoice(keep);
     }
     this.won = true;
-    // next-level: casebook — record the voyage's optional layer as it ends
+    // Record the voyage's optional layer as it ends
     this.deedsShown = false;
     const card = this.endingCard();
     // The ending painting is not a room plate: ask for it as the card rises.
     void this.assets.ensure([card.image]);
-    // next-level: a11y — the card reads its page turns out; the ending itself is read out below.
+    // The card reads its page turns out; the ending itself is read out below.
     this.ending = new EndingScreen(card, this.assets, (text) => this.announce(text));
     if (card.music) this.audio.playMusic(card.music);
-    // The resolving chord r3-audio added (the chime stays for tips). // next-level: audio
+    // The resolving chord r3-audio added (the chime stays for tips).
     this.audio.resolve(this.act);
     markCompleted();
-    // next-level: a11y — once: the title and the first line, so a screen reader hears where the
+    // Once: the title and the first line, so a screen reader hears where the
     // voyage has arrived even though the card is canvas.
     if (!this.announcedEnding) {
       this.announcedEnding = true;
-      this.announce(`${card.title}.${card.lines[0] ? " " + card.lines[0] : ""}`);
+      // The closing card is canvas-only. Read the whole card, not just its title and first line;
+      // a screen-reader player must be able to hear the ending.
+      this.announce(`${card.title}. ${card.lines.join(" ")}`.trim());
     }
-    // next-level: casebook — enter this voyage's optional layer now, not when the page is opened:
+    // Enter this voyage's optional layer now, not when the page is opened:
     // the player may close the tab on the ending, and what they did should still be theirs.
     fileDeeds((deed) => deed.if.every((c) => this.check(c)));
   }
@@ -3507,7 +3903,7 @@ export class Game {
     return { title, lines, image: painting.image, focus: painting.focus, music: painting.music };
   }
 
-  // next-level: casebook — chain the deeds page between the closing card and the title
+  // Chain the deeds page between the closing card and the title
   /**
    * A click or Enter on the card: everything up first, then the deeds page, then home to the
    * title. The page is its own overlay (deeds.ts); when it is dismissed it calls `leaveDeeds`.
@@ -3615,8 +4011,8 @@ export class Game {
     const n = this.narration;
     if (!n) return 0;
     if (n.shown < n.text.length || this.queue || this.dialogue) return 1;
-    const t = this.narrationClock - this.lineDue("say") - NARRATION_LINGER;
-    return t <= 0 ? 1 : Math.max(0, 1 - t / NARRATION_FADE);
+    const t = this.narrationClock - this.lineDue("say") - NARRATION_LINGER * this.readingFactor;
+    return t <= 0 ? 1 : Math.max(0, 1 - t / (NARRATION_FADE * this.readingFactor));
   }
 
   /** The name of what the pointer (or keyboard focus) is on, to preview a sentence's end. */
@@ -3690,6 +4086,7 @@ export class Game {
 
     if (this.title) {
       this.renderTitle(ctx);
+      this.drawTitleNotice(ctx);
       this.renderFade(ctx);
       if (!this.mobile) drawCursor(ctx, this.input.x, this.input.y, null);
       return;
@@ -3734,6 +4131,7 @@ export class Game {
       // The cursor is a shape, not a word chip: hover is answered by the gold rim in the scene.
       drawCursor(ctx, this.input.x, this.input.y, null, this.rejection > 0, this.textScale, narrationBox);
     }
+    this.narrationTop = narrationBox ? (narrationBox as { y: number }).y : null;
     this.drawFirstWatch(ctx);
     this.renderFade(ctx);
   }
@@ -3823,9 +4221,21 @@ export class Game {
    * and inherit the room's on top.
    */
   private figureGrade(extra?: string): string {
-    const parts = [this.room.grade, extra].filter((g): g is string => !!g && g !== "none");
-    return parts.length ? parts.join(" ") : "none";
+    // Asked for every figure on every frame with the same two strings: join them once per
+    // (room grade, extra) pair rather than allocating an array and a string each time.
+    const room = this.room.grade;
+    if (this.gradeMemoRoom !== room) { this.gradeMemo.clear(); this.gradeMemoRoom = room; }
+    const key = extra ?? "";
+    let grade = this.gradeMemo.get(key);
+    if (grade === undefined) {
+      const parts = [room, extra].filter((g): g is string => !!g && g !== "none");
+      grade = parts.length ? parts.join(" ") : "none";
+      this.gradeMemo.set(key, grade);
+    }
+    return grade;
   }
+  private gradeMemo = new Map<string, string>();
+  private gradeMemoRoom: string | undefined = undefined;
 
   /** Whether the current room's background and sprites have all arrived. */
   private roomReady(): boolean {
@@ -3844,6 +4254,8 @@ export class Game {
   /** The shared finish over the scene (see paint.ts): one constant turns it all off. */
   private paint = new Paint();
 
+  private drawables: { y: number; draw: () => void }[] = [];
+
   private renderScene(ctx: CanvasRenderingContext2D): void {
     // The plate comes already graded by the room's backdrop, baked once: a filter here would
     // cost a full-plate pass every frame, and Safari before 18 ignores canvas filters.
@@ -3857,9 +4269,15 @@ export class Game {
     ctx.translate(-this.cameraX, 0);
     if (bg) ctx.drawImage(bg, 0, 0, worldWidth, SCENE_H);
     this.ambient.under(ctx, view);
+    // The way-out light lies on the floor and the opening, under everybody standing in it.
+    this.drawExitLighting(ctx);
+    // Q's outlines lie under the figures too: a big box never crosses Fenn or anyone else.
+    if (this.revealing) this.drawReveal(ctx);
 
-    // Depth-sorted drawables: static props/NPCs and the player share one list.
-    const drawables: { y: number; draw: () => void }[] = [];
+    // Depth-sorted drawables: static props/NPCs and the player share one list (kept between
+    // frames: emptied, not reallocated).
+    const drawables = this.drawables;
+    drawables.length = 0;
 
     for (const s of this.room.sprites ?? []) {
       const hs = this.room.hotspots.find((h) => h.id === s.hotspot);
@@ -3874,6 +4292,12 @@ export class Game {
       drawables.push({ y: s.y, draw: () => this.drawSprite(ctx, s.key, s.x, s.y, s.size * (1 + breath), s.visible ?? 1, Boolean(s.speaker), s.flip, this.figureGrade(s.grade), speech, wrap) });
     }
     drawables.push({ y: this.y, draw: () => this.drawPlayer(ctx) });
+    // The way-out chevrons: the ones standing in the room sort with the figures (Fenn walks in
+    // front of one, never under it); the ones pinned to the screen edge stay on the glass.
+    const chevrons = this.exitChevrons();
+    for (const c of chevrons) {
+      if (!c.edge) drawables.push({ y: c.floor, draw: () => this.drawChevronAt(ctx, c.x, c.y, c.angle, c.strength) });
+    }
     // Occluders sort by where they meet the floor: they cover what stands behind them only.
     if (bg) for (const o of this.room.occluders ?? []) {
       drawables.push({ y: o.y, draw: () => this.ambient.occlude(ctx, o) });
@@ -3898,15 +4322,38 @@ export class Game {
       ctx.fillRect(0, 0, LOGICAL_W, SCENE_H);
     }
 
+    this.drawFloorLift(ctx);
+
     ctx.save();
     ctx.translate(-this.cameraX, 0);
-    if (this.revealing) this.drawReveal(ctx);
     // Exit legibility lives in the scene layer, under the chrome: warm threshold light, a
     // breathing rim on the door/ladder in reach, then one small unlabeled chevron if needed.
-    this.drawExitLighting(ctx);
     this.drawHoverGlow(ctx);
     this.drawKeyboardFocus(ctx);
-    this.drawExitChevron(ctx);
+    for (const c of chevrons) if (c.edge) this.drawChevronAt(ctx, c.x, c.y, c.angle, c.strength, true);
+    ctx.restore();
+  }
+
+  private floorLift: CanvasGradient | null = null;
+  private floorLiftFor: CanvasRenderingContext2D | null = null;
+  /**
+   * A cool, faint lightening of the last stretch of floor above the control strip: the dark panel
+   * under it would otherwise swallow the lower scene. Screen-blended, so it lifts shadows and
+   * leaves lamps and highlights alone; built once per context, one fill a frame.
+   */
+  private drawFloorLift(ctx: CanvasRenderingContext2D): void {
+    if (this.floorLiftFor !== ctx || !this.floorLift) {
+      const g = ctx.createLinearGradient(0, SCENE_H - 190, 0, SCENE_H);
+      g.addColorStop(0, "rgba(58,68,86,0)");
+      g.addColorStop(0.6, "rgba(58,68,86,0.07)");
+      g.addColorStop(1, "rgba(58,68,86,0.17)");
+      this.floorLift = g;
+      this.floorLiftFor = ctx;
+    }
+    ctx.save();
+    ctx.globalCompositeOperation = "screen";
+    ctx.fillStyle = this.floorLift;
+    ctx.fillRect(0, SCENE_H - 190, LOGICAL_W, 190);
     ctx.restore();
   }
 
@@ -3934,27 +4381,33 @@ export class Game {
       ctx.fillStyle = "rgba(0,0,0,0.46)";
       ctx.fill();
       roundRectPath(ctx, b.x, b.y, b.w, b.h, 11);
-      ctx.fillStyle = hover === id ? "rgba(27,46,62,0.97)" : on ? "rgba(7,15,25,0.96)" : "rgba(3,9,16,0.9)";
+      // The hovered plate warms like the title's focused button; a chosen one holds a brass tint.
+      ctx.fillStyle = hover === id ? "rgba(52,40,22,0.97)" : on ? "rgba(26,20,11,0.96)" : "rgba(3,9,16,0.9)";
       ctx.fill();
-      ctx.strokeStyle = hover === id ? "rgba(255,231,172,0.62)" : on ? "rgba(232,201,138,0.42)" : "rgba(232,201,138,0.3)";
-      ctx.lineWidth = 1;
+      const hc = hudHighContrast();
+      ctx.strokeStyle = hc ? (hover === id ? "#fff3cf" : "rgba(255,231,172,0.95)")
+        : hover === id ? "rgba(255,231,172,0.62)" : on ? "rgba(232,201,138,0.42)" : "rgba(232,201,138,0.3)";
+      ctx.lineWidth = hc ? 2 : 1;
       ctx.stroke();
+      // The title's brass-plate bevel and studs inside the glass (plain in high contrast).
+      if (!hc) brassInset(ctx, b.x, b.y, b.w, b.h, { hover: hover === id, active: on, radius: 11, rivets: true, bare: true });
       if (on || focus || glow) {
         ctx.save();
         ctx.beginPath();
         ctx.arc(b.x + b.w / 2, b.y + b.h / 2, 19, 0, Math.PI * 2);
         ctx.strokeStyle = glow ? `rgba(255,230,168,${0.55 + 0.45 * k})`
           : focus ? "rgba(255,240,200,0.95)" : "rgba(232,201,138,0.8)";
-        ctx.lineWidth = focus ? 2 : 1.5;
-        ctx.shadowColor = "rgba(255,206,130,0.7)";
-        ctx.shadowBlur = focus ? 10 : 6 + 6 * (glow ? k : 0);
+        ctx.lineWidth = hc ? (focus ? 4 : 3) : focus ? 2 : 1.5;
+        this.glow(ctx, "rgba(255,206,130,0.7)", focus ? 10 : 6 + 6 * (glow ? k : 0), ctx.lineWidth);
         ctx.stroke();
         ctx.restore();
       }
       const color = on || focus || glow ? "#fff6df" : "#ffe2a6";
       ctx.save();
-      ctx.shadowColor = "rgba(255,204,120,0.28)";
-      ctx.shadowBlur = 6;
+      if (!this.view.cheapGlow) {
+        ctx.shadowColor = "rgba(255,204,120,0.28)";
+        ctx.shadowBlur = 6;
+      }
       drawGlyph(ctx, BAR_GLYPHS[id], b.x + b.w / 2, b.y + b.h / 2, focus ? 28 : 27, color, 1);
       ctx.restore();
     }
@@ -4007,9 +4460,17 @@ export class Game {
    * not a legend — it appears when the interface is first met, sits in the same glass and brass
    * as the rest of the chrome, and is gone for good after a few seconds.
    */
-  private drawFirstWatch(ctx: CanvasRenderingContext2D): void {
+  /** A first-watch lesson is up and the screen is plainly playable (shared by canvas and DOM). */
+  private lessonShowing(): boolean {
     if (this.title || this.won || this.explore || this.dialogue || this.cinematic.active ||
-        this.areaCardBusy || this.paused || this.fade > 0.5) return;
+        this.areaCardBusy || this.paused || this.fade > 0.5) return false;
+    return Boolean(this.watch.current) && this.watch.alpha > 0.01;
+  }
+
+  private drawFirstWatch(ctx: CanvasRenderingContext2D): void {
+    // The touch layout shows the lesson as a DOM toast (see MobileState.lesson); a canvas plate
+    // would be four-pixel type there.
+    if (this.mobile || !this.lessonShowing()) return;
     const lesson = this.watch.current;
     if (!lesson) return;
     const alpha = this.watch.alpha;
@@ -4152,12 +4613,18 @@ export class Game {
     ctx.beginPath();
     ctx.ellipse(x, y, r * 1.55, r * 0.56, 0, 0, Math.PI * 2);
     ctx.fill();
+    // Everything below is a radial falloff that reaches zero at its rim: no edge to see, and the
+    // whole thing lies under the figures, so a doorway never washes out Fenn's coat.
     // A warm tint first: on a pale plate a purely additive pool goes white and disappears, but
     // a low amber wash turns the cool floor warm and reads at once. On a dark plate it is gentle.
     ctx.globalCompositeOperation = "source-over";
-    ctx.fillStyle = `rgba(255,168,78,${0.1 * k})`;
+    const tint = ctx.createRadialGradient(x, y, 0, x, y, r);
+    tint.addColorStop(0, `rgba(255,168,78,${0.11 * k})`);
+    tint.addColorStop(0.55, `rgba(255,168,78,${0.06 * k})`);
+    tint.addColorStop(1, "rgba(255,168,78,0)");
+    ctx.fillStyle = tint;
     ctx.beginPath();
-    ctx.ellipse(x, y, r * 0.95, r * 0.32, 0, 0, Math.PI * 2);
+    ctx.ellipse(x, y, r, r * 0.36, 0, 0, Math.PI * 2);
     ctx.fill();
     // Warm pool on the floor.
     ctx.globalCompositeOperation = "lighter";
@@ -4169,18 +4636,17 @@ export class Game {
     ctx.beginPath();
     ctx.ellipse(x, y, r, r * 0.36, 0, 0, Math.PI * 2);
     ctx.fill();
-    // A short column of light rising into the opening: it reads as "through here" without a sign.
-    const column = ctx.createLinearGradient(0, y, 0, y - rise);
-    column.addColorStop(0, `rgba(255,205,130,${0.11 * k})`);
-    column.addColorStop(0.45, `rgba(255,185,100,${0.05 * k})`);
+    // A soft shaft of light rising into the opening: a squashed radial falloff, so it has no flat
+    // bottom and no side edge, and reads as "through here" without a sign.
+    ctx.translate(x, y - rise * 0.3);
+    ctx.scale(beam * 0.6, rise * 0.7);
+    const column = ctx.createRadialGradient(0, 0, 0, 0, 0, 1);
+    column.addColorStop(0, `rgba(255,205,130,${0.1 * k})`);
+    column.addColorStop(0.5, `rgba(255,185,100,${0.045 * k})`);
     column.addColorStop(1, "rgba(255,170,80,0)");
     ctx.fillStyle = column;
     ctx.beginPath();
-    ctx.moveTo(x - beam / 2, y);
-    ctx.quadraticCurveTo(x - beam * 0.34, y - rise * 0.55, x - beam * 0.14, y - rise);
-    ctx.lineTo(x + beam * 0.14, y - rise);
-    ctx.quadraticCurveTo(x + beam * 0.34, y - rise * 0.55, x + beam / 2, y);
-    ctx.closePath();
+    ctx.arc(0, 0, 1, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
   }
@@ -4211,19 +4677,22 @@ export class Game {
    * focus, else the single one Fenn is close enough to take. Q already shows every way out in
    * light, so no chevron competes with it.
    */
-  private drawExitChevron(ctx: CanvasRenderingContext2D): void {
+  /** Reused every frame: the way-out cues (no new array a frame). */
+  private chevronOut: ExitChevron[] = [];
+  private exitChevrons(): ExitChevron[] {
+    const out = this.chevronOut;
+    out.length = 0;
     if (this.title || this.won || this.dialogue || this.cinematic.active ||
-        this.paused || this.revealing) return;
+        this.paused || this.revealing) return out;
     // A verb or object on the line changes what clicking a door would do: no cue can promise
     // "walk through" while the sentence says "use crowbar".
-    if (this.sentence.verb || this.sentence.a || this.sentence.b) return;
+    if (this.sentence.verb || this.sentence.a || this.sentence.b) return out;
 
     const visible = this.visibleHotspots();
     const hovered = this.hoverHotspot ? visible.find((h) => h.id === this.hoverHotspot) : undefined;
     const focusedId = this.keyboardFocus?.kind === "hotspot" ? this.keyboardFocus.id : null;
     // Every way out carries a small, quiet chevron. A door, hatch, ladder or path should never
     // be visible only to a player who happens to stand close enough. No names, no signs.
-    const placed: Array<{ x: number; y: number }> = [];
     for (const raw of visible) {
       if (!this.isExit(raw)) continue;
       const hs = this.hotspotState(raw);
@@ -4231,32 +4700,54 @@ export class Game {
       const sound = this.exitSound(hs);
       let x = threshold.x;
       const y = Math.max(76, Math.min(SCENE_H - 34, threshold.y - 26));
+      // Fenn already standing in the doorway needs no sign: it fades out as he arrives.
+      const away = Math.hypot(threshold.x - this.x, threshold.y - this.y);
+      const arrived = Math.max(0, Math.min(1, (away - EXIT_CHEVRON_HIDE_R) / (EXIT_CHEVRON_SHOW_R - EXIT_CHEVRON_HIDE_R)));
+      if (arrived <= 0.01) continue;
       let angle = 0;
       if (sound === "none") {
         const dx = threshold.x - this.x;
         angle = Math.abs(dx) < 18 ? 0 : dx < 0 ? -Math.PI / 2 : Math.PI / 2;
       }
+      let pinned = false;
       if (x < this.cameraX + 24 || x > this.cameraX + LOGICAL_W - 24) {
         const edge = x < this.cameraX ? "left" : "right";
         x = edge === "left" ? this.cameraX + 30 : this.cameraX + LOGICAL_W - 30;
         angle = edge === "left" ? -Math.PI / 2 : Math.PI / 2;
+        pinned = true;
       }
+      // The narration lower-third is painted over the scene: a chevron under it only ghosts.
+      if (this.narrationTop !== null && y + 30 > this.narrationTop) continue;
       const near = raw === hovered || raw.id === focusedId || this.pointerNear(threshold) ||
         Math.hypot(threshold.x - this.x, threshold.y - this.y) <= EXIT_CUE_RANGE;
       // Two thresholds that share a screen spot (the dock stair foot) get one cue, not a pile.
-      if (!near && placed.some((p) => Math.hypot(p.x - x, p.y - y) < 70)) continue;
-      placed.push({ x, y });
-      this.drawChevronAt(ctx, x, y, angle, near ? 1 : 0.72);
+      if (!near && out.some((p) => Math.hypot(p.x - x, p.y - y) < 70)) continue;
+      out.push({ x, y, angle, strength: (near ? 1 : 0.72) * arrived, edge: pinned, floor: threshold.y });
     }
+    return out;
   }
+  /** Top of the narration lower-third as last drawn, so cues can keep out from under it. */
+  private narrationTop: number | null = null;
 
   /** One small, soft chevron with a dark contour so it survives a bright plate. */
-  private drawChevronAt(ctx: CanvasRenderingContext2D, x: number, y: number, angle: number, strength = 1): void {
+  private drawChevronAt(ctx: CanvasRenderingContext2D, x: number, y: number, angle: number, strength = 1, edge = false): void {
     const pulse = this.reduced ? 0.6 : 0.5 + 0.5 * Math.sin(this.time * 2.6);
-    const alpha = (0.62 + 0.24 * pulse) * strength;
+    // A cue pinned to the screen edge has no warm pool under it and often sits on a dark plate:
+    // it gets a dark halo and a higher floor so it still reads.
+    const alpha = Math.min(1, (0.62 + 0.24 * pulse + (edge ? 0.14 : 0)) * strength);
     const bob = this.reduced ? 0 : Math.sin(this.time * 2) * 1.4;
     ctx.save();
     ctx.translate(x, y + bob);
+    if (edge) {
+      const dark = ctx.createRadialGradient(0, 2, 0, 0, 2, 34);
+      dark.addColorStop(0, `rgba(8,4,1,${0.5 * strength})`);
+      dark.addColorStop(0.65, `rgba(8,4,1,${0.28 * strength})`);
+      dark.addColorStop(1, "rgba(8,4,1,0)");
+      ctx.fillStyle = dark;
+      ctx.beginPath();
+      ctx.arc(0, 2, 34, 0, Math.PI * 2);
+      ctx.fill();
+    }
     // A soft light behind the glyph so it sits in the pool rather than on top of it.
     ctx.globalCompositeOperation = "lighter";
     const halo = ctx.createRadialGradient(0, 2, 0, 0, 2, 26);
@@ -4287,9 +4778,8 @@ export class Game {
       ctx.stroke();
       ctx.strokeStyle = `rgba(255,238,200,${alpha})`;
       ctx.lineWidth = 2.4;
-      ctx.shadowColor = "rgba(255,186,96,0.8)";
-      ctx.shadowBlur = 10;
       shape();
+      this.glow(ctx, "rgba(255,186,96,0.8)", 10, 2.4);
       ctx.stroke();
     }
     ctx.restore();
@@ -4301,6 +4791,14 @@ export class Game {
     for (const raw of this.visibleHotspots()) {
       const hs = this.hotspotState(raw);
       const exit = this.isExit(hs);
+      const b = areaBox(hs.area);
+      // A big area (the rigging, the rail, a row of windows) is a place, not a thing: it gets four
+      // dim corner marks and a faint line, so it doesn't box in everything it overlaps. A small
+      // one is the thing itself and keeps the full light.
+      if (b.w > LOGICAL_W * REVEAL_BIG || b.h > LOGICAL_H * REVEAL_TALL) {
+        this.revealBrackets(ctx, hs.area, b, exit, pulse);
+        continue;
+      }
       // Exits are warm amber; everything else is a paler gold. Both are light, neither is a label.
       this.outlineHotspot(ctx, hs, {
         fill: exit ? `rgba(255,196,120,${0.05 + 0.025 * pulse})` : `rgba(255,214,150,${0.055 + 0.03 * pulse})`,
@@ -4312,6 +4810,28 @@ export class Game {
         edge: 0.2,
       });
     }
+  }
+
+  /** A large area, shown lightly: a faint outline and a short bracket in each corner. */
+  private revealBrackets(ctx: CanvasRenderingContext2D, area: Area, b: { x: number; y: number; w: number; h: number }, exit: boolean, pulse: number): void {
+    ctx.save();
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    const rgb = exit ? "255,206,140" : "255,228,175";
+    this.areaPath(ctx, area);
+    ctx.strokeStyle = `rgba(${rgb},0.2)`;
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+    const k = Math.min(44, b.w / 4, b.h / 4);
+    ctx.beginPath();
+    cornerMarks(ctx, b.x, b.y, b.w, b.h, k);
+    ctx.strokeStyle = "rgba(12,7,2,0.4)";
+    ctx.lineWidth = 5;
+    ctx.stroke();
+    ctx.strokeStyle = `rgba(${rgb},${0.62 + 0.2 * pulse})`;
+    ctx.lineWidth = 2.4;
+    ctx.stroke();
+    ctx.restore();
   }
 
   /** The tip row's height (0 when it is off), measured the way it is drawn. */
@@ -4333,6 +4853,27 @@ export class Game {
     }
   }
 
+  /**
+   * Light around the path about to be stroked. At the default quality that is the canvas's own
+   * `shadowBlur` (set here, so the caller's stroke carries it). At the low render quality the blur
+   * is the most expensive thing the scene does per frame, so the same glow is a wider, fainter
+   * stroke of the same path laid down first instead (a double stroke).
+   */
+  private glow(ctx: CanvasRenderingContext2D, colour: string, blur: number, width: number): void {
+    if (!this.view.cheapGlow) {
+      ctx.shadowColor = colour;
+      ctx.shadowBlur = blur;
+      return;
+    }
+    ctx.save();
+    ctx.shadowBlur = 0;
+    ctx.strokeStyle = colour;
+    ctx.globalAlpha *= 0.32;
+    ctx.lineWidth = width + blur * 0.9;
+    ctx.stroke();
+    ctx.restore();
+  }
+
   private outlineHotspot(ctx: CanvasRenderingContext2D, hs: Hotspot,
     style: {
       stroke: string; fill: string; dash?: number[]; width: number; glow?: number; glowColor?: string;
@@ -4352,15 +4893,14 @@ export class Game {
       ctx.lineWidth = Math.max(7, style.width * 4.5);
       ctx.stroke();
       ctx.globalAlpha = 1;
-      ctx.shadowColor = style.glowColor ?? style.stroke;
-      ctx.shadowBlur = style.glow;
+      this.glow(ctx, style.glowColor ?? style.stroke, style.glow, style.width);
     }
     if (style.edge) {
       ctx.shadowBlur = 0;
       ctx.strokeStyle = `rgba(12,7,2,${style.edge})`;
       ctx.lineWidth = style.width + 2.4;
       ctx.stroke();
-      if (style.glow) {
+      if (style.glow && !this.view.cheapGlow) {
         ctx.shadowColor = style.glowColor ?? style.stroke;
         ctx.shadowBlur = style.glow * 0.7;
       }
@@ -4397,6 +4937,37 @@ export class Game {
     ctx.fillStyle = `rgba(255,215,150,${0.05 + 0.045 * heat})`;
     ctx.fill();
     ctx.restore();
+    // A pointer can see what it is on: brass corner brackets on a box, a soft brass line round a
+    // painted shape. No shadowBlur (plain strokes of one path), a dash for a big shape, so a wide
+    // area reads as a mark, not a wireframe. A finger has no hover.
+    if (this.touch) return;
+    const b = areaBox(hs.area);
+    ctx.save();
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    if ("rect" in hs.area) {
+      const r = hs.area.rect;
+      const k = Math.min(26, r.w / 3, r.h / 3);
+      this.areaPath(ctx, hs.area);
+      ctx.strokeStyle = `rgba(255,226,160,${0.1 + 0.05 * heat})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.beginPath();
+      cornerMarks(ctx, r.x, r.y, r.w, r.h, k);
+      ctx.strokeStyle = `rgba(255,226,160,${0.6 + 0.25 * heat})`;
+      ctx.lineWidth = 2.4;
+      ctx.stroke();
+    } else {
+      if (Math.max(b.w, b.h) > 560) ctx.setLineDash([14, 10]);
+      this.areaPath(ctx, hs.area);
+      ctx.strokeStyle = `rgba(232,196,120,${0.07 + 0.05 * heat})`;
+      ctx.lineWidth = 6;
+      ctx.stroke();
+      ctx.strokeStyle = `rgba(255,226,160,${0.42 + 0.2 * heat})`;
+      ctx.lineWidth = 1.6;
+      ctx.stroke();
+    }
+    ctx.restore();
   }
 
   /** A small warm focus ring where Fenn would act: for openings too big to outline honestly. */
@@ -4415,10 +4986,9 @@ export class Game {
     ctx.globalCompositeOperation = "source-over";
     ctx.strokeStyle = `rgba(255,243,207,${0.62 + 0.26 * pulse})`;
     ctx.lineWidth = 2;
-    ctx.shadowColor = "rgba(255,210,140,0.9)";
-    ctx.shadowBlur = 14;
     ctx.beginPath();
     ctx.ellipse(0, 0, 27, 10, 0, 0, Math.PI * 2);
+    this.glow(ctx, "rgba(255,210,140,0.9)", 14, 2);
     ctx.stroke();
     ctx.restore();
   }
@@ -4490,7 +5060,9 @@ export class Game {
   /** The halo tint for a figure at (x, y), if the pass is on and the light is actually lit. */
   private wrapAt(x: number, y: number, height: number): FigureWrap | undefined {
     if (!PAINT_PASS) return undefined;
-    return figureWrap(this.room, x, y, height, (l) => !l.showIf || l.showIf.every((c) => this.check(c)));
+    const wrap = figureWrap(this.room, x, y, height, (l) => !l.showIf || l.showIf.every((c) => this.check(c)));
+    // The rim light is a second bake per pose, size and tint: the first thing a weak machine drops.
+    return this.view.cheapGlow && wrap.rim ? { colour: wrap.colour, blur: wrap.blur } : wrap;
   }
 
   /**
@@ -4524,15 +5096,22 @@ export class Game {
     const grade = this.figureGrade("saturate(0.85) brightness(0.9)");
     const wrap = this.wrapAt(this.x, this.y, height);
 
-    drawShadow(ctx, this.x, this.y, height * 0.26, 0.38);
+    drawShadow(ctx, this.x, this.y, height * 0.26, 0.38, wrap?.rim?.side ?? 0, shadowTintOf(wrap));
+
+    // The body rises a little between footfalls, so the strides read as steps and not a slide.
+    // The shadow stays on the floor. Reduced motion: none.
+    const stepAt = (cycle * 2) % 1;
+    const bob = walking && !this.reduced ? Math.sin(Math.PI * stepAt) * (vertical ? 0.014 : 0.008) * height : 0;
 
     // Every sheet faces right; facing left mirrors about the torso.
     if (walking && vertical && this.assets.img("char_walk_vertical")) {
-      const frame = (this.moveDirection === "up" ? 0 : 3) + (Math.floor(cycle * 3) % 3);
-      drawFigure(ctx, this.assets, "char_walk_vertical", this.x, this.y, height, { frames: 6, frame, grade, wrap });
+      // Three poses per direction (contact, passing, other contact), played A,B,C,B so the legs
+      // alternate: the passing pose is the one in between both contacts.
+      const frame = (this.moveDirection === "up" ? 0 : 3) + VERTICAL_STEP[Math.floor(cycle * VERTICAL_STEP.length) % VERTICAL_STEP.length];
+      drawFigure(ctx, this.assets, "char_walk_vertical", this.x, this.y - bob, height, { frames: 6, frame, grade, wrap });
     } else if (walking && this.assets.img(sheet)) {
       const frame = Math.floor(cycle * 6) % 6;
-      drawFigure(ctx, this.assets, sheet, this.x, this.y, height, { frames: 6, frame, grade, flip: this.facing < 0, wrap });
+      drawFigure(ctx, this.assets, sheet, this.x, this.y - bob, height, { frames: 6, frame, grade, flip: this.facing < 0, wrap });
     } else if (this.assets.img("char_elias")) {
       // A slow breath rather than a bob keeps the feet planted. Reduced motion: still.
       const breath = this.reduced ? 1 : 1 + Math.sin(this.time * 2.2) * 0.004;
@@ -4862,7 +5441,7 @@ export class Game {
   }
 
   private renderExplore(ctx: CanvasRenderingContext2D): void {
-    // next-level: a11y — chapter select is chrome too: its banner and headings follow the scale,
+    // Chapter select is chrome too: its banner and headings follow the scale,
     // fitted so the fixed plates (and the top bar beside them) are never overflowed.
     const scale = this.textScale;
     if (!this.roomMenu) {
@@ -4953,9 +5532,28 @@ export class Game {
   private continueLabel: string | null = null;
 
   private titleButtons() {
-    // next-level: recap — Continue's sub-label
+    // Continue's sub-label
     return titleButtons(this.hasSave, this.chaptersUnlocked(), this.confirmNew, this.continueLabel,
-      this.hasPrevious);
+      this.hasPrevious, this.recoverView());
+  }
+  /** "Recover an older page": what the archive can give back, as the title lists it. */
+  private recoverView(): TitleRecover | null {
+    if (!this.recoverable.length) return null;
+    return {
+      open: this.recoverOpen,
+      offset: this.recoverOffset,
+      pages: this.recoverable.map(({ page, data }) => ({
+        label: this.actTitle(data.act) ?? "A saved voyage",
+        sub: [ARCHIVE_WORDS[page.reason], page.at > 0 ? new Date(page.at).toLocaleDateString() : null]
+          .filter(Boolean).join(" · "),
+      })),
+    };
+  }
+  private closeRecover(): void {
+    this.recoverOpen = false;
+    this.recoverOffset = 0;
+    this.setTitleFocus("recover");
+    this.announce("Back to the title.");
   }
   /** Chapter select: for players once they have finished; always on the dev server. */
   private chaptersUnlocked(): boolean {
@@ -4978,18 +5576,34 @@ export class Game {
     this.titleClock = 0;
     // Storage can have changed while the voyage was running (another tab, a cleared save): read
     // both facts once here rather than every frame the title is drawn.
-    try { this.hasSave = hasAnySave(); this.hasPrevious = hasStashedSave(); }
-    catch { this.hasSave = false; this.hasPrevious = false; }
+    try {
+      // A page this build cannot resume (corrupt, or from a newer build) is put in the archive
+      // now, so it is never one write away from being lost, and the title offers to recover it
+      // instead of a Continue that would only fail.
+      const stuck = unreadableSave(KNOWN);
+      this.titleNotice = null;
+      if (stuck) {
+        const kept = archiveSave(stuck.raw, stuck.reason, undefined, stuck.version);
+        if (kept) this.clearKeepPage();
+        // Say what happened to it: otherwise Continue just vanishes, with no word why.
+        this.titleNotice = setAsideNotice(stuck.reason, kept);
+      }
+      this.hasSave = hasAnySave(KNOWN);
+      this.hasPrevious = hasStashedSave();
+      this.recoverable = recoverablePages(KNOWN);
+    } catch { this.hasSave = false; this.hasPrevious = false; this.recoverable = []; }
+    this.recoverOpen = false;
+    this.recoverOffset = 0;
     const buttons = this.titleButtons();
-    // next-level: recap — read the act once, here, not every frame the title is drawn.
+    // Read the act once, here, not every frame the title is drawn.
     this.continueLabel = this.hasSave ? this.saveLabel(" ·") : null;
     this.titleFocus = defaultTitleButton(buttons);
     this.needle = { fromY: null, since: -99 };
-    // next-level: a11y — say where the player is and what the screen offers.
+    // Say where the player is and what the screen offers.
     const chosen = buttons.find((b) => b.id === this.titleFocus);
-    this.announce(`Title screen. ${buttons.map((b) => b.label).join(", ")}.${
+    this.announce(`${this.titleNotice ? this.titleNotice + " " : ""}Title screen. ${buttons.map((b) => b.label).join(", ")}.${
       chosen ? ` Enter chooses ${chosen.label}.` : ""} Arrow keys move between them.`);
-    // next-level: casebook — written when the voyage ended; read once here, not every frame.
+    // Written when the voyage ended; read once here, not every frame.
     this.casebookTally = deedTally();
   }
   private cancelConfirmNew(): void {
@@ -5030,22 +5644,17 @@ export class Game {
       saveLabel: this.confirmLabel,
       time: this.titleClock,
       reduced: this.reduced,
-      scale: this.textScale, // next-level: a11y — the title's chrome follows the text scale
+      scale: this.textScale, // The title's chrome follows the text scale
       needle: this.needle,
-      // next-level: casebook — "Chart: N of M notes" under the menu
+      // "Chart: N of M notes" under the menu
       casebook: this.mobile ? null : this.casebookTally,
-      decorate: this.titleDecor ?? undefined,
     });
   }
-  /**
-   * Drawn over the title painting, inside its drift: a hook for the harbour's ambient life
-   * (lights on the water) so it moves with the picture. Nothing by default.
-   */
-  titleDecor: ((ctx: CanvasRenderingContext2D) => void) | null = null;
   private titleActivate(id: TitleId): void {
     if (id === "previous") {
       // The undo of Begin anew / Restart: put back the page that was replaced.
-      if (restoreStashedSave()) {
+      if (restoreStashedSave(KNOWN)) {
+        this.clearKeepPage();
         this.hasSave = true;
         this.hasPrevious = false;
         this.clearForeignSave();
@@ -5073,6 +5682,38 @@ export class Game {
       this.cancelConfirmNew();
       return;
     }
+    if (id === "more") {
+      // The next window of the archive; focus lands on its first page.
+      const next = recoverStart(this.recoverable.length, this.recoverOffset + RECOVER_SHOWN);
+      this.recoverOffset = next;
+      this.setTitleFocus(`page${next}`);
+      this.announce(`Pages ${next + 1} to ${Math.min(next + RECOVER_SHOWN, this.recoverable.length)} of ${this.recoverable.length}.`);
+      return;
+    }
+    if (id === "recover") {
+      this.recoverOpen = true;
+      this.recoverOffset = 0;
+      this.setTitleFocus("page0");
+      this.announce(`Recover an older page. ${this.recoverable.length} kept. Choose one to make it your ` +
+        "saved voyage; the one you have now is kept too. Escape goes back.");
+      return;
+    }
+    if (id === "back") {
+      this.closeRecover();
+      return;
+    }
+    if (id.startsWith("page")) {
+      const entry = this.recoverable[Number(id.slice(4))];
+      if (entry && restoreArchivedSave(entry.page, KNOWN)) {
+        this.clearKeepPage();
+        this.clearForeignSave();
+        this.enterTitle();
+        this.announce("That page is back. Continue takes it up.");
+      } else {
+        this.announce("That page could not be taken up. Nothing was changed.");
+      }
+      return;
+    }
     // An answer within moments of the question is the hand that asked it (a double-click, a
     // key bounce): only a separate, later choice starts anew.
     if (id === "confirm" && (!this.confirmNew || performance.now() - this.confirmArmedAt < CONFIRM_GRACE_MS)) return;
@@ -5080,7 +5721,7 @@ export class Game {
     this.titleFocus = null;
     if (id === "start" || id === "confirm") { this.explore = false; this.beginNewVoyage(); }
     else if (id === "continue" && this.hasSave) {
-      // next-level: recap — a save this browser can read gets the card first, and the room
+      // A save this browser can read gets the card first, and the room
       // waits behind Set sail. A corrupt (or older) save skips it, so loadGame's banner shows.
       const { data } = readSave(KNOWN);
       if (!data) this.sail();
@@ -5097,14 +5738,18 @@ export class Game {
   private renderFade(ctx: CanvasRenderingContext2D): void {
     // A cut with no shared threshold gets the short passage shot at full black.
     if (this.connector.active) {
-      this.connector.draw(ctx, this.reduced);
+      const vis = this.view.visible;
+      this.connector.draw(ctx, this.reduced, this.view.logicalHeight, vis.x + vis.w / 2);
       return;
     }
+    const vis = this.view.visible;
     drawFade(ctx, {
+      center: { x: vis.x + vis.w / 2, y: this.view.logicalHeight / 2 },
       fade: this.fade,
       reduced: this.reduced,
       entry: this.transition.entrySide(),
       card: this.exitCard,
+      waited: this.roomWait,
     });
   }
 }

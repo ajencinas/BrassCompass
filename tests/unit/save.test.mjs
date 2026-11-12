@@ -7,10 +7,11 @@ const vite = await loader();
 after(() => vite.close());
 const save = await vite.load("/src/game/save.ts");
 const {
-  normalizeSave, readSave, writeSave, migrateOldSave, flagsForRestart, hasAnySave, takeOldSave,
+  normalizeSave, readSave, writeSave, hasAnySave, takeOldSave,
   archiveSave, archivedSaves, stashCurrentSave, hasStashedSave, restoreStashedSave,
+  backupCorrupt, recoverablePages, restoreArchivedSave, unreadableSave, savedQueue, clearSave,
   withoutEndingFlags, ENDING_FLAGS,
-  SAVE_KEY, SAVE_VERSION, ARCHIVE_KEY, PREVIOUS_KEY,
+  SAVE_KEY, SAVE_VERSION, ARCHIVE_KEY, PREVIOUS_KEY, OLD_SAVE_KEYS,
 } = save;
 
 const known = {
@@ -18,6 +19,10 @@ const known = {
   item: (id) => ["compass", "lemon", "crowbar"].includes(id),
   act: (n) => [1, 2, 3, 4].includes(n),
   firstAct: 1,
+  lastAct: 4,
+  talk: (tree, node) => (tree === "quill4" || tree === "ending") && (node === undefined || node === "start"),
+  treeInAct: (n, tree) => (tree === "ending" ? n === 4 : true),
+  roomInAct: () => true,
 };
 const good = () => ({
   version: SAVE_VERSION, room: "dock", x: 100, y: 600, facing: -1, flags: { met_marta: true },
@@ -54,11 +59,11 @@ test("unknown and malformed items are dropped, duplicates collapse", () => {
 });
 
 test("an unusable position falls back to the room's entry; facing and act are sanitised", () => {
-  const d = normalizeSave({ ...good(), x: NaN, y: "600", facing: 3, act: 9 }, known);
+  const d = normalizeSave({ ...good(), x: NaN, y: "600", facing: 3 }, known);
   assert.equal(d.x, undefined);
   assert.equal(d.y, undefined);
   assert.equal(d.facing, 1);
-  assert.equal(d.act, 1);
+  assert.equal(d.act, 2);
   // JSON turns NaN into null.
   assert.equal(normalizeSave(JSON.parse(JSON.stringify({ ...good(), x: NaN })), known).x, undefined);
 });
@@ -113,13 +118,25 @@ test("a saved queue can only end the act the save is in, and only the last act's
   assert.deepEqual(queue(1, { k: "act", n: 9 }), [say]);
   assert.deepEqual(queue(1, { k: "act", n: 2 }), [say]);
   assert.deepEqual(queue(3, { k: "act", n: 3 }), [say, { k: "act", n: 3 }]);
+  // The closing act's ending is not a resumable queued effect: it would roll a blank card.
+  assert.deepEqual(queue(4, { k: "act", n: 4 }), [say]);
   // A saved ending is never run on Continue: the final choice must be made again, this time
   // with no ending flag left over from the first attempt.
   assert.deepEqual(queue(1, { k: "win" }), [say]);
   assert.deepEqual(queue(3, { k: "win" }), [say]);
   assert.deepEqual(queue(4, { k: "win" }), [say]);
-  // A save whose own act is unknown starts the first act; its queued ending goes with it.
-  assert.deepEqual(normalizeSave({ ...good(), act: 9, queue: [say, { k: "act", n: 9 }] }, known).queue, [say]);
+  // A queued conversation must belong to the save's act. `ending` is present in every act's
+  // dialogue map but cannot be opened from Act I.
+  assert.deepEqual(queue(1, { k: "talk", tree: "ending" }), [say]);
+  assert.deepEqual(queue(2, { k: "talk", tree: "quill4" }), [say, { k: "talk", tree: "quill4" }]);
+  // A saved transition must not cross acts.
+  assert.deepEqual(queue(1, { k: "go", room: "tavern" }), [say, { k: "go", room: "tavern" }]);
+  assert.deepEqual(queue(2, { k: "go", room: "dock" }), [say, { k: "go", room: "dock" }]);
+  // A queued ending flag cannot select a branch without the player making the choice.
+  assert.deepEqual(queue(1, { k: "flag", id: "ending_fog_lifts", v: true }), [say]);
+  assert.deepEqual(queue(1, { k: "add", id: "curse_broken", n: 1 }), [say]);
+  // A save whose own act is unknown is not loaded as another act (see the act tests below).
+  assert.equal(normalizeSave({ ...good(), act: 9, queue: [say, { k: "act", n: 9 }] }, known), null);
 });
 
 test("readSave: missing, unparsable, invalid and good", () => {
@@ -143,38 +160,12 @@ test("throwing storage never throws out of the save functions", () => {
   assert.equal(writeSave(good()), false);
 });
 
-test("v2 migration keeps the act and flags, or nothing", () => {
-  assert.deepEqual(migrateOldSave(JSON.stringify({ act: 3, flags: { a: 1 }, room: "gone" }), known), { act: 3, flags: { a: 1 } });
-  assert.deepEqual(migrateOldSave(JSON.stringify({ act: 2, flags: "bad" }), known), { act: 2, flags: {} });
-  assert.equal(migrateOldSave(JSON.stringify({ act: 1, flags: {} }), known), null, "act I just restarts");
-  assert.equal(migrateOldSave(JSON.stringify({ act: 99 }), known), null);
-  assert.equal(migrateOldSave("{oops", known), null);
-  assert.equal(migrateOldSave("null", known), null);
+test("old-story keys count for Continue (which archives them), and leave storage once taken", () => {
   localStorage.setItem("brasscompass.save.v2", "{}");
   assert.equal(hasAnySave(), true);
+  assert.equal(hasAnySave(known), true);
   assert.equal(takeOldSave(), "{}");
   assert.equal(hasAnySave(), false);
-});
-
-test("an old save restarting its act drops the flags that act (or a later one) sets, keeps earlier acts'", () => {
-  // Act 2 opens the chest and hears the cook; act 1 met Marta and raised `aff`, which act 2 raises
-  // too; act 3 alone sets `hatch_open`.
-  const sets = { 1: ["met_marta", "aff", "seen:marta.hello"], 2: ["chest_open", "dinner", "aff", "seen:hobb.mess", "looked:deck.chest"], 3: ["hatch_open"] };
-  const actFlags = (n) => (sets[n] ? new Set(sets[n]) : undefined);
-  const k = { act: (n) => n in sets, firstAct: 1, actFlags };
-  const flags = {
-    met_marta: true, aff: 5, "seen:marta.hello": true, chest_open: true, dinner: true, "seen:hobb.mess": true,
-    "looked:deck.chest": true, hatch_open: true, old_story_flag: "kept",
-  };
-  assert.deepEqual(flagsForRestart(flags, 2, k), { met_marta: true, aff: 5, "seen:marta.hello": true, old_story_flag: "kept" });
-  assert.deepEqual(migrateOldSave(JSON.stringify({ act: 2, flags }), k), {
-    act: 2, flags: { met_marta: true, aff: 5, "seen:marta.hello": true, old_story_flag: "kept" },
-  });
-  // Restarting act 3 keeps act 2's progress; only act 3's own flag goes.
-  assert.equal("hatch_open" in flagsForRestart(flags, 3, k), false);
-  assert.equal(flagsForRestart(flags, 3, k).chest_open, true);
-  // Without the content's flag sets, nothing is dropped (the old behaviour).
-  assert.deepEqual(migrateOldSave(JSON.stringify({ act: 2, flags }), { act: k.act, firstAct: 1 }).flags, flags);
 });
 
 test("renamed items: lemon and jet-caps saves come back holding rum; a known id is left alone", () => {
@@ -297,29 +288,29 @@ test("pre-v4 keys are archived before they leave storage", () => {
 });
 
 test("a replaced voyage is stashed and can be taken up once", () => {
-  assert.equal(stashCurrentSave(), false, "nothing to stash");
+  assert.equal(stashCurrentSave(), "none", "nothing to stash");
   assert.equal(hasStashedSave(), false);
   assert.equal(writeSave(good()), true);
-  assert.equal(stashCurrentSave(), true);
+  assert.equal(stashCurrentSave(), "ok");
   assert.equal(hasStashedSave(), true);
   assert.equal(localStorage.getItem(PREVIOUS_KEY), localStorage.getItem(SAVE_KEY));
   // A new voyage overwrites the live key, but not the stash.
   localStorage.setItem(SAVE_KEY, JSON.stringify({ ...good(), act: 1, room: "tavern" }));
   assert.deepEqual(readSave(known).data, { ...good(), act: 1, room: "tavern" });
-  assert.equal(restoreStashedSave(), true);
+  assert.equal(restoreStashedSave(known), true);
   assert.equal(hasStashedSave(), false);
   assert.deepEqual(readSave(known).data, good(), "the whole old voyage came back");
-  assert.equal(restoreStashedSave(), false, "one undo, not a stack");
+  assert.equal(restoreStashedSave(known), false, "one undo, not a stack");
 });
 
 test("stashing a second voyage archives the older undo page instead of dropping it", () => {
   assert.equal(writeSave(good()), true);
   const first = localStorage.getItem(SAVE_KEY);
-  assert.equal(stashCurrentSave(), true);
+  assert.equal(stashCurrentSave(), "ok");
   assert.equal(localStorage.getItem(PREVIOUS_KEY), first);
   assert.equal(writeSave({ ...good(), act: 1, room: "tavern" }), true);
   const second = localStorage.getItem(SAVE_KEY);
-  assert.equal(stashCurrentSave(), true);
+  assert.equal(stashCurrentSave(), "ok");
   assert.equal(localStorage.getItem(PREVIOUS_KEY), second);
   const archived = archivedSaves();
   assert.equal(archived.some((page) => page.raw === first && page.key === PREVIOUS_KEY), true,

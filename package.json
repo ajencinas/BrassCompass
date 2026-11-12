@@ -23,9 +23,10 @@
     "script:export": "node tools/export-script.mjs",
     "package:itch": "node tools/package-itch.mjs",
     "assets": "node tools/asset-manifest.mjs --write",
-    "prebuild": "npm run assets",
+    "prebuild": "node tools/asset-manifest.mjs --check",
     "postbuild": "node tools/audit-assets.mjs --dist",
     "test:assets": "node tools/audit-assets.mjs",
+    "test:size": "node tools/check-bundle-size.mjs",
     "test:mobile": "node tools/mobile-test.mjs",
     "test:audio": "node tools/audio-test.mjs",
     "test:a11y": "node tools/a11y-test.mjs"

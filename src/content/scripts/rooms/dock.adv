@@ -1,7 +1,7 @@
 room dock "Dreadwater Harbour"
   bg bg_dock_cinema_wide
   width 2560
-  backdrop "brightness(1.14) saturate(1.02)"
+  backdrop "contrast(0.9) brightness(1.22) saturate(1.04)"
   music music_dock
   grade "brightness(0.95) saturate(0.85)"
   ambience gulls
@@ -40,8 +40,8 @@ room dock "Dreadwater Harbour"
   # the only ship with her gear aloft is the Marrow.
   scene if act 1 and not dock_landed
     set dock_landed
-    say "The boatman puts me on the pier and pushes off before I can thank him."
-    say "Dreadwater. Three months since my father sailed, and the harbour has gone quiet."
+    say "The boatman's lantern dwindles across the water. I have the pier to myself, and the quiet."
+    say "The few people on the quay find something else to look at. Nobody asks who I am. They know."
     say "One ship is tied up. The other berths are empty, and the lamps are lit for nobody."
     say "A lamp burns in the harbourmaster's house. It is the only welcome in sight."
     say "The quay runs on past the harbourmaster's house, out toward the harbour mouth."

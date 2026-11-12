@@ -1,7 +1,7 @@
 room office "The Harbourmaster's House"
   bg bg_office_cinema_wide
   width 2560
-  backdrop "brightness(1.14) saturate(1.02)"
+  backdrop "contrast(0.9) brightness(1.22) saturate(1.04)"
   music music_office
   grade "brightness(0.95) saturate(0.85)"
   # The interior of the harbourmaster's house: the door standing open on the foggy quay at

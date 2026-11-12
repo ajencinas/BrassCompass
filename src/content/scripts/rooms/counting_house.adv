@@ -1,7 +1,7 @@
 room counting_house "Vex's Warehouse"
   bg bg_countinghouse_restart_wide
   width 2560
-  backdrop "brightness(1.14) saturate(1.02)"
+  backdrop "contrast(0.9) brightness(1.22) saturate(1.04)"
   music music_office
   grade "saturate(0.85) brightness(0.95)"
   # Vex's counting house as a full-bleed painting, strict side-on: the tall lane door open on

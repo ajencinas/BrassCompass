@@ -27,6 +27,6 @@ dialogue nell
   node strange2 nell "Old Onn says the water goes quiet out there. I sell rope, not answers."
     > "I'll ask her." -> bye
     > "What do you think it is?" -> think
-  node think nell "I think a harbour town should sound like a harbour. This one doesn't."
+  node think nell "I think the fog is listening. The gulls stopped first. They always know."
     -> bye
   node bye nell "Go on. If you hear anything out there, I'm buying. News, I mean. Not rope."

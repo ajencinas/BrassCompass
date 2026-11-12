@@ -361,6 +361,45 @@ function fogTexture(band: RoomHaze, seed: number, cells: number): HTMLCanvasElem
   return c;
 }
 
+/** `tone(0.5)` inside a room's `backdrop`: the amount of the split-tone grade. */
+const TONE = /\btone\(\s*([\d.]+)\s*\)/;
+/** `lift(0.05)` inside a `backdrop`: raises the shadows by that share of full white, leaving the highlights alone. */
+const LIFT = /\blift\(\s*([\d.]+)\s*\)/;
+
+/**
+ * A shadow lift over a baked plate: a screen of a dark, faintly cool grey. Screen adds most where
+ * the picture is darkest and nothing where it is already white, so a plate that is a third black
+ * gets its floor and its corners back without washing the lamps or the highlights.
+ */
+function liftShadows(cx: CanvasRenderingContext2D, w: number, h: number, amount: number): void {
+  if (amount <= 0) return;
+  const v = Math.round(Math.min(1, amount) * 255);
+  cx.save();
+  cx.globalCompositeOperation = "screen";
+  cx.fillStyle = `rgb(${Math.round(v * 0.96)},${Math.round(v * 0.98)},${v})`;
+  cx.fillRect(0, 0, w, h);
+  cx.restore();
+}
+
+/**
+ * A split-tone over a baked plate: a multiply of indigo takes the cold, pale shadows toward the
+ * deep blue of the interiors, a soft-light of amber warms the key. Done once, at bake time.
+ * Canvas blend modes are universal, so there is no by-hand fallback to keep.
+ */
+function splitTone(cx: CanvasRenderingContext2D, w: number, h: number, amount: number): void {
+  if (amount <= 0) return;
+  cx.save();
+  cx.globalCompositeOperation = "multiply";
+  cx.globalAlpha = Math.min(1, amount);
+  cx.fillStyle = "#6f78b8";
+  cx.fillRect(0, 0, w, h);
+  cx.globalCompositeOperation = "soft-light";
+  cx.globalAlpha = Math.min(1, amount * 0.8);
+  cx.fillStyle = "#ffb462";
+  cx.fillRect(0, 0, w, h);
+  cx.restore();
+}
+
 // ------------------------------------------------------------ the layers
 
 export class Ambient {
@@ -428,14 +467,20 @@ export class Ambient {
     c.width = w;
     c.height = h;
     const cx = c.getContext("2d")!;
+    // `tone(n)` is not a CSS filter: it is the split-tone below (indigo shadows, amber key).
+    const toned = TONE.exec(css);
+    const lifted = LIFT.exec(css);
+    const filter = css.replace(TONE, " ").replace(LIFT, " ").trim();
     if (filterSupported()) {
-      cx.filter = css;
+      cx.filter = filter || "none";
       cx.drawImage(img, 0, 0);
       cx.filter = "none";
     } else {
       cx.drawImage(img, 0, 0);
-      applyGradeByHand(cx, w, h, css);
+      if (filter) applyGradeByHand(cx, w, h, filter);
     }
+    if (toned) splitTone(cx, w, h, Math.max(0, Math.min(1, Number(toned[1]))));
+    if (lifted) liftShadows(cx, w, h, Math.max(0, Math.min(1, Number(lifted[1]))));
     this.baked = c;
     this.bakedFrom = img;
     this.bakedCss = css;

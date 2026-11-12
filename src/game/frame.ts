@@ -49,6 +49,8 @@ export class FrameClock {
   /** Forget the last frame time: the next callback starts the clock over (Try again). */
   reset(): void {
     this.lastT = 0;
+    this.accum = 0;
+    this.pendingDt = 0;
   }
 }
 
@@ -67,7 +69,7 @@ export interface FrameLoopHooks {
  */
 export class FrameLoop {
   private clock = new FrameClock();
-  /** Consecutive frame exceptions since the last clean callback. */
+  /** Consecutive frame exceptions since the last step that ran cleanly. */
   private failures = 0;
   /** The failure overlay is up; the loop still runs but skips update/render. */
   private fatal = false;
@@ -81,11 +83,13 @@ export class FrameLoop {
   private frame(t: number): void {
     try {
       if (this.fatal) return;
-      // A callback that is not due still counts as a clean frame, exactly as the old inline
-      // loop did: on a 120 Hz panel most callbacks just accumulate time.
+      // A callback that is not due neither fails nor proves anything: on a 120 Hz panel half of
+      // them only accumulate time, so only a step that actually ran clears the failure streak.
       const dt = this.clock.tick(t);
-      if (dt !== null) this.hooks.step(dt, t);
-      this.failures = 0;
+      if (dt !== null) {
+        this.hooks.step(dt, t);
+        this.failures = 0;
+      }
     } catch (error) {
       this.failures++;
       console.error("The Brass Compass: frame failed", error);

@@ -30,7 +30,7 @@ async function until(fn, label, timeout = 30000) {
 
 const output = resolve("test-output/mobile");
 await mkdir(output, { recursive: true });
-const server = await startVite(5210, 5230);
+const server = await startVite(Number(process.env.MOBILE_TEST_PORT) || 5210, (Number(process.env.MOBILE_TEST_PORT) || 5210) + 20);
 let browser;
 let socket;
 try {
@@ -72,6 +72,7 @@ try {
     const visible = ${visible};
     const canvas = document.querySelector("canvas");
     const c = canvas.getBoundingClientRect();
+    const st = document.getElementById("stage").getBoundingClientRect();
     const buttons = [...document.querySelectorAll("#mobile-ui button")].filter(visible).map((b) => {
       const r = b.getBoundingClientRect();
       return { label: b.getAttribute("aria-label") || b.textContent.trim().slice(0, 40), w: r.width, h: r.height };
@@ -80,6 +81,7 @@ try {
       body: document.body.className, vw: innerWidth, vh: innerHeight,
       scrollWidth: document.documentElement.scrollWidth, bodyScrollWidth: document.body.scrollWidth,
       canvas: { left: c.left, top: c.top, right: c.right, bottom: c.bottom, width: c.width, height: c.height },
+      stage: { left: st.left, top: st.top, right: st.right, bottom: st.bottom, width: st.width, height: st.height },
       title: Boolean(window.__game?.title), room: window.__game?.room?.id ?? null, fade: window.__game?.fade ?? null,
       hud: visible(document.querySelector(".m-hud")), top: visible(document.querySelector(".m-top")),
       buttons,
@@ -128,8 +130,44 @@ try {
       const r = b.getBoundingClientRect();
       return { x: r.left + r.width / 2, y: r.top + r.height / 2, w: r.width, h: r.height };
     })()`);
-    assert.ok(rect, `expected a visible ${selector}`);
+    assert.ok(rect, `expected a visible ${selector}; saw ${await evaluate(`[...document.querySelectorAll("#mobile-ui button")].filter(${visible}).map((b) => b.textContent.trim().slice(0, 20)).join("|") + " body=" + document.body.className`)}`);
     return rect;
+  }
+
+  /** Text on the touch chrome keeps its floor: 15px for what is read or tapped, 12px for hints. */
+  async function checkType(label) {
+    const small = await evaluate(`(() => {
+      const visible = ${visible};
+      const body = ".m-verbs button, .m-narration, .m-line, .m-action, .m-bag, .m-choice, .m-dialogue-text, .m-lesson, .m-primary, .m-title-button .m-title-label";
+      const hint = ".m-action-hint, .m-speaker, .m-bag-count, .m-title-sub, .m-pager-label, .m-where";
+      const bad = [];
+      for (const el of document.querySelectorAll("#mobile-ui " + body)) if (visible(el) && parseFloat(getComputedStyle(el).fontSize) < 14.95) bad.push(el.className + " " + getComputedStyle(el).fontSize);
+      for (const el of document.querySelectorAll("#mobile-ui " + hint)) if (visible(el) && el.textContent.trim() && parseFloat(getComputedStyle(el).fontSize) < 11.95) bad.push(el.className + " " + getComputedStyle(el).fontSize);
+      return bad; })()`);
+    assert.deepEqual(small, [], `${label}: text under its floor`);
+  }
+
+  /** The portrait scene is a tall crop around Fenn, not a thin strip, and the panel fits under it. */
+  async function checkPortraitScene(label, vh) {
+    const m = await evaluate(`(() => {
+      const g = window.__game;
+      const st = document.getElementById("stage").getBoundingClientRect();
+      const c = g.view.canvas.getBoundingClientRect();
+      const hud = document.querySelector(".m-hud").getBoundingClientRect();
+      const fx = c.left + ((g.x - g.cameraX) / 1920) * c.width, fy = c.top + (g.y / 880) * c.height;
+      const verbs = [...document.querySelectorAll(".m-verbs button")].map((b) => b.getBoundingClientRect());
+      const bag = document.querySelector(".m-bag").getBoundingClientRect();
+      return { st: { t: st.top, b: st.bottom, l: st.left, r: st.right, h: st.height }, c: { l: c.left, r: c.right, w: c.width, h: c.height },
+        hudTop: hud.top, fenn: { x: fx, y: fy }, vw: innerWidth, vh: innerHeight,
+        verbsBottom: Math.max(...verbs.map((r) => r.bottom)), verbsLeft: Math.min(...verbs.map((r) => r.left)), verbsRight: Math.max(...verbs.map((r) => r.right)),
+        bagBottom: bag.bottom, bagTop: bag.top, covered: g.view.visible };
+    })()`);
+    assert.ok(m.st.h >= Math.min(0.5 * vh, vh - 52 - 292) - 2, `${label}: portrait scene uses the height (${m.st.h}px of ${vh})`);
+    assert.ok(m.hudTop >= m.st.b - 1, `${label}: the panel starts under the scene`);
+    assert.ok(m.fenn.x > m.st.l && m.fenn.x < m.st.r && m.fenn.y > m.st.t && m.fenn.y < m.st.b, `${label}: Fenn is inside the visible crop ${JSON.stringify(m.fenn)}`);
+    assert.ok(m.verbsBottom <= m.bagTop + 0.5 && m.bagBottom <= m.vh + 0.5, `${label}: verbs and satchel fit on screen`);
+    assert.ok(m.verbsLeft >= 0 && m.verbsRight <= m.vw + 0.5, `${label}: verbs fit the width`);
+    return m;
   }
 
   async function enterScene() {
@@ -153,9 +191,14 @@ try {
     assert.match(state.body, /\bmobile\b/, "phone viewport must take the touch layout");
     assert.ok(state.scrollWidth <= state.vw + 1 && state.bodyScrollWidth <= state.vw + 1,
       `no horizontal overflow: scrollWidth ${state.scrollWidth}/${state.bodyScrollWidth} vs ${state.vw}`);
-    assert.ok(state.canvas.left >= -0.5 && state.canvas.top >= -0.5 &&
-      state.canvas.right <= state.vw + 0.5 && state.canvas.bottom <= state.vh + 0.5,
-      `canvas fits ${width}x${height}: ${JSON.stringify(state.canvas)}`);
+    // A portrait crop makes the canvas wider than the screen on purpose; the stage that clips it
+    // is what must fit, and the canvas must cover that stage completely.
+    assert.ok(state.stage.left >= -0.5 && state.stage.top >= -0.5 &&
+      state.stage.right <= state.vw + 0.5 && state.stage.bottom <= state.vh + 0.5,
+      `stage fits ${width}x${height}: ${JSON.stringify(state.stage)}`);
+    assert.ok(state.canvas.top >= -0.5 && state.canvas.bottom <= state.vh + 0.5 &&
+      state.canvas.left <= state.stage.left + 1 && state.canvas.right >= state.stage.right - 1,
+      `canvas covers its stage at ${width}x${height}: ${JSON.stringify(state.canvas)}`);
     assert.ok(state.canvas.width > 0 && state.canvas.height > 0, "canvas has a box");
     const visibleButtons = state.buttons.filter((b) => b.w > 0 && b.h > 0);
     assert.ok(visibleButtons.length >= minButtons, `expected touch controls, saw ${visibleButtons.length}`);
@@ -170,7 +213,16 @@ try {
     return evaluate(`(() => {
       const g = window.__game;
       const candidates = g.visibleHotspots().filter((h) => !g.isExit(g.hotspotState(h)));
-      const raw = candidates.find((h) => g.hotspotAt(areaCentre(h.area).x, areaCentre(h.area).y)) || candidates[0];
+      // A portrait crop shows only a slice of the width: pick a thing whose centre is in view.
+      const st = document.getElementById("stage").getBoundingClientRect();
+      const cr = g.view.canvas.getBoundingClientRect();
+      const inView = (h) => { const c = areaCentre(h.area);
+        const px = cr.left + ((c.x - g.cameraX) / 1920) * cr.width, py = cr.top + (c.y / 880) * cr.height;
+        return px > st.left + 24 && px < st.right - 24 && py > st.top + 24 && py < st.bottom - 24; };
+      // Landscape shows the whole width: any thing will do, clamped onto the screen as before.
+      const seen = candidates.filter(inView);
+      if (!seen.length && g.view.visible.w >= 1920) seen.push(...candidates);
+      const raw = seen.find((h) => g.hotspotAt(areaCentre(h.area).x, areaCentre(h.area).y)) || seen[0];
       if (!raw) return null;
       function areaCentre(area) {
         if (area.rect) return { x: area.rect.x + area.rect.w / 2, y: area.rect.y + area.rect.h / 2 };
@@ -185,6 +237,42 @@ try {
         clientY: r.top + (Math.max(4, Math.min(876, c.y)) / 880) * r.height,
       };
     })()`);
+  }
+
+  /** A finger dragging across the scene: touchStart, a few touchMoves, touchEnd. */
+  async function drag(x0, y0, x1, y1) {
+    await send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x: x0, y: y0, id: 1 }] });
+    for (let i = 1; i <= 8; i++) {
+      await send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x: x0 + ((x1 - x0) * i) / 8, y: y0 + ((y1 - y0) * i) / 8, id: 1 }] });
+      await pause(16);
+    }
+    await send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+    await pause(120);
+  }
+
+  /** Portrait shows a crop: drag the scene until some touchable thing is in the window. */
+  async function bringSomethingIntoView() {
+    const want = await evaluate(`(() => {
+      const g = window.__game; const st = document.getElementById("stage").getBoundingClientRect(); const cr = g.view.canvas.getBoundingClientRect();
+      const mid = (a) => a.rect ? { x: a.rect.x + a.rect.w / 2, y: a.rect.y + a.rect.h / 2 } : { x: a.reduce((s, p) => s + p.x, 0) / a.length, y: a.reduce((s, p) => s + p.y, 0) / a.length };
+      const list = g.visibleHotspots().filter((h) => !g.isExit(g.hotspotState(h))).map((h) => { const c = mid(h.area);
+        return { px: cr.left + ((c.x - g.cameraX) / 1920) * cr.width, y: st.top + st.height / 2 }; });
+      if (!list.length) return null;
+      const centre = (st.left + st.right) / 2;
+      list.sort((a, b) => Math.abs(a.px - centre) - Math.abs(b.px - centre));
+      return { dx: Math.max(-(st.width - 60), Math.min(st.width - 60, centre - list[0].px)), y: list[0].y, centre, w: st.width };
+    })()`);
+    if (!want || Math.abs(want.dx) < 8) return;
+    await drag(want.centre - want.dx / 2, want.y, want.centre + want.dx / 2, want.y);
+    // Still not in the window (it is past the room's scroll limit): walk Fenn to it, as a player would.
+    const near = await evaluate(`(() => {
+      const g = window.__game; const st = document.getElementById("stage").getBoundingClientRect(); const cr = g.view.canvas.getBoundingClientRect();
+      const mid = (a) => a.rect ? a.rect.x + a.rect.w / 2 : a.reduce((s, p) => s + p.x, 0) / a.length;
+      const list = g.visibleHotspots().filter((h) => !g.isExit(g.hotspotState(h)));
+      const shown = list.some((h) => { const px = cr.left + ((mid(h.area) - g.cameraX) / 1920) * cr.width; return px > st.left + 40 && px < st.right - 40; });
+      if (shown || !list.length) return false;
+      g.x = mid(list[0].area) + 140; window.__ff(80); return true; })()`);
+    if (near) await pause(900);
   }
 
   async function resetTouchTest() {
@@ -205,6 +293,21 @@ try {
   assert.equal(frame.hud, true, "the touch HUD is up in play");
   assert.equal(frame.top, true, "the touch top bar is up in play");
   await screenshot("play-390x844.png");
+  const tall = await checkPortraitScene("390x844", 844);
+  assert.ok(tall.st.h >= 0.45 * 844, `the 390x844 scene is at least 45% of the screen tall (${tall.st.h}px)`);
+  assert.ok(tall.c.w > tall.st.r - tall.st.l + 50, "the portrait canvas is wider than its stage: a crop, not a strip");
+  await checkType("portrait play");
+  // The first-watch lesson lives in the panel under the scene, not over the painting.
+  await evaluate(`(() => { const g = window.__game; g.explore = false; g.watch.offer("keys"); window.__ff(2); return true; })()`);
+  await pause(300);
+  const lesson = await evaluate(`(() => { const l = document.querySelector(".m-lesson"); const r = l.getBoundingClientRect();
+    const st = document.getElementById("stage").getBoundingClientRect(); return { hidden: l.hidden, top: r.top, stageBottom: st.bottom, text: l.textContent }; })()`);
+  assert.equal(lesson.hidden, false, "the lesson is showing");
+  assert.ok(lesson.top >= lesson.stageBottom - 1, "the lesson toast does not cover the scene");
+  assert.match(lesson.text, /Tap a thing to name it, tap again to act/, "the touch lesson teaches taps, not keys");
+  assert.doesNotMatch(lesson.text, /\bQ\b|Esc|\bJ\b/, "no keyboard shortcuts on touch");
+  await evaluate("(() => { const g = window.__game; g.watch.clearQueue(); g.explore = true; return true; })()");
+  await pause(300); // the Scenes icon comes back and the bar re-centres; let it settle before tapping
 
   // The pause panel is part of the touch surface too.
   const pauseButton = await buttonRect('[data-bar="pause"]');
@@ -220,8 +323,12 @@ try {
 
   // The satchel is a drawer of real buttons, and it closes again.
   const bag = await buttonRect(".m-bag");
+  // Opening and closing the drawer plays the satchel flap, as the desktop satchel does.
+  await evaluate(`(() => { const g = window.__game; window.__flap = []; const was = g.audio.inventory.bind(g.audio);
+    g.audio.inventory = (open) => { window.__flap.push(open); return was(open); }; return true; })()`);
   await tap(bag.x, bag.y);
   await until(() => evaluate("!document.querySelector('.m-drawer').hidden"), "satchel drawer");
+  assert.deepEqual(await evaluate("window.__flap"), [true], "opening the drawer plays the satchel flap");
   const drawer = await evaluate(`(() => { const d = document.querySelector(".m-drawer");
     return [...d.querySelectorAll("button")].filter((b) => b.offsetParent !== null).map((b) => ({ label: b.textContent.trim(), h: b.getBoundingClientRect().height, w: b.getBoundingClientRect().width })); })()`);
   for (const button of drawer) {
@@ -231,6 +338,7 @@ try {
   const drawerDone = await buttonRect(".m-drawer-close");
   await tap(drawerDone.x, drawerDone.y);
   await until(() => evaluate("document.querySelector('.m-drawer').hidden"), "closed satchel drawer");
+  assert.deepEqual(await evaluate("window.__flap"), [true, false], "closing the drawer plays the flap back");
 
   // Chapter select stays reachable: the Scenes plate opens the room sheet again.
   const scenes = await buttonRect(".m-scenes");
@@ -243,6 +351,14 @@ try {
 
   // A first tap arms; a second tap inside the same gesture must not spend it. The two taps go
   // back to back, before any assertion can eat into the 400 ms window.
+  // The portrait scene is a crop around Fenn: a finger drag looks around without arming or walking.
+  const before = await evaluate("({ x: window.__game.view.visible.x, fenn: window.__game.x, armed: window.__game.touchArmed })");
+  await drag(300, 330, 120, 330);
+  const after = await evaluate("({ x: window.__game.view.visible.x, fenn: window.__game.x, armed: window.__game.touchArmed, path: window.__game.path.length })");
+  assert.ok(Math.abs(after.x - before.x) > 40 || after.x === 1920 - await evaluate("window.__game.view.visible.w"), `dragging the scene pans the crop (${before.x} -> ${after.x})`);
+  assert.equal(after.fenn, before.fenn, "a look-around drag does not walk Fenn");
+  assert.equal(after.armed, null, "a look-around drag arms nothing");
+  await bringSomethingIntoView();
   await resetTouchTest();
   let pick = await pickHotspot();
   assert.ok(pick, "a scene has a touchable thing");
@@ -307,6 +423,113 @@ try {
   assert.ok(plateResult.committed || plateResult.verb || plateResult.path > 0 || plateResult.narration,
     "the action plate confirms the armed action");
 
+  // The 12 verbs must all be on screen and reachable in landscape (no hidden horizontal strip),
+  // the stage must be big enough to play, and narration / Continue must stay inside their panel.
+  await resetTouchTest();
+  await evaluate(`(() => { const g = window.__game; g.narration = { text: "The harbour is thick with fog tonight, and every rope on the quay is wet to the touch.", shown: 999 };  window.__ff(1); })()`);
+  const landscapeLayout = await evaluate(`(() => {
+    const visible = ${visible};
+    const verbs = [...document.querySelectorAll(".m-verbs button")].map((b) => { const r = b.getBoundingClientRect(); return { label: b.textContent, l: r.left, r: r.right, t: r.top, b: r.bottom, vis: visible(b) }; });
+    const c = document.querySelector("canvas").getBoundingClientRect();
+    return { verbs, vw: innerWidth, vh: innerHeight, stageH: c.height, stageW: c.width };
+  })()`);
+  assert.equal(landscapeLayout.verbs.length, 12, "all twelve verbs exist");
+  for (const v of landscapeLayout.verbs) {
+    assert.ok(v.vis && v.l >= 0 && v.r <= landscapeLayout.vw + 0.5 && v.t >= 0 && v.b <= landscapeLayout.vh + 0.5,
+      `landscape verb "${v.label}" is fully on screen: ${JSON.stringify(v)}`);
+  }
+  assert.ok(landscapeLayout.stageH >= 250, `landscape scene is big enough to play (${landscapeLayout.stageH}px tall)`);
+  const overlap = await evaluate(`(() => {
+    const c = document.querySelector("canvas").getBoundingClientRect();
+    const ctx = document.querySelector(".m-context").getBoundingClientRect();
+    return { canvasBottom: c.bottom, contextTop: ctx.top };
+  })()`);
+  assert.ok(overlap.contextTop >= overlap.canvasBottom - 0.5, "narration panel sits under the scene, not over it");
+  await resetTouchTest();
+
+  // ---- rotating a phone updates the layout: boot portrait, turn it, turn it back.
+  await viewport(390, 844, true, true);
+  await enterScene();
+  const portraitLeft = await evaluate("document.querySelector('canvas').getBoundingClientRect().height");
+  assert.equal(await evaluate("document.body.classList.contains('m-landscape')"), false, "boots portrait");
+  async function rotate(width, height) {
+    await send("Emulation.setDeviceMetricsOverride", {
+      width, height, deviceScaleFactor: 2, mobile: true,
+      screenOrientation: { type: width > height ? "landscapePrimary" : "portraitPrimary", angle: width > height ? 90 : 0 },
+    });
+    await pause(300);
+  }
+  await rotate(844, 390);
+  assert.equal(await evaluate("document.body.classList.contains('m-landscape')"), true, "rotating to landscape flips the class");
+  const turned = await evaluate(`(() => { const c = document.querySelector("canvas").getBoundingClientRect(); const v = document.querySelector(".m-verbs").getBoundingClientRect();
+    return { canvasW: c.width, canvasH: c.height, vw: innerWidth, verbsLeft: v.left, verbsTop: v.top }; })()`);
+  assert.ok(turned.canvasW < turned.vw - 150, `landscape leaves a rail beside the scene (canvas ${turned.canvasW} of ${turned.vw})`);
+  assert.ok(turned.verbsLeft >= turned.canvasW - 1, "the verb rail is beside the scene, not under it");
+  await screenshot("rotated-844x390.png");
+  await rotate(390, 844);
+  assert.equal(await evaluate("document.body.classList.contains('m-landscape')"), false, "rotating back flips the class back");
+  const back = await evaluate("document.querySelector('canvas').getBoundingClientRect().height");
+  assert.ok(Math.abs(back - portraitLeft) < 2, `portrait scene returns to its size (${back} vs ${portraitLeft})`);
+  await checkFrame(390, 844, 8);
+
+  // ---- small phones, both ways: the scene, the panel and every verb fit, and type keeps its floor.
+  for (const [w, h] of [[360, 640], [320, 568]]) {
+    await viewport(w, h, true, true);
+    await enterScene();
+    await checkFrame(w, h, 8);
+    await checkPortraitScene(`${w}x${h}`, h);
+    await checkType(`${w}x${h}`);
+    await screenshot(`play-${w}x${h}.png`);
+  }
+  for (const [w, h] of [[667, 375], [568, 320]]) {
+    await viewport(w, h, true, true);
+    await enterScene();
+    await checkFrame(w, h, 8);
+    const m = await evaluate(`(() => { const r = (s) => document.querySelector(s).getBoundingClientRect();
+      const verbs = [...document.querySelectorAll(".m-verbs button")].map((b) => b.getBoundingClientRect());
+      return { verbsOk: verbs.length === 12 && verbs.every((v) => v.left >= 0 && v.right <= innerWidth + 0.5 && v.top >= 0 && v.bottom <= innerHeight + 0.5),
+        bag: r(".m-bag").bottom <= innerHeight + 0.5, stageH: r("canvas").height }; })()`);
+    assert.ok(m.verbsOk && m.bag, `${w}x${h}: every verb and the satchel are on screen`);
+    await checkType(`${w}x${h}`);
+    await screenshot(`play-${w}x${h}.png`);
+  }
+
+  // ---- a conversation keeps the scene in view: landscape puts the choices in the rail, portrait
+  // gives them 48px+ targets, and every choice can be reached.
+  for (const [w, h] of [[844, 390], [390, 844], [568, 320]]) {
+    await viewport(w, h, true, true);
+    await enterScene();
+    await evaluate(`(() => { const g = window.__game; g.loadRoom("tavern"); window.__ff(30); g.flags.rule_sound = true;
+      g.startDialogue("marta", "root3"); g.dialogue.shown = 999; window.__ff(3); return true; })()`);
+    await until(() => evaluate("document.querySelectorAll('.m-choice').length >= 6"), `dialogue choices at ${w}x${h}`);
+    const d = await evaluate(`(() => {
+      const c = document.querySelector("canvas").getBoundingClientRect(), st = document.getElementById("stage").getBoundingClientRect();
+      const inner = document.querySelector(".m-dialogue-inner").getBoundingClientRect();
+      const list = document.querySelector(".m-choices");
+      const lr = list.getBoundingClientRect();
+      const choices = [...document.querySelectorAll(".m-choice")].map((b) => b.getBoundingClientRect());
+      const last = document.querySelectorAll(".m-choice")[choices.length - 1];
+      list.scrollTop = list.scrollHeight; const after = last.getBoundingClientRect();
+      const portrait = document.querySelector(".m-portrait").getBoundingClientRect();
+      return { stage: { l: st.left, r: st.right, t: st.top, b: st.bottom }, inner: { t: inner.top, l: inner.left, r: inner.right },
+        list: { l: lr.left, t: lr.top, b: lr.bottom, scrollable: list.scrollHeight > list.clientHeight + 1 },
+        minH: Math.min(...choices.map((r) => r.height)), lastReachable: after.bottom <= innerHeight + 0.5 && after.top >= 0 && after.bottom <= lr.bottom + 1,
+        portrait: portrait.width, vw: innerWidth, vh: innerHeight, landscape: document.body.classList.contains("m-landscape") };
+    })()`);
+    assert.ok(d.minH >= 47.5, `${w}x${h}: dialogue choices are ${d.minH}px tall`);
+    assert.ok(d.lastReachable, `${w}x${h}: the last choice is reachable by scrolling`);
+    if (d.landscape) {
+      assert.ok(d.inner.t >= d.stage.b - 1, `${w}x${h}: the conversation sits under the scene, not over it`);
+      assert.ok(d.list.l >= d.stage.r - 1, `${w}x${h}: the choices are in the rail beside the scene`);
+      assert.ok(d.portrait >= 80, `${w}x${h}: the portrait is a real portrait (${d.portrait}px)`);
+    } else {
+      assert.ok(d.inner.t >= d.stage.b - 1, `${w}x${h}: the conversation starts under the scene`);
+      assert.ok(d.portrait >= 70, `${w}x${h}: portrait is ${d.portrait}px`);
+    }
+    await checkType(`${w}x${h} dialogue`);
+    await screenshot(`dialogue-${w}x${h}.png`);
+  }
+
   // ---- desktop must keep the desktop UI
   await send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
   await send("Emulation.setTouchEmulationEnabled", { enabled: false });
@@ -335,7 +558,7 @@ try {
     "an 800x600 canvas still fits");
 
   assert.deepEqual(runtimeErrors, [], `page exceptions: ${runtimeErrors.join("; ")}`);
-  console.log("mobile browser test passed: 390x844, 844x390, and desktop regression");
+  console.log("mobile browser test passed: 390x844, 844x390, rotation, and desktop regression");
   console.log(`screenshots: ${output}`);
 } finally {
   socket?.close();

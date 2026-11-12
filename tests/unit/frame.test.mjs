@@ -75,3 +75,43 @@ test("three failed frames raise the failure path, and the loop stays scheduled",
     else delete globalThis.requestAnimationFrame;
   }
 });
+
+test("a persistent failure still raises the overlay on a 120 Hz panel", () => {
+  const hadRaf = Object.prototype.hasOwnProperty.call(globalThis, "requestAnimationFrame");
+  const originalRaf = globalThis.requestAnimationFrame;
+  const originalError = console.error;
+  let pending = null;
+  globalThis.requestAnimationFrame = (cb) => { pending = cb; return 1; };
+  const announced = [];
+  let steps = 0;
+  console.error = () => {};
+  try {
+    const loop = new FrameLoop({
+      step: () => { steps++; throw new Error("boom"); },
+      announce: (text) => announced.push(text),
+    });
+    loop.start();
+    let t = 1000;
+    pending(t);
+    // Callbacks arrive every half frame: one due, one not due, alternating.
+    for (let i = 0; i < 12; i++) {
+      t += FRAME_MS / 2;
+      pending(t);
+    }
+    assert.equal(steps, 3, "the third failed step raises the overlay even with idle callbacks between");
+    assert.equal(announced.length, 1);
+  } finally {
+    console.error = originalError;
+    if (hadRaf) globalThis.requestAnimationFrame = originalRaf;
+    else delete globalThis.requestAnimationFrame;
+  }
+});
+
+test("reset also drops accumulated time", () => {
+  const clock = new FrameClock();
+  clock.tick(1000);
+  clock.tick(1000 + FRAME_MS * 0.9); // accumulates, not due yet? (within 1ms tolerance it may be)
+  clock.reset();
+  assert.equal(clock.tick(2000), null);
+  assert.equal(clock.tick(2000 + FRAME_MS / 4), null, "no leftover accumulation makes this early callback due");
+});

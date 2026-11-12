@@ -7,8 +7,8 @@
  * Only the art the live rooms, acts, dialogue, items and code actually name should ever be
  * copied into a build.
  *
- *   node tools/asset-manifest.mjs --write    # rewrite src/content/active-assets.json
- *   node tools/asset-manifest.mjs --check    # fail if it is stale
+ *   node tools/asset-manifest.mjs --write    # rewrite src/content/active-assets.json (npm run assets)
+ *   node tools/asset-manifest.mjs --check    # fail if it is stale (prebuild runs this)
  *   node tools/asset-manifest.mjs            # print what is active/archived
  *
  * "Named" means a key or URL in the compiled content (rooms, acts, ending, dialogue, items and
@@ -25,6 +25,9 @@ export const ROOT = fileURLToPath(new URL("..", import.meta.url));
 export const OUT = join(ROOT, "src/content/active-assets.json");
 const SRC = join(ROOT, "src");
 const PUBLIC = join(ROOT, "public");
+
+/** Page-shell files in public/ (icons named by index.html). Always shipped, not in MANIFEST. */
+export const SHELL_FILES = ["favicon.svg", "favicon-32.png", "apple-touch-icon.png"];
 
 const IMAGE_KEY = /^(bg|char|npc|prop|item)_[a-z0-9_]+$/;
 const AUDIO_KEY = /^music_[a-z0-9_]+$/;
@@ -77,9 +80,10 @@ export async function collect() {
     const images = MANIFEST.images;
     const audio = MANIFEST.audio;
     // A clone without the shared art folder is a code-only checkout, not a broken manifest:
-    // keep `--write`/build working and say so. A shelf that exists but lacks an active file is
-    // still an error (see `missing` below).
-    const artShelf = existsSync(join(PUBLIC, "assets"));
+    // keep the build working and say so. The shelf counts as present only when the painted
+    // folders exist (public/assets/audio is tracked in git, so it proves nothing). A shelf that
+    // exists but lacks an active file is still an error (see `missing` below).
+    const artShelf = hasArtShelf();
     const all = new Map([
       ...Object.entries(images).map(([key, url]) => [key, { kind: "image", url }]),
       ...Object.entries(audio).map(([key, url]) => [key, { kind: "audio", url }]),
@@ -125,7 +129,7 @@ export async function collect() {
     const activeImages = {};
     const activeAudio = {};
     const missing = [];
-    const activeFiles = new Set(["favicon.svg"]);
+    const activeFiles = new Set(SHELL_FILES);
     const unreferenced = [];
     const activeKeySet = new Set();
 
@@ -145,7 +149,9 @@ export async function collect() {
     }
 
     // The page icon is not in the asset manifest, but it is part of the shipped shell.
-    if (!existsSync(join(PUBLIC, "favicon.svg"))) missing.push({ key: "favicon", url: "/favicon.svg" });
+    for (const shell of SHELL_FILES) {
+      if (!existsSync(join(PUBLIC, shell))) missing.push({ key: `shell:${shell}`, url: `/${shell}` });
+    }
 
     const files = [...activeFiles].sort();
     const activeBytes = files.reduce((sum, rel) => {
@@ -182,6 +188,14 @@ export async function collect() {
   }
 }
 
+/**
+ * True when the shared painted art is in place: the gitignored scenes and characters folders.
+ * Keep in step with `hasArtShelf` in vite.config.ts and the CI art checks.
+ */
+export function hasArtShelf() {
+  return existsSync(join(PUBLIC, "assets/scenes")) && existsSync(join(PUBLIC, "assets/characters"));
+}
+
 function fileSize(url) {
   const path = join(PUBLIC, url.replace(/^\//, ""));
   return existsSync(path) ? statSync(path).size : 0;
@@ -204,7 +218,7 @@ export function summary(result) {
     `${Object.keys(result.activeAudio).length} audio, ${result.files.length} shipped public files`);
   lines.push(`shipped public weight: ${mb(result.activeBytes).toFixed(1)} MiB`);
   if (!result.artShelf) {
-    lines.push("art shelf: public/assets is absent — building a code-only bundle (copy the shared art folder to run the game).");
+    lines.push("art shelf: public/assets/scenes and /characters are absent — code-only bundle (copy the shared art folder to run the game).");
   }
   lines.push(`archived manifest entries (not built): ${result.unreferenced.length} entries, ` +
     `${mb(result.unreferenced.reduce((n, e) => n + e.bytes, 0)).toFixed(1)} MiB`);
@@ -239,7 +253,13 @@ async function main() {
   } else {
     console.log(summary(result));
   }
-  if (result.missing.length) process.exitCode = 1;
+  if (result.missing.length) {
+    if (args.has("--check") || args.has("--write")) {
+      console.error(`asset-manifest — ${result.missing.length} active file(s) missing from public/:`);
+      for (const entry of result.missing) console.error(`  ! ${entry.key}  ${entry.url}`);
+    }
+    process.exitCode = 1;
+  }
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

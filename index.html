@@ -4,14 +4,29 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="The Brass Compass — a tale of Dreadwater Isle. A family-friendly pirate point-and-click adventure about a cartographer's apprentice, a missing father, and the fog that keeps every ship it takes." />
+    <meta name="theme-color" content="#05070f" />
+    <meta name="color-scheme" content="dark" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="The Brass Compass — a tale of Dreadwater Isle" />
+    <meta property="og:description" content="A family-friendly pirate point-and-click adventure about a cartographer's apprentice, a missing father, and the fog that keeps every ship it takes." />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="The Brass Compass — a tale of Dreadwater Isle" />
+    <meta name="twitter:description" content="A family-friendly pirate point-and-click adventure about a cartographer's apprentice, a missing father, and the fog that keeps every ship it takes." />
     <title>The Brass Compass — a tale of Dreadwater Isle</title>
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
     <link rel="stylesheet" href="./src/style.css" />
   </head>
   <body>
     <div id="stage">
       <canvas id="game" tabindex="0" aria-label="The Brass Compass, a tale of Dreadwater Isle. Tab moves between the scene, the verbs and the inventory, arrow keys move within them, Enter does the suggested action, Q lists what you can interact with, J opens the chart, L opens the line history, and Escape pauses."></canvas>
     </div>
+    <noscript>
+      <p style="position:fixed;inset:0;z-index:10;margin:0;padding:2rem;display:flex;align-items:center;justify-content:center;text-align:center;background:#05070f;color:#e8c98a;font:1.1rem/1.5 Georgia,serif">
+        The Brass Compass needs JavaScript to run. Please enable it for this page and reload.
+      </p>
+    </noscript>
     <div id="sr" class="sr-only" aria-live="polite" aria-atomic="true"></div>
     <div id="boot">
       <div class="boot-inner">

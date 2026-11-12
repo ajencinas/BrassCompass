@@ -11,10 +11,10 @@
  * Kept free of canvas and game state so the rules can be tested on their own.
  */
 
-export type LessonId = "look" | "take" | "use" | "inventory" | "chart";
+export type LessonId = "look" | "take" | "use" | "inventory" | "chart" | "keys";
 
 /** The order they are introduced in; also the set that must be taught for `fresh` to end. */
-export const LESSON_ORDER: LessonId[] = ["look", "take", "use", "inventory", "chart"];
+export const LESSON_ORDER: LessonId[] = ["look", "take", "use", "inventory", "chart", "keys"];
 
 /** Where a lesson sits on screen: by the scene, the satchel, the top bar or the sentence line. */
 export type LessonAnchor = "scene" | "satchel" | "bar" | "sentence";
@@ -52,6 +52,14 @@ export const LESSONS: Record<LessonId, Lesson> = {
     anchor: "bar",
     text: (touch) => touch ? "The chart keeps what you learn. Tap it." : "The chart keeps what you learn. J.",
   },
+  // The shortcuts the other lessons never name: shown once, early in the first room.
+  keys: {
+    id: "keys",
+    anchor: "bar",
+    text: (touch) => touch
+      ? "Tap a thing to name it, tap again to act. The top bar holds reveal, hint, chart and map."
+      : "Q reveal · H tip · J chart · A map · Esc pause",
+  },
 };
 
 /** How long a lesson stays up, in seconds of play. */
@@ -83,8 +91,10 @@ export interface ActiveLesson {
 }
 
 /**
- * The lessons this browser has not seen, one at a time. A lesson is marked taught the moment it
- * is offered, not when it finishes: a player who closes the tab mid-line has still been told.
+ * The lessons this browser has not seen, one at a time. A lesson is marked taught when it
+ * actually takes the screen (becomes `current`), not when it is merely offered: one queued
+ * behind another, or dropped by a new voyage before its turn, has not been shown and is offered
+ * again later. A player who closes the tab mid-line has still been told.
  */
 export class FirstWatch {
   private taught: Set<LessonId>;
@@ -94,7 +104,9 @@ export class FirstWatch {
 
   constructor(
     initial: readonly LessonId[],
-    private save: (taught: LessonId[]) => void = () => {}
+    private save: (taught: LessonId[]) => void = () => {},
+    /** Called when a lesson takes the screen (so a screen reader hears it then, not when queued). */
+    private onShow: (id: LessonId) => void = () => {}
   ) {
     this.taught = new Set(initial.filter((id) => LESSON_ORDER.includes(id)));
     // Nothing left to teach: don't keep the class on the game's plate.
@@ -105,22 +117,28 @@ export class FirstWatch {
     return this.taught.size < LESSON_ORDER.length;
   }
 
-  /** Whether this lesson has already been offered on this browser. */
+  /** Whether this lesson has already been shown on this browser. */
   learnt(id: LessonId): boolean {
     return this.taught.has(id);
   }
 
   /**
-   * Offer a lesson at its moment. Returns false if it was already taught or is already waiting;
-   * otherwise it takes the screen now, or queues behind the lesson showing.
+   * Offer a lesson at its moment. Returns false if it was already taught, is showing, or is
+   * already waiting; otherwise it takes the screen now, or queues behind the lesson showing.
    */
   offer(id: LessonId): boolean {
-    if (this.taught.has(id)) return false;
+    if (this.taught.has(id) || this.current?.id === id || this.waiting.includes(id)) return false;
+    if (this.current) this.waiting.push(id);
+    else this.show(id);
+    return true;
+  }
+
+  /** A lesson takes the screen: this is the moment it counts as taught. */
+  private show(id: LessonId): void {
     this.taught.add(id);
     this.save([...this.taught]);
-    if (this.current) this.waiting.push(id);
-    else this.current = { id, left: LESSON_TIME, total: LESSON_TIME };
-    return true;
+    this.current = { id, left: LESSON_TIME, total: LESSON_TIME };
+    this.onShow(id);
   }
 
   /** Advance the showing lesson; `frozen` holds it while the screen is handing over. */
@@ -129,10 +147,11 @@ export class FirstWatch {
     this.current.left -= dt;
     if (this.current.left > 0) return;
     const next = this.waiting.shift();
-    this.current = next ? { id: next, left: LESSON_TIME, total: LESSON_TIME } : null;
+    this.current = null;
+    if (next) this.show(next);
   }
 
-  /** Drop anything waiting (a new voyage, a cutscene, leaving play). */
+  /** Drop anything waiting (a new voyage, a cutscene, leaving play); those were never shown. */
   clearQueue(): void {
     this.waiting = [];
     this.current = null;

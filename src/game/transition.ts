@@ -60,7 +60,10 @@ export class Transition {
     const at = this.toward ?? this.from;
     if (!at) return null;
     if (this.from && fade <= 0.001) {
+      // The reveal is over: the directional wipe must not outlive it and wake on the next
+      // curtain (Restart, back to the title), which has no side to come from.
       this.from = null;
+      this.entry = null;
       return null;
     }
     if (reduced) return null;

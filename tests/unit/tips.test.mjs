@@ -144,3 +144,48 @@ test("every Act's tips carry a nudge, and the nudge is never the answer", async 
     assert.ok(t.nudge.length <= 180 && t.text.length <= 180, `too long: ${t.nudge} / ${t.text}`);
   }
 });
+
+// ------------------------------------------------------------------ reachable-state lint
+
+const lib = await import("../../tools/adv-lib.mjs");
+const { actReach } = await vite.load("/src/game/reach.ts");
+const { ENDING_RESET_FLAGS } = await vite.load("/src/game/save.ts");
+
+function lintOf(files, tipList) {
+  const r = compile(files, {});
+  assert.deepEqual(r.errors.filter((e) => !e.warning).map(formatError), []);
+  const reach = actReach({ rooms: r.rooms, dialogues: r.dialogues, acts: r.acts, combos: r.combos });
+  const flags = lib.flagReachability({ ...r, reach, endingFlags: new Set() });
+  return lib.deadTips(tipList ?? r.tips, Object.keys(r.acts).map(Number), flags, (n) => reach.get(n)?.rooms ?? new Set());
+}
+
+test("the shipped tip ladder has no rung that no reachable state can show", async () => {
+  const { MANIFEST } = await vite.load("/src/content/assets.ts");
+  const { CHARACTERS } = await vite.load("/src/content/characters.ts");
+  const r = compile(lib.readScripts(), { characters: CHARACTERS, images: MANIFEST.images, music: MANIFEST.audio });
+  const reach = actReach({ rooms: r.rooms, dialogues: r.dialogues, acts: r.acts, combos: r.combos });
+  const flags = lib.flagReachability({ ...r, reach, endingFlags: ENDING_RESET_FLAGS });
+  assert.deepEqual(lib.deadTips(r.tips, Object.keys(r.acts).map(Number), flags, (n) => reach.get(n)?.rooms ?? new Set()), []);
+  assert.deepEqual(lib.choiceTerminalNodes(r.dialogues), []);
+});
+
+test("a flag set only by the effect that ends the act is dead in that act; a flag the opening scene sets is always on", () => {
+  const files = [
+    { path: "acts.adv", text: 'act 1 "One"\n  start dock\nact 2 "Two"\n  start dock\n' },
+    { path: "items.adv", text: 'item lemon "lemon"\n  look "A lemon."\n' },
+    { path: "rooms/dock.adv", text: 'room dock "Dock"\n  bg bg_dock\n  perspective horizon 1 ref 2 height 3\n  walk (0,0) (10,0) (10,10)\n  entry 5,5\n  scene if act 2 and not opened\n    set opened\n    say "x"\n  hotspot h "H"\n    area 0,0 10x10\n    look "x"\n  use lemon on h\n    "x"\n    set early\n    talk d\n' },
+    { path: "dialogue/d.adv", text: 'dialogue d\n  node a narrator "A"\n    set lost\n    act 1\n    -> END\n' },
+  ];
+  const tipsOf = (...rungs) => rungs.map(([cond, text]) => ({ if: cond, text }));
+  // `lost` is only set by the effect ending act 1, so "act 1 and lost" can never be shown.
+  const dead = lintOf(files, tipsOf([[{ act: 1 }, { flag: "lost" }], "after the end"], [[{ act: 1 }], "act one"]));
+  assert.equal(dead.length, 1);
+  assert.match(dead[0], /after the end/);
+  // `opened` is set by the opening scene of act 2, so the plain act-2 rung behind "not opened" is dead.
+  const dead2 = lintOf(files, tipsOf([[{ act: 2 }, { flag: "opened" }], "opened"], [[{ act: 2 }, { flag: "opened", is: false }], "not opened"]));
+  assert.equal(dead2.length, 1);
+  assert.match(dead2[0], /not opened/);
+  // A flag nothing ever sets is dead; one a hotspot sets is live.
+  assert.equal(lintOf(files, tipsOf([[{ act: 1 }, { flag: "ghost" }], "ghost"], [[{ act: 1 }], "one"]))[0].includes("ghost"), true);
+  assert.deepEqual(lintOf(files, tipsOf([[{ act: 1 }, { flag: "early" }], "early"], [[{ act: 1 }], "one"])), []);
+});

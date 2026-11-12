@@ -23,8 +23,9 @@ const result = compile(readScripts(), {
   images: MANIFEST.images,
   music: MANIFEST.audio,
 });
-if (result.errors.length) {
-  for (const e of result.errors) console.error(`${e.file}:${e.line}: ${e.message}`);
+const fatal = result.errors.filter((e) => !e.warning);
+if (fatal.length) {
+  for (const e of fatal) console.error(`${e.file}:${e.line}: ${e.message}`);
   process.exit(1);
 }
 const rooms = Object.values(result.rooms);

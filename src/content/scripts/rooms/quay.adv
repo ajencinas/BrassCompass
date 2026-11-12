@@ -52,7 +52,7 @@ room quay "The Quay"
   hotspot lighthouse "the lighthouse"
     area 290,250 180x290
     nowalk
-    look "The lighthouse on the point. It burns for the harbour mouth, and it does not reach the fog."
+    look "The lighthouse on the point. It burns for the harbour mouth, and for anyone still coming home."
 
   hotspot marrow "the Marrow's bow"
     area 1120,300 420x310

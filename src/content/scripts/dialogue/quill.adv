@@ -5,7 +5,6 @@ dialogue quill
     > "You're Quill." -> name
     > "Who told you that?" -> marta
     > "Later." -> END
-    > "Anything out there?" if act 2 -> aboard
 
   node marta quill "Marta tells everyone everything. It's how the island stays alive."
     -> want
@@ -18,7 +17,7 @@ dialogue quill
     > "Why won't Vex sail?" -> why
     > "Then I'll find another crew." -> END
 
-  node why quill "Ask him. He's been counting his money all morning."
+  node why quill "Ask him. He's been counting his money all night."
     > "Where's your compass?" -> compass
     > "I'll ask him." -> END
 
@@ -176,7 +175,7 @@ dialogue quill
   node camp_gone quill "The fog took them, or the camp did. I don't like either answer."
     -> camp
 
-  node camp_hut quill "Locked from the outside. That's not a store. That's a cage."
+  node camp_hut quill "Locked from the outside, same as the tents. That's a store, shut up tidy by people who meant to come back."
     -> camp
 
   node wreck quill "I was in the nest when she went. I heard the bell. Then the water."

@@ -1,10 +1,11 @@
 room lagoon_shore "The Wrack Line"
   bg bg_lagoon_shore_v2b_wide
   width 2560
+  backdrop "contrast(1.04) saturate(0.84) brightness(1.08) tone(0.3)"
   music music_sea
   ambience sea
-  # The plate is the Shroud's own cold, fog-bound flats, painted at night. Only the figures are
-  # graded, so the painting keeps the grey-blue palette it was made with.
+  # The plate is the Shroud's own cold, fog-bound flats, painted at night. The figures are
+  # graded to match: the backdrop deepens the pale flats and tones them (indigo shadows, amber key).
   grade "saturate(0.76) brightness(0.92)"
   perspective horizon 500 ref 875 height 300
   # The longboat fills the lower left, so the walk starts to the right of her hull and runs the
@@ -39,7 +40,7 @@ room lagoon_shore "The Wrack Line"
     say "\"I could have come about. I told myself the fog was too thick.\""
     say "Quill turns on him. \"You knew,\" she says. \"You knew, and you let us come.\""
     say "Dorrit does not say anything. That is how I know he is angry."
-    say "Vex pulls the coat down. He looks older than he did this morning."
+    say "Vex pulls the coat down. He looks older than he did at sundown."
     say "\"The fog was thinner than I told myself. He waved. I turned the wheel.\""
     say "\"You can hate me on the walk. There is a long walk.\""
     say "Hobb has not said a word. He is looking out at the wreck on the reef."
@@ -61,8 +62,8 @@ room lagoon_shore "The Wrack Line"
     area (560,480) (1700,480) (1700,640) (1450,680) (900,660) (560,620)
     stand 1300,850
     look "The lagoon, flat and cold. The water lies in grey channels between the sandbars."
-    talk "I say my father's name out over the water. The water has heard it before."
-    use "I could drink it. I have had worse from the tavern."
+    talk "I say my father's name to the lagoon. Somewhere out there a ripple starts, and thinks better of it."
+    use "I put a finger in. It is cold enough to feel like a decision."
     pickup "I would need something to carry it in. My hands have been tried."
 
   hotspot wreck_far "the wreck in the fog"
@@ -98,7 +99,7 @@ room lagoon_shore "The Wrack Line"
     look "Vex, on the flats, with his coat half off. He has stopped being the captain of anything."
     talk "He does not look up. \"The tide is wrong. We have until it turns.\""
       talk vex at shore
-    give "He looks at my hands, then at the water. \"Keep it. I travel light these days.\""
+    give "He looks at my hands, then at the water. \"Save it for someone who is staying. I travel light these days.\""
 
   hotspot quill "Quill"
     show if act 3

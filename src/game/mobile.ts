@@ -15,7 +15,8 @@
 import type { VerbId } from "./types";
 
 export type MobileBarId = "reveal" | "log" | "tip" | "casebook" | "map" | "pause";
-export type MobileTitleId = "continue" | "start" | "explore" | "keep" | "confirm" | "previous";
+export type MobileTitleId = "continue" | "start" | "explore" | "keep" | "confirm" | "previous"
+  | "recover" | "back" | "more" | `page${number}`;
 
 export interface MobileButton {
   id: MobileTitleId;
@@ -36,6 +37,8 @@ export interface MobileItem {
   id: string;
   name: string;
   selected: boolean;
+  /** URL of the painted icon (the same art the desktop satchel draws), or null if it has none. */
+  icon: string | null;
 }
 
 export interface MobileDialogueChoice {
@@ -49,19 +52,13 @@ export interface MobileRoom {
 }
 
 export interface MobileState {
-  screen: "title" | "prologue" | "play" | "dialogue" | "ending";
+  screen: "title" | "play" | "dialogue" | "ending";
   blocked: boolean;
   title: { buttons: MobileButton[] };
-  prologue: {
-    text: string;
-    shown: number;
-    speaker: string;
-    canStamp: boolean;
-    skippable: boolean;
-    stamped: boolean;
-  };
   dialogue: {
     speaker: string;
+    /** URL of the speaker's portrait, or null when they have none. */
+    portrait: string | null;
     text: string;
     shown: number;
     choices: MobileDialogueChoice[];
@@ -84,6 +81,8 @@ export interface MobileState {
   };
   reveal: boolean;
   tip: boolean;
+  /** The first-watch lesson showing now (a one-line toast), or null. */
+  lesson: string | null;
   roomMenu: { open: boolean; rooms: MobileRoom[] } | null;
 }
 
@@ -99,20 +98,26 @@ export interface MobileBridge {
   dialogueTap(): void;
   dialogueChoice(index: number): void;
   title(id: MobileTitleId): void;
-  prologueStamp(): void;
-  prologueSkip(): void;
   advanceEnding(): void;
   room(id: string): void;
   openRooms(): void;
   closeRooms(): void;
+  /** Any tap on the touch chrome is a gesture: let the game unlock its audio from it. */
+  unlockAudio?(): void;
+  /** The satchel drawer opened or closed by the player: the game plays the flap. */
+  drawer?(open: boolean): void;
   state(): MobileState;
 }
 
-const BARS: { id: MobileBarId; glyph: string; label: string }[] = [
+/** A folded sea chart and a leather satchel, drawn so the two buttons never share a glyph. */
+const CHART_ICON = `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20Z"/><path d="M9 4v13.5M15 6.5V20"/></svg>`;
+const BAG_ICON = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M8 8V6.5A4 4 0 0 1 16 6.5V8"/><path d="M5.5 8h13l1.5 11.5a1 1 0 0 1-1 1.1H5a1 1 0 0 1-1-1.1Z"/><path d="M9 13.5h6"/></svg>`;
+
+const BARS: { id: MobileBarId; glyph: string; label: string; svg?: string }[] = [
   { id: "reveal", glyph: "◉", label: "Reveal interactive things" },
   { id: "log", glyph: "≡", label: "Line history" },
   { id: "tip", glyph: "✦", label: "Tip" },
-  { id: "casebook", glyph: "◈", label: "Chart" },
+  { id: "casebook", glyph: "", label: "Chart", svg: CHART_ICON },
   { id: "map", glyph: "⌖", label: "Map" },
   { id: "pause", glyph: "Ⅱ", label: "Pause" },
 ];
@@ -136,12 +141,10 @@ export class MobileUI {
   private clear: HTMLButtonElement;
   private title: HTMLElement;
   private titleButtons: HTMLElement;
-  private prologue: HTMLElement;
-  private prologueSpeaker: HTMLElement;
-  private prologueText: HTMLElement;
-  private prologueStamp: HTMLButtonElement;
-  private prologueSkip: HTMLButtonElement;
   private dialogue: HTMLElement;
+  private dialogueInner: HTMLElement;
+  private portrait: HTMLImageElement;
+  private lesson: HTMLElement;
   private speaker: HTMLElement;
   private dialogueText: HTMLButtonElement;
   private choices: HTMLElement;
@@ -175,7 +178,9 @@ export class MobileUI {
   private lastLine = "";
   private lastSpeaker = "";
   private lastDialogue = "";
-  private lastPrologue = "";
+  private lastLesson = "";
+  private lastPortrait = "";
+  private verbKey = "";
   private lastEnding = "";
 
   constructor(private bridge: MobileBridge) {
@@ -184,6 +189,7 @@ export class MobileUI {
     this.root.innerHTML = `
       <div class="m-top" role="toolbar" aria-label="Game controls"></div>
       <section class="m-hud" aria-label="Game controls">
+        <p class="m-lesson" aria-hidden="true" hidden></p>
         <div class="m-context">
           <p class="m-where"></p>
           <p class="m-room-name"></p>
@@ -198,7 +204,7 @@ export class MobileUI {
         <div class="m-verbs" role="toolbar" aria-label="Verbs"></div>
         <div class="m-bag-row">
           <button type="button" class="m-bag" aria-expanded="false" aria-controls="m-drawer">
-            <span class="m-bag-glyph" aria-hidden="true">◈</span>
+            <span class="m-bag-glyph" aria-hidden="true">${BAG_ICON}</span>
             <span class="m-bag-label">Satchel</span>
             <span class="m-bag-count"></span>
           </button>
@@ -211,18 +217,9 @@ export class MobileUI {
           <div class="m-title-buttons"></div>
         </div>
       </section>
-      <section class="m-prologue" aria-label="Cold open" hidden>
-        <div class="m-prologue-inner">
-          <p class="m-prologue-speaker"></p>
-          <p class="m-prologue-text" aria-live="polite"></p>
-          <div class="m-prologue-actions">
-            <button type="button" class="m-primary m-prologue-stamp">Stamp the day-book</button>
-            <button type="button" class="m-quiet m-prologue-skip" hidden>Skip</button>
-          </div>
-        </div>
-      </section>
       <section class="m-dialogue" role="dialog" aria-label="Conversation" hidden>
         <div class="m-dialogue-inner">
+          <img class="m-portrait" alt="" width="56" height="56" hidden />
           <p class="m-speaker"></p>
           <button type="button" class="m-dialogue-text"></button>
           <div class="m-choices"></div>
@@ -275,12 +272,10 @@ export class MobileUI {
     this.clear = this.q<HTMLButtonElement>(".m-clear");
     this.title = this.q(".m-title");
     this.titleButtons = this.q(".m-title-buttons");
-    this.prologue = this.q(".m-prologue");
-    this.prologueSpeaker = this.q(".m-prologue-speaker");
-    this.prologueText = this.q(".m-prologue-text");
-    this.prologueStamp = this.q<HTMLButtonElement>(".m-prologue-stamp");
-    this.prologueSkip = this.q<HTMLButtonElement>(".m-prologue-skip");
     this.dialogue = this.q(".m-dialogue");
+    this.dialogueInner = this.q(".m-dialogue-inner");
+    this.portrait = this.q<HTMLImageElement>(".m-portrait");
+    this.lesson = this.q(".m-lesson");
     this.speaker = this.q(".m-speaker");
     this.dialogueText = this.q<HTMLButtonElement>(".m-dialogue-text");
     this.choices = this.q(".m-choices");
@@ -321,7 +316,7 @@ export class MobileUI {
       button.setAttribute("aria-label", bar.label);
       button.title = bar.label;
       if (bar.id === "reveal" || bar.id === "tip") button.setAttribute("aria-pressed", "false");
-      button.innerHTML = `<span aria-hidden="true">${bar.glyph}</span>`;
+      button.innerHTML = `<span aria-hidden="true">${bar.svg ?? bar.glyph}</span>`;
       this.top.append(button);
     }
     // Chapter select is a mode, not one of the six icon actions; it only appears while the
@@ -338,6 +333,9 @@ export class MobileUI {
 
   private bind(): void {
     this.root.addEventListener("click", (event) => {
+      // A tap on the touch chrome is a user gesture the browser trusts: unlock audio from it
+      // (iOS honours a click, and the window listener alone has been missed there).
+      this.bridge.unlockAudio?.();
       const target = (event.target as Element | null)?.closest<HTMLElement>("[data-bar],[data-verb],[data-item],[data-title],[data-room],[data-choice]");
       if (target) {
         const bar = target.dataset.bar as MobileBarId | undefined;
@@ -368,10 +366,9 @@ export class MobileUI {
       if (this.scenes.contains(event.target as Node)) { this.bridge.openRooms(); return; }
       if (this.bag.contains(event.target as Node)) { this.setDrawer(!this.drawerOpen); return; }
       if ((event.target as Element | null)?.closest(".m-drawer-close")) { this.setDrawer(false); return; }
-      if (event.target === this.dialogueText) { this.bridge.dialogueTap(); return; }
+      // The sheet's empty part is as good as the line itself: a thumb anywhere on it goes on.
+      if (event.target === this.dialogueText || event.target === this.dialogueInner) { this.bridge.dialogueTap(); return; }
       if (event.target === this.dialogueContinue) { this.bridge.dialogueTap(); return; }
-      if (event.target === this.prologueStamp) { this.bridge.prologueStamp(); return; }
-      if (event.target === this.prologueSkip) { this.bridge.prologueSkip(); return; }
       if (event.target === this.endingPage) return;
       if ((event.target as Element | null)?.closest(".m-ending-continue")) { this.bridge.advanceEnding(); return; }
       if ((event.target as Element | null)?.closest(".m-rooms-close")) { this.bridge.closeRooms(); return; }
@@ -380,9 +377,10 @@ export class MobileUI {
     });
   }
 
-  private setDrawer(open: boolean): void {
+  private setDrawer(open: boolean, quiet = false): void {
     const was = this.drawerOpen;
     this.drawerOpen = open;
+    if (open !== was && !quiet) this.bridge.drawer?.(open);
     this.drawers.hidden = !open;
     this.bag.setAttribute("aria-expanded", String(open));
     if (open) this.renderItems(this.bridge.state());
@@ -416,18 +414,21 @@ export class MobileUI {
     this.top.hidden = state.screen !== "play";
     this.hud.hidden = state.screen !== "play";
     this.title.hidden = state.screen !== "title";
-    this.prologue.hidden = state.screen !== "prologue";
     this.dialogue.hidden = state.screen !== "dialogue";
     this.ending.hidden = state.screen !== "ending";
     this.rooms.hidden = !(state.screen === "play" && state.roomMenu?.open);
-    if (state.screen !== "play") this.setDrawer(false);
+    const chromeBlocked = Boolean(state.roomMenu?.open) || state.screen === "dialogue";
+    this.top.inert = chromeBlocked;
+    const canvas = document.getElementById("game") as HTMLCanvasElement | null;
+    if (canvas) canvas.tabIndex = state.screen === "title" || state.screen === "dialogue" ? -1 : 0;
+    if (state.screen !== "play") this.setDrawer(false, true);
     this.scenes.hidden = state.screen !== "play" || !play.explore;
     this.syncTopBar(state);
     this.syncTitle(state);
-    this.syncPrologue(state);
     this.syncDialogue(state);
     this.syncEnding(state);
     this.syncRooms(state);
+    this.syncLesson(state);
 
     const where = play.act;
     if (where !== this.lastWhere) { this.where.textContent = where; this.lastWhere = where; }
@@ -476,13 +477,14 @@ export class MobileUI {
 
     // A sheet or a screen that replaced another one moves focus with it: a real DOM button that
     // has just been put away (or shown) must not leave the keyboard on <body>.
+    const firstSync = this.lastScreen === null;
     const screenChanged = this.lastScreen !== null && this.lastScreen !== state.screen;
     this.lastScreen = state.screen;
     const roomsOpen = state.screen === "play" && Boolean(state.roomMenu?.open);
     if (roomsOpen && !this.roomsWereOpen) this.focusRooms();
     else if (!roomsOpen && this.roomsWereOpen && !screenChanged) this.focusAfterRooms();
     this.roomsWereOpen = roomsOpen;
-    if (screenChanged) this.focusScreen(state.screen);
+    if (screenChanged || firstSync) this.focusScreen(state.screen);
   }
 
   /** Focus the first scene of the chapter-select sheet (or its Done button if it is empty). */
@@ -569,24 +571,18 @@ export class MobileUI {
     }
   }
 
-  private syncPrologue(state: MobileState): void {
-    const p = state.prologue;
-    const text = p.text.slice(0, Math.max(0, p.shown));
-    if (text !== this.lastPrologue) {
-      this.prologueText.textContent = text;
-      this.lastPrologue = text;
-    }
-    this.prologueSpeaker.textContent = p.speaker;
-    this.prologueSpeaker.hidden = !p.speaker;
-    this.prologueStamp.disabled = !p.canStamp;
-    this.prologueStamp.textContent = p.stamped ? "Stamped" : "Stamp the day-book";
-    this.prologueSkip.hidden = !p.skippable;
-  }
-
   private syncDialogue(state: MobileState): void {
     const d = state.dialogue;
     if (!d) return;
     if (d.speaker !== this.lastSpeaker) { this.speaker.textContent = d.speaker; this.lastSpeaker = d.speaker; }
+    const portrait = d.portrait ?? "";
+    if (portrait !== this.lastPortrait) {
+      this.lastPortrait = portrait;
+      if (portrait) this.portrait.src = portrait;
+      else this.portrait.removeAttribute("src");
+      this.portrait.hidden = !portrait;
+      this.dialogueInner.classList.toggle("has-portrait", Boolean(portrait));
+    }
     const text = d.text.slice(0, Math.max(0, d.shown));
     if (text !== this.lastDialogue) { this.dialogueText.textContent = text; this.lastDialogue = text; }
     const key = d.choices.map((c) => `${c.text}|${c.seen ? 1 : 0}`).join("§");
@@ -608,6 +604,16 @@ export class MobileUI {
       }
     }
     this.dialogueContinue.hidden = !d.canAdvance || d.choices.length > 0;
+  }
+
+  /** The first-watch lesson, as a DOM toast: the canvas plate is four-pixel type on a phone. */
+  private syncLesson(state: MobileState): void {
+    const text = state.screen === "play" ? state.lesson ?? "" : "";
+    if (text !== this.lastLesson) {
+      this.lesson.textContent = text;
+      this.lastLesson = text;
+    }
+    this.lesson.hidden = text.length === 0;
   }
 
   private syncEnding(state: MobileState): void {
@@ -636,7 +642,10 @@ export class MobileUI {
 
   private syncVerbs(state: MobileState): void {
     const verbs = state.play.verbs;
-    if (this.verbs.childElementCount !== verbs.length) {
+    // Rebuild when the verbs themselves change, not just how many there are.
+    const key = verbs.map((verb) => `${verb.id}|${verb.label}`).join("§");
+    if (key !== this.verbKey || this.verbs.childElementCount !== verbs.length) {
+      this.verbKey = key;
       this.verbs.replaceChildren();
       for (const verb of verbs) {
         const button = document.createElement("button");
@@ -658,7 +667,7 @@ export class MobileUI {
 
   private renderItems(state: MobileState): void {
     const items = state.play.inventory;
-    const key = `${state.play.page}|${items.map((item) => `${item.id}|${item.name}`).join("§")}`;
+    const key = `${state.play.page}|${items.map((item) => `${item.id}|${item.name}|${item.icon ?? ""}`).join("§")}`;
     if (key !== this.itemKey) {
       this.itemKey = key;
       this.items.replaceChildren();
@@ -667,7 +676,20 @@ export class MobileUI {
         button.type = "button";
         button.dataset.item = item.id;
         button.className = "m-item";
-        button.textContent = item.name;
+        if (item.icon) {
+          const icon = document.createElement("img");
+          icon.className = "m-item-icon";
+          icon.src = item.icon;
+          icon.alt = "";
+          icon.width = 40;
+          icon.height = 40;
+          icon.decoding = "async";
+          button.append(icon);
+        }
+        const name = document.createElement("span");
+        name.className = "m-item-name";
+        name.textContent = item.name;
+        button.append(name);
         this.items.append(button);
       }
     }

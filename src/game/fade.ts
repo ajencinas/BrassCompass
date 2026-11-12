@@ -43,10 +43,20 @@ export interface ExitCardCrop {
 }
 
 /**
+ * Where the middle of the visible scene is, in logical pixels. The desktop frame's middle is
+ * (960, 540); a phone's scene canvas is 880 high and, held upright, shows only a slice of the
+ * width, so the exit card and the loading cue are centred on what the player can see.
+ */
+export interface FadeCenter { x: number; y: number }
+const DEFAULT_CENTER: FadeCenter = { x: LOGICAL_W / 2, y: LOGICAL_H / 2 };
+
+/**
  * The close-up crop of the room painting around a threshold, clamped to the painting, scaled
  * to cover the frame and pushed in a little as the curtain falls.
  */
-export function exitCardCrop(card: ExitCardSource, eased: number): ExitCardCrop {
+export function exitCardCrop(
+  card: ExitCardSource, eased: number, cx = LOGICAL_W / 2, cy = LOGICAL_H / 2,
+): ExitCardCrop {
   const zoom = 1.06 + eased * 0.18;
   const sw = Math.max(1, Math.min(card.imageW, card.w * 1.25));
   const sh = Math.max(1, Math.min(card.imageH, card.h * 1.25));
@@ -57,8 +67,8 @@ export function exitCardCrop(card: ExitCardSource, eased: number): ExitCardCrop 
   const dh = sh * scale;
   return {
     sx, sy, sw, sh,
-    dx: LOGICAL_W / 2 - dw / 2,
-    dy: LOGICAL_H / 2 - dh / 2,
+    dx: cx - dw / 2,
+    dy: cy - dh / 2,
     dw, dh,
   };
 }
@@ -127,16 +137,17 @@ export function drawExitCard(
   card: ExitCardSource,
   f: number,
   eased: number,
+  center: FadeCenter = DEFAULT_CENTER,
 ): void {
-  const crop = exitCardCrop(card, eased);
+  const crop = exitCardCrop(card, eased, center.x, center.y);
   const a = Math.min(1, (f - 0.28) / 0.22);
   ctx.save();
   ctx.globalAlpha = a;
   ctx.fillStyle = "#020406";
   ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
   ctx.drawImage(card.image, crop.sx, crop.sy, crop.sw, crop.sh, crop.dx, crop.dy, crop.dw, crop.dh);
-  const warm = ctx.createRadialGradient(LOGICAL_W / 2, LOGICAL_H * 0.54, 10,
-    LOGICAL_W / 2, LOGICAL_H * 0.54, LOGICAL_W * 0.46);
+  const warm = ctx.createRadialGradient(center.x, center.y + LOGICAL_H * 0.04, 10,
+    center.x, center.y + LOGICAL_H * 0.04, LOGICAL_W * 0.46);
   warm.addColorStop(0, "rgba(255,190,105,0.12)");
   warm.addColorStop(0.55, "rgba(255,155,70,0.04)");
   warm.addColorStop(1, "rgba(0,0,0,0.35)");
@@ -149,6 +160,51 @@ export function drawExitCard(
   ctx.restore();
 }
 
+/** Seconds the curtain waits on a room's art before a small "loading" cue appears. */
+export const LOADING_CUE_AFTER = 1.5;
+/**
+ * Seconds the curtain will wait on a room's art, at most. A slow connection should be waited
+ * for (a big plate on 3G takes many seconds), but not for ever: after this the room is shown
+ * on the painted fallback plate and the real art swaps in if it arrives.
+ */
+export const ROOM_WAIT_CAP = 25;
+
+/** The cue's opacity after `waited` seconds of waiting: 0 until it is due, then in over 0.5 s. */
+export function loadingCueAlpha(waited: number): number {
+  return Math.max(0, Math.min(1, (waited - LOADING_CUE_AFTER) / 0.5)) * 0.75;
+}
+
+/**
+ * A small ring of dots and the word "Loading" at the middle of the black, once the wait has
+ * run past `LOADING_CUE_AFTER`. Under reduced motion the ring holds still and only the dots'
+ * brightness steps round, so it never spins.
+ */
+export function drawLoadingCue(
+  ctx: CanvasRenderingContext2D, waited: number, reduced: boolean, center: FadeCenter = DEFAULT_CENTER,
+): void {
+  const alpha = loadingCueAlpha(waited);
+  if (alpha <= 0) return;
+  const cx = center.x, cy = center.y + 6, n = 8, r = 18;
+  const head = Math.floor(waited * 8) % n;
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = "#d8c9a3";
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * Math.PI * 2 - Math.PI / 2;
+    const age = reduced ? 0 : (head - i + n) % n;
+    ctx.globalAlpha = alpha * (reduced ? 0.6 : Math.max(0.18, 1 - age / n));
+    ctx.beginPath();
+    ctx.arc(cx + Math.cos(a) * r, cy - 30 + Math.sin(a) * r, 3.2, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = alpha;
+  ctx.font = "22px Georgia, serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("Loading", cx, cy + 12);
+  ctx.restore();
+}
+
 /** Everything the curtain needs from the game at paint time. */
 export interface SceneFade {
   /** 0 clear .. 1 black. */
@@ -158,6 +214,10 @@ export interface SceneFade {
   entry: ExitSide | null;
   /** The threshold being crossed, or null. */
   card: ExitCardSource | null;
+  /** Seconds the curtain has been held on a room's art still arriving (0 when it is not). */
+  waited?: number;
+  /** The middle of the visible scene (see FadeCenter); the desktop frame's middle if omitted. */
+  center?: FadeCenter;
 }
 
 /**
@@ -173,5 +233,7 @@ export function drawFade(ctx: CanvasRenderingContext2D, state: SceneFade): void 
     ctx.fillStyle = `rgba(0,0,0,${eased})`;
     ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
   }
-  if (state.card && f > 0.28 && !state.entry) drawExitCard(ctx, state.card, f, eased);
+  const center = state.center ?? DEFAULT_CENTER;
+  if (state.card && f > 0.28 && !state.entry) drawExitCard(ctx, state.card, f, eased, center);
+  if (state.waited && f > 0.99) drawLoadingCue(ctx, state.waited, state.reduced, center);
 }

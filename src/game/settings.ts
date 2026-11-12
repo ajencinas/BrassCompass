@@ -1,6 +1,6 @@
 /** Native controls keep settings usable with mouse, touch, and keyboard. */
 
-import { effectiveTextSpeed, type Prefs, type TextScale, type TextSpeed } from "./prefs";
+import { effectiveTextSpeed, type GraphicsQuality, type Prefs, type ReadingTime, type RevealMode, type TextScale, type TextSpeed } from "./prefs";
 import { CONTROLS } from "./controls";
 import { restoreFocus } from "./focus";
 
@@ -20,6 +20,8 @@ export interface SettingsActions {
   reduced: () => boolean;
   /** The text size "Automatic" picks on this screen. */
   autoTextScale: () => TextScale;
+  /** Whether high contrast is in effect right now (the OS setting when following it). */
+  contrast: () => boolean;
 }
 
 /** The mark in the corner: a compass, the game's own signature on an instrument panel. */
@@ -79,10 +81,19 @@ export class Settings {
             <label class="row stacked"><span>Text size</span><select data-pref="textScale">
               <option value="auto">Automatic</option>
               <option value="1">100%</option><option value="1.25">125%</option><option value="1.5">150%</option>
+              <option value="1.75">175%</option><option value="2">200%</option>
             </select></label>
-            <button data-action="wait" aria-pressed="false"></button>
+            <label class="row stacked"><span>Reading time</span><select data-pref="readingTime" aria-describedby="reading-note">
+              <option value="normal">Normal</option><option value="long">Long</option>
+              <option value="xlong">Very long</option>
+            </select></label>
+            <button data-action="wait" aria-pressed="false" aria-describedby="wait-note"></button>
+            <button data-action="skipread" aria-pressed="false" aria-describedby="skip-note"></button>
           </div>
           <p class="note" id="speed-note" hidden>Reduced motion is on, so lines appear at once.</p>
+          <p class="note" id="reading-note">Reading time sets how long a line stays up once it has been read, before it moves on by itself.</p>
+          <p class="note" id="wait-note">Keep each line until I click: a line that something is waiting on stays up until you click, press a key or tap. Off, it moves on by itself after the reading time.</p>
+          <p class="note" id="skip-note">Skip read text: lines you have already read move on after a moment. Hold Ctrl, or press ], to fast-forward them even when this is off.</p>
         </div>
         <div class="group" data-group="sound" role="group" aria-labelledby="sound-heading">
           <h2 id="sound-heading"><span class="group-icon">${groupIcon("sound")}</span>Sound</h2>
@@ -96,6 +107,16 @@ export class Settings {
           <label class="row"><span>Reduced motion</span><select data-pref="reducedMotion">
             <option value="auto">Follow system</option><option value="on">On</option><option value="off">Off</option>
           </select></label>
+          <label class="row"><span>High contrast</span><select data-pref="highContrast">
+            <option value="auto">Follow system</option><option value="on">On</option><option value="off">Off</option>
+          </select></label>
+          <label class="row"><span>Reveal key (Q)</span><select data-pref="revealMode">
+            <option value="hold">Hold to show</option><option value="toggle">Press to switch on and off</option>
+          </select></label>
+          <label class="row"><span>Graphics quality</span><select data-pref="quality" aria-describedby="quality-note">
+            <option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option>
+          </select></label>
+          <p class="note" id="quality-note">Lower it if the game stutters: Medium and Low draw fewer pixels, and Low drops the soft glows.</p>
           <button data-action="fullscreen" aria-pressed="false"></button>
           <button data-action="tips" aria-pressed="false"></button>
         </div>
@@ -129,6 +150,7 @@ export class Settings {
       if (action === "mute") { this.actions.mute(); this.sync(); }
       if (action === "tips") { this.actions.toggleTips(); this.sync(); }
       if (action === "wait") { this.actions.setPrefs({ waitForClick: !this.actions.prefs().waitForClick }); this.sync(); }
+      if (action === "skipread") { this.actions.setPrefs({ skipRead: !this.actions.prefs().skipRead }); this.sync(); }
       if (action === "fullscreen") this.toggleFullscreen();
     });
     // A click on the dim backdrop would drop focus onto the page, where the dialog's own keys
@@ -154,6 +176,12 @@ export class Settings {
         if (select.dataset.pref === "reducedMotion") {
           this.actions.setPrefs({ reducedMotion: v === "auto" ? null : v === "on" });
         }
+        if (select.dataset.pref === "highContrast") {
+          this.actions.setPrefs({ highContrast: v === "auto" ? null : v === "on" });
+        }
+        if (select.dataset.pref === "readingTime") this.actions.setPrefs({ readingTime: v as ReadingTime });
+        if (select.dataset.pref === "revealMode") this.actions.setPrefs({ revealMode: v as RevealMode });
+        if (select.dataset.pref === "quality") this.actions.setPrefs({ quality: v as GraphicsQuality });
         this.sync();
       });
     }
@@ -237,17 +265,25 @@ export class Settings {
     size.value = prefs.textScale === null ? "auto" : String(prefs.textScale);
     size.options[0].textContent = `Automatic (${Math.round(this.actions.autoTextScale() * 100)}% here)`;
     sel("reducedMotion").value = prefs.reducedMotion === null ? "auto" : prefs.reducedMotion ? "on" : "off";
+    sel("highContrast").value = prefs.highContrast === null ? "auto" : prefs.highContrast ? "on" : "off";
+    sel("readingTime").value = prefs.readingTime;
+    sel("revealMode").value = prefs.revealMode;
+    sel("quality").value = prefs.quality;
     const toggle = (action: string, on: boolean, yes: string, no: string) => {
       const b = this.button(action);
       b.textContent = on ? yes : no;
       b.setAttribute("aria-pressed", String(on));
     };
-    toggle("wait", prefs.waitForClick, "Wait for click: on", "Wait for click: off");
+    toggle("wait", prefs.waitForClick, "Keep each line until I click: on", "Keep each line until I click: off");
+    toggle("skipread", prefs.skipRead, "Skip read text: on", "Skip read text: off");
     toggle("tips", this.actions.tips(), "Tips: on", "Tips: off");
     this.button("tips").setAttribute("aria-label",
       this.actions.tips() ? "Tips are on. Turn tips off." : "Tips are off. Turn tips on.");
     this.button("wait").setAttribute("aria-label",
-      prefs.waitForClick ? "Wait for click is on. Let lines move on their own." : "Wait for click is off. Keep lines until clicked.");
+      prefs.waitForClick ? "Keep each line until I click is on. Turn it off to let lines move on by themselves."
+        : "Keep each line until I click is off. Turn it on to keep lines until you click.");
+    this.button("skipread").setAttribute("aria-label",
+      prefs.skipRead ? "Skip read text is on. Turn it off." : "Skip read text is off. Turn it on.");
     const full = Boolean(document.fullscreenElement ?? (document as { webkitFullscreenElement?: Element }).webkitFullscreenElement);
     const canFull = Boolean(document.documentElement.requestFullscreen ??
       (document.documentElement as { webkitRequestFullscreen?: unknown }).webkitRequestFullscreen);

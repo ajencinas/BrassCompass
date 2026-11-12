@@ -11,8 +11,9 @@
 # salvage_seen below decks, vex_exposed and marrow_lost at the helm. Act III reads the fog
 # flags its first scene and rooms set: stranded on the flats, bell_plan at the wreck,
 # elias_found and rule_name at the camp, lantern_boarded at the reef gate. Act IV reads the
-# three holds the deck and the captain's cabin set (bell_cut, lantern_doused, name_spoken);
-# its last rungs are the ending dialogue's own flags, curse_broken and escaped_fog.
+# three holds the deck and the captain's cabin set (bell_cut, lantern_doused, name_spoken).
+# The ending flags (curse_broken, escaped_fog) have no rung: the closing card follows the choice
+# at once. tools/test-scripts.mjs (3c) fails a rung that no reachable state can ever show.
 
 # Act I — the last step: a crew, a chart and a ship. Quill only counts once she has actually
 # joined (`seen:quill.join`): her compass being in hand is not the same as her saying yes, and
@@ -24,7 +25,7 @@ tip if act 1 and vex_deal and dorrit_cleared and quill_compass and seen:quill.jo
 # Hobb: the mast still wants a carpenter.
 tip if act 1 and vex_deal and dorrit_cleared and quill_compass and rook_story and not hobb_joined
   nudge "The Marrow has a captain, a navigator and a cook. She has no carpenter."
-  "Talk to Hobb at the shipwright's, off Wreckers' Lane."
+  "Pick up the crowbar from the counter at the shipwright's, off Wreckers' Lane, and use it on the seized mast band to win Hobb over."
 
 # Rook: the log is fetched, and still has to be brought back.
 tip if act 1 and vex_deal and dorrit_cleared and quill_compass and not rook_story and weather_works_store
@@ -64,18 +65,19 @@ tip if act 1 and met_vex and not rudder_back
 # Act I — the first step.
 tip if act 1
   nudge "The harbourmaster knows the harbour. The tavern keeper knows the island. The last captain has the only ship."
-  "Talk to Bramwick, then Marta, then Vex at his warehouse."
+  "Talk to Bramwick or Marta about a ship, and Vex has the only one: his warehouse."
 
 # Act II — the ship, the first fog, the hold and the captain's last lie. The ladder runs from
 # the last step back to the first, so the most advanced flag state wins.
 
-# The Marrow is lost: the longboat is the only deck left.
-tip if act 2 and marrow_lost
-  nudge "The Marrow is going down and the fog is full of timbers."
-  "Get into the longboat."
+# (marrow_lost is set by the scene that ends Act II, so no tip is ever asked while it holds.)
 
 # Vex has stopped lying and started sailing deeper. He is at the helm, not on the main deck:
 # the next move is to say it to his face, from the quarterdeck.
+tip if act 2 and vex_exposed and not marrow_lost and room marrow_quarterdeck
+  nudge "Vex has stopped explaining. He has the helm and he is not turning back."
+  "Talk to Vex at the helm and tell him to turn back."
+
 tip if act 2 and vex_exposed and not marrow_lost
   nudge "Vex has stopped explaining. He has the helm and he is not turning back."
   "Go up to the helm and tell Vex to turn back."
@@ -95,11 +97,6 @@ tip if act 2 and fog_tried and rule_light and not salvage_seen
   nudge "The fog hunts light and sound now, and Vex is carrying something he did not declare."
   "Go below decks and look in the hold."
 
-# The bell rang itself. Vex has to hear it from us.
-tip if act 2 and fog_tried and not rule_light
-  nudge "The bell rang itself and the lanterns died. Vex needs to hear it from us."
-  "Go aft and tell Vex what happened at the bow."
-
 # Act II — the first step. Vex has the helm and a heading.
 tip if act 2
   nudge "The crew is finding their places, and Vex has the helm. He wants to run her to the edge of the Shroud."
@@ -108,11 +105,6 @@ tip if act 2
 # Act III — the fog flats, the wreck, the castaway camp and the reef gate. The ladder works
 # whichever way round the player finds Hobb and Elias: a missing piece always has a next step.
 
-# The boarding has begun; the act is about to turn.
-tip if act 3 and lantern_boarded
-  nudge "The boarding party is over the rail, and the fog is closing behind us."
-  "Follow the others onto the deck of the Grey Lantern."
-
 # The plan and the name are both in hand.
 tip if act 3 and bell_plan and rule_name and not lantern_boarded
   nudge "A bell to cut, a light to douse, a name to say. The tide is with us."
@@ -120,12 +112,12 @@ tip if act 3 and bell_plan and rule_name and not lantern_boarded
 
 # The name without the bell.
 tip if act 3 and rule_name and not bell_plan
-  nudge "Elias has given us the name. Hobb has not heard his brother yet."
+  nudge "Elias has given us the name. Hobb has heard the bell, and has not yet said what he means to do about it."
   "Go back to the wreck and tell Hobb what Elias said."
 
 # Elias is alive; the rules are still in his head.
 tip if act 3 and elias_found and not rule_name
-  nudge "My father is alive and counting something on his fingers."
+  nudge "My father is alive and bent over his chart, and the rules are still in his head."
   "Talk to Elias again at the castaway camp."
 
 # Hobb has heard the bell; Elias has not been found.
@@ -133,60 +125,42 @@ tip if act 3 and bell_plan and not elias_found
   nudge "Hobb has heard his brother's bell. Nobody has told my father."
   "Go through the wreck to the castaway camp and find Elias."
 
-# Stranded on the flats: the wreck is the first stop.
-tip if act 3 and stranded and not bell_plan and not elias_found
+# Act III — the first step. Stranded on the flats (the opening scene sets `stranded` at once):
+# the wreck is the first stop.
+tip if act 3 and not bell_plan and not elias_found
   nudge "The crew is ashore, and the wreck is lying open on the reef."
   "Go to the sunken wreck and find Hobb."
-
-# Act III — the first step.
-tip if act 3
-  nudge "The fog flats, the wreck, and a camp I cannot see yet."
-  "Go to the sunken wreck and find the crew."
 
 # Act IV — the Grey Lantern. Three holds remain (the bell, the great lantern, the name), and
 # then Mordant. The order here is the order the deck teaches: bell first, then the light, then
 # the name. Every state has a next step, nudge first.
 
-# The choice is made; the closing card is next.
-tip if act 4 and (curse_broken or escaped_fog)
-  nudge "The fog is behind us, one way or another."
-  "Let the ending play."
+# (curse_broken and escaped_fog are ending flags: the closing card follows the choice at once, and
+# a save never carries them, so no tip is ever asked while they hold.)
 
-# The name is spoken; Mordant is waiting for an answer.
-tip if act 4 and name_spoken
+# All three holds are done and the name is spoken: Mordant is waiting in the cabin.
+tip if act 4 and bell_cut and lantern_doused and name_spoken
   nudge "Mordant is in his cabin, and he has not raised his voice once."
   "Talk to Mordant in the captain's cabin."
-
-# The bell is cut and the lantern is out; the name is the last hold.
-tip if act 4 and bell_cut and lantern_doused and not name_spoken
-  nudge "The bell is quiet and the great lantern is out. One thing is left."
-  "Find Mordant's name in the captain's cabin."
-
-# The bell is cut; the great lantern still burns at the stern.
-tip if act 4 and bell_cut and not lantern_doused and not name_spoken
-  nudge "The bell is cut, but the great lantern is still burning at the stern."
-  "Help Quill douse the great lantern."
-# The bell first: Hobb and Tam are at the rope.
-tip if act 4 and not bell_cut
-  nudge "Hobb has gone for the bell. Tam is the hand on the rope."
-  "Help Hobb cut the bell loose in the rigging."
-
-# The bell is cut; the great lantern still burns at the stern.
-tip if act 4 and not lantern_doused and has lantern
-  nudge "The great lantern is still burning, and the oiled canvas is in my hands."
-  "Use the oiled canvas on the great lantern."
-
-tip if act 4 and not lantern_doused
-  nudge "The bell is cut, but the great lantern is still burning at the stern."
-  "Ask Quill for the oiled canvas, then use it on the great lantern."
 
 # The bell and the lantern are done; the name is the last hold. The plate is already in the
 # satchel: it has to be set down on Mordant's desk, not found.
-tip if act 4 and not name_spoken
+tip if act 4 and bell_cut and lantern_doused
   nudge "The bell is quiet and the great lantern is out. One thing is left."
   "Set Mordant's nameplate on his desk in the captain's cabin."
 
-# All three holds are done; Mordant is waiting in the cabin, not on the deck.
+# The bell first: Hobb and Tam are at the rope. This holds even if the name was spoken early
+# (Mordant sends us back: not yet), so the next step is always on the deck.
+tip if act 4 and not bell_cut
+  nudge "Hobb has gone for the bell. Tam is the hand on the rope."
+  "Use the crowbar on the bell in the rigging, on the deck of the Grey Lantern."
+
+# The bell is cut; the canvas is already in hand.
+tip if act 4 and has lantern
+  nudge "The great lantern is still burning, and the oiled canvas is in my hands."
+  "Use the oiled canvas on the great lantern."
+
+# The bell is cut; the great lantern still burns at the stern.
 tip if act 4
-  nudge "Mordant is in his cabin, and he has not raised his voice once."
-  "Talk to Mordant in the captain's cabin."
+  nudge "The bell is cut, but the great lantern is still burning at the stern."
+  "Ask Quill for the oiled canvas, then use it on the great lantern."

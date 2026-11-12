@@ -12,6 +12,23 @@ dialogue marta
     > "Nothing. I'll stand." -> bye
     > "Rook told me the fog hunts by sound." if rule_sound -> rule
     > "I have my father's chart." if has chart -> chart
+  node again marta "Back again. Rook's still in his corner, and the kettle's still on. What do you need?"
+    > "What happened to my father?" -> father
+    > "I need a ship." -> ship
+    > "Tell me about the island." -> island
+    > "Tell me about Rook." -> rook
+    > "Did Dorrit take the stores?" -> dorrit
+    > "Nothing. I'll stand." -> bye
+    > "Rook told me the fog hunts by sound." if rule_sound -> rule
+    > "I have my father's chart." if has chart -> chart
+  node cleared marta "Dorrit has told the whole kitchen he was right all along. Pike's crew has gone very quiet. What do you need?"
+    > "What happened to my father?" -> father
+    > "I need a ship." -> ship
+    > "Tell me about the island." -> island
+    > "Tell me about Rook." -> rook
+    > "Nothing. I'll stand." -> bye
+    > "Rook told me the fog hunts by sound." if rule_sound -> rule
+    > "I have my father's chart." if has chart -> chart
   node father marta "He kept a room above the back door. I haven't touched it."
     -> father2
   node father2 marta "He was charting the fog. He said the answer was out there, not in a bottle."

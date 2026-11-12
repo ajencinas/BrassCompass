@@ -27,3 +27,13 @@ export const ROOM_TONE_FOR_ROOM: Readonly<Record<string, RoomToneKind>> = {
 export function roomToneFor(roomId: string): RoomToneKind | null {
   return ROOM_TONE_FOR_ROOM[roomId] ?? null;
 }
+
+/**
+ * A hotspot's line that says a way is shut ("Padlocked.", "Locked. The drawer is winning on
+ * points.", "bolted", "barred"). Used to give a refused open/use the sound of a door that will
+ * not give, without any audio syntax in the room scripts. "Unlocked" does not match.
+ */
+const LOCKED_LINE = /\b(?:locked|padlocked|bolted|barred|sealed shut)\b/i;
+export function isLockedLine(text: string): boolean {
+  return LOCKED_LINE.test(text);
+}

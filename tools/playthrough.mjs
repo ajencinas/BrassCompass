@@ -492,6 +492,13 @@ try {
   await until(() => evaluate("window.__game.title === false && window.__game.room.id === 'dock'"), "a new voyage at the dock");
   assert.equal(await evaluate("window.__game.act"), 1);
   assert.equal(await evaluate("window.__coldopen === undefined"), true);
+  // The opening is six lines of narration. A click on the floor must not be spent on the text
+  // alone: it moves the text on AND sets Fenn walking (once the curtain has lifted).
+  await evaluate("window.__ff(120)");
+  assert.equal(await evaluate("Boolean(window.__game.queue || window.__game.narration)"), true, "the opening narration is up");
+  await evaluate("window.__game.onClick(1100, 700, 0, 1)");
+  assert.ok(await evaluate("window.__game.path.length > 0"), "the first floor click walks, even over the opening text");
+  await evaluate("window.__game.path = []; window.__game.walkGoal = null");
   await readScene("the dock arrival");
   // The icon rail fades when idle, but never below a readable floor (the old 22% was a rumour
   // of a button). Park the pointer off the bar, spend the first-watch plates, and let it settle.

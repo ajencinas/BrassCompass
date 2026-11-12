@@ -4,6 +4,7 @@ room marrow_deck "The Marrow — Deck"
   # right. The lower third is one clear run of wet planks in front of the hatch.
   bg bg_marrow_deck_v2_wide
   width 2560
+  backdrop "lift(0.012)"
   music music_sea
   grade "saturate(0.9) brightness(0.98)"
   ambience sea
@@ -53,6 +54,12 @@ room marrow_deck "The Marrow — Deck"
 
   scene if act 2 and vex_exposed and not marrow_lost
     say "Above us, the helm is turning. Vex is not waiting for me."
+
+  # A migrated/hand-edited save can carry the one-way flag without the queued act ending.
+  # Do not strand it on a ship with no way to finish the act.
+  scene if act 2 and marrow_lost
+    say "The Marrow is already going into the fog. There is nothing left to argue with."
+    act 2
 
   hotspot rail "the sea"
     area 20,260 380x220
@@ -117,10 +124,12 @@ room marrow_deck "The Marrow — Deck"
     stand 700,795
     look "Quill, at the rail with her spyglass. She has not used it once since we left."
     talk "She does not turn around. \"I came for the chart. And because Vex owes me a horizon.\""
+      talk quill at aboard
     give "She looks at my hands. \"I have a compass. I need a horizon.\""
     state if fog_tried
       look "Quill has put the spyglass away. She is watching the water, not the horizon."
       talk "She says, \"That was not weather. Weather does not ring a bell.\""
+        talk quill at aboard
 
   hotspot hobb "Hobb"
     show if act 2 and not salvage_seen

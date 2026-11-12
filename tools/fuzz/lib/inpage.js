@@ -8,6 +8,9 @@
  * devRestore(); the rest reads the Game instance and calls its input-level methods the way the
  * dev tools (window.__ff, devGoRoom...) and tools/playthrough.mjs already do. What each act can
  * reach comes from the game's own src/game/reach.ts.
+ *
+ * Automated drivers: Continue (or Enter on the title) shows the "Previously" recap, which holds the
+ * room until "Set sail" is pressed; a driver must press it (Enter) before it expects the room.
  */
 (() => {
   if (window.__fz) return;
@@ -1060,7 +1063,9 @@
   const g = window.__game;
   const rng = (seed) => () => { seed |= 0; seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
   const ev = (repeat = false, shiftKey = false) => ({ repeat, shiftKey, preventDefault() {} });
-  const BAR = { reveal: [1126, 150], log: [1286, 120], tip: [1416, 120], casebook: [1546, 170], pause: [1726, 170] };
+  // The icon bar's plates (game.ts BAR/barLayout): 52 px squares, right edge 1896, 8 px apart. The map
+  // plate (x 1784) is left out: it opens the atlas, a modal the monkey would then sit behind.
+  const BAR = { reveal: [1544, 52], log: [1604, 52], tip: [1664, 52], casebook: [1724, 52], pause: [1844, 52] };
 
   /** Screen point inside a hotspot (camera brought round to it, as a player would by walking). */
   const hotspotPoint = (h, r) => {
@@ -1137,7 +1142,7 @@
     }
     if (roll < 0.99) { g.onClick(960, 300, 2, 1); return "right-click empty"; }
     // Simulate a reload: what's in storage is what Continue gets.
-    g.title = true; g.resetTransient(); g.titleActivate("continue"); return "reload+continue";
+    g.title = true; g.resetTransient(); g.titleActivate("continue"); if (g.recap?.open) g.recap.sail(); return "reload+continue";
   };
 
   fz.monkey = (seed, { steps = 400, act = null, items = false, touch = false, explore = false } = {}) => {
@@ -1163,7 +1168,9 @@
     const visits = { rooms: new Set(), acts: new Set([startAct]) };
     for (let i = 0; i < steps; i++) {
       let desc;
-      try { desc = fz.monkeyStep(r); } catch (e) { fz.err(P, "input #" + i + " " + (desc ?? "?"), e); log.push("THREW"); break; }
+      // Continue (or Enter on the title) puts up the "Previously" card, which holds the room until
+      // Set sail; the monkey is a player, and a player presses it.
+      try { desc = fz.monkeyStep(r); if (g.recap?.open) g.recap.sail(); } catch (e) { fz.err(P, "input #" + i + " " + (desc ?? "?"), e); log.push("THREW"); break; }
       log.push(desc);
       const n = Math.floor(r() ** 2 * 120);
       for (let k = 0; k < n; k++) {

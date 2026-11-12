@@ -5,6 +5,7 @@
 room below_decks "The Marrow — Crew Deck"
   bg bg_below_decks_restart_wide
   width 2560
+  backdrop "brightness(1.1) contrast(0.97) lift(0.02)"
   music music_office
   grade "saturate(0.92) brightness(0.97)"
   perspective horizon 470 ref 875 height 560
@@ -37,6 +38,12 @@ room below_decks "The Marrow — Crew Deck"
     say "The crew deck smells of other ships. Tar, salt, and wood that has been in the water."
     say "The hold is full. What would not fit is stacked here, where the crew eats."
     say "Dorrit has stopped stirring. Down the deck, Hobb has his hand flat on a barrel head."
+
+  # A migrated/hand-edited save can carry the one-way flag without the queued act ending.
+  # Do not strand it on a ship with no way to finish the act.
+  scene if act 2 and marrow_lost
+    say "The Marrow is already going into the fog. There is nothing left to argue with."
+    act 2
 
   hotspot salvage "the salvage"
     # The barrel and crate stacked against the right-hand corner, under the hatch light.

@@ -1,16 +1,11 @@
 dialogue dorrit
   node root dorrit "Well? I've no time to waste, and neither has the stew."
     set met_dorrit
-    > "You're Dorrit, the cook?" if not met_dorrit -> cook
     > "Marta says you're blamed." if not dorrit_cleared -> blamed
     > "Pike gave up the rudder. You're clear." if rudder_back and seen:dorrit.confess and not dorrit_cleared -> clear2
     > "What's missing?" if not dorrit_cleared -> stores
     > "You're cleared. Come aboard." if dorrit_cleared -> cleared
     > "Nothing. I'm sorry." -> END
-    > "What's in the pot?" if act 2 -> galley
-
-  node cook dorrit "The cook. The one the island is blaming for a thief's work."
-    -> blamed
 
   node blamed dorrit "Blamed. Forty years cooking for this island, and now I'm a thief."
     > "Why you?" -> why
@@ -153,7 +148,7 @@ dialogue dorrit
   node camp_gone dorrit "Gone. Every one. The washing is still out. That's what I can't get past."
     -> camp
 
-  node camp_hut dorrit "Locked from the outside. Somebody was afraid of their own cook."
+  node camp_hut dorrit "Locked from the outside. A pantry, if I'm any judge. Somebody was afraid of their own cook."
     -> camp
 
   node holding dorrit "I lost forty spoons and a good pan. I'm furious. Don't tell anyone."

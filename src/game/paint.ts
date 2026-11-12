@@ -55,7 +55,7 @@ function parseColour(css: string | undefined): Rgb | null {
 }
 
 /** A figure's halo, worked out from where it stands: the nearest lamp's colour against the fog. */
-export interface FigureWrap { colour: string; blur: number }
+export interface FigureWrap { colour: string; blur: number; rim?: { rgb: string; alpha: number; side: -1 | 0 | 1 } }
 
 /**
  * Tint for a figure at (x, y). A lamp within reach warms (or greens, or reddens) it; fog and
@@ -63,6 +63,27 @@ export interface FigureWrap { colour: string; blur: number }
  * spilling around a body, not as a sticker outline.
  */
 export function figureWrap(room: Room, x: number, y: number, height: number, lightOn?: (light: RoomLight) => boolean): FigureWrap {
+  // Called for every figure on every frame, and a figure that stands still asks the same
+  // question 60 times a second. The answer is already quantised (tint to steps of 32, alpha to
+  // tenths, blur to 2 px), so it is memoised per room on the position to 6 px, the height to
+  // 4 px and which lights are lit: a still figure allocates nothing, a walking one recomputes
+  // every few pixels.
+  const lights = room.lights ?? [];
+  let lit = 0;
+  for (let i = 0; i < lights.length && i < 20; i++) if (!lightOn || lightOn(lights[i])) lit |= 1 << i;
+  const key = ((Math.round(x / 6) + 2048) * 1024 + (Math.round(y / 6) + 256)) * 512 + Math.min(511, Math.round(height / 4));
+  let rows = wrapCache.get(room);
+  if (!rows) { rows = new Map(); wrapCache.set(room, rows); }
+  const slot = rows.get(key);
+  if (slot && slot.lit === lit) return slot.wrap;
+  const wrap = figureWrapUncached(room, x, y, height, lightOn);
+  if (rows.size > 1500) rows.clear();
+  rows.set(key, { lit, wrap });
+  return wrap;
+}
+const wrapCache = new WeakMap<Room, Map<number, { lit: number; wrap: FigureWrap }>>();
+
+function figureWrapUncached(room: Room, x: number, y: number, height: number, lightOn?: (light: RoomLight) => boolean): FigureWrap {
   let hue: Rgb = DAY_RGB;
   let weight = 0.28;
 
@@ -80,17 +101,27 @@ export function figureWrap(room: Room, x: number, y: number, height: number, lig
     weight = Math.max(weight, 0.22 + fog * 0.10);
   }
 
+  // The lamp that lights the cloth itself: the strongest pool reaching this spot, and which
+  // side of the body it is on.
+  let rim: { k: number; rgb: Rgb; side: -1 | 0 | 1 } | null = null;
+
   // Lamps: a light whose pool reaches this spot pulls the halo toward its colour. A doused
   // lantern throws no light at all, so its condition must hold.
   for (const l of room.lights ?? []) {
     if (lightOn && !lightOn(l)) continue;
-    const reach = Math.max(360, l.radius * 2.6);
+    // A big named-colour lantern hangs high over the room (the Grey Lantern's green one): its
+    // light falls on everyone on the deck, so it reaches the figures' feet, not just the air round it.
+    const reach = Math.max(360, l.radius * (l.kind === "lantern" && l.colour && l.radius >= 150 ? 6 : 2.6));
     const d = Math.hypot(l.at.x - x, l.at.y - y);
     if (d >= reach) continue;
     const k = (1 - d / reach) ** 2;
     const rgb = parseColour(l.colour) ?? LIGHT_RGB[l.kind];
     hue = mix(hue, rgb, k * 0.85);
     weight = Math.max(weight, 0.2 + k * 0.14);
+    if (!rim || k > rim.k) {
+      const dx = l.at.x - x;
+      rim = { k, rgb, side: Math.abs(dx) < height * 0.18 ? 0 : dx > 0 ? 1 : -1 };
+    }
   }
 
   // Quantised, so a breathing or walking figure keeps the same halo bake: a continuous tint
@@ -99,7 +130,13 @@ export function figureWrap(room: Room, x: number, y: number, height: number, lig
   const alpha = Math.round(Math.min(0.36, weight) * 10) / 10;
   const blur = Math.max(10, Math.round((Math.min(32, height * 0.08)) / 2) * 2);
   const rgb = [clamp(hue[0]), clamp(hue[1]), clamp(hue[2])].map((n) => clamp(step(n, 32)));
-  return { colour: `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alpha})`, blur };
+  const out: FigureWrap = { colour: `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alpha})`, blur };
+  if (rim && rim.k > 0.02) {
+    // Three strengths and 32-step colour, so a walking figure keeps the same rim bake.
+    const a = Math.round(Math.min(0.34, 0.08 + rim.k * 0.4) * 20) / 20;
+    out.rim = { rgb: rim.rgb.map((n) => clamp(step(n, 32))).join(","), alpha: a, side: rim.side };
+  }
+  return out;
 }
 
 // ------------------------------------------------------------ grain

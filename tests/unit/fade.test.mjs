@@ -166,3 +166,25 @@ test("the entry reveal is a directional wash, and reduced motion keeps a flat fa
     op: "fillRect", x: 0, y: 0, w: 1920, h: 1080, style: "rgba(0,0,0,0.5)",
   });
 });
+
+test("the threshold card and the loading cue centre on the visible scene (a phone's crop)", () => {
+  const CARD = { image: {}, imageW: 2560, imageH: 1080, x: 1200, y: 300, w: 200, h: 400 };
+  const base = exitCardCrop(CARD, 0.5);
+  const moved = exitCardCrop(CARD, 0.5, 700, 440);
+  near(moved.dx - base.dx, 700 - 960, "the card shifts horizontally to the visible middle");
+  near(moved.dy - base.dy, 440 - 540, "and vertically to the 880-high canvas's middle");
+
+  const cue = recorder();
+  Object.assign(cue, {
+    beginPath() {}, fill() {},
+    arc(...args) { this.calls.push({ op: "arc", args }); },
+    fillText(...args) { this.calls.push({ op: "fillText", args }); },
+  });
+  drawFade(cue, { fade: 1, reduced: false, entry: null, card: null, waited: 3, center: { x: 700, y: 440 } });
+  const arcs = cue.calls.filter((call) => call.op === "arc");
+  const text = cue.calls.find((call) => call.op === "fillText");
+  assert.ok(text && arcs.length === 8, "the cue is drawn");
+  assert.equal(text.args[1], 700, "the Loading word is centred on the visible slice");
+  assert.ok(arcs.every((a) => Math.abs(a.args[0] - 700) <= 18), "the ring is too");
+  assert.ok(Math.abs(text.args[2] - (440 + 6 + 12)) < 1, "and sits at the middle of the 880-high canvas");
+});

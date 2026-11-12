@@ -30,6 +30,7 @@ import type { Assets } from "./assets";
 import {
   STEPS, TICK, PAGE, SATCHEL, HATCH, POP, HISS, LAP, DRIP, CREAK, STAMP, BELL, PLACE, GULLS, LEVEL,
   HOVER, ADVANCE, CHOICE, THRESHOLD, SAVE, ERROR,
+  PICKUP, CHIME, DENY, DOOR, GULL, INVENTORY_OPEN, INVENTORY_CLOSE, COMBINE, ATLAS_TRAVEL, LOCKED,
   compassMotif, actBreakCue, NOTE_STINGER, motifNotes,
   renderSound, stepMix, emitterMix,
   type Design, type Surface, type EmitterSound, type DoorKind,
@@ -133,14 +134,30 @@ export const BED_LOOP_END: Record<string, { duration: number; end: number }> = {
 export const LOOP_GUARD_MS = 60;
 
 /**
- * Bus calibration. The seven beds measure around -18 dBFS mean, while the synthesised effects
- * peak at 0.03-0.11 (-30 to -19 dBFS): music sat roughly 25-30 dB above effects, which made
- * the interface, footsteps and room sounds inaudible under it. Trim the music bus and lift
- * the effects bus so a click, a step and the bed sit in the same range; the user sliders stay
- * meaningful (1.0 is this calibrated level). The master limiter below catches summed peaks.
+ * Bus calibration. The seven beds measure -15.5 to -17.2 LUFS (peaks -0.7 to -2.6 dBFS), while
+ * the synthesised effects peak at 0.03-0.11 (-30 to -19 dBFS): a tick every 1.5 s measures
+ * about 7 dB under the bed, a walking step about 20 dB under it. The trims keep that balance
+ * (effects trim = 10 x music trim, so music sits ~6-10 dB above foley and the sea bed is
+ * audible next to it) and lift both to a listening level: with the default master and sliders
+ * the beds land at about -21 LUFS and peak near -6 dBFS, so the -2 dB limiter below only ever
+ * catches summed peaks (a bell on a loud bed), not the music itself.
+ *
+ * The sliders have headroom above their default: `SLIDER_DEFAULT` of the range is the
+ * calibrated level, and the top of the range is `sliderGain(1)` = +3.1 dB. The master default
+ * is 0.8 for the same reason: 1.0 is +1.9 dB above where it starts.
  */
-export const MUSIC_TRIM = 0.18;   // about -15 dB
-export const SFX_TRIM = 1.8;      // about +5 dB
+export const MASTER_DEFAULT = 0.8;
+export const SLIDER_DEFAULT = 0.7;
+export const MUSIC_TRIM = 0.7;    // about -3 dB
+export const SFX_TRIM = 7;        // about +17 dB
+/** The linear gain a Music or Effects slider position adds on top of its trim. */
+export function sliderGain(position: number): number {
+  return Math.max(0, Math.min(1, Number.isFinite(position) ? position : SLIDER_DEFAULT)) / SLIDER_DEFAULT;
+}
+/** Saved settings from before the recalibration (version 1) held the old, quieter defaults. */
+const PREF_VERSION = 2;
+/** A video's own soundtrack sits where the music bed does: master x music slider x this. */
+export const VIDEO_TRIM = 0.7;
 
 /** A gentle master limiter: nothing should clip when a cue, a bell and the room sum. */
 export const LIMITER = { threshold: -2, knee: 0, ratio: 20, attack: 0.002, release: 0.18 };
@@ -151,6 +168,16 @@ export const LIMITER = { threshold: -2, knee: 0, ratio: 20, attack: 0.002, relea
  */
 export const SAVE_CUE_GAP_MS = 10000;
 
+/** Seconds a track requested before the first gesture takes to come up once audio unlocks. */
+const FIRST_TRACK_FADE_MS = 1000;
+/** Ramp segments in an equal-power fade (a quarter sine in 16 straight pieces is within 0.1 dB). */
+const FADE_STEPS = 16;
+/** Where a fade has got to after the fraction `u` (0..1): sin when rising, cos when falling. */
+export function equalPower(from: number, target: number, u: number): number {
+  const a = (Math.max(0, Math.min(1, u)) * Math.PI) / 2;
+  return target >= from ? from + (target - from) * Math.sin(a) : target + (from - target) * Math.cos(a);
+}
+
 /** Each foley sound and how many variants of it to render. */
 const BANKS = {
   tick: { design: TICK, variants: 3 },
@@ -160,6 +187,16 @@ const BANKS = {
   threshold: { design: THRESHOLD, variants: 2 },
   save: { design: SAVE, variants: 2 },
   error: { design: ERROR, variants: 2 },
+  pickup: { design: PICKUP, variants: 3 },
+  chime: { design: CHIME, variants: 2 },
+  deny: { design: DENY, variants: 3 },
+  door: { design: DOOR, variants: 3 },
+  gull: { design: GULL, variants: 4 },
+  "inventory:open": { design: INVENTORY_OPEN, variants: 2 },
+  "inventory:close": { design: INVENTORY_CLOSE, variants: 2 },
+  combine: { design: COMBINE, variants: 2 },
+  travel: { design: ATLAS_TRAVEL, variants: 2 },
+  locked: { design: LOCKED, variants: 3 },
   page: { design: PAGE, variants: 3 },
   satchel: { design: SATCHEL, variants: 3 },
   hatch: { design: HATCH, variants: 2 },
@@ -181,12 +218,13 @@ const BANKS = {
   "step:sand": { design: STEPS.sand.design, variants: 4 },
   "step:earth": { design: STEPS.earth.design, variants: 4 },
 } satisfies Record<string, { design: Design; variants: number }>;
-type Bank = keyof typeof BANKS;
+export type Bank = keyof typeof BANKS;
 /** What each place sound plays, so a room's sounds can be made before it is shown. */
 const VOICE_BANKS: Record<EmitterSound, Bank[]> = { crackle: ["pop", "hiss"], lapping: ["lap"], drip: ["drip"], creak: ["creak"] };
 /** Made in idle time once audio is unlocked, so the first click or page turn never waits. */
-const WARM: Bank[] = ["tick", "hover", "advance", "choice", "threshold", "page", "satchel",
-  "hatch", "stamp", "bell", "step:wood", "note", "save", "error",
+export const WARM: Bank[] = ["tick", "hover", "advance", "choice", "threshold", "page", "satchel",
+  "hatch", "stamp", "bell", "step:wood", "note", "save", "error", "pickup", "deny", "door",
+  "chime", "inventory:open", "inventory:close", "combine", "travel", "locked", "gull",
   "motif:1", "motif:2", "motif:3", "motif:4"];
 
 /** Run `fn` when the main thread is idle (or soon, where there is no idle callback). */
@@ -205,10 +243,10 @@ function hash(text: string): number {
 export class AudioEngine {
   private ctx: AudioContext | null = null;
   private current: HTMLAudioElement | null = null;
-  volume = 0.55;
+  volume = MASTER_DEFAULT;
   /** Music and effects (SFX and ambience) each have their own level under the master. */
-  musicVolume = 1;
-  sfxVolume = 1;
+  musicVolume = SLIDER_DEFAULT;
+  sfxVolume = SLIDER_DEFAULT;
   muted = false;
 
   private master: GainNode | null = null;
@@ -231,6 +269,8 @@ export class AudioEngine {
   /** The hand-made loop point for each bed, and the timer that watches for it. */
   private bedEnds = new Map<HTMLAudioElement, number | null>();
   private loopTimers = new Map<HTMLAudioElement, number>();
+  private listeners = new Set<() => void>();
+  private resumeHooked = new WeakSet<HTMLAudioElement>();
   private hidden = typeof document !== "undefined" && document.hidden;
 
   /** A looping environmental bed: sea, wind or a room full of people. */
@@ -267,9 +307,13 @@ export class AudioEngine {
       this.muted = saved.muted === true;
       const unit = (v: unknown, fallback: number) =>
         typeof v === "number" && Number.isFinite(v) ? Math.max(0, Math.min(1, v)) : fallback;
-      this.volume = unit(saved.volume, this.volume);
-      this.musicVolume = unit(saved.music, this.musicVolume);
-      this.sfxVolume = unit(saved.sfx, this.sfxVolume);
+      // Levels saved before the recalibration were chosen against the old, quieter mix: keep
+      // the mute choice but let them start from the new defaults.
+      if (saved.version === PREF_VERSION) {
+        this.volume = unit(saved.volume, this.volume);
+        this.musicVolume = unit(saved.music, this.musicVolume);
+        this.sfxVolume = unit(saved.sfx, this.sfxVolume);
+      }
     } catch { /* settings are optional */ }
     if (typeof document !== "undefined") {
       document.addEventListener("visibilitychange", () => {
@@ -315,9 +359,9 @@ export class AudioEngine {
       g.cancelScheduledValues(this.ctx.currentTime);
       g.setTargetAtTime(this.level, this.ctx.currentTime, 0.015);
       for (const [bus, v] of [
-        [this.musicBus, this.musicVolume * MUSIC_TRIM],
-        [this.sfxBus, this.sfxVolume * SFX_TRIM],
-        [this.cueBus, this.musicVolume * MUSIC_TRIM],
+        [this.musicBus, this.musicBusGain()],
+        [this.sfxBus, this.sfxBusGain()],
+        [this.cueBus, this.musicBusGain()],
       ] as const) {
         if (!bus) continue;
         bus.gain.cancelScheduledValues(this.ctx.currentTime);
@@ -327,21 +371,41 @@ export class AudioEngine {
     this.syncUnrouted();
     try {
       localStorage.setItem("brasscompass.audio.v1", JSON.stringify({
-        muted: this.muted, volume: this.volume, music: this.musicVolume, sfx: this.sfxVolume,
+        version: PREF_VERSION, muted: this.muted, volume: this.volume, music: this.musicVolume, sfx: this.sfxVolume,
       }));
     } catch {}
+    for (const fn of [...this.listeners]) { try { fn(); } catch { /* a listener must not break the sliders */ } }
+  }
+
+  /** Be told when mute or any volume changes (a playing video follows them). Returns the unsubscribe. */
+  onChange(fn: () => void): () => void {
+    this.listeners.add(fn);
+    return () => { this.listeners.delete(fn); };
+  }
+
+  private musicBusGain(): number { return sliderGain(this.musicVolume) * MUSIC_TRIM; }
+  private sfxBusGain(): number { return sliderGain(this.sfxVolume) * SFX_TRIM; }
+
+  /** What a cinematic's own soundtrack should play at: the music's level, 0 when muted. */
+  get videoVolume(): number {
+    return this.muted ? 0 : Math.max(0, Math.min(1, this.volume * sliderGain(this.musicVolume) * VIDEO_TRIM));
   }
 
   /** Before the context exists a track may be playing unrouted (autoplay allowed): use .volume. */
   private syncUnrouted(): void {
     if (this.current && !this.trackGain.get(this.current)) {
-      this.current.volume = this.level * this.musicVolume * MUSIC_TRIM * this.musicDuckLevel();
+      this.current.volume = Math.min(1, this.level * this.musicBusGain() * this.musicDuckLevel());
     }
   }
 
   private panner(ctx: AudioContext): StereoPannerNode | null {
     // Old Safari has no StereoPannerNode: everything then simply plays centred.
     return typeof ctx.createStereoPanner === "function" ? ctx.createStereoPanner() : null;
+  }
+
+  /** Whether the audio context exists and is actually running (iOS can leave it suspended). */
+  get running(): boolean {
+    return this.ctx?.state === "running";
   }
 
   /** Must be called from a user gesture (browser autoplay policy). Cheap and idempotent. */
@@ -366,25 +430,26 @@ export class AudioEngine {
         this.musicDuck.gain.value = this.musicDuckLevel();
         this.musicDuck.connect(this.master);
         this.musicBus = context.createGain();
-        this.musicBus.gain.value = this.musicVolume * MUSIC_TRIM;
+        this.musicBus.gain.value = this.musicBusGain();
         this.musicBus.connect(this.musicDuck);
         this.sfxBus = context.createGain();
-        this.sfxBus.gain.value = this.sfxVolume * SFX_TRIM;
+        this.sfxBus.gain.value = this.sfxBusGain();
         this.sfxBus.connect(this.master);
         // The score shares the Music slider, but not the cinematic duck: the cue is what the
         // duck is making room for. Mute is still the master, so it covers this bus too.
         this.cueBus = context.createGain();
-        this.cueBus.gain.value = this.musicVolume * MUSIC_TRIM;
+        this.cueBus.gain.value = this.musicBusGain();
         this.cueBus.connect(this.master);
         this.envBus = context.createGain();
         this.envBus.gain.value = this.ducked ? this.duckLevel : 1;
         this.envBus.connect(this.sfxBus);
         this.stepPan = this.panner(context);
         this.stepPan?.connect(this.sfxBus);
-        // A track requested before the first gesture: route it in at full track level.
+        // A track requested before the first gesture: route it in silent and swell it up, as
+        // a track asked for later would, rather than starting at full level.
         if (this.current) {
           const g = this.route(this.current);
-          if (g) g.gain.value = 1;
+          if (g) this.fade(g.gain, 1, FIRST_TRACK_FADE_MS);
         }
         // A room entered before the first gesture (the title's harbour) gets its sounds now.
         this.buildVoices();
@@ -454,6 +519,36 @@ export class AudioEngine {
     param.cancelScheduledValues(t);
     param.setValueAtTime(param.value, t);
     param.linearRampToValueAtTime(target, t + Math.max(0.01, ms / 1000));
+  }
+
+  /**
+   * An equal-power fade of `param` to `target` over `ms`: a quarter sine (rising) or cosine
+   * (falling) as a short run of ramps. Two uncorrelated tracks swapped with a linear fade dip
+   * 3 dB at the midpoint; with sin/cos they sum to constant power. Segments rather than a
+   * value curve, so a fade can be cut and restarted at any moment without an overlap error.
+   */
+  private fade(param: AudioParam, target: number, ms: number): void {
+    const ctx = this.ctx!;
+    const t = ctx.currentTime;
+    const from = param.value;
+    param.cancelScheduledValues(t);
+    param.setValueAtTime(from, t);
+    const seconds = Math.max(0.01, ms / 1000);
+    for (let i = 1; i <= FADE_STEPS; i++) {
+      const u = i / FADE_STEPS;
+      param.linearRampToValueAtTime(equalPower(from, target, u), t + seconds * u);
+    }
+  }
+
+  /** Fade a track out and stop it once silent; a track already on its way out is re-timed. */
+  private fadeOut(el: HTMLAudioElement, fadeMs: number): void {
+    const g = this.trackGain.get(el);
+    const pending = this.stopTimers.get(el);
+    if (pending !== undefined) window.clearTimeout(pending);
+    this.stopTimers.delete(el);
+    if (!g || el.paused || !this.ctx) { this.stopTrack(el); return; }
+    this.fade(g.gain, 0, fadeMs);
+    this.stopTimers.set(el, window.setTimeout(() => this.stopTrack(el), fadeMs + 120));
   }
 
   /** The bed's hand-made loop point, or null when this file has no measured trim. */
@@ -541,10 +636,17 @@ export class AudioEngine {
     const next = this.assets.audio.get(key);
     if (!next) return;
     if (this.current === next && (!next.paused || this.hidden)) return;
+    // Tracks other than the title's are only metadata-preloaded at boot: this one is wanted now.
+    if (next.preload !== "auto") next.preload = "auto";
+    this.resumeWhenReady(next);
 
     const old = this.current && this.current !== next ? this.current : null;
+    // Anything else still sounding (a track on its way out from an earlier change) is let go
+    // gently too: A -> B -> C must not click as A is cut mid-fade.
     for (const other of this.assets.audio.values()) {
-      if (other !== old && other !== next) this.stopTrack(other);
+      if (other === old || other === next) continue;
+      if (this.stopTimers.has(other) || !other.paused) this.fadeOut(other, fadeMs);
+      else this.stopTrack(other);
     }
 
     // `next` may still be fading out from a previous change: cancel its pending stop.
@@ -556,19 +658,25 @@ export class AudioEngine {
     this.watchLoop(next);
 
     const gNext = this.route(next);
-    if (gNext) this.ramp(gNext.gain, 1, fadeMs);
-    else next.volume = this.level * this.musicVolume * MUSIC_TRIM * this.musicDuckLevel();   // no context yet: nothing to crossfade against
+    if (gNext) this.fade(gNext.gain, 1, fadeMs);
+    else next.volume = Math.min(1, this.level * this.musicBusGain() * this.musicDuckLevel());   // no context yet: nothing to crossfade against
     if (!this.hidden) void next.play().catch(() => { /* autoplay still blocked; retried on unlock */ });
 
     if (old) {
-      const gOld = this.trackGain.get(old);
-      if (gOld) {
-        this.ramp(gOld.gain, 0, fadeMs);
-        this.stopTimers.set(old, window.setTimeout(() => this.stopTrack(old), fadeMs + 120));
-      } else {
-        this.stopTrack(old);
-      }
+      this.fadeOut(old, fadeMs);
     }
+  }
+
+  /**
+   * A bed that failed to load and was retried (assets.ts) comes up paused: start it once it can
+   * play, if it is still the bed the room wants. Added once per element.
+   */
+  private resumeWhenReady(el: HTMLAudioElement): void {
+    if (this.resumeHooked.has(el)) return;
+    this.resumeHooked.add(el);
+    el.addEventListener("canplay", () => {
+      if (this.current === el && el.paused && !this.hidden && !el.ended) void el.play().catch(() => {});
+    });
   }
 
   // ---------------------------------------------------------------- ducking
@@ -1260,15 +1368,31 @@ export class AudioEngine {
     this.sound("bell", LEVEL.bell * 0.55, { delay: 1.05, rate: 0.965 + Math.random() * 0.02 });
   }
 
+  /** Something taken: a soft clink of small brass, then the satchel's rustle as it goes in. */
   pickup(): void {
-    this.tone(660, 0.09, "triangle", 0.15);
-    this.tone(990, 0.12, "triangle", 0.12, undefined, { delay: 0.09 });
-    // ...and into the satchel it goes.
-    this.sound("satchel", LEVEL.satchel, { delay: 0.05, rate: 0.95 + Math.random() * 0.1 });
+    this.sound("pickup", LEVEL.pickup, { rate: 0.97 + Math.random() * 0.06 });
+    this.sound("satchel", LEVEL.satchel, { delay: 0.1, rate: 0.95 + Math.random() * 0.1 });
   }
+  /** A tip: two soft struck bars. */
   chime(): void {
-    this.tone(523, 0.18, "sine", 0.13);
-    this.tone(784, 0.24, "sine", 0.11, undefined, { delay: 0.12 });
+    this.sound("chime", LEVEL.chime, { rate: 0.99 + Math.random() * 0.02 });
+  }
+  /** The satchel's flap lifted (`open`) or let fall: leather, a buckle and the weight of it. */
+  inventory(open: boolean): void {
+    this.sound(open ? "inventory:open" : "inventory:close", open ? LEVEL.inventoryOpen : LEVEL.inventoryClose,
+      { rate: 0.97 + Math.random() * 0.06 });
+  }
+  /** Two items fitted together: a small clink and a warm "that worked". */
+  combine(): void {
+    this.sound("combine", LEVEL.combine, { rate: 0.99 + Math.random() * 0.02 });
+  }
+  /** A course laid in on the atlas: paper and canvas, and the compass leaning under them. */
+  travel(): void {
+    this.sound("travel", LEVEL.travel, { rate: 0.97 + Math.random() * 0.06 });
+  }
+  /** A door that will not give: a heavy thud and the hasp rattling. */
+  locked(): void {
+    this.sound("locked", LEVEL.locked, { rate: 0.96 + Math.random() * 0.08 });
   }
   /**
    * The ending: C, E, G and the C above, one after another, each left to ring out. The compass
@@ -1282,8 +1406,9 @@ export class AudioEngine {
     });
     motifNotes(act, 1).forEach((f, i) => this.ring(f, 0.045, 0.35 + i * 0.3, 0.5));
   }
+  /** "Not that": a muffled low double thud, never a buzzer. */
   deny(): void {
-    this.tone(180, 0.14, "sawtooth", 0.07, 120);
+    this.sound("deny", LEVEL.deny, { rate: 0.97 + Math.random() * 0.06 });
   }
   /** Going through an exit: a door unless the exit says otherwise; `none` out in the open. */
   door(kind: DoorKind = "door"): void {
@@ -1301,14 +1426,13 @@ export class AudioEngine {
       }
       return;
     }
-    this.noise(0.5, 0.1, 420);
-    this.tone(90, 0.4, "sine", 0.05, 60);
+    // A wooden door: the hinge's slow creak, then the latch dropping.
+    this.sound("door", LEVEL.door, { rate: 0.95 + Math.random() * 0.1 });
   }
   gulls(): void {
     this.gullCall();
   }
   private gullCall(dest?: AudioNode, pitch = 1, delay = 0, level = 1): void {
-    this.tone(1400 * pitch, 0.18, "sine", 0.05 * level, 900 * pitch, { dest, delay });
-    this.tone(1250 * pitch, 0.22, "sine", 0.04 * level, 800 * pitch, { dest, delay: delay + 0.26 });
+    this.sound("gull", LEVEL.gull * level, { dest, delay, rate: pitch });
   }
 }

@@ -1,7 +1,7 @@
 room tavern "The Salty Keel"
   bg bg_tavern_cinema_wide
   width 2560
-  backdrop "brightness(1.14) saturate(1.02)"
+  backdrop "contrast(0.9) brightness(1.22) saturate(1.04) lift(0.012)"
   music music_tavern
   ambience tavern
   grade "brightness(0.95) saturate(0.85)"
@@ -51,6 +51,17 @@ room tavern "The Salty Keel"
       talk marta
     give "She only takes things worth trading."
     open "Marta is not a door. She's made that point to better men than me."
+    # Once she has said her piece, she does not say it again: the later visits open shorter.
+    state if seen:marta.root3 and dorrit_cleared and seen:rook.story
+      look "Marta's watching the corner where Rook sits. She's stopped wiping the glass."
+      talk: talk marta at cleared
+    state if seen:marta.root3 and dorrit_cleared
+      talk: talk marta at cleared
+    state if seen:marta.root3 and seen:rook.story
+      look "Marta's watching the corner where Rook sits. She's stopped wiping the glass."
+      talk: talk marta at again
+    state if seen:marta.root3
+      talk: talk marta at again
     state if seen:rook.story
       look "Marta's watching the corner where Rook sits. She's stopped wiping the glass."
 

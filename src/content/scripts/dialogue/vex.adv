@@ -3,7 +3,7 @@ dialogue vex
     set met_vex
     > "I need the Marrow." -> need
     > "They say you're the only one sailing." -> only
-    > "Nothing. Good day." -> END
+    > "Nothing. Goodnight." -> END
 
   node need vex "The Marrow doesn't sail. She's had enough of the fog."
     -> terms
@@ -134,7 +134,10 @@ dialogue vex
   node crew vex "Then they can hate me on the way back. It is how I am paid."
     -> admit
 
-  node admit vex "The sea takes. I keep what it drops. I don't apologise for weather."
+  node admit vex "The sea takes. I keep what it drops. The Arcadia's barrels came in on the tide a week after she sailed."
+    -> admit2
+
+  node admit2 vex "I fished them out before anyone else could. I don't apologise for weather."
     > "My father was on one of those ships." -> about_father
     > "You're a thief." -> thief
     > "Take us home." -> home
@@ -156,7 +159,7 @@ dialogue vex
   node refuse vex "Maybe. Not today. Hold the rail."
     -> END
 
-  node together vex "That's the spirit. Hold on to something."
+  node together vex "That's the spirit. Everyone aboard, then."
     -> END
 
   node last vex "I'm taking her deeper. You can watch, or you can swim."
@@ -167,10 +170,10 @@ dialogue vex
   node last_light vex "Then we go dark. Hold on to something."
     -> gone
 
-  node last_kill vex "Probably. Hold on to something."
+  node last_kill vex "Probably. Find a rail."
     -> gone
 
-  node last_go vex "Good. Hold on to something."
+  node last_go vex "Good. Keep your feet under you."
     -> gone
 
   node gone narrator "Vex puts both hands on the wheel and turns her past the last pencil mark."
@@ -212,7 +215,7 @@ dialogue vex
   # Act III — the Shroud. Stranded on the flats, the wreck, the reef gate and the
   # boarding. The admission is `saw_elias`, not `admit`: `admit` is already the Act II
   # salvage beat and its node id has to stay.
-  node shore vex "Stranded on a fog flat with a crew that would happily leave me here. I've had worse mornings."
+  node shore vex "Stranded on a fog flat with a crew that would happily leave me here. I've had worse nights."
     > "What do we do now?" -> shore_what
     > "The crew wants answers." -> shore_crew
     > "What did you see out there?" -> shore_saw
@@ -238,7 +241,7 @@ dialogue vex
     > "Tell me again." if seen:vex.saw_elias -> saw_again
     > "Not now." -> END
 
-  node saw_elias vex "I keep seeing it. A lantern going up and down off the reef. I told myself it was a buoy. It wasn't."
+  node saw_elias vex "The part I left out. He had a lantern, and he swung it up and down off the reef. I told myself it was a buoy. It wasn't."
     > "You left him there." -> saw_left
     > "Why?" -> saw_why
     > "You're telling me now." -> saw_now
@@ -247,6 +250,12 @@ dialogue vex
     -> saw_fear
 
   node saw_why vex "The fog was between us. I was on the wrong side of it, and I stayed there."
+    -> saw_why2
+
+  node saw_why2 fenn "A buoy. Thick fog. The wrong side of it. That's the third reason you've given me."
+    -> saw_why3
+
+  node saw_why3 vex "Then here is the fourth, and the true one. I was afraid."
     -> saw_fear
 
   node saw_now vex "Because you'd have found out. You're the sort who finds out."
@@ -358,5 +367,11 @@ dialogue vex
   node board_crew vex "They follow you. I follow the boat. It works out the same."
     -> board_go
 
+  # The same boarding the open gate gives (key_gate.adv): all three holds are already in hand,
+  # because Vex only offers this beat once Elias, the name and Hobb's plan are done.
   node board_go vex "Get in. Try not to rock her."
-    -> END
+    -> board_away
+
+  node board_away narrator "I step into the boat. The gate stands open behind me, and nobody looks back. Vex pulls, and the Grey Lantern comes out of the fog to meet us."
+    set lantern_boarded
+    act 3

@@ -1,7 +1,7 @@
 room salt_camp "The Castaway Camp"
   bg bg_salt_camp_v2b_wide
   width 2560
-  backdrop "saturate(0.82) brightness(0.90) sepia(0.04)"
+  backdrop "contrast(1.04) saturate(0.84) brightness(1.12) tone(0.3)"
   music music_fog
   # The plate is the camp at night already: a cold blue-grey salt sheen with two warm lamps.
   # The crew takes the same cold, flattened grade, so nobody reads as a warm cut-out.
@@ -70,11 +70,11 @@ room salt_camp "The Castaway Camp"
   hotspot hut "the store hut"
     area 1840,110 580x650
     stand 2000,850
-    look "A stout hut with a barred window and a padlock. A ship's slate is nailed beside the door. One line is still legible: THE BELL CALLED. WE WENT."
-      note camp_slate "The camp's slate says the bell called and they went. The tents were tied shut from the outside."
-    open "The padlock is new. The hut is not. It does not open for me."
+    look "A stout hut with a barred window and a padlock. STORES is painted over the door: salt, rope, lamp oil. A ship's slate is nailed beside it, and one line is still legible: THE BELL CALLED. WE WENT."
+      note camp_slate "The camp's slate says the bell called and they went. The tents and the store were shut up tidily from the outside."
+    open "The padlock is new. The hut is not. The crews shut it as they left, and it does not open for me."
     talk "I knock. The slate by the door has already answered."
-    use "The padlock is new. The crowbar would open it. The slate has told me enough."
+    use "The padlock is new. The crowbar would open it. It is only the camp's store, and the slate has told me enough."
 
   hotspot pallet "the pallet"
     area 1240,590 180x100
@@ -122,7 +122,7 @@ room salt_camp "The Castaway Camp"
   hotspot elias "Elias Fenn"
     area 1280,430 240x310
     stand 1240,826
-    look "A thin man in a coat too big for him. He has been drawing all morning."
+    look "A thin man in a coat too big for him. He has been drawing all night."
     talk "He looks up. Then he looks at me properly."
       talk elias at found
     state if rule_name
@@ -171,4 +171,4 @@ room salt_camp "The Castaway Camp"
   use compass on quill
     "She holds it up. \"Still the fog,\" she says. She does not sound sorry."
   use crowbar on hut
-    "The padlock is new. The crowbar would open it. I leave the lock alone."
+    "The padlock is new. The crowbar would open it. It is only a store, shut up by people who meant to come back. I leave it be."

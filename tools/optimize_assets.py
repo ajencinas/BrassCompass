@@ -16,6 +16,12 @@ Cinematics in public/assets/video are re-encoded (H.264 CRF 23, preset slow, +fa
 only when smaller. Scene backgrounds are left alone: their pixel size is what the room
 coordinates were calibrated against.
 
+After that, every character and prop PNG also gets a WebP sibling (same name, `.webp`) with its
+alpha kept at full quality (`--webp-quality`, default 95; `--webp-lossless` for bit-exact). The
+PNG is never touched or removed: the WebP is what `src/content/assets.ts` names and the build
+ships (about a quarter of the weight); the PNG stays as the editable source. A WebP is rebuilt
+only when it is missing or older than its PNG. `--webp-only` runs just this step.
+
 Before anything is changed, the original is copied to .asset-originals/<same path> (once: an
 existing backup is never overwritten, so re-running always works from the true original).
 """
@@ -94,6 +100,39 @@ def shrink_png(path: Path, max_h: int, max_side: int, dry: bool) -> tuple[int, i
     return before, after
 
 
+def webp_siblings(quality: int, lossless: bool, dry: bool) -> tuple[int, int]:
+    """Write <name>.webp beside every character/prop PNG that lacks a current one."""
+    from PIL import Image
+
+    png_total = webp_total = 0
+    for folder in ("characters", "props"):
+        for path in sorted((ASSETS / folder).rglob("*.png")):
+            dest = path.with_suffix(".webp")
+            if dest.exists() and dest.stat().st_mtime >= path.stat().st_mtime:
+                png_total += path.stat().st_size
+                webp_total += dest.stat().st_size
+                continue
+            if dry:
+                print(f"  would write {dest.relative_to(ROOT)}")
+                continue
+            with Image.open(path) as im:
+                im.load()
+                rgba = im.convert("RGBA")
+            tmp = dest.with_suffix(".tmp.webp")
+            if lossless:
+                rgba.save(tmp, "WEBP", lossless=True, method=6)
+            else:
+                # alpha_quality=100 keeps the silhouette (and so the opaque bounds the game
+                # measures figures by) exactly as painted; only the colour is lossy.
+                rgba.save(tmp, "WEBP", quality=quality, alpha_quality=100, method=6)
+            tmp.replace(dest)
+            b, a = path.stat().st_size, dest.stat().st_size
+            png_total += b
+            webp_total += a
+            print(f"  {dest.relative_to(ROOT)}: {kb(b)} png -> {kb(a)} webp")
+    return png_total, webp_total
+
+
 def reencode_video(path: Path, dry: bool) -> tuple[int, int]:
     before = path.stat().st_size
     if dry:
@@ -126,6 +165,10 @@ def main() -> int:
     ap.add_argument("--prop-max-side", type=int, default=900,
                     help="props are drawn at ~100-300 px; cap their longer side too")
     ap.add_argument("--no-video", action="store_true")
+    ap.add_argument("--no-webp", action="store_true", help="skip the WebP siblings step")
+    ap.add_argument("--webp-only", action="store_true", help="only write the WebP siblings")
+    ap.add_argument("--webp-quality", type=int, default=95, help="WebP colour quality, 92-100 (alpha is always 100)")
+    ap.add_argument("--webp-lossless", action="store_true", help="bit-exact WebP (about 75%% of the PNG size)")
     args = ap.parse_args()
 
     try:
@@ -133,6 +176,12 @@ def main() -> int:
     except ImportError:
         print("Pillow is required: pip install pillow", file=sys.stderr)
         return 1
+
+    if args.webp_only:
+        print("WebP siblings:")
+        b, a = webp_siblings(args.webp_quality, args.webp_lossless, args.dry_run)
+        print(f"WebP: {kb(b)} png -> {kb(a)} webp")
+        return 0
 
     total_b = total_a = 0
     print("Characters and props:")
@@ -160,6 +209,11 @@ def main() -> int:
             ],
             check=True,
         )
+
+    if not args.no_webp:
+        print("WebP siblings:")
+        b, a = webp_siblings(args.webp_quality, args.webp_lossless, args.dry_run)
+        print(f"WebP: {kb(b)} png -> {kb(a)} webp  (PNGs kept)")
 
     if not args.no_video and shutil.which("ffmpeg"):
         print("Video:")

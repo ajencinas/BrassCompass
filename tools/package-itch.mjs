@@ -196,8 +196,8 @@ SAVING
 
 CREDITS AND LICENCE
   See CREDITS.md and LICENSE, both beside this file. Copyright (c) 2026. All rights reserved.
-  The artwork, music and any films were produced with AI generation tools under the author's
-  direction; see AI-DISCLOSURE.txt.
+  The artwork and music were produced with AI generation tools under the author's
+  direction (the game ships no films); see AI-DISCLOSURE.txt.
 
 The game is an original work of interactive fiction. Any resemblance to actual fog banks is
 entirely meteorological.
@@ -208,9 +208,9 @@ const AI_DISCLOSURE = `AI DISCLOSURE — THE BRASS COMPASS
 The Brass Compass is an original game: its story, characters, dialogue, puzzles, code and
 design were written and built by a human author using AI-assisted development tools.
 
-The painted scene backgrounds, character art, props, music and any films were generated with
+The painted scene backgrounds, character art, props and music were generated with
 generative AI models from the author's prompts, then selected, edited, colour-graded, cropped
-and composed by hand. No third-party copyrighted artwork, music or footage is included. All
+and composed by hand. This game ships no films or video footage. No third-party copyrighted artwork, music or footage is included. All
 character names, places, dialogue and plot are original to this work; the game is not
 affiliated with, endorsed by or derived from any existing adventure game or franchise.
 

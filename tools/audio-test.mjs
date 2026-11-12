@@ -120,9 +120,14 @@ try {
   assert.equal(s.toneKind, "study");
   assert.equal(s.toneNodes, 6, "the study's body has no air layer");
   assert.ok(Math.abs(s.master - s.volume) < 0.01, `master ${s.master} vs volume ${s.volume}`);
-  assert.ok(Math.abs(s.music - s.musicVolume * 0.18) < 0.01, `music ${s.music} has the -15 dB trim`);
-  assert.ok(Math.abs(s.sfx - s.sfxVolume * 1.8) < 0.01, `effects ${s.sfx} has the +5 dB trim`);
-  assert.ok(Math.abs(s.cue - s.musicVolume * 0.18) < 0.01, `cue ${s.cue} shares the music trim`);
+  // Calibration (src/engine/audio.ts): master 0.8 and both sliders at 0.7 of their range are the
+  // calibrated level; a bus gain is trim x slider / 0.7, so the top of a slider is +3 dB.
+  const musicGain = (v) => 0.7 * (v / 0.7), sfxGain = (v) => 7 * (v / 0.7);
+  assert.equal(s.volume, 0.8, "master starts at 0.8, with headroom above it");
+  assert.equal(s.musicVolume, 0.7, "the Music slider starts at 0.7 of its range");
+  assert.ok(Math.abs(s.music - musicGain(s.musicVolume)) < 0.01, `music ${s.music} has the music trim`);
+  assert.ok(Math.abs(s.sfx - sfxGain(s.sfxVolume)) < 0.01, `effects ${s.sfx} has the effects trim`);
+  assert.ok(Math.abs(s.cue - musicGain(s.musicVolume)) < 0.01, `cue ${s.cue} shares the music trim`);
   assert.equal(s.limiter, -2, "the master limiter is still in place");
 
   // --- mute and each slider reach the graph ---------------------------------------------------
@@ -135,12 +140,16 @@ try {
   await pause(250);
   s = await state();
   assert.ok(Math.abs(s.master - 0.25) < 0.01, `master volume is ${s.master}`);
-  await evaluate("window.__game.audio.setVolume(0.55); window.__game.audio.setMusicVolume(0.5); window.__game.audio.setSfxVolume(0.5)");
+  await evaluate("window.__game.audio.setVolume(0.8); window.__game.audio.setMusicVolume(0.5); window.__game.audio.setSfxVolume(0.5)");
   await pause(250);
   s = await state();
-  assert.ok(Math.abs(s.music - 0.5 * 0.18) < 0.01, `music at half is ${s.music}`);
-  assert.ok(Math.abs(s.sfx - 0.5 * 1.8) < 0.01, `effects at half is ${s.sfx}`);
+  assert.ok(Math.abs(s.music - musicGain(0.5)) < 0.01, `music at half is ${s.music}`);
+  assert.ok(Math.abs(s.sfx - sfxGain(0.5)) < 0.01, `effects at half is ${s.sfx}`);
   await evaluate("window.__game.audio.setMusicVolume(1); window.__game.audio.setSfxVolume(1)");
+  await pause(250);
+  s = await state();
+  assert.ok(Math.abs(s.music - 1.0) < 0.01 && Math.abs(s.sfx - 10) < 0.05, `the top of the sliders is +3 dB (music ${s.music}, effects ${s.sfx})`);
+  await evaluate("window.__game.audio.setMusicVolume(0.7); window.__game.audio.setSfxVolume(0.7)");
 
   // --- every cue fires; a burst of saves speaks once; each node frees itself -------------------
   await evaluate(`(() => {
@@ -153,6 +162,8 @@ try {
     const a = window.__game.audio;
     a.hover(); a.arm(); a.advance(); a.choice(); a.chart(true); a.chart(false);
     a.threshold(); a.saved(); a.error();
+    a.pickup(); a.chime(); a.deny(); a.door(); a.gulls(); a.inventory(true); a.inventory(false);
+    a.combine(); a.travel(); a.locked();
   })()`);
   await pause(2200);
   const cueDisconnects = await evaluate("window.__cueDisconnects");

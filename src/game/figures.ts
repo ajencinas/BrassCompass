@@ -27,8 +27,14 @@ export interface FigureOptions {
    * the room's light (see paint.ts). The alpha silhouette is baked and blurred once per pose,
    * size and tint, then blitted — no per-frame shadow or filter.
    */
-  wrap?: { colour: string; blur: number };
+  wrap?: { colour: string; blur: number; rim?: Rim };
 }
+
+/**
+ * Light that reaches the figure's surface, not just the air behind it: a tinted wash over the
+ * lit side of the coat. `side` is the screen side the lamp is on (-1 left, 1 right, 0 overhead).
+ */
+export interface Rim { rgb: string; alpha: number; side: -1 | 0 | 1 }
 
 /** Draw one cell of `key`, `height` pixels tall, with its feet at (x, y). */
 export function drawFigure(
@@ -46,7 +52,7 @@ export function drawFigure(
   if (!img || !b) return;
 
   const k = (height * (opts.visible ?? 1)) / (b.bottom - b.top);
-  const anchor = opts.anchor === "box" ? (b.left + b.right) / 2 : b.torso;
+  const anchor = opts.anchor === "box" ? (b.left + b.right) / 2 : stableTorso(key, opts.frames ?? 1, frame, img.width, b.torso);
   const dw = (b.right - b.left) * k, dh = (b.bottom - b.top) * k;
 
   // The cell, already graded and scaled close to the size it lands on screen: one cheap blit
@@ -77,12 +83,35 @@ export function drawFigure(
     ctx.restore();
   }
   if (baked) {
-    ctx.drawImage(baked, (b.left - anchor) * k, -height, dw, dh);
+    // Lit side: art space is unflipped, so a mirrored figure takes the lamp on the other edge.
+    const lit = opts.wrap?.rim ? rimFor(baked, opts.wrap.rim, opts.flip ?? false) : null;
+    ctx.drawImage(lit ?? baked, (b.left - anchor) * k, -height, dw, dh);
   } else {
-    ctx.filter = opts.grade ?? "none";
+    ctx.filter = splitGrade(opts.grade).filter || "none";
     ctx.drawImage(img, b.left, b.top, b.right - b.left, b.bottom - b.top, (b.left - anchor) * k, -height, dw, dh);
   }
   ctx.restore();
+}
+
+/**
+ * Where the chest sits in each cell of the two walk strips, as a fraction of the cell's width,
+ * measured over the top third of the figure only. The generic torso (15-45% down) takes in the
+ * satchel and the swinging arm, and on frame 5 of the side strip it jumps 70 px sideways, so the
+ * walking figure swayed with it. Cells not listed fall back to the measured torso.
+ */
+const CHEST: Record<string, readonly number[]> = {
+  // Measured on the r2 strips (elias_walk_v2_painted_r2.png, elias_walk_vertical_painted_r2.png).
+  // The strips these replaced measured: char_walk_v2 [0.4561, 0.4551, 0.4561, 0.4867, 0.4633, 0.4694],
+  // char_walk_vertical [0.5217, 0.4959, 0.5027, 0.4878, 0.4905, 0.4932].
+  char_walk_v2: [0.538, 0.4399, 0.4198, 0.4852, 0.4494, 0.4462],
+  char_walk_vertical: [0.4845, 0.4858, 0.5052, 0.5142, 0.5077, 0.509],
+};
+
+function stableTorso(key: string, frames: number, frame: number, imgW: number, measured: number): number {
+  const chest = CHEST[key];
+  if (!chest || chest.length !== frames || frame >= chest.length) return measured;
+  const cell = imgW / frames;
+  return (frame + chest[frame]) * cell;
 }
 
 // ------------------------------------------------------------ baked cells
@@ -127,10 +156,19 @@ function bake(
   if (!cx) return null;
   cx.imageSmoothingEnabled = true;
   cx.imageSmoothingQuality = "high";
-  const css = grade !== "none" && grade !== "" ? grade : null;
+  const split = splitGrade(grade);
+  const css = split.filter || null;
   if (css && filterSupported()) cx.filter = css;
   cx.drawImage(img, b.left, b.top, srcW, srcH, 0, 0, w, h);
   if (css && !filterSupported()) applyGradeByHand(cx, w, h, css);
+  if (split.tint) {
+    // The room's colour over the cloth only (never the empty cell): the cast takes the light it stands in.
+    cx.filter = "none";
+    cx.globalCompositeOperation = "source-atop";
+    cx.fillStyle = split.tint;
+    cx.fillRect(0, 0, w, h);
+    cx.globalCompositeOperation = "source-over";
+  }
 
   bakes.set(id, c);
   bakedPixels += w * h;
@@ -139,6 +177,77 @@ function bake(
     bakes.delete(old);
     bakedPixels -= oc.width * oc.height;
     oc.width = oc.height = 0;   // hand the memory back now (Safari is slow to)
+  }
+  return c;
+}
+
+// ------------------------------------------------------------ baked rim light
+
+/**
+ * A lit copy of one baked cell, per (colour, strength, side). Looked up by the baked canvas itself
+ * (a weak key: when a bake is evicted its rims go with it) and by one small integer, so asking
+ * for it every frame builds no string and reorders nothing.
+ */
+interface RimEntry { canvas: HTMLCanvasElement; pixels: number; stamp: number; owner: Map<number, RimEntry>; key: number }
+const rimsByBase = new WeakMap<HTMLCanvasElement, Map<number, RimEntry>>();
+const rimEntries = new Set<RimEntry>();
+let rimPixels = 0;
+let rimTick = 0;
+/**
+ * ~24 MB of RGBA. A walk cycle crossing a lamp's pool takes a few tint and side variants of each
+ * of its six poses, and a room's cast stands in its own: 2 MP rebuilt those canvases every few steps.
+ */
+const RIM_BUDGET = 6_000_000;
+/** The lamp colours in use, numbered: "255,178,96" becomes 0, 1, 2... */
+const rimColours = new Map<string, number>();
+
+/**
+ * A copy of a baked cell with the lamp's colour washed over the side that faces it, only where
+ * there is cloth (source-atop), fading out by the middle of the body. Made once per pose, size
+ * and quantised tint, then blitted like the plain cell: no per-frame work.
+ */
+function rimFor(base: HTMLCanvasElement, rim: Rim, flip: boolean): HTMLCanvasElement | null {
+  const w = base.width, h = base.height;
+  if (w <= 0 || h <= 0) return null;
+  const side = rim.side === 0 ? 0 : flip ? -rim.side : rim.side;
+  let colour = rimColours.get(rim.rgb);
+  if (colour === undefined) { colour = rimColours.size; rimColours.set(rim.rgb, colour); }
+  // alpha is in twentieths (0.05 steps), side is -1, 0 or 1.
+  const key = (colour * 32 + Math.round(rim.alpha * 20)) * 3 + side + 1;
+  let owned = rimsByBase.get(base);
+  if (!owned) { owned = new Map(); rimsByBase.set(base, owned); }
+  const hit = owned.get(key);
+  if (hit && hit.canvas.width === w) {
+    hit.stamp = ++rimTick;
+    return hit.canvas;
+  }
+  const c = document.createElement("canvas");
+  c.width = w;
+  c.height = h;
+  const cx = c.getContext("2d");
+  if (!cx) return null;
+  cx.drawImage(base, 0, 0);
+  cx.globalCompositeOperation = "source-atop";
+  const g = side === 0 ? cx.createLinearGradient(0, 0, 0, h * 0.55)
+    : cx.createLinearGradient(side > 0 ? w : 0, 0, side > 0 ? w * 0.25 : w * 0.75, 0);
+  g.addColorStop(0, `rgba(${rim.rgb},${rim.alpha})`);
+  g.addColorStop(1, `rgba(${rim.rgb},0)`);
+  cx.fillStyle = g;
+  cx.fillRect(0, 0, w, h);
+  if (hit) { rimEntries.delete(hit); rimPixels -= hit.pixels; }
+  const entry: RimEntry = { canvas: c, pixels: w * h, stamp: ++rimTick, owner: owned, key };
+  owned.set(key, entry);
+  rimEntries.add(entry);
+  rimPixels += entry.pixels;
+  // Over budget (rare): drop the least recently drawn until it fits again.
+  while (rimPixels > RIM_BUDGET && rimEntries.size > 1) {
+    let oldest: RimEntry | null = null;
+    for (const e of rimEntries) if (e !== entry && (!oldest || e.stamp < oldest.stamp)) oldest = e;
+    if (!oldest) break;
+    rimEntries.delete(oldest);
+    oldest.owner.delete(oldest.key);
+    rimPixels -= oldest.pixels;
+    oldest.canvas.width = oldest.canvas.height = 0;
   }
   return c;
 }
@@ -222,6 +331,25 @@ function glowFor(
     oc.canvas.width = oc.canvas.height = 0;   // hand the memory back now (Safari is slow to)
   }
   return entry;
+}
+
+/**
+ * A grade is a CSS filter plus, optionally, `tint(hue)`: the room's own colour laid over the
+ * figure (not a CSS function, like `tone` in a backdrop). `tint(160)` is a teal-green wash at a
+ * fixed gentle strength, so a cast standing in a green room is not lit like a tavern.
+ */
+const TINT_ALPHA = 0.42;
+const splits = new Map<string, { filter: string; tint: string | null }>();
+function splitGrade(grade: string | undefined): { filter: string; tint: string | null } {
+  const g = grade ?? "none";
+  let hit = splits.get(g);
+  if (!hit) {
+    const m = /\btint\(\s*(-?[\d.]+)\s*\)/.exec(g);
+    const filter = g.replace(/\btint\([^)]*\)/g, " ").replace(/\s+/g, " ").trim();
+    hit = { filter: filter === "none" ? "" : filter, tint: m ? `hsla(${Number(m[1])},62%,40%,${TINT_ALPHA})` : null };
+    splits.set(g, hit);
+  }
+  return hit;
 }
 
 let filterOk: boolean | undefined;
@@ -327,29 +455,75 @@ export function drawShadow(
   x: number,
   y: number,
   w: number,
-  alpha = 0.34
+  alpha = 0.34,
+  /** Which side the nearest lamp is on (-1 left, 1 right, 0 none): the pool slides away from it. */
+  lightSide: -1 | 0 | 1 = 0,
+  /** The room's ambient colour at the feet, "r,g,b" (see `shadowTintOf`): the shade takes its hue. */
+  tint?: string
 ): void {
+  const pool = shadowPool(tint);
+  const rx = w * 1.25 * (lightSide ? 1.12 : 1), ry = Math.max(5, w * 0.27);
+  const cx = x - lightSide * w * 0.14;
   ctx.save();
-  const rx = w / 2;
-  const ry = Math.max(3, w * 0.13);
-  // Wide, very faint falloff.
-  const grad = ctx.createRadialGradient(x, y - 2, 0, x, y - 2, rx * 1.7);
-  grad.addColorStop(0, `rgba(0,0,0,${alpha * 0.55})`);
-  grad.addColorStop(0.55, `rgba(0,0,0,${alpha * 0.22})`);
-  grad.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = grad;
-  ctx.beginPath();
-  ctx.ellipse(x, y - 2, rx * 1.7, ry * 1.7, 0, 0, Math.PI * 2);
-  ctx.fill();
-  // Tight contact core, softer than the old hard disc.
-  const core = ctx.createRadialGradient(x, y - 2, 0, x, y - 2, rx * 0.7);
-  core.addColorStop(0, `rgba(0,0,0,${alpha * 0.8})`);
-  core.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = core;
-  ctx.beginPath();
-  ctx.ellipse(x, y - 2, rx * 0.7, ry * 0.7, 0, 0, Math.PI * 2);
-  ctx.fill();
+  ctx.globalAlpha = Math.min(1, alpha * 2.7);
+  ctx.imageSmoothingQuality = "low";
+  ctx.drawImage(pool, cx - rx, y - ry - 1, rx * 2, ry * 2);
   ctx.restore();
+}
+
+/**
+ * The ambient colour a figure's contact shadow should take: the halo's tint (which already mixes
+ * the room's daylight, fog and the nearest lamp), quantised so only a handful of pools exist.
+ * Cached on the wrap object, which the paint pass keeps stable while a figure stands still.
+ */
+const tints = new WeakMap<object, string>();
+export function shadowTintOf(wrap: { colour: string } | undefined): string | undefined {
+  if (!wrap) return undefined;
+  const hit = tints.get(wrap);
+  if (hit !== undefined) return hit;
+  const m = /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/.exec(wrap.colour);
+  const out = m ? `${m[1]},${m[2]},${m[3]}` : "";
+  tints.set(wrap, out);
+  return out;
+}
+
+/**
+ * The soft pool, painted once per tint: a wide faint falloff and a denser core right under the
+ * feet, as one elliptical image that every figure scales. A blit, where the old shadow built two
+ * radial gradients and paths per figure per frame. With no tint it is slightly blue-black; with
+ * one, the shade picks up a trace of the room's own light so it sits in the plate's shade.
+ */
+const pools = new Map<string, HTMLCanvasElement>();
+function shadowPool(tint?: string): HTMLCanvasElement {
+  const key = tint || "";
+  const hit = pools.get(key);
+  if (hit) return hit;
+  const c = document.createElement("canvas");
+  c.width = 256;
+  c.height = 64;
+  const g = c.getContext("2d");
+  if (g) {
+    const [tr, tg, tb] = key ? key.split(",").map(Number) : [0, 0, 0];
+    const f = key ? `${Math.round(4 + tr * 0.13)},${Math.round(6 + tg * 0.13)},${Math.round(10 + tb * 0.13)}` : "5,7,16";
+    const k = key ? `${Math.round(2 + tr * 0.07)},${Math.round(3 + tg * 0.07)},${Math.round(6 + tb * 0.07)}` : "2,3,9";
+    g.translate(128, 32);
+    g.scale(1, 0.25);
+    const falloff = g.createRadialGradient(0, 0, 0, 0, 0, 128);
+    falloff.addColorStop(0, `rgba(${f},0.75)`);
+    falloff.addColorStop(0.4, `rgba(${f},0.5)`);
+    falloff.addColorStop(0.75, `rgba(${f},0.17)`);
+    falloff.addColorStop(1, `rgba(${f},0)`);
+    g.fillStyle = falloff;
+    g.fillRect(-128, -128, 256, 256);
+    const core = g.createRadialGradient(0, 0, 0, 0, 0, 62);
+    core.addColorStop(0, `rgba(${k},0.7)`);
+    core.addColorStop(1, `rgba(${k},0)`);
+    g.fillStyle = core;
+    g.fillRect(-128, -128, 256, 256);
+  }
+  if (pools.size > 40) pools.clear();
+  pools.set(key, c);
+  return c;
 }
 
 /**
@@ -363,7 +537,7 @@ export function drawSprite(
   x: number,
   y: number,
   height: number,
-  opts: { visible?: number; figure?: boolean; flip?: boolean; grade?: string; lean?: number; squash?: number; wrap?: { colour: string; blur: number } } = {}
+  opts: { visible?: number; figure?: boolean; flip?: boolean; grade?: string; lean?: number; squash?: number; wrap?: { colour: string; blur: number; rim?: Rim } } = {}
 ): void {
   const b = assets.frameBounds(key)?.[0];
   if (!b) return;
@@ -371,7 +545,7 @@ export function drawSprite(
   // Only art that reaches the floor casts a contact shadow; never wider than a body's (arms
   // flung wide made a puddle of it).
   if (visible >= 1) {
-    drawShadow(ctx, x, y, Math.min(height * 0.3, height * ((b.right - b.left) / (b.bottom - b.top)) * 0.8));
+    drawShadow(ctx, x, y, Math.min(height * 0.3, height * ((b.right - b.left) / (b.bottom - b.top)) * 0.8), 0.34, opts.wrap?.rim?.side ?? 0, shadowTintOf(opts.wrap));
   }
   drawFigure(ctx, assets, key, x, y, height, {
     visible,

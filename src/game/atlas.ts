@@ -242,6 +242,9 @@ export class Atlas {
   hide(): void {
     if (this.overlay.hidden) return;
     this.overlay.hidden = true;
+    // Drop the large chart allocation; it is repainted the next time it opens.
+    this.chart.width = 1;
+    this.chart.height = 1;
     restoreFocus(this.previousFocus);
     this.handlers.onDismiss();
   }
@@ -355,7 +358,9 @@ export class Atlas {
     const w = this.stage.clientWidth, h = this.stage.clientHeight;
     if (!w || !h) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const cw = Math.max(1, Math.round(w * dpr)), ch = Math.max(1, Math.round(h * dpr));
+    // A static chart does not need a 4K/8K backing store; cap it like the game canvas.
+    const dprCapped = Math.min(dpr, 1920 / w, 1080 / h);
+    const cw = Math.max(1, Math.round(w * dprCapped)), ch = Math.max(1, Math.round(h * dprCapped));
     if (this.chart.width !== cw) this.chart.width = cw;
     if (this.chart.height !== ch) this.chart.height = ch;
     const ctx = this.chart.getContext("2d");

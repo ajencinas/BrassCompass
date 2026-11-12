@@ -12,6 +12,11 @@
  *      A check marked `todo` names the fix it waits for: it runs and reports, but can't fail the
  *      suite. Make it a plain check once that fix is merged.
  *
+ * NOTE FOR ANY AUTOMATED DRIVER: Continue (and Enter on the title) puts up the "Previously" recap
+ * card, which holds the room until the player presses "Set sail" (Enter). A driver that clicks
+ * Continue and then waits for the room without pressing Set sail will wait forever; see
+ * tools/playthrough.mjs ("Set sail") and the monkey in lib/inpage.js for the press.
+ *
  *   npm run test:fuzz                                    # starts this checkout's dev server
  *   FUZZ_URL=http://127.0.0.1:5173/ node tools/fuzz/regression.mjs   # or fuzz one already running
  *
@@ -278,12 +283,16 @@ try {
       if (h) g.onHotspotClick(g.hotspotState(h), 1);
       step(600);
       return { firstSeen, visible, len: text.length, inLog: g.history.lines.some((l) => /notebook/.test(l.text)),
-        backup: localStorage.getItem("brasscompass.save.v4.corrupt") };
+        backup: localStorage.getItem("brasscompass.save.v4.corrupt"),
+        archive: (() => { try { return JSON.parse(localStorage.getItem("brasscompass.save.archive") || "[]"); } catch { return []; } })() };
     })()`);
     assert.ok(r.firstSeen !== null && r.firstSeen < 1, "not shown at once: " + JSON.stringify(r));
     assert.ok(r.visible >= r.len / 18, `on screen for ${r.visible.toFixed(2)} s`);
     assert.equal(r.inLog, true, "kept in the log (L)");
-    assert.equal(r.backup, '{"room":"dock","flags":{', "the unreadable save is kept aside");
+    // The save/persistence pass keeps an unreadable save as a "corrupt" page in the archive (the
+    // single `.corrupt` key is only read, for saves an older build wrote).
+    const kept = r.backup === '{"room":"dock","flags":{' || r.archive.some((page) => page.reason === "corrupt" && page.raw === '{"room":"dock","flags":{');
+    assert.equal(kept, true, "the unreadable save is kept aside");
   });
 
   await check("BUG-6b 'my progress is not being saved' stays up long enough to read while play goes on", async () => {

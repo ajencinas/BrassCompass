@@ -8,6 +8,8 @@ import { LOGICAL_W, LOGICAL_H, SCENE_H } from "../engine/view";
 import { drawText, wrap, fontOf, typewriterSlice, type TextStyle } from "../engine/text";
 import { VERBS } from "./verbs";
 import type { Rect, VerbId } from "./types";
+import { hudHighContrast } from "./prefs";
+import { brassInset, ENGRAVE_LIP } from "./plate";
 
 export interface Chip {
   id: string;
@@ -95,7 +97,9 @@ const V_GAP_X = 6;
  * text makes the verb buttons taller and moves the sentence line down into the slack.
  */
 function panelLayout(scale: number) {
-  const vh = Math.round(40 + (scale - 1) * 28);      // 40, 47, 54
+  // 40, 47, 54, then no taller: past 150% the sentence line below would run off the bottom of
+  // the screen, and the type inside a cell stops growing before the cell does.
+  const vh = Math.round(40 + (Math.min(scale, 1.5) - 1) * 28);
   const gap = scale > 1 ? 6 : 8;
   const vy = scale > 1 ? 888 : 892;
   const sentY = vy + 2 * vh + gap + (scale > 1 ? 6 : 12);
@@ -115,14 +119,19 @@ const SENT_W = 940;
 const INV_X = 1010;
 const INV_Y = 918;
 const INV_W = 205;
-const INV_H = 74;
-const INV_GAP = 10;
-/** Item art is drawn no bigger than this, beside the name. */
-const ICON = 56;
+const INV_H = 68;
+const INV_GAP = 8;
+/**
+ * Item art is fitted inside this box (the pocket is 205 x 74): wide enough that a long thin
+ * thing, a crowbar or a spyglass, is not shrunk to a sliver by the height it shares with a
+ * round one, and short enough to leave a margin above and below.
+ */
+const ICON_W = 96;
+const ICON_H = 58;
 
 export const COLORS = {
-  verb: "#93a3bb",
-  verbHover: "#ffffff",
+  verb: "#d6caa8",
+  verbHover: "#fff6dc",
   verbActive: "#e8c98a",
   sentence: "#7fd6d0",
   narration: "#d8cfb8",
@@ -193,8 +202,8 @@ export function inventorySlotRect(i: number): Rect {
 }
 
 // Pager, only drawn when there is more than one page.
-const PAGE_PREV = { x: 1690, y: 880, w: 32, h: 28 };
-const PAGE_NEXT = { x: 1782, y: 880, w: 32, h: 28 };
+const PAGE_PREV = { x: 1680, y: 880, w: 44, h: 34 };
+const PAGE_NEXT = { x: 1780, y: 880, w: 44, h: 34 };
 
 /**
  * The pager buttons can hold keyboard focus too (they are part of the inventory group), so a
@@ -306,6 +315,23 @@ export function drawPanel(ctx: CanvasRenderingContext2D, model: PanelModel): { n
   return { narrationBox };
 }
 
+/**
+ * One type size for every verb at a text scale, the largest at which the longest label (set
+ * bold, as the active one is) fits its plate with room to spare: twelve labels in three sizes
+ * read as a mistake.
+ */
+const verbSizes = new Map<number, number>();
+function verbSize(ctx: CanvasRenderingContext2D, scale: number): number {
+  let size = verbSizes.get(scale);
+  if (size === undefined) {
+    const room = V_W - (scale > 1 ? 40 : 20);
+    size = Math.round(21 * scale);
+    for (const v of VERBS) size = Math.min(size, fitSize(ctx, v.label, room, Math.round(21 * scale), 16, "bold"));
+    verbSizes.set(scale, size);
+  }
+  return size;
+}
+
 function drawVerbs(ctx: CanvasRenderingContext2D, model: PanelModel): void {
   VERBS.forEach((v, i) => {
     const r = verbRect(i, model.scale);
@@ -314,11 +340,17 @@ function drawVerbs(ctx: CanvasRenderingContext2D, model: PanelModel): void {
     const focused = model.focusVerb === v.id;
     const suggested = !active && model.suggestVerb === v.id;
 
-    ctx.fillStyle = "rgba(130,160,180,0.07)";
+    // The resting edge of a verb cell must be visible against the dark panel (it was 0.16 alpha,
+    // below the 3:1 a control boundary needs); high contrast makes it a bold, bright line.
+    const hc = hudHighContrast();
+    ctx.fillStyle = hc ? "rgba(130,160,180,0.16)" : "rgba(130,160,180,0.07)";
     ctx.fillRect(r.x, r.y, r.w, r.h);
-    ctx.strokeStyle = "rgba(140,166,179,0.16)";
-    ctx.lineWidth = 1;
-    ctx.strokeRect(r.x + .5, r.y + .5, r.w - 1, r.h - 1);
+    ctx.strokeStyle = hc ? "rgba(214,226,236,0.9)" : "rgba(160,184,198,0.42)";
+    ctx.lineWidth = hc ? 2 : 1;
+    ctx.strokeRect(r.x + ctx.lineWidth / 2, r.y + ctx.lineWidth / 2, r.w - ctx.lineWidth, r.h - ctx.lineWidth);
+    // The title's brass-plate material inside that edge (plain in high contrast): a dark glass
+    // pane, a bevel, studs. The cell's own border, fills and focus ring are drawn around it.
+    if (!hc) brassInset(ctx, r.x, r.y, r.w, r.h, { hover: hover || suggested, active, rivets: true });
     if (active) {
       ctx.fillStyle = "rgba(201,162,74,0.16)";
       ctx.fillRect(r.x, r.y, r.w, r.h);
@@ -337,15 +369,23 @@ function drawVerbs(ctx: CanvasRenderingContext2D, model: PanelModel): void {
     }
     if (focused) {
       ctx.strokeStyle = "#fff3cf";
-      ctx.lineWidth = 2.5;
+      ctx.lineWidth = hc ? 4 : 2.5;
       ctx.strokeRect(r.x + 3, r.y + 3, r.w - 6, r.h - 6);
     }
 
     const weight = active ? "bold" : "normal";
-    const size = fitSize(ctx, v.label, r.w - 20, Math.round(21 * model.scale), 18, weight);
+    // A bigger text size centres the label with 20 px of clear plate each side, so it never
+    // touches the bevel or the studs; at 100% it sits left with the plate's own margin.
+    const size = verbSize(ctx, model.scale);
+    // Engraved: a pale lip under the letters, as if cut into the plate.
+    if (!hc) {
+      drawText(ctx, v.label, r.x + (model.scale > 1 ? r.w / 2 : 14), r.y + Math.round((r.h - size) / 2), {
+        size, color: ENGRAVE_LIP, weight, align: model.scale > 1 ? "center" : "left", shadow: false,
+      });
+    }
     drawText(ctx, v.label, r.x + (model.scale > 1 ? r.w / 2 : 14), r.y + Math.round((r.h - size) / 2) - 1, {
       size,
-      color: focused || active || suggested ? COLORS.verbActive : hover ? COLORS.verbHover : COLORS.verb,
+      color: focused || active || suggested ? COLORS.verbActive : hover || hc ? COLORS.verbHover : COLORS.verb,
       weight,
       align: model.scale > 1 ? "center" : "left",
       shadow: false,
@@ -359,15 +399,15 @@ function drawNarration(ctx: CanvasRenderingContext2D, model: PanelModel): Rect |
   if (!model.narration || alpha <= 0.001) return null;
   const size = Math.round(27 * model.scale);
   const lh = Math.round(size * 1.34);
-  const style = { size, color: COLORS.narration, lineHeight: lh };
+  const style = { size, color: hudHighContrast() ? "#fffaf0" : COLORS.narration, lineHeight: lh };
   const full = model.narrationFull ?? model.narration;
   const lines = wrapOnce(ctx, full, 1560, style);
   const height = Math.max(Math.round(84 * model.scale), lines.length * lh + 48);
   const top = Math.max(64, SCENE_H - height - 4);
   const grad = ctx.createLinearGradient(0, top, 0, top + height);
   grad.addColorStop(0, "rgba(3,7,13,0)");
-  grad.addColorStop(0.22, "rgba(3,7,13,0.7)");
-  grad.addColorStop(1, "rgba(3,7,13,0.95)");
+  grad.addColorStop(0.22, hudHighContrast() ? "rgba(0,0,0,0.88)" : "rgba(3,7,13,0.7)");
+  grad.addColorStop(1, hudHighContrast() ? "rgba(0,0,0,0.98)" : "rgba(3,7,13,0.95)");
   ctx.save();
   ctx.globalAlpha = alpha;
   ctx.fillStyle = grad;
@@ -402,6 +442,22 @@ function drawSentence(ctx: CanvasRenderingContext2D, model: PanelModel): Rect | 
     : !a ? ` ${target}`
     : verbDef?.twoObject ? ` ${link} ${target}` : null;
 
+  // The sentence is read off a nameplate: dark glass with a brass edge, like the verbs above it.
+  // It sits under the text (which keeps its own x and y) and grows to take a second line.
+  {
+    const hc = hudHighContrast();
+    const bottom = b ? l.line2Y + Math.round(Math.min(28, 25 * model.scale)) + 12 : l.sentY + l.line1 + 16;
+    const px = SENT_X - 12, py = l.sentY - 6, pw = SENT_W + 24, ph = Math.min(LOGICAL_H - 8, bottom) - py;
+    ctx.save();
+    ctx.fillStyle = "rgba(5,9,16,0.58)";
+    ctx.fillRect(px, py, pw, ph);
+    ctx.strokeStyle = hc ? "rgba(232,201,138,0.8)" : "rgba(201,162,74,0.34)";
+    ctx.lineWidth = hc ? 2 : 1;
+    ctx.strokeRect(px + ctx.lineWidth / 2, py + ctx.lineWidth / 2, pw - ctx.lineWidth, ph - ctx.lineWidth);
+    if (!hc) brassInset(ctx, px, py, pw, ph, { bare: true, rivets: true });
+    ctx.restore();
+  }
+
   if (line1) {
     const size = fitSize(ctx, line1 + (preview ?? ""), SENT_W, l.line1, 20, "bold");
     drawText(ctx, line1, SENT_X, l.sentY + 4, { size, color: COLORS.sentence, weight: "bold" });
@@ -412,7 +468,9 @@ function drawSentence(ctx: CanvasRenderingContext2D, model: PanelModel): Rect | 
     } else if (verbDef?.twoObject && a && !b) {
       // A two-object verb is still waiting for its second half. Say so in the sentence's own
       // grammar — "Use crowbar with …" — rather than with a line of instructions beneath it.
-      drawText(ctx, ` ${link} …`, at, l.sentY + 4, { size, color: "rgba(236,210,154,0.6)", weight: "bold" });
+      drawText(ctx, ` ${link} …`, at, l.sentY + 4, {
+        size, color: hudHighContrast() ? "#f4e2b4" : "rgba(236,210,154,0.78)", weight: "bold",
+      });
     }
   } else if (model.suggestLine) {
     // The lit-up verb as a promise: "Talk to Marta". A small compass mark, no caveat.
@@ -497,16 +555,20 @@ function drawInventory(ctx: CanvasRenderingContext2D, model: PanelModel): void {
 
   if (pages > 1) {
     const arrow = (r: Rect, glyph: string, enabled: boolean, focused: boolean) => {
-      ctx.fillStyle = enabled ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.015)";
+      ctx.fillStyle = enabled ? "rgba(232,201,138,0.1)" : "rgba(255,255,255,0.025)";
       ctx.fillRect(r.x, r.y, r.w, r.h);
+      ctx.strokeStyle = enabled ? "rgba(232,201,138,0.5)" : "rgba(232,201,138,0.16)";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(r.x + 0.5, r.y + 0.5, r.w - 1, r.h - 1);
       if (focused) {
         ctx.strokeStyle = "#fff3cf";
-        ctx.lineWidth = 2.5;
+        ctx.lineWidth = hudHighContrast() ? 4 : 2.5;
         ctx.strokeRect(r.x + 3, r.y + 3, r.w - 6, r.h - 6);
       }
-      drawText(ctx, glyph, r.x + r.w / 2, r.y + 3, {
-        size: Math.round(20 * model.scale),
-        color: enabled ? COLORS.item : "rgba(160,150,170,0.28)",
+      const glyphSize = Math.min(34, Math.round(26 * Math.max(1, model.scale)));
+      drawText(ctx, glyph, r.x + r.w / 2, r.y + Math.round((r.h - glyphSize) / 2) - 2, {
+        size: glyphSize,
+        color: enabled ? "#f0d9a0" : hudHighContrast() ? "rgba(214,204,176,0.6)" : "rgba(201,180,140,0.38)",
         align: "center",
         shadow: false,
       });
@@ -554,7 +616,7 @@ function drawInventory(ctx: CanvasRenderingContext2D, model: PanelModel): void {
     const reveal = hover || focused;
     // The picture, dimmed while its name has the pocket.
     if (icon) {
-      const k = Math.min(ICON / icon.width, ICON / icon.height);
+      const k = Math.min(ICON_W / icon.width, ICON_H / icon.height);
       const iw = icon.width * k, ih = icon.height * k;
       ctx.save();
       ctx.globalAlpha = reveal ? 0.22 : 1;
@@ -606,15 +668,17 @@ function drawPocket(ctx: CanvasRenderingContext2D, r: Rect, hover: boolean, focu
   ctx.fillStyle = grad;
   ctx.fill();
   ctx.setLineDash([3, 4]);
-  ctx.strokeStyle = hover ? "rgba(232,201,138,0.5)" : "rgba(201,162,74,0.2)";
-  ctx.lineWidth = 1;
+  ctx.strokeStyle = hover ? "rgba(232,201,138,0.5)" : hudHighContrast() ? "rgba(232,201,138,0.8)" : "rgba(201,162,74,0.2)";
+  ctx.lineWidth = hudHighContrast() ? 1.5 : 1;
   ctx.stroke();
   ctx.setLineDash([]);
   ctx.strokeStyle = "rgba(255,231,190,0.05)";
   ctx.beginPath(); ctx.moveTo(r.x + 8, r.y + 3); ctx.lineTo(r.x + r.w - 8, r.y + 3); ctx.stroke();
+  // A filled pocket is a plate in the satchel: bevelled, with brass studs in its corners.
+  if (filled) brassInset(ctx, r.x, r.y, r.w, r.h, { hover, radius: 6, rivets: true, bare: true });
   if (focused) {
     ctx.strokeStyle = "#fff3cf";
-    ctx.lineWidth = 2.5;
+    ctx.lineWidth = hudHighContrast() ? 4 : 2.5;
     rounded(ctx, r.x + 3, r.y + 3, r.w - 6, r.h - 6, 4);
     ctx.stroke();
   }
@@ -822,27 +886,37 @@ export class DialogueStage {
   }
 }
 
-/** The veil over the scene: flat, with a soft-edged hole where the speaker stands. */
-const VEIL = "rgba(2,4,10,0.72)";
-let holeSprite: HTMLCanvasElement | null = null;
-function hole(): HTMLCanvasElement {
-  if (holeSprite) return holeSprite;
+/**
+ * The veil over the scene: flat, with a soft-edged hole where the speaker stands. It only has to
+ * quiet the picture a little (the lower-third behind the text does the real work), so the room
+ * stays visible while someone talks. High contrast keeps the old, darker veil.
+ */
+const VEIL = { soft: 0.34, strong: 0.72 };
+const holeSprites: { soft: HTMLCanvasElement | null; strong: HTMLCanvasElement | null } = { soft: null, strong: null };
+function hole(strong: boolean): HTMLCanvasElement {
+  const kind = strong ? "strong" : "soft";
+  const cached = holeSprites[kind];
+  if (cached) return cached;
+  const edge = VEIL[kind];
   const c = document.createElement("canvas");
   c.width = c.height = 256;
   const g = c.getContext("2d")!;
   const grad = g.createRadialGradient(128, 128, 0, 128, 128, 128);
-  grad.addColorStop(0, "rgba(2,4,10,0.08)");
-  grad.addColorStop(0.5, "rgba(2,4,10,0.22)");
-  grad.addColorStop(0.82, "rgba(2,4,10,0.58)");
-  grad.addColorStop(1, "rgba(2,4,10,0.72)");
+  grad.addColorStop(0, `rgba(2,4,10,${(edge * 0.11).toFixed(3)})`);
+  grad.addColorStop(0.5, `rgba(2,4,10,${(edge * 0.3).toFixed(3)})`);
+  grad.addColorStop(0.82, `rgba(2,4,10,${(edge * 0.8).toFixed(3)})`);
+  grad.addColorStop(1, `rgba(2,4,10,${edge})`);
   g.fillStyle = grad;
   g.fillRect(0, 0, 256, 256);
-  holeSprite = c;
+  holeSprites[kind] = c;
   return c;
 }
 
+const VEIL_FILL = { soft: `rgba(2,4,10,${VEIL.soft})`, strong: `rgba(2,4,10,${VEIL.strong})` };
+
 function drawVeil(ctx: CanvasRenderingContext2D, spot: Spot | null, open: number): void {
-  ctx.fillStyle = VEIL;
+  const strong = hudHighContrast();
+  ctx.fillStyle = strong ? VEIL_FILL.strong : VEIL_FILL.soft;
   if (!spot || open <= 0.01) {
     ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
     return;
@@ -855,7 +929,7 @@ function drawVeil(ctx: CanvasRenderingContext2D, spot: Spot | null, open: number
   ctx.fillRect(0, y1, LOGICAL_W, Math.max(0, LOGICAL_H - y1));
   ctx.fillRect(0, y0, Math.max(0, x0), y1 - y0);
   ctx.fillRect(x1, y0, Math.max(0, LOGICAL_W - x1), y1 - y0);
-  ctx.drawImage(hole(), x0, y0, x1 - x0, y1 - y0);
+  ctx.drawImage(hole(strong), x0, y0, x1 - x0, y1 - y0);
 }
 
 function drawPortrait(ctx: CanvasRenderingContext2D, img: HTMLImageElement, p: Rect, alpha: number): void {
@@ -913,8 +987,9 @@ export function drawDialogue(ctx: CanvasRenderingContext2D, m: DialogueModel): v
   // A cinematic lower-third, not a box: the picture keeps its top, the dark gathers at the foot.
   const veil = ctx.createLinearGradient(0, boxTop, 0, boxBottom);
   veil.addColorStop(0, "rgba(3,6,12,0)");
-  veil.addColorStop(0.16, "rgba(3,6,12,0.55)");
-  veil.addColorStop(0.46, "rgba(3,6,12,0.9)");
+  const hc = hudHighContrast();
+  veil.addColorStop(0.16, hc ? "rgba(3,6,12,0.55)" : "rgba(3,6,12,0.42)");
+  veil.addColorStop(0.46, hc ? "rgba(3,6,12,0.9)" : "rgba(3,6,12,0.84)");
   veil.addColorStop(1, "rgba(2,4,9,0.98)");
   ctx.fillStyle = veil;
   ctx.fillRect(0, boxTop, LOGICAL_W, boxBottom - boxTop);

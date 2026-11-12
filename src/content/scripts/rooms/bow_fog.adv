@@ -1,6 +1,7 @@
 room bow_fog "The Marrow — Bow"
   bg bg_bow_fog_restart_b_wide
   width 2560
+  backdrop "brightness(0.76) saturate(0.92) contrast(1.04) lift(0.01)"
   music music_fog
   grade "saturate(0.72) brightness(0.94)"
   ambience sea

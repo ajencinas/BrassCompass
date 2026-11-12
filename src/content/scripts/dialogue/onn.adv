@@ -9,7 +9,7 @@ dialogue onn
   node crew2 onn "I counted them out. I counted them back. Only the first part worked."
     > "What happened to them?" -> water
     > "I'm sorry, Onn." -> sorry
-  node sorry onn "Don't be sorry. Be useful. Find out what's out there."
+  node sorry onn "Sorry doesn't sweep cobbles. Find out what's out there."
     -> bye
   node water onn "Past the reef the water goes quiet. Not calm. Quiet. The fishermen won't say its name."
     -> water2

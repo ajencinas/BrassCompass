@@ -1,0 +1,20 @@
+{
+  "version": 4,
+  "facing": 1,
+  "notes": [],
+  "actStarted": false,
+  "at": 1700000000000,
+  "room": "lagoon_shore",
+  "x": 900,
+  "y": 880,
+  "act": 3,
+  "flags": {
+    "met_quill": true,
+    "met_hobb": true
+  },
+  "inventory": [
+    "compass",
+    "crowbar",
+    "chart"
+  ]
+}

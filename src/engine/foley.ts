@@ -334,6 +334,143 @@ export const SATCHEL: Design = (r) => [
   { src: "sine", f: between(r, 2400, 2800), at: 0.17, attack: 0.0005, decay: 0.012, amp: 0.06 },
 ];
 
+// ------------------------------------------------------------------ event cues
+
+/**
+ * Something small picked up: a soft clink of two little brass things touching, the second a
+ * fifth up and a touch later — a coin dropped on a coin, not a game-show ping. No sustained
+ * tone: every partial is gone inside 0.1 s. The satchel's rustle follows it in the engine.
+ */
+export const PICKUP: Design = (r) => {
+  const f = between(r, 1560, 1760);
+  return [
+    { src: "noise", filter: { type: "bandpass", f: between(r, 3000, 3800), q: 2.5 }, attack: 0.0006, decay: 0.007, amp: 0.4 },
+    { src: "sine", f, f2: f * 0.99, glide: 0.2, attack: 0.0012, decay: 0.04, amp: 0.8 },
+    { src: "sine", f: f * 2.41, attack: 0.0008, decay: 0.02, amp: 0.2 },
+    { src: "sine", f: f * 1.4983, at: between(r, 0.065, 0.08), attack: 0.0012, decay: 0.05, amp: 0.55 },
+    { src: "sine", f: f * 1.4983 * 2.41, at: 0.07, attack: 0.0008, decay: 0.022, amp: 0.12 },
+  ];
+};
+
+/**
+ * A tip, or any small "here is something": two soft struck bars a fifth apart, the second
+ * leaning on the first's tail. A little warmer and slower than the pickup, and never sharp.
+ */
+export const CHIME: Design = (r) => {
+  const f = between(r, 516, 530);
+  return [
+    { src: "sine", f, attack: 0.008, decay: 0.12, amp: 0.8 },
+    { src: "sine", f: f * 2.756, attack: 0.004, decay: 0.04, amp: 0.1 },
+    { src: "sine", f: f * 1.4983, at: 0.12, attack: 0.01, decay: 0.16, amp: 0.65 },
+    { src: "sine", f: f * 1.4983 * 2.756, at: 0.12, attack: 0.004, decay: 0.05, amp: 0.07 },
+  ];
+};
+
+/**
+ * "Not that": a muffled low double thud, like a knuckle on a thick door — two soft knocks, the
+ * second lower and lighter. There is no pitch to speak of and no edge: it must read as "no"
+ * without ever sounding like an alarm over the room.
+ */
+export const DENY: Design = (r) => [
+  { src: "sine", f: between(r, 150, 168), f2: 100, glide: 0.03, attack: 0.003, decay: 0.045, amp: 0.8 },
+  { src: "noise", filter: { type: "lowpass", f: between(r, 300, 380) }, attack: 0.002, decay: 0.03, amp: 0.5 },
+  { src: "sine", f: between(r, 128, 142), f2: 86, glide: 0.03, at: 0.1, attack: 0.003, decay: 0.05, amp: 0.55 },
+  { src: "noise", filter: { type: "lowpass", f: 260 }, at: 0.1, attack: 0.002, decay: 0.03, amp: 0.3 },
+];
+
+/**
+ * A wooden door: a slow hinge creak (stick-slip pulses through the wood's resonances, softer
+ * and lower than the hatch's squeal), then the latch dropping — a dry click and the timber
+ * settling in its frame.
+ */
+export const DOOR: Design = (r) => [
+  {
+    src: "pulses", f: between(r, 90, 120), f2: between(r, 150, 190), glide: 0.12, jitter: 0.3,
+    filter: [{ type: "bandpass", f: between(r, 620, 760), q: 6 }, { type: "bandpass", f: 1450, q: 5, gain: 0.5 }],
+    attack: 0.05, hold: 0.1, decay: 0.08, amp: 0.5,
+  },
+  { src: "noise", filter: { type: "bandpass", f: between(r, 1700, 2100), q: 3 }, at: 0.36, attack: 0.0008, decay: 0.006, amp: 0.45 },
+  { src: "sine", f: between(r, 190, 215), f2: 120, glide: 0.02, at: 0.365, attack: 0.002, decay: 0.045, amp: 0.8 },
+  { src: "noise", filter: { type: "lowpass", f: 520 }, at: 0.365, attack: 0.002, decay: 0.04, amp: 0.55 },
+];
+
+/**
+ * A gull's cry: an impulse train gliding down through two throat resonances, so it is a
+ * vowel-like "kyow" rather than a whistle, twice in a row with the second lower. Not sine
+ * beeps. `r` varies the pitch and the glide, so no two gulls are the same bird.
+ */
+export const GULL: Design = (r) => {
+  const f = between(r, 760, 900);
+  const f1 = between(r, 1250, 1450);
+  return [
+    {
+      src: "pulses", f, f2: f * 0.62, glide: 0.1, jitter: 0.08,
+      filter: [{ type: "bandpass", f: f1, q: 5 }, { type: "bandpass", f: f1 * 2.1, q: 6, gain: 0.55 }],
+      attack: 0.03, hold: 0.09, decay: 0.07, amp: 1,
+    },
+    {
+      src: "pulses", f: f * 0.92, f2: f * 0.55, glide: 0.12, jitter: 0.1,
+      filter: [{ type: "bandpass", f: f1 * 0.92, q: 5 }, { type: "bandpass", f: f1 * 1.9, q: 6, gain: 0.5 }],
+      at: 0.3, attack: 0.035, hold: 0.1, decay: 0.09, amp: 0.8,
+    },
+  ];
+};
+
+/** The satchel's flap opened: leather and canvas parting, a buckle tinging once. */
+export const INVENTORY_OPEN: Design = (r) => [
+  { src: "noise", filter: { type: "bandpass", f: between(r, 780, 940), q: 0.7 }, attack: 0.06, decay: 0.05, amp: 0.7 },
+  { src: "grains", density: 200, filter: { type: "bandpass", f: 1300, q: 1.1 }, attack: 0.03, hold: 0.03, decay: 0.06, amp: 0.8 },
+  { src: "sine", f: between(r, 2250, 2450), attack: 0.0008, decay: 0.014, amp: 0.07, at: 0.1 },
+  { src: "sine", f: 130, f2: 86, glide: 0.012, at: 0.13, attack: 0.002, decay: 0.03, amp: 0.35 },
+];
+
+/** The flap let fall: shorter and lower than opening it, the weight of the leather settling. */
+export const INVENTORY_CLOSE: Design = (r) => [
+  { src: "noise", filter: { type: "bandpass", f: between(r, 620, 740), q: 0.7 }, attack: 0.03, decay: 0.035, amp: 0.55 },
+  { src: "sine", f: 112, f2: 74, glide: 0.012, at: 0.055, attack: 0.002, decay: 0.032, amp: 0.55 },
+  { src: "noise", filter: { type: "lowpass", f: 480 }, at: 0.055, attack: 0.002, decay: 0.03, amp: 0.4 },
+  { src: "sine", f: between(r, 1850, 1950), attack: 0.0008, decay: 0.01, amp: 0.05, at: 0.06 },
+];
+
+/**
+ * Two things put together and fitting: a small clink as they meet, then a warm two-note
+ * "that worked" a fifth apart that rises under it. Warmer and a little longer than the pickup.
+ */
+export const COMBINE: Design = (r) => {
+  const f = between(r, 392, 400);
+  return [
+    { src: "noise", filter: { type: "bandpass", f: between(r, 2600, 3200), q: 3 }, attack: 0.0006, decay: 0.006, amp: 0.35 },
+    { src: "sine", f: between(r, 1300, 1400), attack: 0.001, decay: 0.03, amp: 0.4 },
+    { src: "sine", f, at: 0.05, attack: 0.01, decay: 0.13, amp: 0.75 },
+    { src: "sine", f: f * 1.4983, at: 0.16, attack: 0.012, decay: 0.2, amp: 0.7 },
+    { src: "sine", f: f * 1.4983 * 2.005, at: 0.16, attack: 0.008, decay: 0.07, amp: 0.1 },
+  ];
+};
+
+/**
+ * Setting out across the chart: a long, soft sweep of paper and canvas with the compass's low
+ * note leaning under it and settling — the sound of a course being laid in, quiet enough to
+ * sit under the door and the curtain that follow.
+ */
+export const ATLAS_TRAVEL: Design = (r) => [
+  { src: "noise", filter: { type: "bandpass", f: between(r, 1700, 2100), q: 0.5 }, attack: 0.14, hold: 0.05, decay: 0.13, amp: 0.5 },
+  { src: "grains", density: 220, filter: { type: "bandpass", f: 3600, q: 1.2 }, attack: 0.08, hold: 0.05, decay: 0.1, amp: 0.6 },
+  { src: "sine", f: between(r, 190, 200), f2: 147, glide: 0.25, attack: 0.1, hold: 0.05, decay: 0.22, amp: 0.7 },
+  { src: "sine", f: between(r, 388, 398), f2: 296, glide: 0.25, at: 0.08, attack: 0.1, decay: 0.16, amp: 0.2 },
+];
+
+/**
+ * A door that will not give: a heavy shoulder-weight thud and the hasp rattling in its staple
+ * twice, tailing off. Wood and iron, no pitch.
+ */
+export const LOCKED: Design = (r) => [
+  { src: "sine", f: between(r, 105, 120), f2: 66, glide: 0.02, attack: 0.002, decay: 0.07, amp: 1 },
+  { src: "noise", filter: { type: "lowpass", f: between(r, 520, 640) }, attack: 0.0015, decay: 0.05, amp: 0.8 },
+  { src: "noise", filter: { type: "bandpass", f: between(r, 330, 400), q: 2 }, attack: 0.001, decay: 0.03, amp: 0.5 },
+  { src: "grains", density: 900, filter: { type: "bandpass", f: between(r, 1500, 1900), q: 2.5 }, at: 0.05, attack: 0.004, hold: 0.02, decay: 0.05, amp: 0.4 },
+  { src: "grains", density: 600, filter: { type: "bandpass", f: between(r, 1300, 1600), q: 2.5 }, at: 0.17, attack: 0.004, decay: 0.04, amp: 0.25 },
+];
+
 /**
  * Peak levels of the one-shots. The tick is heard constantly: as loud as the old square-wave
  * click (K-weighted), but a short wooden knock without its edge.
@@ -349,6 +486,15 @@ export const LEVEL = {
   hover: 0.018, arm: 0.026, advance: 0.022, choice: 0.034,
   chartOpen: 0.05, chartClose: 0.033, chartTone: 0.02,
   threshold: 0.045, save: 0.026, error: 0.045,
+  /**
+   * The event cues. Peaks sit under the tick's; by K-weighted loudness (400 ms window) they land
+   * 3-5 dB above it, level with the hatch and the error, as an event should be: the pickup is
+   * the brightest of the pleasant ones, the chime and combine are tuned to the same loudness,
+   * the satchel flap is 4-6 dB under the tick, and the deny and locked door are low enough to be
+   * felt more than heard.
+   */
+  pickup: 0.05, chime: 0.035, deny: 0.045, door: 0.08, gull: 0.045,
+  inventoryOpen: 0.04, inventoryClose: 0.032, combine: 0.04, travel: 0.04, locked: 0.075,
   /**
    * The compass motif and the note-filed stinger are quiet, dialogue-level sounds. The motif's
    * peak sits 10 dB under the interface tick's — the loudest routine one-shot, and this game's

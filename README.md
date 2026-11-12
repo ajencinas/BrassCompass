@@ -56,12 +56,14 @@ npm run test:unit  # the unit tests (save, recap, reach, prefs, tips, compile, f
 npm run test:scale # every character's size, screen height and reachable stand, all 25 rooms
 npm run test:all   # asset audit + scale + exit audit + npm test + fuzz + unit + build
 npm run test:assets # manifest/weight audit: no dead entries, no stray public files, budget
-npm run assets     # regenerate src/content/active-assets.json from the live content
+npm run assets     # rewrite src/content/active-assets.json after content/art changes (build only checks it)
+npm run test:size  # gzip bundle budget on dist/ (JS 250 KB, CSS 30 KB)
 npm run test:fuzz  # the state-machine fuzzer's regression suite in Chromium (about a minute)
 ```
 
-The browser playthrough is being retargeted to the new acts alongside the story work; the script
-lint, editor test and unit tests are the fast gates that stay green while it is rewritten.
+The browser playthrough (`tools/playthrough.mjs`) drives all four acts and both endings; it needs
+the painted art and a Chrome, so CI runs it only on demand. The script lint, unit tests and
+typecheck (`npm run test:fast`) are the fast gates that need neither.
 
 ---
 
@@ -86,16 +88,19 @@ a 30-second trailer beat sheet are in [`docs/STORE.md`](docs/STORE.md). Section 
 the pre-upload check: serve `dist/` from a subdirectory and confirm the game boots with no 404s.
 Credits are in [`CREDITS.md`](CREDITS.md), the AI disclosure is repeated there and in
 [`docs/STORE.md`](docs/STORE.md), and the licence is [LICENSE](LICENSE). CI
-(`.github/workflows/ci.yml`) runs typecheck, scripts, unit tests and the build on every push and
-pull request, and refuses a build whose HTML has root-absolute URLs.
+(`.github/workflows/ci.yml`) runs typecheck, scripts, unit tests, the asset/scale/exit/connect
+audits, a code-only build from a clean checkout, the bundle-size budget and an advisory
+`npm audit --omit=dev` on every push and pull request, and refuses a build whose HTML has
+root-absolute URLs. Release steps for the owner are in [`docs/RELEASE_CHECKLIST.md`](docs/RELEASE_CHECKLIST.md).
 
 ---
 
 ## Art and audio
 
 The generated art — scene backgrounds, character sprites, portraits and props — is **not in this
-repository**. The shared shelf is about 125 MiB of WebP, PNG and old films; only the ~63 MiB the
-live story actually names is copied into a build.
+repository**. The shared shelf is about 125 MiB of WebP, PNG and old films; only the ~33 MiB the
+live story actually names is copied into a build (character and prop art ships as WebP; `python3 tools/optimize_assets.py --webp-only` writes it beside each PNG, which stay as the
+editable source).
 
 New for the reboot: **Vex** (portrait and body), **Mordant** (portrait and body), the **Grey
 Lantern deck** plate (`bg_lantern_deck_restart_b_wide`), the **longboat** prop, and the
@@ -129,7 +134,8 @@ Drop the folders into `public/assets/` and the game runs unchanged — the asset
 `src/content/assets.ts` are relative to that directory. Music and the code to regenerate both
 live here, so the folder only needs to supply the painted art.
 
-A clone without the art folder still builds — Vite warns and produces a code-only bundle — but the
+A clone without the art folder (`public/assets/scenes` and `characters`) still builds — Vite warns
+"CODE-ONLY bundle" and produces one — but the
 game cannot start: the boot screen names the missing first-room painting and offers a retry rather
 than leaving a black canvas. The browser tests/playthrough need the art shelf.
 
@@ -385,8 +391,7 @@ Keys typed in the panel never reach the game.
 ### Tests
 
 `npm test` launches the Vite dev server and headless Chromium, lints room placement, then runs the
-browser playthrough with real pointer events (the playthrough is being retargeted to the new acts
-in parallel). It exercises title, verb, inventory, hotspot and dialogue keyboard controls, derives
+browser playthrough with real pointer events (all four acts and both endings). It exercises title, verb, inventory, hotspot and dialogue keyboard controls, derives
 scene clicks from live hotspot/camera coordinates, and checks camera scrolling, walk-before-exit
 transitions, directional frames, rejection feedback, dialogue links, examination, pause/resume and
 save/reload. Screenshots are saved to
@@ -453,8 +458,8 @@ cards, but no gore and no innuendo.
   states, sprites and arrival scenes per act, depth-sorted figures and occluders, night grades
 - Save/load, generated music, synthesised SFX, and no fail states; the new acts play without
   opening or closing films
-- `npm test` lints the scripts, runs the editor test and drives the browser playthrough; the
-  playthrough is being retargeted to the new acts in parallel
+- `npm test` lints the scripts, runs the editor test and drives the browser playthrough through
+  all four acts
 
 The canon is [`docs/STORY.md`](docs/STORY.md), with [`docs/REBOOT.md`](docs/REBOOT.md) as the
 showrunner spec; the generated screenplay is [`docs/FULL_SCRIPT.md`](docs/FULL_SCRIPT.md).
@@ -481,4 +486,4 @@ it to keep Bramwick behind the desk.
 
 Validation gates: TypeScript type checking, script lint, unit tests, the editor test and the
 production build; new rooms and the new cast are screenshot-reviewed with `tools/shoot.mjs`. The
-full browser playthrough is retargeted to the new acts alongside the content work.
+full browser playthrough (`npm test`) covers all four acts and needs the painted art.

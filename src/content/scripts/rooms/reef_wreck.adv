@@ -1,6 +1,7 @@
 room reef_wreck "The Sunken Wreck"
   bg bg_reef_wreck_v2b_wide
   width 2560
+  backdrop "brightness(0.64) saturate(0.95) contrast(1.04) lift(0.01)"
   music music_fog
   ambience sea
   # The plate is the Shroud at night already: only the figures need the same cold, flat key.
@@ -118,7 +119,7 @@ room reef_wreck "The Sunken Wreck"
     stand 760,846
     look "Quill has the oars over her shoulder and no intention of putting them down."
     talk "She says, \"Say the word and I will row you back. I am not saying it twice.\""
-    give "She shifts the oars. \"My hands are full. Keep it.\""
+    give "She shifts the oars. \"My hands are full. Ask me when I am not rowing.\""
 
   hotspot hobb "Hobb"
     show if act 3
@@ -127,7 +128,7 @@ room reef_wreck "The Sunken Wreck"
     look "Hobb, one hand on the wreck. He is listening to the flats."
     talk "He holds up a hand for quiet. Then he points out across the water."
       talk hobb at bell
-    give "He looks at it, then at the wreck. \"Keep it. I have work.\""
+    give "He looks at it, then at the wreck. \"Not now. I have work.\""
     state if bell_plan
       look "Hobb is coiling a length of old rope. He has already chosen his end of the ship."
       talk "He ties the coil and puts it over his shoulder. \"The bell is mine.\""
@@ -153,4 +154,4 @@ room reef_wreck "The Sunken Wreck"
   use compass on wreck
     "The needle points at the hull, then down, at whatever is left of her under the water."
   use crowbar on nameplate
-    "Hobb takes the crowbar out of my hand. \"Brass first. Iron after.\""
+    "Hobb takes the crowbar out of my hand. \"Hobb has the hands for it. Ask him.\""

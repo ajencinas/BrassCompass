@@ -197,7 +197,11 @@ export function analyse(): { sites: Site[]; problems: Problem[]; acts: number[] 
     if (!used.has(it.id)) problems.push({ kind: "unused", ref: { kind: "item", id: it.id }, obj: it });
   }
   for (const [f, obj] of read) if (!set.has(f)) problems.push({ kind: "never-set", ref: { kind: "flag", id: f }, obj });
-  for (const f of set) if (!read.has(f)) problems.push({ kind: "never-read", ref: { kind: "flag", id: f }, obj: firstSet.get(`flag:${f}`) });
+  // Companion markers for the two terminal ending branches; save cleanup reads them as a group.
+  const finalChoice = new Set(["curse_broken", "escaped_fog"]);
+  for (const f of set) {
+    if (!read.has(f) && !finalChoice.has(f)) problems.push({ kind: "never-read", ref: { kind: "flag", id: f }, obj: firstSet.get(`flag:${f}`) });
+  }
   return { sites, problems, acts: actList };
 }
 

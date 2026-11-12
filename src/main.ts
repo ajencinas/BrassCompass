@@ -21,15 +21,17 @@ function withBase(urls: Record<string, string>): Record<string, string> {
 }
 
 /**
- * Boot only what the first screen shows: the title chart, the harbour room behind it, the cold
- * open's desk and Fenn. Everything else is lazy, by room (see `Assets.ensure`). The old boot
+ * Boot only what the first screen shows: the title chart, the harbour room behind it and
+ * Fenn. Everything else is lazy, by room (see `Assets.ensure`). The old boot
  * queued every non-boot image — ~86 MB before the manifest was pruned — while a slow connection
  * sat on the title, and a room could arrive without its plate.
  */
 const BOOT = new Set([
-  "bg_title", "bg_dock_cinema_wide", "bg_coldopen", "bg_office_wide",
+  "bg_title", "bg_dock_cinema_wide",
   "char_elias", "char_walk_v2", "char_walk_vertical",
 ]);
+/** The tracks worth fetching at boot: the title's and the first room's. The rest load on demand. */
+const EAGER_AUDIO = ["music_dock"];
 const ESSENTIAL = ["bg_title", "bg_dock_cinema_wide", "char_elias"];
 
 function pick(keep: boolean): Record<string, string> {
@@ -40,15 +42,20 @@ function pick(keep: boolean): Record<string, string> {
  * The first room could not load even after the loader's retries. Say so instead of leaving a
  * black canvas: name the missing picture, offer a retry, and keep it keyboard accessible.
  */
-function showBootFailure(missing: string[]): void {
+function showBootFailure(missing: string[], error?: unknown): void {
   const boot = document.getElementById("boot");
   boot?.classList.add("gone");
   window.setTimeout(() => boot?.remove(), 700);
   const panel = document.getElementById("bootfail");
   const detail = document.getElementById("bootfail-detail");
-  const detailText = missing.length
-    ? `The first room's art could not be loaded (${missing.join(", ")}).`
-    : "The first room's art could not be loaded.";
+  const reason = error instanceof Error && error.message ? error.message : error ? String(error) : "";
+  // A thrown error (no 2D canvas, a constructor that failed) is not a missing picture: say what
+  // happened and what to try, instead of leaving the loading screen up forever.
+  const detailText = error
+    ? `The game could not start${reason ? ` (${reason})` : ""}. Your browser may have graphics turned off or blocked; try another browser, or reload.`
+    : missing.length
+      ? `The first room's art could not be loaded (${missing.join(", ")}).`
+      : "The first room's art could not be loaded.";
   if (detail) detail.textContent = detailText;
   // There is no game behind the alert: take the dead canvas out of the tab order and the
   // accessibility tree, so Tab cannot land on controls that will never answer.
@@ -66,7 +73,7 @@ function showBootFailure(missing: string[]): void {
   // The alertdialog names the failure for a screen reader; the live region also says what to do.
   const live = document.getElementById("sr");
   if (live) {
-    live.textContent = `The harbour is still in fog. ${detailText} Choose Try again, or check your connection and reload the page.`;
+    live.textContent = `The harbour is still in fog. ${detailText} Choose Try again, or ${error ? "reload the page" : "check your connection and reload the page"}.`;
   }
 }
 
@@ -79,8 +86,12 @@ async function boot(): Promise<void> {
   // and the canvas must be fitted to that, not to the 16:9 desktop frame. The title is the
   // first screen, and it uses the full frame.
   const mobile = wantsMobileLayout();
-  const syncOrientation = (): void => {
-    document.body.classList.toggle("m-landscape", window.innerWidth > window.innerHeight);
+  /** Mirror the window's orientation onto the body; true when it changed. */
+  const syncOrientation = (): boolean => {
+    const landscape = window.innerWidth > window.innerHeight;
+    const was = document.body.classList.contains("m-landscape");
+    document.body.classList.toggle("m-landscape", landscape);
+    return landscape !== was;
   };
   if (mobile) {
     document.body.classList.add("mobile", "m-full");
@@ -93,7 +104,18 @@ async function boot(): Promise<void> {
   const assets = new Assets();
   const audio = new AudioEngine(assets);
 
-  window.addEventListener("resize", () => view.resize());
+  // A phone turns over: the touch layout is chosen per orientation (a rail beside the scene in
+  // landscape, the panel under it in portrait), so the class and the canvas fit must follow.
+  if (mobile) {
+    const relayout = (): void => { if (syncOrientation()) view.resize(); };
+    window.addEventListener("resize", relayout);
+    window.addEventListener("orientationchange", relayout);
+    window.matchMedia?.("(orientation: landscape)")?.addEventListener?.("change", relayout);
+  }
+
+  // A window being dragged fires dozens of resize events; resetting the canvas size for each
+  // reallocates its backing store. The first runs at once, the rest collapse into one.
+  window.addEventListener("resize", () => view.resizeSoon());
 
   // Teach the loader the whole manifest up front, so a room entry can ask for exactly its own
   // art later without re-reading the manifest.
@@ -103,7 +125,7 @@ async function boot(): Promise<void> {
   // nothing before a gesture, so waiting on it only stalls boot.
   await assets.load({ images: pick(true), audio: AUDIO }, (p) => {
     if (bar) bar.style.width = `${Math.round(Math.min(1, p) * 100)}%`;
-  }, { frames: SHEETS });
+  }, { frames: SHEETS, eagerAudio: EAGER_AUDIO });
 
   // Dev/test builds load the active shelf before the first frame: the playthrough and editor
   // drive a synthetic clock and cannot wait for a lazy room request mid-frame. Production keeps
@@ -118,6 +140,7 @@ async function boot(): Promise<void> {
   }
 
   const game = new Game(view, input, assets, audio);
+  assets.onNotice = (text) => game.notify(text);
   game.start();
 
   // Dev/test helpers. Tests drive the clock synchronously (__ff), so they cannot wait for a
@@ -130,17 +153,24 @@ async function boot(): Promise<void> {
   }
 
   // First gesture unlocks audio (browser autoplay policy).
+  // iOS only honours some gestures (touchend, click) and can leave the context suspended after
+  // the first, so the listeners stay until the context is genuinely running.
+  const UNLOCK_EVENTS = ["pointerdown", "touchend", "click", "keydown"] as const;
   const unlock = (): void => {
     audio.unlock();
-    window.removeEventListener("pointerdown", unlock);
-    window.removeEventListener("keydown", unlock);
+    if (!audio.running) return;
+    for (const type of UNLOCK_EVENTS) window.removeEventListener(type, unlock, true);
   };
-  window.addEventListener("pointerdown", unlock);
-  window.addEventListener("keydown", unlock);
+  for (const type of UNLOCK_EVENTS) window.addEventListener(type, unlock, true);
 
   bootEl?.classList.add("gone");
   window.setTimeout(() => bootEl?.remove(), 700);
 }
 
 document.getElementById("bootfail-retry")?.addEventListener("click", () => window.location.reload());
-void boot();
+// Any failure on the way up (a canvas that will not give a 2D context, a constructor that throws,
+// a manifest that never loads) ends in the same alert dialog, never a loading screen forever.
+boot().catch((error: unknown) => {
+  console.error("boot failed:", error);
+  showBootFailure([], error ?? new Error("unknown error"));
+});

@@ -4,6 +4,7 @@
  *
  *   node tools/audit-assets.mjs            # references, active weight, excluded files
  *   node tools/audit-assets.mjs --dist     # also check a built dist/ (postbuild)
+ *   node tools/audit-assets.mjs --dist --dist-dir <dir>   # ... or a build written elsewhere
  *   node tools/audit-assets.mjs --json     # machine-readable report
  *
  * Fails when:
@@ -17,8 +18,8 @@
  * (archived plates and old films). They are listed, and the build excludes them.
  */
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { join, relative, sep } from "node:path";
-import { collect, OUT, ROOT, serialized } from "./asset-manifest.mjs";
+import { join, relative, resolve, sep } from "node:path";
+import { collect, OUT, ROOT, SHELL_FILES, serialized } from "./asset-manifest.mjs";
 
 /** The live game may ship this much media (images + audio) and no more. */
 const MAX_ACTIVE_MIB = 80;
@@ -73,7 +74,7 @@ if (!args.has("--json")) {
     console.log(`not in the manifest (excluded from the build): ${result.outsideManifest.length} files, ${outsideMib.toFixed(1)} MiB`);
     if (!args.has("--dist")) {
       for (const file of result.outsideManifest) {
-        if (file.rel === "favicon.svg") continue; // the page icon is shell, not game art
+        if (SHELL_FILES.includes(file.rel)) continue; // page icons are shell, not game art
         console.log(`  - public/${file.rel}  ${(file.bytes / (1024 * 1024)).toFixed(2)} MiB`);
       }
     }
@@ -82,7 +83,9 @@ if (!args.has("--json")) {
 
 // 6. Postbuild: the copy step must not have smuggled anything back in.
 if (args.has("--dist")) {
-  const dist = join(ROOT, "dist");
+  // `--dist-dir <path>` audits a build written elsewhere (default: dist/).
+  const distFlag = process.argv.indexOf("--dist-dir");
+  const dist = distFlag > 0 ? resolve(process.argv[distFlag + 1]) : join(ROOT, "dist");
   if (!existsSync(join(dist, "index.html"))) {
     errors.push("dist/index.html is missing — build before --dist");
   } else if (!result.artShelf) {
@@ -100,8 +103,8 @@ if (args.has("--dist")) {
       const size = statSync(path).size;
       total += size;
       if (/\.(png|webp|jpg|jpeg|gif|mp3|ogg|mp4|webm)$/i.test(rel)) media += size;
-      if (!rel.startsWith("assets/") && rel !== "favicon.svg" && rel !== "index.html") {
-        if (rel !== "index.html" && rel !== "favicon.svg") errors.push(`dist has an unexpected root file: ${rel}`);
+      if (!rel.startsWith("assets/") && rel !== "index.html" && !SHELL_FILES.includes(rel)) {
+        errors.push(`dist has an unexpected root file: ${rel}`);
         continue;
       }
       if (rel.startsWith("assets/") && !/^assets\/[^/]+\.(js|css|map)$/.test(rel)) {

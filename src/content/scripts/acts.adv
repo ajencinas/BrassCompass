@@ -6,7 +6,7 @@
 act 1 "The Return"
   start dock
   inventory compass
-  caption "Dreadwater Isle. Three months since my father sailed into the fog. Half the harbour is empty, and the other half won't meet my eye."
+  caption "Dreadwater Isle. The boatman puts me on the pier and pushes off before I can thank him. It is three months since my father sailed into the fog."
 
 act 2 "The Crew"
   start marrow_deck
@@ -45,7 +45,7 @@ ending "THE FATHER AND THE FOG"
   line if ending_fog_lifts
     "Quill charts the Shroud for the first time in eighty years. The first clear channel is Quill's Run, and she pretends not to care."
   line if ending_fog_lifts
-    "Hobb and Tam come home together. Tam rings the harbour bell at noon, and Hobb lets him."
+    "Hobb and Tam come home together. Hobb walks half a step behind his brother all the way up the hill, in case the fog changes its mind."
   line if ending_fog_lifts
     "Dorrit feeds every crew that comes in. He says it is to keep them out of his kitchen, and keeps the pot on."
   line if ending_fog_lifts
@@ -61,37 +61,39 @@ ending "THE FATHER AND THE FOG"
   line if ending_fog_lifts
     "My father and I draw the new coast together. The chart is honest now."
   line if ending_fog_lifts
+    "He gives me back my coat, shaves off the beard, and apologises for my birthday a second time. I accept all three."
+  line if ending_fog_lifts
+    "Marta unbolts the back door at last. The lamp in my father's window is lit, and it stays lit."
+  line if ending_fog_lifts
     "His compass lies open on the table between us. The needle points north, and stays there."
   line if ending_fog_lifts
-    "Old Rook hears the bell is quiet. He orders a drink, then pushes it away. He has somewhere to be."
+    "Old Rook hears the fog has gone. He orders a drink, then pushes it away. He has somewhere to be."
   line if ending_fog_lifts
-    "The bell hangs in the harbour. On the first clear morning of the year, it rings for the dead."
-  line if ending_fog_lifts and tam_freed
-    "Tam Hobb rings it at noon. I tell him his son kept counting. Tam says he knows, and rings it again."
+    "On the first clear morning of the year, the harbour bell rings for the dead. At noon Tam Hobb takes the rope, and Hobb lets him."
+  line if ending_fog_lifts
+    "I tell Tam Hobb that his son kept counting. He says he knows, and rings it again."
   line if ending_fog_lifts
     "Old Onn comes down to the quay to hear the story. I tell her the truth. She says it will do, and goes back to her step."
 
   # THE LONG WAY HOME — the living get out; the dead and the fog remain.
   line if ending_long_way and vex_trust
-    "Vex takes the salvage and leaves Dreadwater. He leaves the longboat at the reef for my father, and calls it a debt worth collecting."
+    "Vex takes the salvage and leaves Dreadwater in the longboat. He is not running. He goes back to the rock for my father, and calls it a debt worth collecting."
   line if ending_long_way and vex_trust
     "My father comes home a month later, in that boat, with the rest of the chart."
   line if ending_long_way and not vex_trust
     "Vex takes the salvage and the credit. He tells the island he saved us. The ones we left are not in his story."
   line if ending_long_way and not vex_trust
-    "My father stays on the fog rock to finish the chart. He sends a note once a month, and it is always a map."
+    "My father stays on the fog rock to finish the chart. He chose it, and I did not argue. I have not decided which of us I blame."
   line if ending_long_way
     "Quill brings us out with a heading she made up on the spot. It works. She never says how close it was."
-  line if ending_long_way and tam_freed
-    "Hobb comes home with Tam. He does not speak for a day, and then he does not stop."
-  line if ending_long_way and not tam_freed
-    "Hobb comes home alone. He keeps Tam's tally in his coat and adds to it every morning."
   line if ending_long_way
-    "Dorrit keeps the galley going all the way home. Nobody goes hungry, not even Vex."
+    "Hobb comes home with Tam. He does not speak for a day, and then he does not stop."
+  line if ending_long_way
+    "Dorrit keeps the pot hot all the way home. Nobody goes hungry, not even Vex."
   line if ending_long_way
     "The island takes us back. The fog is still out there, and the fishing boats still do not go past the reef."
   line if ending_long_way
-    "The Shroud keeps its crews. On quiet nights the bell rings across the water, and the island has learned to call it weather."
+    "The Shroud keeps its crews. On quiet nights Hobb takes the Lantern's clapper down to the harbour wall and strikes a post: three, then one. The island has learned not to ask."
   line if ending_long_way
     "The blank half of the chart hangs in the Salty Keel. Marta says that is the honest part."
   line if ending_long_way and vex_trust
@@ -101,8 +103,8 @@ ending "THE FATHER AND THE FOG"
   line if ending_long_way
     "Old Rook does not ask how it went. He puts a glass in front of me and one in front of himself."
   line if ending_long_way and vex_trust
-    "I go back to Dreadwater with a boat, a crew, and a father a month behind me."
+    "I go back to Dreadwater with a crew, half a chart, and a father a month behind me."
   line if ending_long_way and not vex_trust
-    "I go back to Dreadwater with a boat, a crew, and no father. Some mornings the fog looks like a road."
+    "I go back to Dreadwater with a crew, half a chart, and no father. Some mornings the fog looks like a road."
   line if ending_long_way
-    "The Grey Lantern is still out there. Some nights I hear the bell, and I answer it. That is not the same as going back."
+    "The Grey Lantern is still out there. Some nights I stand on the quay and say Mordant's name to the fog. It does not answer. That is not the same as going back."

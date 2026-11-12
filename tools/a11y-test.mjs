@@ -341,6 +341,25 @@ try {
   await key("Escape");
   await until(() => game("!g.casebook.open"), "the chart to close");
 
+  // Tab walks a conversation's answers, but leaves them at either end instead of trapping focus.
+  await focus("canvas");
+  await evaluate('window.__game.startDialogue("bramwick", "root")');
+  await until(() => game("Boolean(g.dialogue)"), "a conversation");
+  await evaluate("window.__game.dialogue.shown = 1e6");
+  await key("Tab");
+  assert.equal(await game("g.hoverChoice"), 0, "Tab moves to the first answer");
+  await key("Tab");
+  assert.equal(await game("g.hoverChoice"), 1, "and on to the next");
+  await key("ArrowDown"); await key("ArrowDown"); await key("ArrowDown");
+  assert.equal(await game("g.hoverChoice"), 4, "arrows still walk to the last answer");
+  await key("Tab");
+  assert.notEqual((await active()).id, "game", "Tab past the last answer leaves the canvas");
+  await focus("canvas");
+  await key("Tab", { shift: true });
+  assert.equal(await game("g.hoverChoice"), 3, "Shift+Tab walks back through the answers");
+  await evaluate("window.__game.leaveDialogue()");
+  await focus("canvas");
+
   await key("Escape");
   await until(() => evaluate('!document.querySelector(".settings").hidden'), "settings to turn motion off");
   await evaluate(`(() => { const s = document.querySelector('select[data-pref="reducedMotion"]');
@@ -350,6 +369,49 @@ try {
     "turning reduced motion off restores motion");
   assert.equal(await evaluate('document.querySelector(\'select[data-pref="textSpeed"]\').disabled'), false,
     "turning reduced motion off re-enables the speed control");
+  await key("Escape");
+  await until(() => evaluate('document.querySelector(".settings").hidden'), "settings to close");
+  await send("Emulation.setEmulatedMedia", { features: [] });
+
+  /* ------------------------------ contrast, text size, reading time, reveal */
+  await send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-contrast", value: "more" }] });
+  await send("Page.navigate", { url: server.url + "?nomobile=1" });
+  await waitTitle();
+  await pause(250);
+  assert.equal(await evaluate('document.body.classList.contains("high-contrast")'), true,
+    "the OS prefers-contrast setting is the default for high contrast");
+  await key("Escape");
+  await until(() => evaluate('!document.querySelector(".settings").hidden'), "settings for the new options");
+  const setPref = (name, value) => evaluate(`(() => { const s = document.querySelector('select[data-pref="${name}"]');
+    s.value = ${JSON.stringify(value)}; s.dispatchEvent(new Event("change", { bubbles: true })); return s.value; })()`);
+  assert.equal(await setPref("highContrast", "off"), "off");
+  await pause(150);
+  assert.equal(await evaluate('document.body.classList.contains("high-contrast")'), false,
+    "high contrast can be turned off against the OS");
+  assert.match(await sr(), /High contrast off/, "the change is announced");
+  await setPref("highContrast", "on");
+  await pause(150);
+  assert.equal(await evaluate('document.body.classList.contains("high-contrast")'), true, "high contrast turns on");
+  assert.match(await sr(), /High contrast on/, "the change is announced");
+  assert.equal(await setPref("textScale", "2"), "2", "200% is a text size");
+  await pause(150);
+  assert.equal(await evaluate('document.documentElement.style.getPropertyValue("--text-scale")'), "2",
+    "the largest text size reaches the DOM");
+  assert.equal(await evaluate('getComputedStyle(document.querySelector(".settings")).fontSize'), "32px");
+  assert.equal(await game("g.textScale"), 2, "and the canvas");
+  assert.equal(await setPref("textScale", "1.75"), "1.75", "175% is a text size");
+  await setPref("textScale", "1.5");
+  await setPref("readingTime", "xlong");
+  assert.equal(await game("g.readingFactor > 2"), true, "Very long reading time lengthens every hold");
+  assert.match(await evaluate('document.querySelector(\'[data-action="wait"]\').textContent'),
+    /Keep each line until I click/, "the wait toggle says what it does");
+  assert.equal(await evaluate('Boolean(document.getElementById(document.querySelector(\'[data-action="wait"]\').getAttribute("aria-describedby")))'),
+    true, "and has its explanation");
+  await setPref("revealMode", "toggle");
+  assert.equal(await game("g.prefs.revealMode"), "toggle");
+  await setPref("highContrast", "auto");
+  await setPref("readingTime", "normal");
+  await setPref("revealMode", "hold");
   await key("Escape");
   await until(() => evaluate('document.querySelector(".settings").hidden'), "settings to close");
   await send("Emulation.setEmulatedMedia", { features: [] });
@@ -406,6 +468,25 @@ try {
     "the recovered canvas is back in the tab order");
   assert.match(await sr(), /Title screen\./, "the recovered title is announced");
 
+  /* ------------------------------- boot failure: no 2D canvas context */
+  const noCanvas = await send("Page.addScriptToEvaluateOnNewDocument", {
+    source: `(() => { const get = HTMLCanvasElement.prototype.getContext;
+      HTMLCanvasElement.prototype.getContext = function (type, ...rest) {
+        return this.id === "game" && type === "2d" ? null : get.call(this, type, ...rest);
+      }; })()`,
+  });
+  await send("Page.navigate", { url: server.url + "?nomobile=1" });
+  await until(() => evaluate('!document.getElementById("bootfail").hidden'), "the boot-failure alert without a canvas", 20000);
+  assert.equal(await evaluate("document.activeElement.id"), "bootfail-retry", "the canvas failure focuses Try again");
+  assert.match(await evaluate('document.getElementById("bootfail-detail").textContent'), /2D canvas unavailable/,
+    "the dialog says what failed");
+  assert.match(await sr(), /could not start/i, "the canvas failure is announced");
+  await until(() => evaluate('!document.getElementById("boot")'), "the loading screen to go");
+  assert.equal(await evaluate('document.getElementById("stage").inert'), true, "the dead canvas is inert");
+  await send("Page.removeScriptToEvaluateOnNewDocument", { identifier: noCanvas.identifier });
+  await send("Page.navigate", { url: server.url + "?nomobile=1" });
+  await waitTitle();
+
   /* ------------------------------------------------------------ mobile */
   await send("Emulation.setDeviceMetricsOverride", {
     width: 390, height: 844, deviceScaleFactor: 2, mobile: true,
@@ -417,12 +498,11 @@ try {
   await pause(450);
   assert.equal(await evaluate('document.body.classList.contains("mobile")'), true, "the phone layout is used");
 
-  await key("Tab");
-  assert.equal((await active()).id, "game", "the first phone Tab reaches the canvas");
-  await key("Tab");
+  // The phone title focuses its real primary button immediately; the canvas is not a tab stop
+  // behind the title sheet.
   state = await active();
   assert.equal(await evaluate("Boolean(document.activeElement.dataset.title)"), true,
-    "the second phone Tab reaches the real title buttons");
+    "the phone title starts on a real title button");
   const firstTitle = await evaluate("document.activeElement.dataset.title");
   assert.equal(firstTitle, "start", "with no save, Begin is the first title button");
   await key("Tab");

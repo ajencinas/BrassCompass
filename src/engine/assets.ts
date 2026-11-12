@@ -8,7 +8,12 @@
  * drawable image, and asking for one that hasn't arrived moves it to the front of the queue.
  *
  * Audio never blocks: an <audio> element is usable as soon as it exists (it buffers on play),
- * and iOS won't fetch media before a user gesture anyway.
+ * and iOS won't fetch media before a user gesture anyway. Only the tracks named in
+ * `LoadOptions.eagerAudio` (the title's and the first room's) are preloaded at boot; the rest
+ * fetch just their metadata and buffer when a room first plays them. A track that errors is
+ * retried a few times with a backoff, again when the connection comes back, and once more when
+ * a room is entered; only when it has finally failed is the player told, once, through
+ * `onNotice`, and the game carries on without it.
  *
  * Nothing else is loaded at boot. The title, the first room and the cold open are fetched by
  * `load`; every later room asks for its own plate, sprites and portraits with `ensure`, and an
@@ -26,6 +31,8 @@ export interface LoadOptions {
   priority?: string[];
   /** Frame counts of sprite sheets, so their cells are measured at load too. */
   frames?: Record<string, number>;
+  /** Audio keys to preload at boot; every other track fetches metadata only. Default: all. */
+  eagerAudio?: string[];
 }
 
 interface Job {
@@ -39,10 +46,16 @@ interface Job {
 const CONCURRENCY = 4;
 /** Attempts per image, then a fallback for backgrounds. */
 const ATTEMPTS = 3;
-/** Give a single image request this long before abandoning the attempt. */
-const IMAGE_TIMEOUT_MS = 15_000;
-/** Backoff between attempts; a flaky connection gets a second and a third chance. */
-const RETRY_DELAY_MS = 260;
+/**
+ * Timing, as one mutable record so a test can shorten it. `stallMs` is a stall deadline, not a
+ * total one: an image attempt is abandoned only after this long with no bytes arriving, and the
+ * clock restarts with every chunk, so a big sprite on a slow link is never given up on while
+ * it is still coming. `directMs` is the total allowance for the plain <img> fallback, which
+ * cannot report progress. `retryDelayMs` is the backoff between attempts.
+ */
+export const LOAD_TIMING = { stallMs: 15_000, directMs: 30_000, retryDelayMs: 260, retryAgainMs: 6_000 };
+/** Attempts per audio track before it is reported as failed. */
+const AUDIO_ATTEMPTS = 3;
 
 export class Assets {
   readonly images = new Map<string, HTMLImageElement>();
@@ -56,6 +69,19 @@ export class Assets {
   /** Every URL the game may ask for later, not just what this boot needs. */
   private catalog = new Map<string, string>();
   private fallback: Promise<HTMLImageElement | null> | null = null;
+  /** Backgrounds currently showing the painted fallback: a later retry may replace them. */
+  private fallbackKeys = new Set<string>();
+  /** When each failed image last failed (performance.now), so entering a room is not a retry storm. */
+  private failedAt = new Map<string, number>();
+  private onlineHooked = false;
+  /** Audio: attempts so far per key, the tracks given up on, and whether the player was told. */
+  private audioTries = new Map<string, number>();
+  private audioUrls = new Map<string, string>();
+  private audioGaveUp = new Set<string>();
+  private audioGaveUpAt = 0;
+  private audioNoticed = false;
+  /** A non-blocking message for the player (the game shows it on its notice banner). */
+  onNotice: ((text: string) => void) | null = null;
 
   /** Teach the loader where the rest of the art lives, so `ensure` can fetch it by key. */
   setCatalog(images: Record<string, string>): void {
@@ -73,14 +99,17 @@ export class Assets {
 
     this.setCatalog(manifest.images);
 
+    const eager = opts.eagerAudio ? new Set(opts.eagerAudio) : null;
     for (const [key, url] of Object.entries(manifest.audio)) {
       if (this.audio.has(key)) continue;
       const a = new Audio();
-      a.preload = "auto";
+      a.preload = !eager || eager.has(key) ? "auto" : "metadata";
       a.src = url;
-      a.addEventListener("error", () => console.warn("audio failed:", key, url), { once: true });
+      this.audioUrls.set(key, url);
+      a.addEventListener("error", () => this.audioFailed(key, a));
       this.audio.set(key, a);
     }
+    this.hookOnline();
 
     const keys = Object.keys(manifest.images);
     const order = [
@@ -113,6 +142,9 @@ export class Assets {
    */
   async ensure(keys: Iterable<string>, onProgress?: (p: number) => void): Promise<void> {
     const wanted = [...new Set(keys)].filter((key) => this.catalog.has(key));
+    // Entering a room is a second chance for what failed before (a blip, a dropped link).
+    this.retryFailed(wanted, LOAD_TIMING.retryAgainMs);
+    this.retryAudio(LOAD_TIMING.retryAgainMs);
     if (!wanted.length) { onProgress?.(1); return; }
     let settled = 0;
     const waits = wanted.map((key) => this.enqueue(key, this.catalog.get(key)!).done.then(() => {
@@ -160,7 +192,8 @@ export class Assets {
     const existing = this.jobs.get(key);
     if (existing) return existing;
     // Already loaded or finally failed: a resolved job lets ensure() count it without a fetch.
-    if (this.images.has(key) || this.failed.has(key)) {
+    // A background that is only the painted fallback does not count as loaded.
+    if ((this.images.has(key) && !this.fallbackKeys.has(key)) || this.failed.has(key)) {
       let resolve!: () => void;
       const done = new Promise<void>((r) => { resolve = r; });
       resolve();
@@ -205,17 +238,101 @@ export class Assets {
           await this.measure(job.key, img, n && n > 1 ? [1, n] : [1]);
         }
         this.images.set(job.key, img);
+        this.fallbackKeys.delete(job.key);
+        this.failed.delete(job.key);
+        this.failedAt.delete(job.key);
         return;
       }
-      if (attempt < ATTEMPTS) await delay(RETRY_DELAY_MS * attempt);
+      if (attempt < ATTEMPTS) await delay(LOAD_TIMING.retryDelayMs * attempt);
     }
     console.warn("image failed after retries:", job.key, job.url);
     this.failed.add(job.key);
+    this.failedAt.set(job.key, now());
     // A missing plate must not leave the room black: paint a quiet fallback under the scene.
-    if (job.key.startsWith("bg_")) {
+    if (job.key.startsWith("bg_") && !this.images.has(job.key)) {
       const fallback = await this.fallbackImage();
-      if (fallback) this.images.set(job.key, fallback);
+      if (fallback && !this.images.has(job.key)) {
+        this.images.set(job.key, fallback);
+        this.fallbackKeys.add(job.key);
+      }
     }
+  }
+
+  /**
+   * Stop waiting for these backgrounds: show the painted fallback plate now (the curtain has
+   * waited as long as it will). The real image keeps loading and replaces the fallback if it
+   * arrives. Returns once the fallback is in place.
+   */
+  async giveUp(keys: Iterable<string>): Promise<void> {
+    const pending = [...keys].filter((k) => k.startsWith("bg_") && !this.images.has(k));
+    if (!pending.length) return;
+    const fallback = await this.fallbackImage();
+    if (!fallback) return;
+    for (const key of pending) {
+      if (this.images.has(key)) continue;   // it arrived while the fallback was being made
+      this.images.set(key, fallback);
+      this.fallbackKeys.add(key);
+    }
+  }
+
+  /**
+   * Give images that failed for good another go: `keys` (or all of them), no sooner than
+   * `minAgeMs` after they last failed. They re-enter the queue as fresh jobs; a background
+   * keeps its painted fallback until the real plate arrives.
+   */
+  retryFailed(keys?: Iterable<string>, minAgeMs = 0): void {
+    const retried: string[] = [];
+    for (const key of keys ? [...keys] : [...this.failed]) {
+      if (!this.failed.has(key) || !this.catalog.has(key)) continue;
+      if (now() - (this.failedAt.get(key) ?? -Infinity) < minAgeMs) continue;
+      this.failed.delete(key);
+      this.jobs.delete(key);
+      retried.push(key);
+    }
+    for (const key of retried) this.enqueue(key, this.catalog.get(key)!);
+    if (retried.length) this.pump();
+  }
+
+  // ------------------------------------------------------------------ audio retries
+
+  private audioFailed(key: string, el: HTMLAudioElement): void {
+    const url = this.audioUrls.get(key) ?? el.src;
+    const tries = (this.audioTries.get(key) ?? 0) + 1;
+    this.audioTries.set(key, tries);
+    if (tries < AUDIO_ATTEMPTS) {
+      setTimeout(() => { el.src = retryUrl(url, tries + 1); el.load(); }, LOAD_TIMING.retryDelayMs * tries * 4);
+      return;
+    }
+    console.warn("audio failed after retries:", key, url);
+    this.audioGaveUp.add(key);
+    this.audioGaveUpAt = now();
+    // One notice for the whole set, and a quiet one: the game plays on without the music.
+    if (!this.audioNoticed) {
+      this.audioNoticed = true;
+      this.onNotice?.("The music could not be loaded. The voyage goes on without it; it will try again when the connection settles.");
+    }
+  }
+
+  /** Try the tracks that failed again (the connection came back, or a room was entered). */
+  retryAudio(minAgeMs = 0): void {
+    if (!this.audioGaveUp.size || now() - this.audioGaveUpAt < minAgeMs) return;
+    for (const key of [...this.audioGaveUp]) {
+      const el = this.audio.get(key);
+      const url = this.audioUrls.get(key);
+      if (!el || !url) continue;
+      this.audioGaveUp.delete(key);
+      this.audioTries.set(key, AUDIO_ATTEMPTS - 1);   // one more attempt, then it is given up again
+      el.src = retryUrl(url, 9);
+      el.load();
+    }
+    this.audioGaveUpAt = now();
+  }
+
+  /** When the browser says the network is back, retry whatever failed. */
+  private hookOnline(): void {
+    if (this.onlineHooked || typeof window === "undefined" || typeof window.addEventListener !== "function") return;
+    this.onlineHooked = true;
+    window.addEventListener("online", () => { this.retryFailed(); this.retryAudio(); });
   }
 
   /** One dark, foggy plate reused when any background has failed for good. */
@@ -359,8 +476,71 @@ export interface Bounds {
   torso: number;
 }
 
-/** Load one image with a deadline; a stalled request must not hold a room forever. */
-function loadImage(url: string): Promise<HTMLImageElement | null> {
+function now(): number {
+  return typeof performance !== "undefined" ? performance.now() : Date.now();
+}
+
+/**
+ * Load one image. Where `fetch` can stream, the bytes are read chunk by chunk and the stall
+ * deadline restarts with each one, so a slow connection is waited for as long as bytes keep
+ * coming and a dead one is abandoned `stallMs` after the last. Anywhere that cannot (no fetch,
+ * a cross-origin host without CORS) it falls back to a plain <img> with a longer total deadline.
+ */
+async function loadImage(url: string): Promise<HTMLImageElement | null> {
+  if (typeof fetch === "function" && !url.startsWith("data:") && !url.startsWith("blob:")) {
+    const blob = await readStalled(url);
+    if (blob === null) return null;
+    if (blob) {
+      const objectUrl = URL.createObjectURL(blob);
+      const img = await loadDirect(objectUrl, LOAD_TIMING.directMs);
+      URL.revokeObjectURL(objectUrl);
+      return img;
+    }
+  }
+  return loadDirect(url, LOAD_TIMING.directMs);
+}
+
+/**
+ * The bytes of `url`, with a stall deadline: a Blob when read, null when it failed (an HTTP
+ * error, or no bytes for `stallMs`), undefined when streaming is not possible here.
+ */
+async function readStalled(url: string): Promise<Blob | null | undefined> {
+  const ctl = typeof AbortController === "function" ? new AbortController() : null;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  let stalled = false;
+  const arm = (): void => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { stalled = true; ctl?.abort(); }, LOAD_TIMING.stallMs);
+  };
+  try {
+    arm();
+    const res = await fetch(url, ctl ? { signal: ctl.signal } : undefined);
+    if (!res.ok) return null;
+    const type = res.headers.get("content-type") ?? "";
+    const reader = res.body?.getReader?.();
+    if (!reader) {
+      const blob = await res.blob();
+      return blob;
+    }
+    const chunks: Uint8Array[] = [];
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (value) chunks.push(value);
+      arm();
+    }
+    return new Blob(chunks as BlobPart[], { type });
+  } catch {
+    // A stall or an abort is a failed attempt; any other error (offline, CORS) may still be
+    // loadable as a plain <img>, which the caller tries.
+    return stalled ? null : undefined;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/** A plain <img> load with a total deadline (it reports no progress to restart a clock on). */
+function loadDirect(url: string, totalMs: number): Promise<HTMLImageElement | null> {
   return new Promise((resolve) => {
     const img = new Image();
     img.decoding = "async";
@@ -373,7 +553,7 @@ function loadImage(url: string): Promise<HTMLImageElement | null> {
       img.onerror = null;
       resolve(value);
     };
-    const timer = setTimeout(() => finish(null), IMAGE_TIMEOUT_MS);
+    const timer = setTimeout(() => finish(null), totalMs);
     img.onload = () => finish(img);
     img.onerror = () => finish(null);
     img.src = url;
@@ -381,7 +561,7 @@ function loadImage(url: string): Promise<HTMLImageElement | null> {
 }
 
 /** A retry of a cached 404 needs a different URL or the browser may answer from its cache. */
-function retryUrl(url: string, attempt: number): string {
+export function retryUrl(url: string, attempt: number): string {
   if (url.startsWith("data:") || url.startsWith("blob:")) return url;
   const sep = url.includes("?") ? "&" : "?";
   return `${url}${sep}retry=${attempt}`;

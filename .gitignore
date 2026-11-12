@@ -17,6 +17,8 @@ cinematic/cinematic.mp4
 cinematic/renders/
 .env
 .gencache.json
+.art_r2_cache.json
+.art_r2_ledger.jsonl
 .playwright-mcp/
 __pycache__/
 *.pyc
@@ -24,6 +26,10 @@ __pycache__/
 .DS_Store
 .genraw/
 reference/screens/cal/
+# Private travel/personal files (removed from HEAD; see RELEASE_CHECKLIST for history purge)
+travel-map/
+reference/travel-map/
+
 # Third-party reference art (published-game stills, UI captures) is not ours to ship.
 reference/mi1_*
 *Monkey Island*
@@ -40,6 +46,8 @@ public/assets/props
 public/assets/props/
 public/assets/video
 public/assets/video/
+# Round-2 art candidates (tools/art_r2.py output, ~75 MB): working shelf, not source.
+public/assets/candidates_r2/
 
 # Depth caches for tools/calibrate.py
 .calibration/

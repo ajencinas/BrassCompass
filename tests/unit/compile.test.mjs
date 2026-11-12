@@ -171,6 +171,11 @@ const ATMOSPHERE_ERRORS = [
   ["filter without a unit", '  backdrop "hue-rotate(195)"\n', "rooms/dock.adv:6:12: hue-rotate needs a unit: hue-rotate(195deg)"],
   ["misspelt filter", '  grade "brigthness(0.9)"\n', "rooms/dock.adv:6:9: 'brigthness' isn't a colour filter"],
   ["negative filter", '  grade "brightness(-1)"\n', "rooms/dock.adv:6:9: brightness can't be negative"],
+  ["tone outside a backdrop", '  grade "tone(0.3)"\n', "rooms/dock.adv:6:9: tone(...) only works in a backdrop, not in a grade"],
+  ["tint outside a grade", '  backdrop "tint(160)"\n', "rooms/dock.adv:6:12: tint(...) only works in a grade, not in a backdrop"],
+  ["tone with a percentage", '  backdrop "tone(50%)"\n', "rooms/dock.adv:6:12: tone(50%) needs a plain number from 0 to 1"],
+  ["tone out of range", '  backdrop "tone(1.5)"\n', "rooms/dock.adv:6:12: tone(1.5) must be between 0 and 1"],
+  ["tint with a unit", '  grade "tint(160deg)"\n', "rooms/dock.adv:6:9: tint(160deg) needs a plain number"],
   ["blur isn't a grade", '  sprite s at 1,1 size 1 grade "blur(2px)"\n', "rooms/dock.adv:6:32: 'blur' isn't a colour filter"],
   ["filter junk", '  backdrop "brightness(0.5), saturate(1)"\n', "rooms/dock.adv:6:12: can't read the filter from ', saturate(1)'"],
 ];
@@ -188,4 +193,14 @@ test("error: a painting of an image or music that doesn't exist", () => {
   for (const expected of ["acts.adv:4:3: no image 'bg_nowhere'", "acts.adv:4:3: no music track 'music_disco'", "acts.adv:5:30: 'dim' isn't a painting option (focus, music, if)"]) {
     assert.ok(msgs.some((m) => m.includes(expected)), `expected "${expected}" in:\n  ${msgs.join("\n  ")}`);
   }
+});
+
+test("error: a node with choices and a node-level terminal effect (a save would replay it)", () => {
+  const msgs = messages("dialogue/d.adv", dlg('  node a narrator "A"\n    go tavern\n    > "x" -> END\n'));
+  assert.ok(msgs.some((m) => m.includes("ends the conversation, so this node can't go on to choices")), msgs.join("\n"));
+});
+
+test("tone and tint: a plain number in the field that reads them compiles", () => {
+  const msgs = messages("rooms/dock.adv", ROOM('  backdrop "contrast(1.04) tone(0.3)"\n  grade "saturate(0.8) tint(158)"\n  sprite s at 1,1 size 1 grade "tint(40)"\n'));
+  assert.deepEqual(msgs.filter((m) => !m.includes("never read")), []);
 });

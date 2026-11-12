@@ -13,10 +13,21 @@
 body.mobile #boot { z-index: 120; }
 
 body.mobile {
+  /* The landscape rail (verbs + satchel) and the dynamic viewport height. */
+  --m-rail: 236px;
+  --m-vh: 100vh;
+  --m-sl: env(safe-area-inset-left, 0px);
+  --m-sr: env(safe-area-inset-right, 0px);
+  --m-st: env(safe-area-inset-top, 0px);
+  --m-sb: env(safe-area-inset-bottom, 0px);
   overflow: hidden;
   overscroll-behavior: none;
   background: #05070f;
   -webkit-tap-highlight-color: transparent;
+}
+
+@supports (height: 100dvh) {
+  body.mobile { --m-vh: 100dvh; }
 }
 
 /* ---- scene stage ---------------------------------------------------------- */
@@ -34,15 +45,48 @@ body.mobile #stage {
   background: radial-gradient(circle at 50% 40%, #101a2e 0%, #05070f 70%);
 }
 
-/* In landscape the scene is the full width of the screen and the chrome floats over it. */
+/*
+ * Portrait play: the scene is not a thin 16:9 strip. The stage takes about half the screen's
+ * height, leaving 290 px under it for the words, the verbs and the satchel, and the canvas is
+ * scaled to that height and cropped to the width: the view follows Fenn (View.panTo), and a tap
+ * is converted through the canvas's real box, so hotspots still mean the same world point.
+ * Never shorter than the width-fit strip (a tablet in portrait just shows the whole width).
+ */
+body.mobile:not(.m-landscape):not(.m-full) {
+  --m-pstage-h: max(calc(100vw * 880 / 1920), min(calc(var(--m-vh) * 0.52), calc(var(--m-vh) - var(--m-st) - 52px - 292px)));
+  --m-hud-top: calc(var(--m-st) + 52px + var(--m-pstage-h));
+}
+body.mobile:not(.m-landscape):not(.m-full) #stage {
+  height: var(--m-pstage-h);
+  aspect-ratio: auto;
+}
+/* While cropped the canvas is wider than the stage: its CSS box is the view's, not 100%. */
+
+/*
+ * Landscape play: the scene sits top-left at the largest size that leaves a band under it for
+ * the words, and a rail on the right holds the verbs and the satchel. Nothing floats over the
+ * painting but the icon bar (and a lesson toast), so a thumb never covers what it is aiming at.
+ */
+body.mobile.m-landscape:not(.m-full) {
+  --m-stage-w: min(calc(100vw - var(--m-rail) - var(--m-sl)), calc((var(--m-vh) - 104px) * 1920 / 880));
+  --m-stage-h: calc(var(--m-stage-w) * 880 / 1920);
+  --m-stage-l: calc(var(--m-sl) + (100vw - var(--m-sl) - var(--m-rail) - var(--m-stage-w)) / 2);
+}
 body.mobile.m-landscape:not(.m-full) #stage {
   top: 0;
+  left: var(--m-stage-l);
+  width: var(--m-stage-w);
 }
 
 /* Title, cold open and ending are full 16:9 paintings, not the playfield crop. */
 body.mobile.m-full #stage {
   top: 0;
   aspect-ratio: 1920 / 1080;
+}
+/* Portrait title: the painting fills the screen (a crop around the logo), the menu rides it. */
+body.mobile.m-title:not(.m-landscape) #stage {
+  height: var(--m-vh);
+  aspect-ratio: auto;
 }
 
 body.mobile.m-full.m-landscape #stage {
@@ -51,7 +95,7 @@ body.mobile.m-full.m-landscape #stage {
   transform: translateX(-50%);
 }
 
-body.mobile #game {
+body.mobile:not(.m-cover) #game {
   width: 100% !important;
   height: 100% !important;
   box-shadow: none;
@@ -79,7 +123,8 @@ body.mobile .m-top[hidden],
 body.mobile .m-top button[hidden],
 body.mobile .m-hud[hidden],
 body.mobile .m-title[hidden],
-body.mobile .m-prologue[hidden],
+body.mobile .m-lesson[hidden],
+body.mobile .m-portrait[hidden],
 body.mobile .m-dialogue[hidden],
 body.mobile .m-ending[hidden],
 body.mobile .m-drawer[hidden],
@@ -89,7 +134,6 @@ body.mobile .m-pager[hidden],
 body.mobile .m-action[hidden],
 body.mobile .m-cancel[hidden],
 body.mobile .m-clear[hidden],
-body.mobile .m-prologue-skip[hidden],
 body.mobile .m-dialogue-continue[hidden] {
   display: none !important;
 }
@@ -98,6 +142,18 @@ body.mobile.m-landscape .m-top {
   justify-content: flex-end;
   padding-right: calc(10px + env(safe-area-inset-right, 0px));
   background: linear-gradient(180deg, rgba(3, 6, 12, 0.72), rgba(3, 6, 12, 0));
+}
+/* Landscape play: the icon bar rides the scene's top edge, not the whole screen's. */
+body.mobile.m-landscape:not(.m-full) .m-top {
+  left: var(--m-stage-l);
+  right: auto;
+  width: var(--m-stage-w);
+  padding-right: 6px;
+}
+/* Seven icons (Chapter select adds the seventh) must fit a 320 px phone and a short landscape
+   stage: butt them up rather than let the last one fall off the screen. */
+@media (max-width: 339px), (orientation: landscape) and (max-width: 680px) {
+  body.mobile .m-top { gap: 0; padding-left: 2px; padding-right: 2px; }
 }
 
 body.mobile:not(.m-landscape) .m-top {
@@ -139,7 +195,7 @@ body.mobile .m-hud {
   z-index: 20;
   left: 0;
   right: 0;
-  top: calc(env(safe-area-inset-top, 0px) + 52px + 45.8333vw);
+  top: var(--m-hud-top);
   bottom: 0;
   display: flex;
   flex-direction: column;
@@ -152,28 +208,48 @@ body.mobile .m-hud {
   overflow: hidden;
 }
 
+/*
+ * Landscape: the HUD frame itself is invisible and takes no taps; its three parts are placed on
+ * the screen individually. The words sit in a band under the scene, the verbs form a 3x4 grid
+ * in the rail on the right, and the satchel sits under them.
+ */
 body.mobile.m-landscape .m-hud {
-  top: auto;
-  bottom: 0;
-  max-height: 58vh;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-areas:
-    "context context"
-    "verbs bag";
-  align-items: stretch;
-  gap: 6px;
-  padding: 6px 10px calc(6px + env(safe-area-inset-bottom, 0px));
-  padding-left: calc(10px + env(safe-area-inset-left, 0px));
-  padding-right: calc(10px + env(safe-area-inset-right, 0px));
-  background:
-    linear-gradient(180deg, rgba(4, 7, 13, 0.18), rgba(4, 7, 13, 0.96) 24%),
-    radial-gradient(120% 70% at 50% 100%, rgba(46, 39, 26, 0.22), transparent 60%);
-  border-top: 1px solid rgba(201, 162, 74, 0.32);
+  inset: 0;
+  top: 0;
+  display: block;
+  padding: 0;
+  gap: 0;
+  background: none;
+  border: 0;
+  overflow: visible;
+  pointer-events: none;
 }
-body.mobile.m-landscape .m-context { grid-area: context; }
-body.mobile.m-landscape .m-verbs { grid-area: verbs; min-width: 0; }
-body.mobile.m-landscape .m-bag-row { grid-area: bag; }
+body.mobile.m-landscape .m-hud > * { pointer-events: auto; }
+body.mobile.m-landscape .m-context {
+  position: absolute;
+  left: calc(var(--m-sl) + 8px);
+  right: calc(var(--m-rail) + var(--m-sr) + 6px);
+  top: calc(var(--m-stage-h) + 6px);
+  bottom: calc(6px + var(--m-sb));
+}
+body.mobile.m-landscape .m-verbs {
+  position: absolute;
+  top: calc(var(--m-st) + 8px);
+  right: calc(var(--m-sr) + 8px);
+  bottom: calc(var(--m-sb) + 64px);
+  width: calc(var(--m-rail) - 16px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(4, minmax(44px, 60px));
+  align-content: start;
+  gap: 5px;
+}
+body.mobile.m-landscape .m-bag-row {
+  position: absolute;
+  right: calc(var(--m-sr) + 8px);
+  bottom: calc(var(--m-sb) + 8px);
+  width: calc(var(--m-rail) - 16px);
+}
 
 body.mobile.m-full .m-hud {
   display: none !important;
@@ -194,20 +270,29 @@ body.mobile.m-full .m-hud {
   scrollbar-width: thin;
 }
 
+/* The band under the scene: the words on the left, the one action (Continue / confirm) beside. */
 body.mobile.m-landscape .m-context {
-  flex: 0 1 auto;
-  max-height: 24vh;
-  padding: 7px 10px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-auto-rows: min-content;
+  align-content: center;
+  align-items: center;
+  column-gap: 10px;
+  padding: 6px 10px;
 }
+body.mobile.m-landscape .m-narration { grid-column: 1; grid-row: 1; }
+body.mobile.m-landscape .m-line { grid-column: 1; grid-row: 2; }
+body.mobile.m-landscape .m-action {
+  grid-column: 2;
+  grid-row: 1;
+  width: auto;
+  min-width: 132px;
+  margin-top: 0;
+  white-space: nowrap;
+}
+body.mobile.m-landscape .m-cancel { grid-column: 2; grid-row: 2; margin-top: 6px; align-self: stretch; }
 /* Armed: the confirmation plate is the one thing that must never be below the fold. */
-body.mobile.m-landscape .m-context.is-armed {
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  gap: 8px;
-  max-height: none;
-  padding: 4px;
-}
+body.mobile.m-landscape .m-context.is-armed { padding: 4px; }
 body.mobile.m-landscape .m-context.is-armed .m-where,
 body.mobile.m-landscape .m-context.is-armed .m-room-name,
 body.mobile.m-landscape .m-context.is-armed .m-narration,
@@ -215,19 +300,19 @@ body.mobile.m-landscape .m-context.is-armed .m-line {
   display: none;
 }
 body.mobile.m-landscape .m-context.is-armed .m-action {
-  flex: 1 1 auto;
-  margin-top: 0;
+  grid-column: 1;
   min-height: 56px;
+  white-space: normal;
 }
 body.mobile.m-landscape .m-context.is-armed .m-cancel {
-  flex: none;
-  min-width: 88px;
+  grid-column: 2;
+  grid-row: 1;
   margin-top: 0;
+  min-width: 88px;
 }
-body.mobile.m-landscape .m-bag { min-width: 128px; }
 body.mobile.m-landscape .m-bag-row .m-clear { min-width: 64px; }
 body.mobile.m-landscape .m-context.is-idle { display: none; }
-body.mobile.m-landscape .m-room-name { font-size: 19px; margin-bottom: 4px; }
+body.mobile.m-landscape .m-narration { font-size: 15px; line-height: 1.4; }
 
 /* Portrait has room to spare: the words sit on the dark, not in an empty box. */
 body.mobile:not(.m-landscape) .m-context {
@@ -240,20 +325,11 @@ body.mobile:not(.m-landscape) .m-context.is-armed .m-action,
 body.mobile:not(.m-landscape) .m-context.is-armed .m-cancel { order: 1; }
 body.mobile:not(.m-landscape) .m-context.is-armed .m-narration,
 body.mobile:not(.m-landscape) .m-context.is-armed .m-line { order: 2; }
-body.mobile:not(.m-landscape) .m-context.is-idle::after {
-  content: "";
-  display: block;
-  width: 118px;
-  height: 118px;
-  margin: 26px auto 0;
-  opacity: 0.11;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='20' fill='none' stroke='%23e8c98a' stroke-width='.6'/%3E%3Ccircle cx='24' cy='24' r='14' fill='none' stroke='%23e8c98a' stroke-width='.4'/%3E%3Cpath d='M24 4 27 21l17 3-17 3-3 17-3-17-17-3 17-3Z' fill='%23e8c98a'/%3E%3C/svg%3E") center / contain no-repeat;
-}
 
 .m-where {
   margin: 0 0 5px;
   color: #c9a24a;
-  font: 600 10px/1.2 system-ui, -apple-system, sans-serif;
+  font: 600 12px/1.2 system-ui, -apple-system, sans-serif;
   letter-spacing: 0.2em;
   text-transform: uppercase;
 }
@@ -269,7 +345,7 @@ body.mobile:not(.m-landscape) .m-context.is-idle::after {
 .m-narration {
   margin: 0;
   color: #e8e2d0;
-  font: 17px/1.5 Georgia, "Times New Roman", serif;
+  font: 18px/1.5 Georgia, "Times New Roman", serif;
   overflow-wrap: anywhere;
 }
 .m-narration:empty { display: none; }
@@ -309,8 +385,8 @@ body.mobile:not(.m-landscape) .m-context.is-idle::after {
 .m-action:focus-visible { outline: 2px solid #ffe6a8; outline-offset: 2px; }
 .m-action-hint {
   color: #d8be8a;
-  font: 600 10px/1.2 system-ui, -apple-system, sans-serif;
-  letter-spacing: 0.16em;
+  font: 600 12px/1.2 system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -338,12 +414,12 @@ body.mobile:not(.m-landscape) .m-context.is-idle::after {
 }
 .m-verbs button {
   min-height: 44px;
-  padding: 4px 2px;
-  border: 1px solid rgba(140, 166, 179, 0.2);
+  padding: 4px 3px;
+  border: 1px solid rgba(140, 166, 179, 0.26);
   border-radius: 2px;
-  background: rgba(130, 160, 180, 0.07);
-  color: #93a3bb;
-  font: 13px/1.15 Georgia, "Times New Roman", serif;
+  background: rgba(130, 160, 180, 0.09);
+  color: #aab8cc;
+  font: 15px/1.15 Georgia, "Times New Roman", serif;
   cursor: pointer;
   touch-action: manipulation;
 }
@@ -360,20 +436,11 @@ body.mobile:not(.m-landscape) .m-context.is-idle::after {
 .m-verbs button:active { background: rgba(232, 201, 138, 0.22); }
 .m-verbs button:focus-visible { outline: 2px solid #ffe6a8; outline-offset: 1px; }
 
-body.mobile.m-landscape .m-verbs {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  padding-bottom: 2px;
-  scrollbar-width: none;
-}
-body.mobile.m-landscape .m-verbs::-webkit-scrollbar { display: none; }
-body.mobile.m-landscape .m-verbs button {
-  flex: 0 0 auto;
-  min-width: 84px;
-  padding: 4px 8px;
-}
+/* Portrait has spare height: let the verbs and satchel grow into it. */
+body.mobile:not(.m-landscape) .m-verbs { gap: 7px; }
+body.mobile:not(.m-landscape) .m-verbs button { min-height: clamp(46px, 5.8vh, 56px); }
+body.mobile:not(.m-landscape) .m-bag { min-height: clamp(48px, 6.2vh, 60px); }
+body.mobile:not(.m-landscape) .m-hud { gap: 6px; padding-top: 8px; }
 
 .m-bag-row {
   flex: none;
@@ -403,7 +470,8 @@ body.mobile.m-landscape .m-verbs button {
   background: linear-gradient(180deg, rgba(74, 53, 31, 0.95), rgba(40, 28, 18, 0.96));
 }
 .m-bag:focus-visible { outline: 2px solid #ffe6a8; outline-offset: 2px; }
-.m-bag-glyph { color: #d9b877; font-size: 17px; }
+.m-bag-glyph { display: inline-flex; color: #d9b877; font-size: 17px; }
+.m-bag-glyph svg { display: block; }
 .m-bag-count {
   min-width: 1.5em;
   color: #d9b877;
@@ -422,6 +490,11 @@ body.mobile .m-title {
   justify-content: center;
   padding: 0 18px calc(7vh + env(safe-area-inset-bottom, 0px));
   pointer-events: none;
+}
+/* Portrait: the painting's crop ends at --m-title-h; melt it into the dark the menu stands on. */
+body.mobile:not(.m-landscape) .m-title {
+  --m-title-h: max(calc(100vw * 0.5625), min(var(--m-vh), calc(100vw * 1.6875)));
+  background: linear-gradient(180deg, rgba(5, 7, 15, 0) calc(var(--m-title-h) * 0.5), rgba(5, 7, 15, 0.62) calc(var(--m-title-h) * 0.8), #05070f var(--m-title-h));
 }
 body.mobile.m-landscape .m-title-eyebrow { display: none; }
 body.mobile.m-landscape .m-title {
@@ -484,41 +557,8 @@ body.mobile.m-landscape .m-title {
 .m-title-button:focus-visible { outline: 2px solid #ffe6a8; outline-offset: 2px; }
 .m-title-button[disabled] { opacity: 0.45; cursor: default; }
 
-/* ---- cold open ------------------------------------------------------------ */
+/* ---- buttons -------------------------------------------------------------- */
 
-body.mobile .m-prologue {
-  position: fixed;
-  z-index: 24;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  padding: 0 14px calc(16px + env(safe-area-inset-bottom, 0px));
-  background: linear-gradient(180deg, rgba(2, 4, 9, 0) 0%, rgba(2, 4, 9, 0.82) 34%, rgba(2, 4, 9, 0.96));
-  pointer-events: none;
-}
-body.mobile.m-landscape .m-prologue { background: linear-gradient(180deg, rgba(2, 4, 9, 0) 0%, rgba(2, 4, 9, 0.86) 42%); }
-.m-prologue-inner {
-  width: min(620px, 100%);
-  pointer-events: auto;
-  padding: 12px 14px;
-  border-top: 1px solid rgba(201, 162, 74, 0.4);
-}
-.m-prologue-speaker {
-  margin: 0 0 4px;
-  color: #d4b064;
-  font: 600 10px/1.2 system-ui, -apple-system, sans-serif;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-.m-prologue-text {
-  margin: 0 0 12px;
-  color: #d8cfb8;
-  font: 17px/1.5 Georgia, "Times New Roman", serif;
-  min-height: 3em;
-}
-.m-prologue-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .m-primary {
   min-height: 48px;
   padding: 9px 16px;
@@ -557,10 +597,14 @@ body.mobile .m-dialogue {
   scrollbar-color: #6b5a3a #0d1822;
   scrollbar-width: thin;
 }
-body.mobile.m-landscape .m-dialogue-inner { max-height: 88vh; max-height: 88dvh; padding-top: 8px; }
+body.mobile.m-landscape .m-dialogue-inner {
+  max-height: 72vh;
+  max-height: 72dvh;
+  padding: 8px calc(16px + env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) calc(16px + env(safe-area-inset-left, 0px));
+}
 /* In portrait the conversation starts at the scene's foot, not at the screen's. */
 body.mobile:not(.m-landscape) .m-dialogue {
-  top: calc(env(safe-area-inset-top, 0px) + 52px + 45.8333vw);
+  top: var(--m-hud-top);
   align-items: stretch;
   background: linear-gradient(180deg, rgba(2, 4, 9, 0.92), rgba(2, 4, 9, 0.99) 22%);
 }
@@ -569,11 +613,39 @@ body.mobile:not(.m-landscape) .m-dialogue-inner {
   flex: 1 1 auto;
   border-top: 0;
   background: none;
+  --m-portrait: 76px;
 }
+.m-dialogue-inner {
+  --m-portrait: 56px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  /* The line and its speaker above, the choices pushed to the thumb's end of the sheet. */
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  align-content: stretch;
+}
+.m-dialogue-inner.has-portrait {
+  grid-template-columns: var(--m-portrait) minmax(0, 1fr);
+  column-gap: 12px;
+}
+.m-portrait {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  width: var(--m-portrait);
+  height: var(--m-portrait);
+  object-fit: cover;
+  object-position: 50% 14%;
+  border: 1px solid rgba(232, 201, 138, 0.55);
+  border-radius: 3px;
+  background: #0a1018;
+}
+.m-dialogue-inner.has-portrait .m-speaker,
+.m-dialogue-inner.has-portrait .m-dialogue-text { grid-column: 2; }
+.m-dialogue-inner .m-choices,
+.m-dialogue-inner .m-dialogue-continue { grid-column: 1 / -1; }
 .m-speaker {
   margin: 0 0 5px;
   color: #edce91;
-  font: 600 11px/1.2 system-ui, -apple-system, sans-serif;
+  font: 600 12px/1.2 system-ui, -apple-system, sans-serif;
   letter-spacing: 0.2em;
   text-transform: uppercase;
 }
@@ -592,10 +664,25 @@ body.mobile:not(.m-landscape) .m-dialogue-inner {
   touch-action: manipulation;
 }
 .m-dialogue-text:focus-visible { outline: 2px solid #ffe6a8; outline-offset: 3px; }
-.m-choices { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.m-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: #6b5a3a #0d1822;
+  scrollbar-width: thin;
+}
+/* Short lists sit at the thumb's end of the sheet; long ones scroll from the top. */
+.m-choices > .m-choice:first-child { margin-top: auto; }
+.m-choice { flex: none; }
 .m-choice {
   width: 100%;
-  min-height: 48px;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
   padding: 9px 12px;
   border: 1px solid rgba(232, 201, 138, 0.2);
   border-radius: 2px;
@@ -609,7 +696,64 @@ body.mobile:not(.m-landscape) .m-dialogue-inner {
 .m-choice.seen { color: #a9a79a; }
 .m-choice:active { background: rgba(232, 201, 138, 0.16); }
 .m-choice:focus-visible { outline: 2px solid #ffe6a8; outline-offset: 2px; }
-.m-dialogue-continue { width: 100%; margin-top: 8px; }
+.m-dialogue-continue { width: 100%; margin-top: 8px; grid-row: 4; align-self: end; min-height: 52px; }
+
+/*
+ * Landscape: the scene stays in view. The speaker and the line sit in the band under it (where
+ * the narration goes), and the choices take the rail on the right, all of them scrollable and
+ * reachable, instead of a sheet laid over two-thirds of the painting.
+ */
+body.mobile.m-landscape .m-dialogue {
+  inset: 0;
+  align-items: stretch;
+  background: none;
+  pointer-events: none;
+}
+body.mobile.m-landscape .m-dialogue-inner {
+  --m-portrait: 88px;
+  position: absolute;
+  left: calc(var(--m-sl) + 8px);
+  right: calc(var(--m-rail) + var(--m-sr) + 6px);
+  top: calc(var(--m-stage-h) + 6px);
+  bottom: calc(6px + var(--m-sb));
+  width: auto;
+  max-height: none;
+  padding: 6px 10px;
+  border: 1px solid rgba(201, 162, 74, 0.22);
+  border-radius: 3px;
+  background: rgba(5, 9, 15, 0.92);
+  grid-template-rows: auto minmax(0, 1fr);
+  align-content: start;
+  pointer-events: auto;
+}
+body.mobile.m-landscape .m-dialogue-inner.has-portrait { column-gap: 10px; }
+body.mobile.m-landscape .m-portrait { grid-row: 1 / span 2; align-self: start; }
+body.mobile.m-landscape .m-speaker { margin-bottom: 2px; }
+body.mobile.m-landscape .m-dialogue-text { padding: 0; line-height: 1.4; align-self: start; }
+body.mobile.m-landscape .m-choices,
+body.mobile.m-landscape .m-dialogue-continue {
+  position: fixed;
+  right: calc(var(--m-sr) + 8px);
+  width: calc(var(--m-rail) - 16px);
+  margin: 0;
+  pointer-events: auto;
+}
+body.mobile.m-landscape .m-choices {
+  top: calc(var(--m-st) + 8px);
+  bottom: calc(var(--m-sb) + 8px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  align-self: auto;
+}
+body.mobile.m-landscape .m-choices > .m-choice:first-child { margin-top: 0; }
+body.mobile.m-landscape .m-choice {
+  min-height: 48px;
+  background: rgba(14, 22, 32, 0.94);
+  border-color: rgba(232, 201, 138, 0.32);
+}
+body.mobile.m-landscape .m-dialogue-continue {
+  top: calc(var(--m-st) + 8px);
+}
 
 /* ---- ending --------------------------------------------------------------- */
 
@@ -672,7 +816,10 @@ body.mobile .m-rooms {
 .m-items { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 body.mobile.m-landscape .m-items { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .m-item {
-  min-height: 52px;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   padding: 8px 10px;
   border: 1px solid rgba(201, 162, 74, 0.35);
   border-radius: 3px;
@@ -683,6 +830,14 @@ body.mobile.m-landscape .m-items { grid-template-columns: repeat(4, minmax(0, 1f
   cursor: pointer;
   touch-action: manipulation;
 }
+.m-item-icon {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
+}
+.m-item-name { min-width: 0; overflow-wrap: anywhere; }
 .m-item.selected {
   border-color: rgba(232, 201, 138, 0.9);
   box-shadow: inset 3px 0 0 #c9a24a;
@@ -717,10 +872,64 @@ body.mobile.m-landscape .m-items { grid-template-columns: repeat(4, minmax(0, 1f
 .m-room:active { background: rgba(232, 201, 138, 0.18); }
 .m-room:focus-visible { outline: 2px solid #ffe6a8; outline-offset: 2px; }
 
+/* ---- first-watch lesson toast --------------------------------------------- */
+
+body.mobile .m-lesson {
+  position: fixed;
+  z-index: 21;
+  left: 12px;
+  right: 12px;
+  top: var(--m-hud-top);
+  margin: 0;
+  padding: 10px 14px 10px 18px;
+  border: 1px solid rgba(232, 201, 138, 0.5);
+  border-left: 3px solid #c9a24a;
+  border-radius: 4px;
+  background: rgba(4, 10, 18, 0.98);
+  color: #f2e6cb;
+  font: 15px/1.35 Georgia, "Times New Roman", serif;
+  pointer-events: none;
+  animation: m-lesson-in 0.28s ease-out;
+}
+/* Portrait: the lesson is the first line of the panel under the scene, never over the painting. */
+body.mobile:not(.m-landscape) .m-lesson {
+  position: static;
+  flex: none;
+  padding: 7px 12px 7px 14px;
+}
+/* A short phone has no height to spare for a line that comes and goes: it lies over the words. */
+@media (max-height: 759px) {
+  body.mobile:not(.m-landscape) .m-lesson {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: 8px;
+  }
+}
+body.mobile.m-landscape .m-hud > .m-lesson { pointer-events: none; }
+/* Landscape: the lesson takes the top of the words' band, never the painting or the icon bar. */
+body.mobile.m-landscape:not(.m-full) .m-lesson {
+  left: calc(var(--m-sl) + 8px);
+  right: calc(var(--m-rail) + var(--m-sr) + 6px);
+  top: calc(var(--m-stage-h) + 6px);
+  transform: none;
+  background: rgba(4, 10, 18, 0.98);
+}
+/* Armed: the confirmation plate fills the band, so the lesson rides the foot of the painting instead of covering the plate's name. */
+body.mobile.m-landscape:not(.m-full) .m-hud:has(.m-context.is-armed) > .m-lesson {
+  top: calc(var(--m-stage-h) - 52px);
+}
+@keyframes m-lesson-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { body.mobile .m-lesson { animation: none; } }
+
 /* While a modal (pause, chart, map, film) has the screen, stop the HUD taking taps behind it. */
 #mobile-ui.is-blocked .m-top,
-#mobile-ui.is-blocked .m-hud {
+#mobile-ui.is-blocked .m-hud,
+#mobile-ui.is-blocked .m-hud > * {
   pointer-events: none;
+}
+#mobile-ui.is-blocked .m-top,
+#mobile-ui.is-blocked .m-hud {
   opacity: 0.4;
 }
 
@@ -730,7 +939,17 @@ body.mobile .settings {
   padding: 8px;
   place-items: start center;
 }
-body.mobile .settings section { padding: 18px 16px 14px; }
+body.mobile .settings section { padding: 0 16px 14px; overflow: visible; }
+/* The pause panel is taller than a landscape phone: it scrolls, and Resume stays pinned. */
+body.mobile .settings { overflow-x: hidden; overflow-y: auto; }
+body.mobile .settings section::before { bottom: 0; width: 220px; height: 220px; }
+body.mobile .settings-head {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  padding-top: 14px;
+  background: #0f1a21;
+}
 body.mobile .settings button,
 body.mobile .settings select,
 body.mobile .settings summary {
@@ -786,28 +1005,32 @@ body.mobile .m-context .m-room-name { display: none; }
  * control keeps its 44 CSS pixel floor and its own layout. At the default (Automatic) the
  * scale is 1, so the phone layout is unchanged unless the player asks for bigger type.
  */
-body.mobile .m-where { font-size: calc(10px * var(--text-scale, 1)); }
+body.mobile .m-where { font-size: calc(12px * var(--text-scale, 1)); }
 body.mobile .m-room-name { font-size: calc(24px * var(--text-scale, 1)); }
 body.mobile.m-landscape .m-room-name { font-size: calc(19px * var(--text-scale, 1)); }
-body.mobile .m-narration { font-size: calc(17px * var(--text-scale, 1)); }
+body.mobile .m-narration { font-size: calc(18px * var(--text-scale, 1)); }
+body.mobile.m-landscape .m-narration { font-size: calc(15px * var(--text-scale, 1)); }
 body.mobile .m-line { font-size: calc(16px * var(--text-scale, 1)); }
+body.mobile .m-lesson { font-size: calc(15px * var(--text-scale, 1)); }
 body.mobile .m-action { font-size: calc(17px * var(--text-scale, 1)); }
-body.mobile .m-action-hint { font-size: calc(10px * var(--text-scale, 1)); }
-body.mobile .m-quiet { font-size: calc(14px * var(--text-scale, 1)); }
-body.mobile .m-bag { font-size: calc(15px * var(--text-scale, 1)); }
+body.mobile .m-action-hint { font-size: calc(12px * var(--text-scale, 1)); }
+/* The verb grid and the satchel plate have a fixed footprint (a finger-sized cell), so their labels
+   follow the text size only up to half as large again; at 200% the words in the scene and the sheets
+   carry the full size and the cells keep fitting the screen. */
+body.mobile .m-verbs button { font-size: calc(15px * min(var(--text-scale, 1), 1.5)); line-height: 1.05; padding: 3px 2px; }
+body.mobile .m-quiet { font-size: calc(15px * min(var(--text-scale, 1), 1.5)); }
+body.mobile .m-bag { font-size: calc(15px * min(var(--text-scale, 1), 1.5)); }
 body.mobile .m-bag-count { font-size: calc(12px * var(--text-scale, 1)); }
-body.mobile .m-title-eyebrow { font-size: calc(10px * var(--text-scale, 1)); }
+body.mobile .m-title-eyebrow { font-size: calc(12px * var(--text-scale, 1)); }
 body.mobile .m-title-button { font-size: calc(15px * var(--text-scale, 1)); }
-body.mobile .m-title-button .m-title-sub { font-size: calc(11px * var(--text-scale, 1)); }
-body.mobile .m-prologue-speaker { font-size: calc(10px * var(--text-scale, 1)); }
-body.mobile .m-prologue-text { font-size: calc(17px * var(--text-scale, 1)); }
+body.mobile .m-title-button .m-title-sub { font-size: calc(12px * var(--text-scale, 1)); }
 body.mobile .m-primary { font-size: calc(15px * var(--text-scale, 1)); }
-body.mobile .m-speaker { font-size: calc(11px * var(--text-scale, 1)); }
+body.mobile .m-speaker { font-size: calc(12px * var(--text-scale, 1)); }
 body.mobile .m-dialogue-text { font-size: calc(17px * var(--text-scale, 1)); }
 body.mobile .m-choice { font-size: calc(16px * var(--text-scale, 1)); }
-body.mobile .m-ending-page { font-size: calc(10px * var(--text-scale, 1)); }
+body.mobile .m-ending-page { font-size: calc(12px * var(--text-scale, 1)); }
 body.mobile .m-drawer-head h2 { font-size: calc(20px * var(--text-scale, 1)); }
-body.mobile .m-item { font-size: calc(14px * var(--text-scale, 1)); }
+body.mobile .m-item { font-size: calc(15px * var(--text-scale, 1)); }
 body.mobile .m-items-empty { font-size: calc(15px * var(--text-scale, 1)); }
 body.mobile .m-pager-label { font-size: calc(12px * var(--text-scale, 1)); }
 body.mobile .m-room { font-size: calc(15px * var(--text-scale, 1)); }
@@ -817,3 +1040,28 @@ body.mobile .m-room { font-size: calc(15px * var(--text-scale, 1)); }
 body.mobile .casebook,
 body.mobile .recap,
 body.mobile .deeds { font-size: calc(16px * var(--text-scale, 1)); }
+
+
+/* Armed confirmation: keep Cancel visible at 100% and 150%; it was below the scroll fold. */
+.m-context { position: relative; }
+.m-context.is-armed { padding-right: 62px; }
+body.mobile .m-cancel {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  min-width: 44px;
+  min-height: 44px;
+  margin: 0;
+  z-index: 3;
+}
+
+/* The chapter sheet's Done button must not scroll away with 25 rooms. */
+body.mobile .m-rooms .m-drawer-head {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  background: #0b151d;
+}
+
+/* Long dialogue at 150% landscape text scrolls inside its band instead of being clipped. */
+body.mobile .m-dialogue-inner { overflow-y: auto; }

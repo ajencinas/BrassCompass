@@ -1,7 +1,7 @@
 room far_pans "The Far Flats"
   bg bg_far_pans_v2b_wide
   width 2560
-  backdrop "saturate(0.82) brightness(0.92) sepia(0.04)"
+  backdrop "contrast(1.04) saturate(0.84) brightness(1.08) tone(0.3)"
   music music_pans
   ambience wind
   # The plate is the far flats at night already: cold pewter pans, one lamp on the camp track.

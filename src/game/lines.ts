@@ -209,3 +209,21 @@ export function itemAloneLine(verb: VerbId, item: Target): string {
     `I'd use ${i} on something, if I could decide what.`,
   ], verb + item.name);
 }
+
+/**
+ * "Look at" with nothing under the click: bare floor, sky, painted wall without a thing on it.
+ * Fenn answers in his own dry voice instead of walking off in silence. Stepped on each time,
+ * so asking the same patch of nothing twice does not get the same reply.
+ */
+export function emptyLookLine(act = 0): string {
+  const options = [
+    `Nothing there worth the name.`,
+    `I look. It looks like scenery, and it knows it.`,
+    `Nothing to write down there, and I write down most things.`,
+    `Pleasant enough, in a way that asks nothing of me.`,
+    `There's nothing there for a cartographer to add.`,
+    `Just a bit of the world, between the more interesting bits.`,
+    ...(act >= 3 ? [`I've seen emptier water, but not by much.`] : []),
+  ];
+  return pick(options, "empty-look");
+}

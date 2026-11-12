@@ -246,7 +246,7 @@ html, body {
   display: block; margin: 0 0 6px; color: #cdbf9e;
   font: 600 .72em system-ui, sans-serif; letter-spacing: .12em; text-transform: uppercase;
 }
-.settings .reading button { margin: 0; align-self: end; }
+.settings .reading button { margin: 0; align-self: stretch; }
 .settings .reading .note { grid-column: 1 / -1; margin: 2px 0 0; }
 .settings-grid > [data-group="voyage"] {
   display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px;
@@ -267,10 +267,18 @@ html, body {
 }
 .group-icon { flex: none; width: 17px; height: 17px; color: #c9a24a; }
 .group-icon svg { display: block; width: 100%; height: 100%; }
+/* The select keeps the browser's own list (a native picker is the accessible one), but wears the
+   panel's dark glass and a brass chevron instead of the system's grey-blue widget. */
 .settings select {
-  width: 100%; padding: 7px 9px; background: #14232e; border: 1px solid rgba(201, 162, 74, .32);
-  color: #f3e7cb; font: 1em Georgia, serif; border-radius: 2px;
+  width: 100%; padding: 7px 34px 7px 9px; border: 1px solid rgba(201, 162, 74, .38);
+  background-color: #12161a;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23d9b877' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 11px center; background-size: 12px 8px;
+  -webkit-appearance: none; appearance: none; color-scheme: dark;
+  color: #f3e7cb; font: 1em Georgia, serif; border-radius: 2px; cursor: pointer;
 }
+.settings select:hover { border-color: rgba(232, 201, 138, .62); background-color: #191c1c; }
+.settings select option { background: #12161a; color: #f3e7cb; }
 .settings select:disabled { color: #9aa7ad; border-style: dashed; cursor: not-allowed; }
 .settings select:focus-visible, .settings input:focus-visible, .settings summary:focus-visible {
   outline: 2px solid #ffe6a8; outline-offset: 2px;
@@ -286,7 +294,7 @@ html, body {
 .settings p { color: #c9d2d8; line-height: 1.4; margin: 0; }
 .settings button {
   display: flex; width: 100%; align-items: center; gap: 9px; padding: 9px 12px; margin: 6px 0;
-  background: rgba(26, 48, 64, .55); border: 1px solid rgba(201, 162, 74, .3); color: #f3e7cb;
+  background: rgba(20, 23, 26, .72); border: 1px solid rgba(201, 162, 74, .34); color: #f3e7cb;
   font: 1em Georgia, serif; cursor: pointer; border-radius: 2px; text-align: left;
 }
 .settings button[data-action]::before {
@@ -299,10 +307,14 @@ html, body {
 .settings button[data-action="restart"]::before { content: "↺"; }
 .settings button[data-action="title"]::before { content: "⌂"; }
 .settings button:hover, .settings button:focus-visible {
-  background: #263d49; outline: 2px solid #ffe6a8; outline-offset: 2px;
+  background: #2a2519; outline: 2px solid #ffe6a8; outline-offset: 2px;
 }
-.settings button.primary { background: #23404f; border-color: #b39457; }
-.settings button.primary:hover, .settings button.primary:focus-visible { background: #2d4d5d; }
+/* Resume is the brass plate: the same warm dark glass and gold edge as the title's Continue. */
+.settings button.primary {
+  background: linear-gradient(180deg, #3b3017 0%, #251d0f 100%); border-color: #c9a24a; color: #fbebc4;
+  box-shadow: inset 0 0 0 1px rgba(255, 226, 160, .12);
+}
+.settings button.primary:hover, .settings button.primary:focus-visible { background: linear-gradient(180deg, #4a3b1d 0%, #30250f 100%); }
 .settings button.danger { background: #3a1c14; border-color: #a86a52; color: #ffe2cc; }
 .settings button.danger:hover, .settings button.danger:focus-visible { background: #56251a; outline-color: #ffb38f; }
 .settings label.row {
@@ -760,4 +772,65 @@ body.reduced-motion .cinematic { transition-duration: .15s; }
 @media (max-width: 760px) {
   .area-card-text { left: 6vw; max-width: 80vw; }
   .area-card-text h1 { font-size: 2em; }
+}
+
+/*
+ * High contrast (the setting, or the OS's `prefers-contrast: more` when it follows the system):
+ * bolder edges, brighter small text, and focus rings you cannot miss. The canvas HUD does the
+ * same from the game's own draw code; this is the DOM's half.
+ */
+body.high-contrast #game:focus-visible { outline: 4px solid #fff3cf; outline-offset: -6px; }
+body.high-contrast .settings section { border-color: rgba(255, 231, 172, .95); border-width: 2px; }
+body.high-contrast .settings button, body.high-contrast .settings select {
+  border-color: rgba(255, 231, 172, .95); border-width: 2px; color: #fffaf0;
+}
+body.high-contrast .settings h2, body.high-contrast .settings summary,
+body.high-contrast .settings .reading .row.stacked > span { color: #ffe9bb; }
+body.high-contrast .settings p, body.high-contrast .settings .note,
+body.high-contrast .settings dl.controls dd, body.high-contrast .settings label.row { color: #f4f7f9; }
+body.high-contrast .settings button:hover, body.high-contrast .settings button:focus-visible,
+body.high-contrast .settings select:focus-visible, body.high-contrast .settings input:focus-visible,
+body.high-contrast .settings summary:focus-visible { outline: 4px solid #fff; outline-offset: 2px; }
+body.high-contrast .a11y-controls button:focus-visible { outline: 4px solid #fff; outline-offset: 3px; }
+/* On the pale paper pages a white ring disappears; use dark ink plus a white separation rim. */
+body.high-contrast .casebook button:focus-visible, body.high-contrast .recap button:focus-visible,
+body.high-contrast .deeds button:focus-visible {
+  outline: 4px solid #2b0f08;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 2px #fff;
+}
+
+
+/* The screen-reader toolbar is normally visually hidden, but a sighted keyboard user can Tab
+   into it. Reveal it as a real focus strip rather than leaving focus on an invisible control. */
+.a11y-controls:focus-within {
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  z-index: 80;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  width: auto;
+  height: auto;
+  padding: 6px;
+  clip: auto;
+  clip-path: none;
+  overflow: visible;
+  white-space: normal;
+  background: rgba(5, 13, 22, 0.96);
+  border: 1px solid rgba(232, 201, 138, 0.7);
+  border-radius: 4px;
+}
+.a11y-controls:focus-within button {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid rgba(232, 201, 138, 0.45);
+  background: rgba(20, 38, 52, 0.9);
+  color: #f3e3bd;
+  font: 12px/1.2 system-ui, sans-serif;
 }

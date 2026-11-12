@@ -2,6 +2,7 @@ room marrow_cabin "The Marrow — Captain's Cabin"
   bg bg_cabin_v2_wide
   width 2560
   music music_office
+  backdrop "contrast(0.9) brightness(1.18) saturate(1.04) lift(0.012)"
   grade "brightness(0.96) saturate(0.9)"
   perspective horizon 200 ref 875 height 430
   # The painting's floor is one deep plank run: the forward door and its lantern at the left,
@@ -34,6 +35,12 @@ room marrow_cabin "The Marrow — Captain's Cabin"
   scene if act 2 and not vex_exposed
     say "Vex's cabin. The chart is out, the lamp is lit, and nobody is here to stop me."
 
+  # A migrated/hand-edited save can carry the one-way flag without the queued act ending.
+  # Do not strand it on a ship with no way to finish the act.
+  scene if act 2 and marrow_lost
+    say "The Marrow is already going into the fog. There is nothing left to argue with."
+    act 2
+
   hotspot chart "the chart table"
     area 1100,380 620x220
     stand 1750,840
@@ -42,7 +49,7 @@ room marrow_cabin "The Marrow — Captain's Cabin"
     open "The chart is pinned at the corners. Vex does not like it moved."
 
   hotspot shelf "the instrument shelf"
-    area 930,140 250x220
+    area 1085,225 190x150
     nowalk
     look "A shelf of brass instruments, polished every morning. A telescope, dividers, and one thing that does nothing but look expensive."
     use "I do not touch another captain's instruments. That is how expensive things get broken."

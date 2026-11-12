@@ -1,0 +1,29 @@
+{
+  "version": 4,
+  "facing": 1,
+  "notes": [
+    {
+      "id": "fog_note",
+      "text": "The fog answers to a rule.",
+      "act": 2
+    }
+  ],
+  "actStarted": true,
+  "at": 1700000000000,
+  "room": "below_decks",
+  "x": 700,
+  "y": 820,
+  "act": 2,
+  "flags": {
+    "nest_arrived": true,
+    "fog_tried": true,
+    "below_arrived": true,
+    "met_quill": true,
+    "seen:hobb.root": true
+  },
+  "inventory": [
+    "compass",
+    "spyglass",
+    "crowbar"
+  ]
+}

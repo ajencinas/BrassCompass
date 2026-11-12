@@ -4,6 +4,7 @@ room arcadia_cabin "The Grey Lantern — Captain's Cabin"
   # oval at the right, the stern windows and the green lantern. The lower third is clear floor.
   bg bg_arcadia_cabin_restart_b_wide
   width 2560
+  backdrop "brightness(1.03) lift(0.027)"
   music music_fog
   grade "saturate(0.86) brightness(0.97)"
   perspective horizon 500 ref 875 height 500
@@ -27,7 +28,7 @@ room arcadia_cabin "The Grey Lantern — Captain's Cabin"
 
   scene if not arcadia_cabin_entered
     set arcadia_cabin_entered
-    say "The cabin is dry, which is the first wrong thing. The ink on the desk is still wet."
+    say "The cabin is dry, which is the first wrong thing. The inkpot is dry too, and the last line in the log is still wet."
     say "Elias is at the desk with his chart rolled tight in one hand."
     say "\"This is where a captain answers to his name,\" he says. \"Put it on the desk.\""
     say "He holds out his hand for the plate, then lets it fall to his side. \"You read it. I'll say it.\""
@@ -37,9 +38,10 @@ room arcadia_cabin "The Grey Lantern — Captain's Cabin"
   # says it, and Mordant answers.
   use nameplate on nameplate if not name_spoken
     "I set the plate down. The brass catches the light from the broken planks."
-    say "GREY LANTERN. M. MORDANT, MASTER."
+    say "GREY LANTERN — M. MORDANT, MASTER."
     say "\"Mordant,\" Elias says. He says it like a bell, once."
     say "\"I've said everyone else's name,\" he says. \"I never had his.\""
+    take nameplate
     set name_spoken
     talk mordant
   use nameplate on nameplate
@@ -47,7 +49,14 @@ room arcadia_cabin "The Grey Lantern — Captain's Cabin"
   use crowbar on nameplate
     "The plate is brass, not a crate. The desk would not thank me."
   use lantern on nameplate
-    "The canvas is wet, and the ink on the desk is still wet. I keep them apart."
+    "The canvas is soaked, and the last line in the log is still wet. I keep them apart."
+  # The plate is normally handed over in Act III. A migrated save without it gets a spare
+  # from the cabin's own desk rather than an unwinnable room.
+  scene if act 4 and not has nameplate and not name_spoken
+    say "A spare brass plate lies in the desk's dust, green at the edges and blank."
+    say "It is not the one from the wreck. It will do."
+    give nameplate
+
   # The ghost captain, in the dark corner, once Elias has spoken his name.
   sprite npc_mordant_body at 250,850 size 1 idle speaker mordant for mordant if name_spoken
 
@@ -56,35 +65,28 @@ room arcadia_cabin "The Grey Lantern — Captain's Cabin"
   hotspot nameplate "the nameplate"
     area 1200,520 580x280
     stand 1450,858
-    look "Mordant's desk. A log, a dry inkpot, and a clean oval in the dust where a plate should sit."
+    look "Mordant's desk. A log with a wet last line, a dry inkpot, and a clean oval in the dust where a plate should sit."
     use "I set the plate down. The brass catches the light from the broken planks."
       say "GREY LANTERN — M. MORDANT, MASTER."
       say "\"Mordant,\" Elias says. He says it like a bell, once."
       say "\"I've said everyone else's name,\" he says. \"I never had his.\""
+      take nameplate
       set name_spoken
       talk mordant
+    state if name_spoken and bell_cut and lantern_doused and seen:mordant.ask
+      name "the nameplate"
+      look "The plate lies where I set it. The name has been said, and the cabin is colder."
+      use "I put my hand on the plate. Something is waiting at the end of the cabin."
+        talk mordant at again_ask
     state if name_spoken
       name "the nameplate"
       look "The plate lies where I set it. The name has been said, and the cabin is colder."
       use "I put my hand on the plate. Something is waiting at the end of the cabin."
-        talk mordant
+        talk mordant at again
     state if not has nameplate
-      look "Mordant's desk. A log, a dry inkpot, and a clean oval in the dust. The plate is in a coat, and not mine."
-      use "There is nothing on the desk to read. The plate is in a coat, and not mine."
+      look "Mordant's desk. A log, a dry inkpot, and a clean oval in the dust. The plate is not in my hands."
+      use "There is nothing on the desk to read. The plate is not in my hands."
         nothing
-
-  hotspot mordant "Mordant"
-    show if name_spoken
-    area 0,480 340x360
-    stand 420,858
-    look "A cold place at the end of the cabin. The green light comes from nowhere I can see."
-    talk "I say his name again. The cold turns toward me."
-      talk mordant
-    state if bell_cut and lantern_doused
-      name "Mordant, waiting"
-      look "Mordant is there, in the cold. He is waiting for me to finish it."
-      talk "He does not move. \"When you are ready,\" he says, \"say it again.\""
-        talk mordant
 
   hotspot hammock "the bunk"
     area 0,480 650x320
@@ -97,6 +99,28 @@ room arcadia_cabin "The Grey Lantern — Captain's Cabin"
     nowalk
     look "A shelf of books and bundles, salt-stained and swollen. Every loose sheet is blank. A captain's name is on the ones he signed."
     use "I pull one out. Blank. The next is blank. The ship stopped needing paper a long time ago."
+
+  # Declared after the bunk and the books he stands in front of: the later hotspot wins the click.
+  hotspot mordant "Mordant"
+    show if name_spoken
+    area 80,380 340x480
+    stand 420,858
+    look "A cold place at the end of the cabin. The green light comes from nowhere I can see."
+    talk "I say his name again. The cold turns toward me."
+      talk mordant
+    state if bell_cut and lantern_doused and seen:mordant.ask
+      name "Mordant, waiting"
+      look "Mordant is there, in the cold. He is waiting for me to finish it."
+      talk "He does not move. \"When you are ready,\" he says, \"say it again.\""
+        talk mordant at again_ask
+    state if bell_cut and lantern_doused
+      name "Mordant, waiting"
+      look "Mordant is there, in the cold. He is waiting for me to finish it."
+      talk "He does not move. \"When you are ready,\" he says, \"say it again.\""
+        talk mordant at again
+    state if seen:mordant.who
+      talk "I say his name again. The cold turns toward me."
+        talk mordant at again
 
   hotspot portrait "the stern windows"
     area 1300,300 900x200

@@ -5,7 +5,6 @@ dialogue hobb
     > "What's wrong with the mast?" -> mast
     > "I need a carpenter." -> need
     > "Later." -> END
-    > "What's in the hold?" if act 2 -> hold
 
   node name hobb "Bosun. Carpenter. Both."
     -> mast
@@ -13,7 +12,7 @@ dialogue hobb
   node need hobb "You'll want the Marrow. Everybody wants the Marrow."
     -> mast
 
-  node mast hobb "The iron band on the mast has seized. I've been at it since dawn."
+  node mast hobb "The iron band on the mast has seized. I've been at it since sundown."
     > "Can you free it?" -> fix
     > "What do you need?" -> fix
     > "I'll leave you to it." -> END

@@ -84,14 +84,16 @@ export const ROOM_TONE_FADE_IN = 1.4;
 export const ROOM_TONE_FADE_OUT = 0.45;
 
 /** Interaction cues whose job is feedback for a pointer or a movement, not a game event. */
-export type CueName = "hover" | "arm" | "advance" | "choice" | "chart" | "threshold" | "save" | "error";
-const MOTION_CUES: ReadonlySet<CueName> = new Set(["hover", "threshold"]);
+export type CueName = "hover" | "arm" | "advance" | "choice" | "chart" | "threshold" | "save" | "error"
+  | "pickup" | "chime" | "deny" | "inventory" | "combine" | "travel" | "locked";
+const MOTION_CUES: ReadonlySet<CueName> = new Set(["hover", "threshold", "travel"]);
 
 /**
  * Whether a cue should sound, given the reduced-motion setting. Reduced motion is a statement
  * about the player: the hover sparkle and the threshold swell describe movement across the
- * screen, so they are left out. Dialogue, choices, the chart, saves and errors are information
- * and still sound.
+ * screen (and the atlas's travel sweep, a journey in sound), so they are left out. Dialogue,
+ * choices, the chart, saves, errors and the event cues (pickup, combine, locked...) are
+ * information and still sound.
  */
 export function cuePlays(cue: CueName, reduced: boolean): boolean {
   return !(reduced && MOTION_CUES.has(cue));

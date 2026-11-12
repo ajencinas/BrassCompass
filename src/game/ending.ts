@@ -131,7 +131,9 @@ export class EndingScreen {
     if (this.page < pages - 1) {
       this.page += 1;
       this.pageStarts[this.page] = this.t;
-      this.say(`page ${this.page + 1} of ${pages}`);
+      const page = this.book?.pages[this.page];
+      const lines = page ? page.indices.map((i) => this.card.lines[i]).join(" ") : "";
+      this.say(`page ${this.page + 1} of ${pages}. ${lines}`.trim());
       return false;
     }
     return true;

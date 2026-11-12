@@ -113,10 +113,10 @@ same system serif stack; it does not ship a web font.
 
 > **AI content disclosure.** *The Brass Compass* was written, designed and built by a human
 > author using AI-assisted development tools. Its painted backgrounds, character art, props,
-> music and cinematics were generated with AI models from the author's own prompts and then
-> selected, edited and composed by hand. All story, characters, dialogue and code are original.
-> No third-party copyrighted artwork, music or footage is used, and the game is not affiliated
-> with any existing adventure game or franchise.
+> and music were generated with AI models from the author's own prompts and then
+> selected, edited and composed by hand. The game ships no films or video footage. All story,
+> characters, dialogue and code are original. No third-party copyrighted artwork, music or
+> footage is used, and the game is not affiliated with any existing adventure game or franchise.
 
 The same disclosure, in legal form, is in [LICENSE](LICENSE) section 5 and in
 [`docs/STORE.md`](docs/STORE.md).

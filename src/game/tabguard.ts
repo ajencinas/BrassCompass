@@ -36,6 +36,29 @@ export class SaveTabGuard {
     return true;
   }
 
+  /**
+   * Stale-tab detection without waiting for a storage event: the `at` of the page this tab last
+   * loaded or wrote. Undefined (the default, and after `clear`) means this tab is not tracking
+   * one yet, so its first write is the one that establishes it.
+   */
+  private mine: number | undefined = undefined;
+
+  /** This tab just loaded or wrote a save stamped `at`. */
+  remember(at: number): void {
+    this.mine = at;
+  }
+
+  /**
+   * Before writing: is the stored save newer than the one this tab last saw? That means another
+   * tab wrote it (an event can lag, or be missed while the tab was frozen). Notes the conflict
+   * and returns true; the caller must not write.
+   */
+  checkStored(storedAt: number | null): boolean {
+    if (this.mine === undefined || storedAt === null || storedAt <= this.mine) return false;
+    this.conflictAt = this.now();
+    return true;
+  }
+
   /** True once another tab has written the save this page loaded. */
   get conflicted(): boolean {
     return this.conflictAt !== null;
@@ -49,5 +72,6 @@ export class SaveTabGuard {
   /** Forget the conflict: this tab is deliberately loading or starting a voyage afresh. */
   clear(): void {
     this.conflictAt = null;
+    this.mine = undefined;
   }
 }

@@ -28,7 +28,7 @@ dialogue elias
   node alive elias "Mostly. The rest of me is still out there, I think."
     -> look
 
-  node months elias "Three months and four days. I stopped counting the days. I kept counting the ships."
+  node months elias "Three months and four days. I'd stopped counting the days. Then you walked up, and I did the sum."
     -> look
 
   node nothing elias "That's all right. I had three months to think of something. I've got nothing."
@@ -37,11 +37,11 @@ dialogue elias
   node look narrator "He looks at me. I look at him. Neither of us moves."
     -> coat
 
-  node coat elias "I'm sorry about your coat. I borrowed it. It's in the tent."
+  node coat elias "I'm sorry about your coat. I took it off the hook the day I sailed."
     > "I don't care about the coat." -> care
     > "You've been wearing my coat?" -> wearing
 
-  node wearing elias "For two months. It's the warmest thing on the rock. I'm sorry."
+  node wearing elias "Since the Arcadia. It's the warmest thing on the rock. I'm sorry."
     -> care
 
   node care narrator "He is apologising for a coat. I don't stop him."
@@ -130,7 +130,11 @@ dialogue elias
   node its elias "The name of the man who captains her. Not the painted one on her stern."
     -> plate
 
-  node plate elias "It's on a plate in her cabin. That's where a captain keeps his name."
+  node plate elias "It's on a brass plate. Her bow carried one, and her captain's desk has the place for it."
+    > "Hobb found it in the wreck." if has nameplate -> plate_have
+    > "Then we'll find it." if not has nameplate -> plan
+
+  node plate_have elias "Then you are carrying her captain's name in your pocket. Keep it dry. We'll read it on his desk."
     -> plan
 
   node plan elias "So. We go aboard. Hobb cuts the bell. Quill puts out the great lantern. One of us says the name."

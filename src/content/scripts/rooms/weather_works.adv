@@ -13,15 +13,16 @@ room weather_works "The Lighthouse"
   arrive village 330,846
   footsteps stone
   # Every light sits on a painted source: the great lamp, the brazier, the lamp post that marks
-  # the way down, and the small lantern over the keeper's open door.
+  # the way down, and the small lantern over the keeper's open door. The fire basket stands
+  # on the flagstones in front of the store (about 685,655 on the plate).
   light 1865,95 radius 240 lantern
-  light 270,640 radius 95 fire
+  light 685,655 radius 95 fire
   light 90,205 radius 130 lantern
   light 520,540 radius 70 lantern
-  motes embers (230,610) (320,610) (320,700) (230,700) count 30
+  motes embers (655,610) (715,610) (715,670) (655,670) count 30
   haze 500 680 floor 700 alpha 0.12 speed 5 tint "#c8d4dc"
   haze 700 850 floor 872 alpha 0.05 speed 3 tint "#bcc9d6"
-  emit crackle at 270,640
+  emit crackle at 685,655
 
   scene if seen:rook.book and not weather_works_store
     say "The lighthouse yard. Rook's log should be in the keeper's store, behind the brazier."
@@ -62,9 +63,9 @@ room weather_works "The Lighthouse"
     use "The glass is warm from the other side. I leave it alone."
 
   hotspot store "the keeper's store"
-    area 240,280 360x410
-    stand 610,845
-    look "The keeper's store, behind the brazier. Rook's old log is on the shelf behind the brazier. Not mine to take yet."
+    area 320,215 600x480
+    stand 850,845
+    look "The keeper's store, behind the brazier. Rook's old log is on the shelf behind the brazier. I could take it."
       note rook_log "Rook's old log is in the keeper's store at the lighthouse. The last page is a list of names."
     use "I take the log down. The keeper can have it back when Rook has read it."
       note rook_log "Rook's old log is in the keeper's store at the lighthouse. The last page is a list of names."
@@ -78,8 +79,8 @@ room weather_works "The Lighthouse"
       open "I have what I need."
 
   hotspot brazier "the brazier"
-    area 365,585 115x115
-    stand 520,845
+    area 625,630 125x85
+    stand 690,845
     look "The brazier at the keeper's door, heaped with kelp. It throws more smoke than light."
     use "I'd only add to the smoke."
     turnoff "There's no lid and no switch. The sea is a long walk down."

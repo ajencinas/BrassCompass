@@ -9,9 +9,33 @@
 import { LOGICAL_W, LOGICAL_H } from "../engine/view";
 import { drawText } from "../engine/text";
 import { fitText } from "./ui";
+import { LAST_ACT } from "../content/acts";
 
 /** Menu buttons, the two answers of the new-voyage question, and the undo of a replaced voyage. */
-export type TitleId = "previous" | "continue" | "start" | "explore" | "keep" | "confirm";
+export type TitleId = "previous" | "continue" | "start" | "explore" | "keep" | "confirm"
+  | "recover" | "back" | "more" | `page${number}`;
+
+/**
+ * "Recover an older page": archived voyages the game can load again. Closed, one quiet line sits
+ * above the menu; open, the menu is replaced by the pages (the newest few) and a way back.
+ */
+export interface TitleRecover {
+  pages: { label: string; sub?: string }[];
+  open: boolean;
+  /** Index of the first page listed (a "More pages" button steps through the rest). */
+  offset?: number;
+}
+
+/** How many archived pages the picker lists at once. */
+export const RECOVER_SHOWN = 4;
+
+/** A window start that is a whole step of RECOVER_SHOWN inside the list (wraps past the end). */
+export function recoverStart(count: number, offset: number): number {
+  if (count <= RECOVER_SHOWN) return 0;
+  const windows = Math.ceil(count / RECOVER_SHOWN);
+  const w = ((Math.floor(offset / RECOVER_SHOWN) % windows) + windows) % windows;
+  return w * RECOVER_SHOWN;
+}
 
 export interface TitleButton {
   id: TitleId;
@@ -26,7 +50,13 @@ export interface TitleButton {
 export const TITLE_BUTTON = { width: 520, height: 68, left: 700, right: 1220 };
 
 /** Act marks on the Chapter select plate. */
-const ROMAN = ["I", "II", "III", "IV"];
+const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
+
+/** The act marks for a voyage of `count` acts: I, II, III... never an undefined or blank mark. */
+export function actMarks(count: number = LAST_ACT): string[] {
+  const n = Math.max(0, Math.min(Math.floor(count) || 0, ROMAN.length));
+  return ROMAN.slice(0, n);
+}
 
 const FIRST_Y = 796;
 const STEP = 82;
@@ -43,11 +73,28 @@ const CONFIRM_DROP = 104;
  * sits well below: a second click, a double-click or an impatient re-click lands on the safe
  * answer.
  *
+ * `recover` adds "Recover an older page" above the menu (or, open, replaces the menu with the pages).
  * `hasPrevious` adds one quiet line above the menu when a replaced voyage is stashed: the undo
  * of "Begin anew" / "Restart". It is not the default, and it sits clear of the buttons below.
  */
 export function titleButtons(hasSave: boolean, chapters: boolean, confirmNew = false,
-  saveLabel: string | null = null, hasPrevious = false): TitleButton[] {
+  saveLabel: string | null = null, hasPrevious = false, recover: TitleRecover | null = null): TitleButton[] {
+  if (recover?.open && recover.pages.length) {
+    // The archive can hold more pages than fit: a window of RECOVER_SHOWN, and "More pages" steps
+    // to the next window (wrapping to the newest). Page ids are absolute indexes into the list.
+    const start = recoverStart(recover.pages.length, recover.offset ?? 0);
+    const shown = recover.pages.slice(start, start + RECOVER_SHOWN);
+    const paged = recover.pages.length > RECOVER_SHOWN;
+    const back = FIRST_Y + STEP;
+    const more = back - STEP;
+    const last = paged ? more : back;
+    return [
+      ...shown.map((p, i) => ({ id: `page${start + i}` as const, label: p.label, sub: p.sub, y: last - (shown.length - i) * STEP })),
+      ...(paged ? [{ id: "more" as const, label: "More pages",
+        sub: `${start + 1}\u2013${start + shown.length} of ${recover.pages.length}`, y: more }] : []),
+      { id: "back" as const, label: "Back", y: back },
+    ];
+  }
   const list: { id: TitleId; label: string; sub?: string }[] = [
     ...(hasSave ? [{ id: "continue" as const, label: "Continue", sub: saveLabel ?? undefined }] : []),
     { id: "start", label: "Begin" },
@@ -55,9 +102,13 @@ export function titleButtons(hasSave: boolean, chapters: boolean, confirmNew = f
   ];
   const menu = list.map((b, i) => ({ ...b, y: FIRST_Y + i * STEP }));
   if (!confirmNew) {
-    return hasPrevious
-      ? [{ id: "previous", label: "Take up last voyage", y: FIRST_Y - STEP }, ...menu]
-      : menu;
+    const above: TitleButton[] = [];
+    if (hasPrevious) above.push({ id: "previous", label: "Take up last voyage", y: FIRST_Y - STEP });
+    if (recover?.pages.length) {
+      above.unshift({ id: "recover", label: "Recover an older page", sub: `${recover.pages.length} kept`,
+        y: FIRST_Y - STEP * (above.length + 1) });
+    }
+    return [...above, ...menu];
   }
   const at = menu.find((b) => b.id === "start")!.y;
   return [
@@ -395,13 +446,15 @@ function drawCompassButton(ctx: CanvasRenderingContext2D, b: TitleButton, t: num
   ctx.lineWidth = 1;
   ctx.beginPath(); ctx.moveTo(x + 76, y + 12); ctx.lineTo(x + 76, y + h - 12); ctx.stroke();
 
-  const label = fitText(ctx, b.label.toUpperCase(), w - 124, Math.round(25 * scale), 16, "bold");
-  const sub = b.sub ? fitText(ctx, b.sub, w - 124, Math.round(15 * scale), 11) : null;
+  // The plate has a fixed height: with a sub-label the type stops growing at 120% (the two lines
+  // would overlap beyond that); alone, the name keeps growing to 150%.
+  const label = fitText(ctx, b.label.toUpperCase(), w - 124, Math.round(25 * Math.min(scale, b.sub ? 1.2 : 1.5)), 16, "bold");
+  const sub = b.sub ? fitText(ctx, b.sub, w - 124, Math.round(15 * Math.min(scale, 1.2)), 11) : null;
   const cx = x + 76 + (w - 76) / 2;
-  const labelY = y + (sub ? 13 : Math.round((h - label.size) / 2) - 1);
+  const labelY = y + (sub ? Math.max(4, Math.floor((h - label.size - sub.size - 2) / 2)) : Math.round((h - label.size) / 2) - 1);
   drawSpaced(ctx, label.text, cx, labelY, label.size, focus ? "#fff6e0" : "#ecd8ab", 4.5, "bold");
   if (sub) {
-    drawText(ctx, sub.text, cx, y + h - sub.size - 13, {
+    drawText(ctx, sub.text, cx, labelY + label.size + 2, {
       size: sub.size, color: focus ? "#e8d6ae" : "#a99a7a", align: "center", shadow: false,
     });
   }
@@ -438,6 +491,9 @@ function drawChartButton(ctx: CanvasRenderingContext2D, b: TitleButton, t: numbe
   ctx.strokeStyle = focus ? "rgba(255,230,168,0.4)" : "rgba(201,162,74,0.24)";
   ctx.lineWidth = 1;
   ctx.beginPath(); ctx.moveTo(x + 78, y + 11); ctx.lineTo(x + 78, y + h - 11); ctx.stroke();
+  // The plate has a fixed height: past 140% the name and its line would overlap, so the type
+  // stops growing there (the plate's other text still follows the chosen size).
+  scale = Math.min(scale, 1.4);
   const label = fitText(ctx, b.label.toUpperCase(), w - 212, Math.round(18 * scale), 13, "bold");
   drawSpaced(ctx, label.text, x + (w - 30) / 2, y + 12, label.size, focus ? "#fff6e0" : "#e0cfa6", 3.6, "bold");
   if (b.sub) {
@@ -448,11 +504,15 @@ function drawChartButton(ctx: CanvasRenderingContext2D, b: TitleButton, t: numbe
   }
   // Four act marks: the chapters that are behind the plate.
   ctx.save();
-  ctx.font = `600 ${Math.round(11 * scale)}px Georgia, serif`;
+  // The marks sit 19 px apart: past ~110% "III" would run into its neighbours.
+  ctx.font = `600 ${Math.round(11 * Math.min(scale, 1.1))}px Georgia, serif`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillStyle = focus ? "rgba(255,231,172,0.95)" : "rgba(201,162,74,0.62)";
-  for (let i = 0; i < 4; i++) ctx.fillText(ROMAN[i + 1], x + w - 86 + i * 19, y + h / 2);
+  const marks = actMarks();
+  // Centred on the same point the four-mark plate used, so a longer voyage grows both ways.
+  const markX = x + w - 57.5 - ((marks.length - 1) * 19) / 2;
+  marks.forEach((mark, i) => ctx.fillText(mark, markX + i * 19, y + h / 2));
   ctx.restore();
   if (focus) {
     // Corner ticks, the same grammar as the compass plate's focus.
@@ -469,55 +529,70 @@ function drawChartButton(ctx: CanvasRenderingContext2D, b: TitleButton, t: numbe
   }
 }
 
-/** Continue's quiet neighbours: a line of type, a diamond when it has the focus. */
+/**
+ * Continue's neighbours (Begin, Take up last voyage, Recover an older page, the pages and Back,
+ * and the destructive answer): the same dark glass plate as Continue and Chapter select, one
+ * step quieter. The text is fitted inside the plate with room on both sides, and the focus is the
+ * plate's own brass edge and corner ticks, never a frame or a mark drawn through the letters.
+ */
 function drawQuietButton(ctx: CanvasRenderingContext2D, label: string, top: number, focus: boolean,
   scale: number, danger = false, sub?: string): void {
-  const fitted = fitText(ctx, label.toUpperCase(), TITLE_BUTTON.width - 40, Math.round(18 * scale), 13);
-  const cx = LOGICAL_W / 2;
-  const y = top + (TITLE_BUTTON.height - fitted.size) / 2;
-  const color = danger
-    ? (focus ? "#ffcbb4" : "#d09a83")
-    : focus ? "#fff6e0" : "#d8cbb0";
-  const glow = focus ? "rgba(255,230,168,0.95)" : "rgba(216,203,176,0.55)";
-  if (focus) {
-    drawStar(ctx, cx - fitted.text.length * 4.6 - 34, top + TITLE_BUTTON.height / 2, 6, glow);
-    drawStar(ctx, cx + fitted.text.length * 4.6 + 34, top + TITLE_BUTTON.height / 2, 6, glow);
-  } else if (/CHAPTER SELECT/.test(fitted.text)) {
-    // Quiet, but unmistakably a second way in: a brass rule and a diamond, no button box.
-    const w = fitted.text.length * fitted.size * 0.62;
-    ctx.save();
-    ctx.strokeStyle = "rgba(201,162,74,0.52)";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(cx - w / 2 - 24, y + fitted.size + 8); ctx.lineTo(cx + w / 2 + 24, y + fitted.size + 8);
-    ctx.stroke();
-    drawStar(ctx, cx - w / 2 - 34, top + TITLE_BUTTON.height / 2, 4, "rgba(216,203,176,0.7)");
-    ctx.restore();
-  }
-  drawSpaced(ctx, fitted.text, cx, y, fitted.size, color, 4.2);
+  const w = TITLE_BUTTON.width, h = TITLE_BUTTON.height;
+  const x = LOGICAL_W / 2 - w / 2, y = top, cx = LOGICAL_W / 2;
+  const grad = ctx.createLinearGradient(0, y, 0, y + h);
   if (danger) {
-    ctx.save();
-    ctx.strokeStyle = "rgba(208,154,131,0.55)";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    const w = fitted.text.length * (fitted.size * 0.62);
-    ctx.moveTo(cx - w / 2, y + fitted.size + 8);
-    ctx.lineTo(cx + w / 2, y + fitted.size + 8);
-    ctx.stroke();
-    ctx.restore();
+    grad.addColorStop(0, focus ? "rgba(52,28,22,0.94)" : "rgba(26,15,15,0.86)");
+    grad.addColorStop(1, focus ? "rgba(30,15,12,0.95)" : "rgba(11,7,9,0.92)");
+  } else {
+    grad.addColorStop(0, focus ? "rgba(40,36,26,0.94)" : "rgba(13,21,31,0.86)");
+    grad.addColorStop(1, focus ? "rgba(22,18,12,0.95)" : "rgba(5,9,16,0.92)");
   }
-  if (sub) {
-    drawText(ctx, sub, cx, top + TITLE_BUTTON.height + 2, {
-      size: Math.round(14 * scale), color: "#a99a7a", align: "center", shadow: false,
+  ctx.save();
+  ctx.fillStyle = grad;
+  ctx.fillRect(x, y, w, h);
+  ctx.strokeStyle = danger
+    ? (focus ? "rgba(255,203,180,0.92)" : "rgba(208,154,131,0.5)")
+    : focus ? "rgba(255,231,172,0.92)" : "rgba(201,162,74,0.45)";
+  ctx.lineWidth = focus ? 1.8 : 1.1;
+  ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
+  // A hairline inside the edge: the glass the lettering sits on.
+  ctx.strokeStyle = focus ? "rgba(255,230,168,0.22)" : "rgba(232,201,138,0.12)";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(x + 4.5, y + 4.5, w - 9, h - 9);
+  // A compass star at each end of the plate, well clear of the lettering.
+  const mark = danger ? "rgba(208,154,131,0.7)" : focus ? "rgba(255,230,168,0.95)" : "rgba(201,162,74,0.6)";
+  drawStar(ctx, x + 26, y + h / 2, focus ? 7 : 5.5, mark);
+  drawStar(ctx, x + w - 26, y + h / 2, focus ? 7 : 5.5, mark);
+  // Type: it follows the player's size up to the point the two lines no longer fit the plate.
+  const track = 3.2;
+  const room = w - 120;
+  const sz = Math.round(19 * Math.min(scale, sub ? 1.25 : 1.5));
+  const fitted = fitText(ctx, label.toUpperCase(), room - track * label.length, sz, 13, "bold");
+  const subFit = sub ? fitText(ctx, sub, room, Math.round(16 * Math.min(scale, 1.25)), 13) : null;
+  const gap = 4;
+  const block = fitted.size + (subFit ? gap + subFit.size : 0);
+  const top0 = y + Math.max(5, (h - block) / 2) - 1;
+  const color = danger ? (focus ? "#ffd9c6" : "#e0b49f") : focus ? "#fff6e0" : "#eddcb3";
+  drawSpaced(ctx, fitted.text, cx, top0, fitted.size, color, track, "bold");
+  if (subFit) {
+    drawText(ctx, subFit.text, cx, top0 + fitted.size + gap, {
+      size: subFit.size, color: focus ? "#eadbb6" : "#c4b794", align: "center", shadow: false,
     });
   }
   if (focus) {
-    ctx.save();
-    ctx.strokeStyle = "rgba(255,230,168,0.8)";
-    ctx.lineWidth = 1.5;
-    ctx.strokeRect(cx - TITLE_BUTTON.width / 2 + 90, top, TITLE_BUTTON.width - 180, TITLE_BUTTON.height);
-    ctx.restore();
+    // Corner ticks, the same grammar as the compass plate's focus.
+    ctx.strokeStyle = danger ? "#ffcbb4" : "#ffe6a8";
+    ctx.lineWidth = 2;
+    const k = 13;
+    for (const [px, py, dx, dy] of [[x, y, 1, 1], [x + w, y, -1, 1], [x, y + h, 1, -1], [x + w, y + h, -1, -1]]) {
+      ctx.beginPath();
+      ctx.moveTo(px + dx * 2, py + dy * 2 + dy * k);
+      ctx.lineTo(px + dx * 2, py + dy * 2);
+      ctx.lineTo(px + dx * 2 + dx * k, py + dy * 2);
+      ctx.stroke();
+    }
   }
+  ctx.restore();
 }
 
 /** The question, set on a card that frames both answers. */
@@ -527,7 +602,9 @@ function drawConfirmCard(ctx: CanvasRenderingContext2D, view: TitleView): void {
   if (!keep || !confirm) return;
   // The card widens and its type grows with the scale, but its answers keep their fixed hit boxes.
   const scale = Math.max(1, view.scale ?? 1);
-  const top = keep.y - 150, bottom = confirm.y + TITLE_BUTTON.height + 20;
+  // Larger type needs a taller card: it grows upward, into the clear space under the lettering.
+  const extra = Math.round(Math.min(scale - 1, 1) * 100);
+  const top = keep.y - 150 - extra, bottom = confirm.y + TITLE_BUTTON.height + 20;
   const w = Math.round(760 * scale);
   const x = LOGICAL_W / 2 - w / 2;
   ctx.save();
@@ -547,7 +624,7 @@ function drawConfirmCard(ctx: CanvasRenderingContext2D, view: TitleView): void {
   const what = view.saveLabel ? `your saved voyage (${view.saveLabel})` : "your saved voyage";
   const body = fitText(ctx, `This replaces ${what}; it can be taken up again from the title.`,
     w - 60, Math.round(20 * scale), 15);
-  drawText(ctx, body.text, LOGICAL_W / 2, top + 118, {
+  drawText(ctx, body.text, LOGICAL_W / 2, top + 72 + heading.size + 16, {
     size: body.size, color: "#e6d3bf", align: "center", shadow: false,
   });
   ctx.restore();

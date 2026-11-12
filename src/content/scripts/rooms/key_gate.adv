@@ -1,9 +1,11 @@
 room key_gate "The Reef Gate"
   bg bg_key_gate_v2b_wide
   width 2560
+  backdrop "contrast(1.04) saturate(0.86) brightness(1.04) tone(0.3)"
   music music_office
   # The plate is already the Shroud's cold gate: the open leaf with firelight beyond, the
-  # longboat in the shallows and the Grey Lantern half-seen. Only the figures need cooling.
+  # longboat in the shallows and the Grey Lantern half-seen. The backdrop deepens it and tones it
+  # (indigo shadows, amber key) so it sits with the interiors; the figures are cooled to match.
   grade "saturate(0.64) brightness(0.86) contrast(0.98)"
   perspective horizon 420 ref 875 height 250
   # The sandbank runs along the bottom, in front of the boat and the brazier. Everything the
@@ -50,6 +52,11 @@ room key_gate "The Reef Gate"
     say "Beyond it, the Grey Lantern is at anchor. One green light, and no other lights."
     say "Vex is by the brazier. He has not looked at the gate once."
 
+  # A migrated save can carry the boarding flag without the queued act ending.
+  scene if act 3 and lantern_boarded
+    say "The longboat is already pulling for the Grey Lantern. The gate is behind us."
+    act 3
+
   # The painted leaves and the open passage between them (x 700-1000), with the brazier light
   # beyond. The stand is the sand strip at the gate's foot.
   hotspot gate "the reef gate"
@@ -70,7 +77,8 @@ room key_gate "The Reef Gate"
       open "I walk up to the open gate. The fog comes in to meet me."
         say "I put a hand on the open leaf. It swings wider into the cold."
         say "At the foot of the gate, the longboat rides on water the colour of old pewter."
-        say "Hobb is in the bow with his crowbar. Quill has the spyglass. Nobody is talking."
+        say "Hobb is in the bow with his crowbar. Quill has the spyglass. My father sits amidships with the chart across his knees."
+        say "Dorrit hands a biscuit round. \"Nobody boards a ghost ship on an empty stomach,\" he says. After that, nobody is talking."
         say "Vex is in the stern with both oars shipped. He does not offer me a hand."
         say "Out past him, the fog has a shape: a great dark hull, and one green light."
         say "The bell rings once. It is not our bell."
@@ -126,7 +134,7 @@ room key_gate "The Reef Gate"
     show if act 3
     area 1806,556 148x312
     stand 1830,862
-    look "Vex by the brazier, coat buttoned to the chin, watching the fog as if it owes him money."
+    look "Vex by the brazier, coat buttoned to the chin, watching the fog with the face of a man who has been outbid."
     talk "He does not turn round. \"If you've come to blame me, form a queue.\""
     state if act 3 and elias_found and bell_plan and rule_name
       look "Vex has stopped watching the fog. He is watching the boat."

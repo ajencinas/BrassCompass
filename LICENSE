@@ -58,7 +58,8 @@ this file does not allow, ask first: see "Licensing enquiries" at the end.
 5. AI-GENERATED MATERIAL — PROVENANCE AND DISCLOSURE
 
    The painted artwork (backgrounds, characters, portraits, props, inventory icons), the music
-   and the cinematic footage were produced with generative AI models from the author's prompts
+   and the legacy cinematic footage (kept in the source repository, not shipped in the game)
+   were produced with generative AI models from the author's prompts
    and direction, then selected, edited, cropped, colour-graded and composed by hand. The game's
    writing — story, characters, dialogue, puzzles, hints, documentation — and all of its code and
    tooling are original work by the author, made with AI-assisted development tools.

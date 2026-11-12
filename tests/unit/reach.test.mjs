@@ -1,5 +1,5 @@
-// What each act can reach, statically: rooms, conversations, items and the flags it can set. An
-// old save restarted at its act drops the flags that act sets itself (save.ts flagsForRestart).
+// What each act can reach, statically: rooms, conversations, items and the flags it can set.
+// save.ts uses it to relocate a save whose room does not belong to its act.
 import { test, after } from "node:test";
 import assert from "node:assert/strict";
 import { loader } from "../../tools/adv-lib.mjs";
@@ -7,7 +7,6 @@ import { loader } from "../../tools/adv-lib.mjs";
 const vite = await loader();
 after(() => vite.close());
 const { actReach } = await vite.load("/src/game/reach.ts");
-const { migrateOldSave } = await vite.load("/src/game/save.ts");
 
 const hs = (id, extra = {}) => ({ id, name: id, area: { rect: { x: 0, y: 0, w: 1, h: 1 } }, say: {}, ...extra });
 const room = (id, extra = {}) => ({ id, name: id, bg: "bg", walk: [], entry: { x: 0, y: 0 }, perspective: { horizon: 0, refY: 1, refH: 1 }, hotspots: [], ...extra });
@@ -69,7 +68,7 @@ test("flags: set and add effects, every node's seen: flag, every shown thing's l
   assert.deepEqual([...actReach(content).get(2).flags].sort(), ["chest_open", "global_act2", "looked:deck.chest", "met_captain", "seen:captain.hi"]);
 });
 
-test("the real content: an old Act II save restarts without what Act II set, and keeps Act I progress", async () => {
+test("the real content: every act reaches its start room and the per-act flag sets differ", async () => {
   const { ROOMS } = await vite.load("/src/content/rooms.ts");
   const { DIALOGUES } = await vite.load("/src/content/dialogue.ts");
   const { ACTS } = await vite.load("/src/content/acts.ts");
@@ -81,16 +80,7 @@ test("the real content: an old Act II save restarts without what Act II set, and
   // The flags each act's own content can set, so a restarted act does not think its one-shot
   // sources are spent. fog_tried is Act II's; vex_deal is Act I's and must survive.
   assert.equal(reach.get(2).flags.has("fog_tried"), true, "Act II sets fog_tried");
-  // A flag only Act I's content can set: it must survive a restart of Act II.
+  // A flag only Act I's content can set exists, and Act II's flag is not Act I's.
   const actOneOnly = [...reach.get(1).flags].find((f) => !f.includes(":") && !reach.get(2).flags.has(f));
   assert.ok(actOneOnly, "some flag only Act I sets");
-  const known = { act: (n) => n in ACTS, firstAct: 1, actFlags: (n) => reach.get(n)?.flags };
-  const old = migrateOldSave(JSON.stringify({
-    room: "marrow_deck", act: 2,
-    flags: { fog_tried: true, [actOneOnly]: true, "seen:vex.root": true }, inventory: ["compass"],
-  }), known);
-  assert.equal(old.act, 2);
-  assert.equal("fog_tried" in old.flags, false, "Act II's own flag is dropped");
-  assert.equal(old.flags[actOneOnly], true, "Act I progress is kept");
-  assert.equal(old.flags["seen:vex.root"], true, "act-2 node reads are kept when the act keeps its content");
 });

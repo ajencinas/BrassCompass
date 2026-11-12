@@ -464,13 +464,23 @@ export class Connector {
     this.elapsed = 0;
   }
 
-  draw(ctx: CanvasRenderingContext2D, reduced: boolean): void {
+  /**
+   * `height` is the logical height of the canvas being drawn into: the shot is composed for the
+   * full 1080-high frame, so on the phone's 880-high scene canvas it is squeezed to fit rather
+   * than losing its bottom 200 px.
+   */
+  draw(ctx: CanvasRenderingContext2D, reduced: boolean, height = H, centerX = W / 2): void {
     if (!this.spec) return;
     const t = clamp01(this.elapsed / this.duration);
     const kind = this.spec.kind;
     ctx.save();
+    if (height > 0 && height < H) ctx.scale(1, height / H);
     ctx.fillStyle = "#020406";
     ctx.fillRect(0, 0, W, H);
+    // A portrait phone sees only a slice of the width: compose the shot around that slice's
+    // middle, so the vanishing point is where the player is looking (the fill above already
+    // covers the canvas; the shot is wider than the slice, so it covers the slice).
+    if (centerX !== W / 2) ctx.translate(centerX - W / 2, 0);
     if (reduced) {
       // Reduced motion gets no travelling shot. The room's own fade is enough.
       ctx.restore();

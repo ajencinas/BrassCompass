@@ -9,6 +9,14 @@ dialogue mordant
   node root narrator "The cold gathers at the end of the cabin. The light through the broken planks does not reach it."
     -> who
 
+  # Coming back to him after a "Not yet" or "Give me a moment": the room sends the player here
+  # (talk mordant at again / again_ask) instead of replaying the introduction from the root.
+  node again narrator "The cold gathers at the end of the cabin again, patient as before."
+    -> report
+
+  node again_ask narrator "The cold gathers again. He is waiting for the question."
+    -> ask
+
   node who mordant "I am Mordant. You said my name. Nobody has said it in eighty years."
     -> report
 
@@ -86,7 +94,10 @@ dialogue mordant
   node fog2 mordant "Let me go and it goes with me. That is the whole of the bargain."
     -> ask
 
-  node arcadia mordant "The ship with the broken bow. I found her empty. Her crew was already here."
+  node arcadia mordant "The ship with the broken bow. The fog brought her crew to me, and I kept them."
+    -> arcadia1b
+
+  node arcadia1b mordant "I keep the hands. The hulls I let go. It seemed civil."
     -> arcadia2
 
   node arcadia2 mordant "One of them rang the bell every night. I think he was calling for his brother."

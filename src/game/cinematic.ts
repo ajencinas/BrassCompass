@@ -17,6 +17,10 @@ export interface CinematicAudio {
   muted: boolean;
   volume: number;
   musicVolume: number;
+  /** Where the video's own soundtrack should sit (the music's level, 0 when muted); optional. */
+  readonly videoVolume?: number;
+  /** Be told when mute or a volume changes, so a video mid-clip follows; returns the unsubscribe. */
+  onChange?(fn: () => void): () => void;
   /**
    * Take the room's music and sound down under a video, and back after. `level` is how far:
    * 0 (the default) for a video with its own soundtrack, part-way under a composed cue.
@@ -69,6 +73,8 @@ export class CinematicPlayer {
   private cueFor: string | null = null;
   private cueStarted = false;
   private cueMeta: (() => void) | null = null;
+  /** Stops following the game's mute and volume once the clip ends. */
+  private unsubscribeAudio: (() => void) | null = null;
   private startedAt = -Infinity;
   /** Keys down right now, and those that were already down when this cinematic began. */
   private held = new Set<string>();
@@ -170,9 +176,11 @@ export class CinematicPlayer {
     audio.endCue(200);
     const soundtrack = SOUNDTRACK.has(nameOf(src));
     audio.duck(true, soundtrack ? 0 : CUE_DUCK);
-    this.video.muted = audio.muted;
-    // The soundtrack is music: it follows the Music slider as well as the master volume.
-    this.video.volume = Math.max(0, Math.min(1, audio.volume * audio.musicVolume));
+    // The soundtrack is music: it follows the Music slider as well as the master volume, and
+    // keeps following them while it plays (M or a slider mid-clip).
+    this.syncVolume();
+    this.unsubscribeAudio?.();
+    this.unsubscribeAudio = audio.onChange?.(() => this.syncVolume()) ?? null;
     // next-level: ship — scripts write `/assets/video/…`; resolve it against the build's base so
     // the cinematics play when the game is hosted in a subdirectory.
     this.video.src = assetUrl(src);
@@ -207,10 +215,21 @@ export class CinematicPlayer {
     });
   }
 
+  /** Put the video's own mute and volume where the game's audio settings are now. */
+  private syncVolume(): void {
+    const audio = this.audio();
+    this.video.muted = audio.muted;
+    this.video.volume = audio.muted
+      ? 0
+      : Math.max(0, Math.min(1, audio.videoVolume ?? audio.volume * audio.musicVolume));
+  }
+
   skip(): void {
     if (!this.onComplete) return;
     const complete = this.onComplete;
     this.onComplete = null;
+    this.unsubscribeAudio?.();
+    this.unsubscribeAudio = null;
     this.cueFor = null;
     if (this.cueMeta) { this.video.removeEventListener("loadedmetadata", this.cueMeta); this.cueMeta = null; }
     this.audio().endCue();

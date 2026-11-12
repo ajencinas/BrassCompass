@@ -63,7 +63,11 @@ dialogue pike
   node confess2 pike "So I paid him. So the stores are mine. That does not make the rudder yours."
     > "Vex wants it back." if met_vex -> caught
     > "I'll take it to Vex myself." if met_vex -> caught
+    > "Who owns a rudder like that?" if not met_vex -> owner
     > "Goodbye." -> bye
+
+  node owner pike "A ship's captain, and a loud one. Vex, at the warehouse. Go and ask him what he wants, then come back."
+    -> bye
 
   node caught pike "All right. Take the rudder. I will write it off as weather and a bad night."
     -> caught2

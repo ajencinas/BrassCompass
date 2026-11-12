@@ -63,33 +63,56 @@ dialogue ending
     -> terms
 
   # Lay them to rest: ring the bell for the dead, speak the name, let the fog go.
-  node rest narrator "I take the clapper from Hobb and strike the bell where it hangs."
+  node rest narrator "We go up the ladder. Mordant follows, slowly."
+    -> rest0
+
+  node rest0 narrator "On deck, the crew stands at its posts. Hobb is waiting at the mast with the clapper in his hand."
+    -> rest1
+
+  node rest1 narrator "He gives it to me. I climb the shrouds as far as I dare, which is not far, and strike the bell where it hangs."
     -> rest2
 
-  node rest2 narrator "Three notes for the watch. One for home. Out on the deck, the crew lifts its heads."
+  node rest2 narrator "Three notes for the watch. One for home. Down on the deck, the crew lifts its heads."
     -> rest3
 
   node rest3 fenn "Mordant. Your watch is over."
     -> rest4
 
-  node rest4 narrator "The fog goes out like a tide. The Grey Lantern settles, slow and easy, and the sea takes her."
+  node rest4 narrator "The fog goes out like a tide. By the time the hull begins to settle, we are in the longboat, and nobody remembers climbing down."
     -> rest5
 
-  node rest5 narrator "A man in a grey coat takes off his hat. My father puts a hand on my shoulder, and we watch the sea take her."
+  node rest5 narrator "Mordant stands at his rail and takes off his hat, first to his crew and then to the sea. My father puts a hand on my shoulder, and we watch the sea take her."
     win
 
   # Take the living and run: the dead stay, and so does the fog.
   node run mordant "Take your living, then. The dead are mine, and the fog is patient."
+    -> run_chart
+
+  # Elias stays: the Lantern's road can only be drawn from the rock, and he will not leave the
+  # chart half done. This is the one choice in the ending that is his.
+  node run_chart narrator "My father has not moved. He looks at the chart in his hands, then at me. It is the look he gives a coastline that is not finished."
+    -> run_stay
+
+  node run_stay elias "Take them home. Someone has to finish the other half, and it can only be drawn from the rock."
+    -> run_stay2
+
+  node run_stay2 fenn "You have been alone out there for three months."
+    -> run_stay3
+
+  node run_stay3 elias "Which makes me the best man for it. Go before I change my mind. Or you change it for me."
+    -> run_tear
+
+  node run_tear narrator "He tears the chart along the fold and puts the blank half in my hand. He keeps the half with the Lantern's road on it, and the pencil."
     -> run2
 
-  node run2 narrator "We go out through the cabin and over the rail into the longboat. Vex has the oars. He does not say why he is rowing, and nobody asks."
+  node run2 narrator "We go up the ladder and over the rail into the longboat. Dorrit has the pot hot. Vex has the oars. He does not say why he is rowing, and nobody asks."
     -> run3
 
-  node run3 narrator "Behind us, the Grey Lantern turns away. Her crew stays at its posts. The fog closes over them."
+  node run3 narrator "We put my father ashore on the fog rock. He waves. This time Vex sees it, and waves back."
     -> run4
 
-  node run4 narrator "Ahead, the harbour light. Behind, the bell, ringing for a crew that cannot leave."
+  node run4 narrator "Behind us, the Grey Lantern turns away, dark and dumb. Her crew stays at its posts. The fog closes over them."
     -> run5
 
-  node run5 narrator "I count the living. My father is not in the boat. He is on the fog rock with the chart, and he does not wave."
+  node run5 narrator "Ahead, the harbour light. I count the living: Quill, Hobb, Tam, Dorrit, Vex, and me. Six in the boat. It is one fewer than I wanted."
     win
