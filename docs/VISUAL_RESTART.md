@@ -97,7 +97,9 @@ A cut between two paintings is part of the art direction, not a technical step. 
   it with a plain fade.
 
 `tools/shoot-transition.mjs <room> <hotspot>` captures every 50 ms of a cut as a contact sheet, so
-a passage can be looked at frame by frame instead of argued about.
+a passage can be looked at frame by frame instead of argued about. `npm run test:exitwalk` stands
+Fenn back from every threshold in the game, clicks the arrow exactly where it is drawn, and checks
+that he walks and arrives: the arrow's one promise, proved 37 times.
 
 ## Regenerating
 

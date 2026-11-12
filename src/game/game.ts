@@ -4771,9 +4771,12 @@ export class Game {
   private exitChevronAt(x: number, y: number): Hotspot | null {
     if (y >= SCENE_H) return null;
     const r = this.touch ? EXIT_CHEVRON_HIT_TOUCH : EXIT_CHEVRON_HIT;
+    // The cues are laid out in world x (they are drawn inside the camera's translate); the
+    // pointer arrives in screen x. Comparing the two directly only ever worked at cameraX 0.
+    const worldX = x + this.cameraX;
     let best: Hotspot | null = null, bestD = r;
     for (const c of this.exitChevrons()) {
-      const d = Math.hypot(c.x - x, c.y - y);
+      const d = Math.hypot(c.x - worldX, c.y - y);
       if (d <= bestD) { bestD = d; best = c.hs; }
     }
     return best;

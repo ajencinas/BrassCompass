@@ -23,6 +23,7 @@ const steps = Number(flag("--steps") ?? 60);
 const every = Number(flag("--every") ?? 2);
 const clickMode = flag("--click") ?? "chevron";
 const debug = has("--debug");
+const mobile = has("--mobile");
 const outDir = resolve(flag("--out") ?? "reference/screens/passage");
 const [roomId, exitId] = args;
 if (!roomId || !exitId) {
@@ -70,8 +71,11 @@ try {
     await writeFile(file, Buffer.from(data, "base64"));
   };
   await send("Page.enable"); await send("Runtime.enable");
-  await send("Emulation.setDeviceMetricsOverride", { width: 1920, height: 1080, deviceScaleFactor: 1, mobile: false });
-  await send("Page.navigate", { url: `http://127.0.0.1:${port}/${debug ? "?debug" : ""}` });
+  await send("Emulation.setDeviceMetricsOverride", mobile
+    ? { width: 390, height: 844, deviceScaleFactor: 2, mobile: true, screenOrientation: { angle: 0, type: "portraitPrimary" } }
+    : { width: 1920, height: 1080, deviceScaleFactor: 1, mobile: false });
+  const query = [debug ? "debug" : null, mobile ? "mobile=1" : null].filter(Boolean).join("&");
+  await send("Page.navigate", { url: `http://127.0.0.1:${port}/${query ? "?" + query : ""}` });
   await until(() => evaluate("Boolean(window.__game) && !document.getElementById('boot')"), "game");
 
   // The room, the art, and Fenn standing a short walk short of the way out.
