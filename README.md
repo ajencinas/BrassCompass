@@ -424,7 +424,7 @@ dev server on a free port — never one that was already listening, which may be
 
 ## What is built
 
-The complete new story: four acts, 24 painted rooms, from Fenn's return to Dreadwater to the last
+The complete new story: four acts, 25 painted rooms, from Fenn's return to Dreadwater to the last
 choice on the Grey Lantern's deck. Family-friendly throughout: pirate peril, ghosts, drinking and
 cards, but no gore and no innuendo.
 
