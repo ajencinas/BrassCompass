@@ -778,3 +778,42 @@ body.mobile .area-card-text h1 { font-size: 2em; }
    to the screen reader through the canvas label, not printed over the HUD. */
 body.mobile .m-context .m-where,
 body.mobile .m-context .m-room-name { display: none; }
+
+/* ---- text size ------------------------------------------------------------ */
+/*
+ * The player's text size is a reading preference, not a request for larger touch targets:
+ * the words on the HUD, title, sheets and conversations follow `--text-scale` while every
+ * control keeps its 44 CSS pixel floor and its own layout. At the default (Automatic) the
+ * scale is 1, so the phone layout is unchanged unless the player asks for bigger type.
+ */
+body.mobile .m-where { font-size: calc(10px * var(--text-scale, 1)); }
+body.mobile .m-room-name { font-size: calc(24px * var(--text-scale, 1)); }
+body.mobile.m-landscape .m-room-name { font-size: calc(19px * var(--text-scale, 1)); }
+body.mobile .m-narration { font-size: calc(17px * var(--text-scale, 1)); }
+body.mobile .m-line { font-size: calc(16px * var(--text-scale, 1)); }
+body.mobile .m-action { font-size: calc(17px * var(--text-scale, 1)); }
+body.mobile .m-action-hint { font-size: calc(10px * var(--text-scale, 1)); }
+body.mobile .m-quiet { font-size: calc(14px * var(--text-scale, 1)); }
+body.mobile .m-bag { font-size: calc(15px * var(--text-scale, 1)); }
+body.mobile .m-bag-count { font-size: calc(12px * var(--text-scale, 1)); }
+body.mobile .m-title-eyebrow { font-size: calc(10px * var(--text-scale, 1)); }
+body.mobile .m-title-button { font-size: calc(15px * var(--text-scale, 1)); }
+body.mobile .m-title-button .m-title-sub { font-size: calc(11px * var(--text-scale, 1)); }
+body.mobile .m-prologue-speaker { font-size: calc(10px * var(--text-scale, 1)); }
+body.mobile .m-prologue-text { font-size: calc(17px * var(--text-scale, 1)); }
+body.mobile .m-primary { font-size: calc(15px * var(--text-scale, 1)); }
+body.mobile .m-speaker { font-size: calc(11px * var(--text-scale, 1)); }
+body.mobile .m-dialogue-text { font-size: calc(17px * var(--text-scale, 1)); }
+body.mobile .m-choice { font-size: calc(16px * var(--text-scale, 1)); }
+body.mobile .m-ending-page { font-size: calc(10px * var(--text-scale, 1)); }
+body.mobile .m-drawer-head h2 { font-size: calc(20px * var(--text-scale, 1)); }
+body.mobile .m-item { font-size: calc(14px * var(--text-scale, 1)); }
+body.mobile .m-items-empty { font-size: calc(15px * var(--text-scale, 1)); }
+body.mobile .m-pager-label { font-size: calc(12px * var(--text-scale, 1)); }
+body.mobile .m-room { font-size: calc(15px * var(--text-scale, 1)); }
+
+/* The mobile journal/page overrides below used to pin these screens at 16px; they follow the
+   chosen size as their desktop counterparts do. */
+body.mobile .casebook,
+body.mobile .recap,
+body.mobile .deeds { font-size: calc(16px * var(--text-scale, 1)); }
