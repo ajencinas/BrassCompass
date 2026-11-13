@@ -13,6 +13,8 @@ blames for the disappearances. Vex wants a price. The fog wants more.
 family-friendly: pirate peril, ghosts, drinking and cards, but no gore, no innuendo, and no
 bureaucracy plot. The mystery is the ghost and the fog.
 
+**Play it:** <https://ajencinas.github.io/BrassCompass/>
+
 The story bible, cast and four-act outline are in [`docs/STORY.md`](docs/STORY.md); the generated
 screenplay is [`docs/FULL_SCRIPT.md`](docs/FULL_SCRIPT.md).
 
@@ -34,6 +36,9 @@ screenplay is [`docs/FULL_SCRIPT.md`](docs/FULL_SCRIPT.md).
   menus scale, Escape cancels instead of pausing first, and the canvas controls are announced.
 - **Ship-ready** — relative production build, `npm run package:itch`, licence, credits, AI
   disclosure, store deck and CI.
+- **On the web** — the game is published at
+  <https://ajencinas.github.io/BrassCompass/>. The painted art is not in git, so the pages
+  branch carries the *built* site; `npm run publish:pages` rebuilds and republishes it.
 
 
 ---
@@ -157,10 +162,11 @@ To regenerate any asset from its prompt, see `tools/generate.py` (requires `RUNC
 | A specific verb | Click it in the bottom-left grid, then click the object |
 | Two-object verbs (`Use`, `Give`) | Pick the verb, click the item, then click the target |
 | Walk somewhere | Click the floor; double-click (or click the same spot again) to run |
-| Go through a door or exit | Click it to walk through; double-click to leave at once |
+| Go through a door or exit | Click the door, or the arrow over it, to walk through; double-click to leave at once |
 | Cancel a sentence or leave a conversation | Right-click anywhere that isn't an object |
 | Reveal everything interactive | Hold `Q`, or toggle the Reveal button in the top bar |
-| Keyboard navigation | `Tab` / `Shift+Tab` move between the scene, the verbs and the inventory (the scene first); arrows move within one; `Enter` activates (with no verb chosen, the lit-up one). Hints switch to key names while you play by keyboard |
+| Keyboard navigation | `Tab` / `Shift+Tab` move between the scene, the verbs and the inventory (the scene first); arrows move within one; `Enter` activates (with no verb chosen, the lit-up one). On a way out, `Enter` walks Fenn through it. Hints switch to key names while you play by keyboard |
+| On a phone | Tap a thing to name it, tap again to act. The arrow over a way out is tapped the same way: it names the exit, and a second tap walks Fenn through |
 | Map — the island chart, the area views and travel | `A`, or the Map button |
 | Chart — everything you've learned | `J`, or the Chart button |
 | History — the last 30 lines | `L`, or the History button |

@@ -96,8 +96,12 @@ try {
         });
     })()`);
 
+    // The contract is per ARROW: every arrow the player can see walks Fenn to the door it
+    // stands for and takes him through it. An exit that is off the visible window has no arrow
+    // of its own - the edge carries one arrow for that direction - so the test also checks
+    // that every exit is covered: it either has its own arrow, or there is an arrow pointing
+    // the way it is.
     for (const exit of exits) {
-      // Fresh room, art settled, Fenn a short walk back from the threshold.
       await ev(`(() => {
         const g = window.__game;
         g.loadRoom(${JSON.stringify(roomId)});
@@ -142,27 +146,59 @@ try {
         // The crop slides on real time, not game time: let it settle.
         await pause(400);
       }
+
+      // The arrows this room is showing, and which way each one points.
+      const shown = await ev(`(() => {
+        const g = window.__game;
+        window.__dbg = [];
+        const vis = g.view.visible;
+        const left = g.cameraX + vis.x, right = left + vis.w;
+        const cues = g.exitChevrons().map((c) => ({
+          id: c.hs.id, x: Math.round(c.x - g.cameraX), y: Math.round(c.y), edge: c.edge,
+          onScreen: (c.x - g.cameraX) >= vis.x - 1 && (c.x - g.cameraX) <= vis.x + vis.w + 1,
+          // Which edge a pinned arrow stands on. It is drawn inside the window, so the side
+          // has to come from where it is in the world, not from where it ended up.
+          side: !c.edge ? "in"
+            : (c.x - g.cameraX) < vis.x + vis.w / 2 ? "left" : "right",
+        }));
+        const th = g.exitThreshold(g.hotspotState(g.room.hotspots.find((h) => h.id === ${JSON.stringify(exit.id)})));
+        return { cues, exitAt: th.x, left, right };
+      })()`);
+
+      const own = shown.cues.find((c) => c.id === exit.id);
+      if (!own) {
+        // Off the visible window: the edge must carry an arrow for that direction.
+        const dir = shown.exitAt < shown.left ? "left" : shown.exitAt > shown.right ? "right" : "in";
+        const edgeCue = dir === "in" ? null : shown.cues.find((c) => c.side === dir);
+        if (!edgeCue) {
+          failures.push(`${roomId}.${exit.id}: no arrow for the way out and none for its direction`);
+          rows.push({ room: roomId, exit: exit.id, ok: false, why: "no arrow for this direction" });
+        } else {
+          rows.push({ room: roomId, exit: exit.id, ok: true, coveredBy: edgeCue.id });
+        }
+        continue;
+      }
+      // The arrow has to be somewhere the player can see: inside the visible slice.
+      if (!own.onScreen) {
+        failures.push(`${roomId}.${exit.id}: the arrow is outside the visible slice`);
+        rows.push({ room: roomId, exit: exit.id, ok: false, why: "outside the visible slice" });
+        continue;
+      }
+
       const shot = await ev(`(() => {
         const g = window.__game;
         const hs = g.room.hotspots.find((h) => h.id === ${JSON.stringify(exit.id)});
         const cue = g.exitChevrons().find((c) => c.hs.id === hs.id);
         if (!cue) return { fail: "no chevron drawn for the way out" };
-        // The arrow has to be somewhere the player can see: inside the visible slice.
-        const vis = g.view.visible;
-        const arrowScreenX = cue.x - g.cameraX;
-        if (arrowScreenX < vis.x - 1 || arrowScreenX > vis.x + vis.w + 1) {
-          return { fail: "the arrow is outside the visible slice", arrowScreenX, vis };
-        }
         const hit = g.exitChevronAt(cue.x - g.cameraX, cue.y);
         if (!hit || hit.id !== hs.id) {
-          return { fail: "chevron hit-test does not resolve to the way out: " + JSON.stringify({
+          return { fail: "chevron hit-test does not resolve to the way out",
             cue: { x: Math.round(cue.x), y: Math.round(cue.y), contested: cue.contested },
-            cameraX: Math.round(g.cameraX), hit: hit?.id ?? null,
-            all: g.exitChevrons().map((c) => [c.hs.id, Math.round(c.x - g.cameraX), Math.round(c.y), c.contested]) }) };
+            cameraX: Math.round(g.cameraX), hit: hit?.id ?? null };
         }
-        // The pointer must learn the same thing: hovering the arrow names the way out.
+        // Hovering the arrow must name the way out.
         g.onMove(cue.x - g.cameraX, cue.y);
-        if (g.hoverHotspot !== hs.id) return { fail: "hovering the chevron does not light the way out" };
+        if (g.hoverHotspot !== hs.id) return { fail: "hovering the arrow does not name the way out" };
         const before = g.room.id;
         g.onClick(cue.x - g.cameraX, cue.y, 0, 1);
         // On touch the first tap only arms: the arrow follows the same grammar as everything
@@ -185,7 +221,7 @@ try {
       } else if (shot.room !== exit.to) {
         failures.push(`${roomId}.${exit.id}: ended in ${shot.room}, expected ${exit.to}`);
         rows.push({ room: roomId, exit: exit.id, ok: false,
-          why: `went to ${shot.room}, expected ${exit.to} (goal ${JSON.stringify(shot.goal)}, start ${JSON.stringify(shot.start)})` });
+          why: `went to ${shot.room}, expected ${exit.to} (goal ${JSON.stringify(shot.goal)})` });
       } else if (!shot.walked) {
         failures.push(`${roomId}.${exit.id}: travelled without walking to the door`);
         rows.push({ room: roomId, exit: exit.id, ok: false, why: "no walk" });
@@ -194,6 +230,7 @@ try {
       }
     }
   }
+
 } finally {
   socket?.close();
   await browser?.stop();

@@ -295,23 +295,21 @@ const EXIT_CHEVRON_SHOW_R = 120;
  * The chevron is a small glyph floating over a threshold, often a little above the painted
  * opening rather than inside it. A click near it is a click on the way out, so it carries a hit
  * radius of its own instead of relying on the hotspot underneath.
+ *
+ * The mouse's radius is in frame pixels: a pointer is precise, so the target can be close to
+ * the mark itself. The finger's target is in CSS pixels, because a phone scales the frame down
+ * and a fixed number of frame pixels becomes a hairline under a thumb.
  */
-const EXIT_CHEVRON_HIT = 36;
-const EXIT_CHEVRON_HIT_TOUCH = 52;
+const EXIT_CHEVRON_HIT = 18;
 /**
- * The arrow's size is a promise to the finger, not to the frame: on a phone the scene is scaled
- * down, so a fixed number of logical pixels becomes a hairline. These are the sizes the player
- * actually sees, in CSS pixels, and the game converts them into logical pixels.
+ * The finger's target, across, in CSS pixels. A finger needs 44 across - not 44 from the
+ * centre, which would be an 88 px bubble with room for two arrows inside it.
  */
-const EXIT_TOUCH_PX = 44;
+const EXIT_TOUCH_TARGET_PX = 44;
+/** The clearance a target keeps from the edge of the screen: a resting thumb lives there. */
+const EXIT_TOUCH_MARGIN_PX = 10;
 /** The mark itself: the glyph has to be big enough to aim at on a small screen. */
 const EXIT_GLYPH_PX = 20;
-/**
- * The gap between two arrows pinned to the same edge. A portrait phone can show three or four
- * ways out at once; without a stack they would sit on top of each other and only one could be
- * clicked.
- */
-const EXIT_CUE_STACK = 62;
 /**
  * The widest a thing can be and still be a thing. A band of floor, a counter, a rail or a
  * stretch of water is scenery; a person, a crate or a well is something the player aims at.
@@ -321,6 +319,8 @@ interface ExitCandidate {
   raw: Hotspot;
   /** Something else the player might mean to click is painted under this arrow. */
   contested: boolean;
+  /** Another exit in the same direction is nearer, so this one gets no edge arrow. */
+  dropped: boolean;
   /** The threshold in world space: the identity of the way out, before any pinning. */
   tx: number;
   ty: number;
@@ -1067,7 +1067,9 @@ export class Game {
     if (this.mobileUI && k !== "Escape" && event.target instanceof Node && this.mobileUI.contains(event.target)) return;
     // On a phone every control is a real DOM button. Leave Tab to the browser so it can walk
     // the touch chrome, the overlays and the page: the old canvas focus groups trapped it.
-    if (this.mobile && k === "Tab") return;
+    // A controller's Tab is not the browser's - a synthetic key cannot move browser focus -
+    // so it is the game's own group walk, and it must not be swallowed here.
+    if (this.mobile && k === "Tab" && !(event as KeyboardEvent & { __pad?: boolean }).__pad) return;
     // Tab from <body> is also the browser's: it has to be able to land on the canvas first
     // (and, after the canvas's focus cycle, on real page controls). A modal overlay holds its
     // own focus and handles its own Tab, so this only applies while nothing is covering play.
@@ -4808,9 +4810,9 @@ export class Game {
     out.length = 0;
     if (this.title || this.won || this.dialogue || this.cinematic.active ||
         this.paused || this.revealing) return out;
-    // A verb or object on the line changes what clicking a door would do: no cue can promise
-    // "walk through" while the sentence says "use crowbar".
-    if (this.sentence.verb || this.sentence.a || this.sentence.b) return out;
+    // A verb on the line does not hide the arrows. On a way out, open, use and walk all mean
+    // the same thing - the compiler gives every exit the same `go` - so the cue still tells
+    // the truth, and clicking it means the same as focusing it and pressing Enter.
 
     const visible = this.visibleHotspots();
     const hovered = this.hoverHotspot ? visible.find((h) => h.id === this.hoverHotspot) : undefined;
@@ -4851,10 +4853,12 @@ export class Game {
       const sound = this.exitSound(hs);
       let x = threshold.x;
       let y = Math.max(76, Math.min(SCENE_H - 34, threshold.y - 26));
-      // Fenn already standing in the doorway needs no sign: it fades out as he arrives.
+      // Fenn already standing in the doorway needs no sign: it fades out as he arrives. An
+      // exit the player has pointed at or focused keeps its mark: they asked about it.
       const away = Math.hypot(threshold.x - this.x, threshold.y - this.y);
       const arrived = Math.max(0, Math.min(1, (away - EXIT_CHEVRON_HIDE_R) / (EXIT_CHEVRON_SHOW_R - EXIT_CHEVRON_HIDE_R)));
-      if (arrived <= 0.01) continue;
+      const pointed = raw === hovered || raw.id === focusedId;
+      if (arrived <= 0.01 && !pointed) continue;
       let angle = 0;
       if (sound === "none") {
         const dx = threshold.x - this.x;
@@ -4867,10 +4871,10 @@ export class Game {
       let edge: "left" | "right" | null = null;
       // Only an arrow that is off the visible window is pinned: one whose door is on screen
       // stays where the painting put it, so a neighbouring arrow can never land on top of it.
-      // A pinned arrow stands a finger's width inside the edge: on a phone the edge of the
-      // screen is exactly where a holding thumb rests, and a way out must not be one stray
-      // touch away.
-      const inset = Math.max(30, EXIT_TOUCH_PX / this.view.scale);
+      // A pinned arrow stands clear of the edge: on a phone the edge of the screen is exactly
+      // where a holding thumb rests, and a way out must not be one stray touch away. The whole
+      // target has to be inside, plus a margin.
+      const inset = Math.max(30, (EXIT_TOUCH_TARGET_PX / 2 + EXIT_TOUCH_MARGIN_PX) / this.view.scale);
       if (x < left) {
         edge = "left";
         x = left + inset;
@@ -4880,7 +4884,7 @@ export class Game {
         x = right - inset;
         angle = Math.PI / 2;
       }
-      const near = raw === hovered || raw.id === focusedId || this.pointerNear(threshold) ||
+      const near = pointed || this.pointerNear(threshold) ||
         Math.hypot(threshold.x - this.x, threshold.y - this.y) <= EXIT_CUE_RANGE;
       // Two thresholds that share a spot (the dock stair foot) get one cue, not a pile. The
       // comparison is in world space: two exits pinned to the same screen edge are still two
@@ -4907,31 +4911,31 @@ export class Game {
           }
         }
       }
-      cands.push({ raw, tx: threshold.x, ty: threshold.y, x, y, angle, edge, near, arrived, floor: threshold.y, contested });
+      cands.push({ raw, tx: threshold.x, ty: threshold.y, x, y, angle, edge, near, arrived,
+        floor: threshold.y, contested, dropped: false });
     }
-    // The arrows pinned to one edge stack down it, so a room with three ways out to the left
-    // shows three arrows rather than one arrow and two missing doors. The gap is a finger's
-    // width on the screen, not a fixed number of frame pixels: on a phone the frame is scaled
-    // down, so a fixed gap would put two arrows inside each other's touch bubble.
-    const stackGap = Math.max(EXIT_CUE_STACK, EXIT_TOUCH_PX / this.view.scale);
+    // One arrow per edge. A way out that is off the window cannot have its own mark at its
+    // threshold, so the edge carries one arrow saying "there is a way out that way" - the
+    // nearest one. Stacking them instead would need five or six finger-sized targets on an
+    // edge that is three times wider than the screen: their bubbles would sit inside each
+    // other, and a tap could belong to two doors. The other doors still have their paint.
     for (const side of ["left", "right"] as const) {
-      const stack = cands.filter((c) => c.edge === side).sort((a, b) => a.ty - b.ty);
-      let last = -Infinity;
-      for (const c of stack) {
-        c.y = Math.max(c.y, last + stackGap);
-        last = c.y;
-      }
-      // The stack ran off the bottom: lift it back into the scene.
-      const over = stack.length ? last - (SCENE_H - 34) : 0;
-      if (over > 0) for (const c of stack) c.y = Math.max(76, c.y - over);
+      const edge = cands.filter((c) => c.edge === side);
+      if (edge.length < 2) continue;
+      const nearest = edge.reduce((best, c) =>
+        (Math.abs(c.tx - (side === "left" ? left : right)) < Math.abs(best.tx - (side === "left" ? left : right)) ? c : best));
+      for (const c of edge) if (c !== nearest) c.dropped = true;
     }
     for (const c of cands) {
+      if (c.dropped) continue;
       // The narration lower-third is painted over the scene: a chevron under it only ghosts.
       if (this.narrationTop !== null && c.y + 30 > this.narrationTop) continue;
       // On a phone the touch chrome sits under the scene: an arrow whose target reaches past
       // the scene's foot would have its lower half under the panel, where taps never land.
-      const reach = Math.max(30, EXIT_TOUCH_PX / this.view.scale) * 0.5;
+      // The WHOLE target has to stay inside, not half of it.
+      const reach = this.chevronHitRadius();
       if (c.y + reach > SCENE_H) c.y = SCENE_H - reach;
+      if (c.y - reach < 76) c.y = 76 + reach;
       out.push({
         x: c.x, y: c.y, angle: c.angle,
         strength: (c.near ? 1 : 0.72) * c.arrived * (c.contested ? 0.7 : 1),
@@ -4948,13 +4952,21 @@ export class Game {
    * click that lands on (or just beside) an arrow is a click on that door, so it walks Fenn over
    * and takes it. Hover uses the same test, which is how the pointer learns the arrow is live.
    */
+  /**
+   * The arrow's hit radius, in frame pixels. A mouse is precise, so its target is a little
+   * larger than the mark itself; a finger is not, so its target is 44 CSS pixels ACROSS - a
+   * phone scales the frame down, and a fixed number of frame pixels would be a coin on a small
+   * screen and a tablecloth on a tablet.
+   */
+  private chevronHitRadius(): number {
+    return this.touch
+      ? Math.max(13, (EXIT_TOUCH_TARGET_PX / 2) / this.view.scale)
+      : EXIT_CHEVRON_HIT;
+  }
+
   private exitChevronAt(x: number, y: number): Hotspot | null {
     if (y >= SCENE_H) return null;
-    // The target is a finger's width on the SCREEN: a phone scales the frame down, so a fixed
-    // number of logical pixels would be a fingertip on a tablet and a coin on a small phone.
-    const r = this.touch
-      ? Math.max(EXIT_CHEVRON_HIT_TOUCH, EXIT_TOUCH_PX / this.view.scale)
-      : EXIT_CHEVRON_HIT;
+    const r = this.chevronHitRadius();
     // The cues are laid out in world x (they are drawn inside the camera's translate); the
     // pointer arrives in screen x, so the cue's screen position is its world x less the camera.
     // The whole scene leans toward the door as the curtain falls, and the cues lean with it:

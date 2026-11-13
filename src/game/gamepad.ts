@@ -250,7 +250,11 @@ export function deliverPadKey(event: PadEvent, settingsOpen = false): void {
       return;
     }
   }
-  target.dispatchEvent(new KeyboardEvent(event.type === "down" ? "keydown" : "keyup", {
+  const key = new KeyboardEvent(event.type === "down" ? "keydown" : "keyup", {
     key: event.key, shiftKey: event.shift, repeat: event.repeat, bubbles: true, cancelable: true,
-  }));
+  });
+  // A controller's key is not the browser's: the game has to tell them apart, because a
+  // synthetic Tab cannot move browser focus at all.
+  Object.defineProperty(key, "__pad", { value: true });
+  target.dispatchEvent(key);
 }
