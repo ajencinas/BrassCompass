@@ -235,6 +235,7 @@ try {
         id: raw.id, name: g.hotspotState(raw).name,
         clientX: r.left + (x / 1920) * r.width,
         clientY: r.top + (Math.max(4, Math.min(876, c.y)) / 880) * r.height,
+        logicalX: x, logicalY: Math.max(4, Math.min(876, c.y)),
       };
     })()`);
   }
@@ -360,26 +361,61 @@ try {
   assert.equal(after.armed, null, "a look-around drag arms nothing");
   await bringSomethingIntoView();
   await resetTouchTest();
-  let pick = await pickHotspot();
+  // The bounce - a second tap inside the gesture's window must not spend the arm - is a
+  // question about the game's own clock, so it is asked inside the page: two taps a few
+  // milliseconds apart, which no loaded machine can fail to deliver. The touch EVENT layer is
+  // covered below (a real tap arms the thing, and a later real tap confirms it).
+  const pick = await pickHotspot();
   assert.ok(pick, "a scene has a touchable thing");
-  await tapFast(pick.clientX, pick.clientY);
-  const bounceAge = await evaluate("performance.now() - window.__game.touchArmedAt");
-  await tapFast(pick.clientX, pick.clientY);
-  await until(() => evaluate("!document.querySelector('.m-action').hidden"), "action plate after arming");
-  let armed = await evaluate(`(() => { const g = window.__game; const a = document.querySelector(".m-action");
-    return { touchArmed: g.touchArmed, at: performance.now() - g.touchArmedAt, hidden: a.hidden, text: a.innerText,
-      height: a.getBoundingClientRect().height, committed: g.committed, verb: g.sentence.verb }; })()`);
-  assert.equal(armed.touchArmed, pick.id, "the first tap arms the thing it hit");
+  const bounce = await evaluate(`(() => {
+    const g = window.__game;
+    const at = { x: ${Math.round(pick.logicalX)}, y: ${Math.round(pick.logicalY)} };
+    // This is a phone: the grammar under test is the touch one.
+    g.touch = true;
+    g.onClick(at.x, at.y, 0, 1);
+    const armed = g.touchArmed;
+    // The action plate is part of the touch chrome, so the chrome has to draw it. The clock
+    // helper steps the game, not the chrome, so the chrome is asked directly.
+    g.mobileUI.sync(g.mobileState());
+    const plateUp = !document.querySelector(".m-action").hidden;
+    const age = performance.now() - g.touchArmedAt;
+    // The second tap, well inside the window.
+    g.onClick(at.x, at.y, 0, 1);
+    const bounced = {
+      armed: g.touchArmed, committed: g.committed, verb: g.sentence.verb,
+      path: g.path.length, age,
+    };
+    // And now a tap AFTER the window: that one must confirm.
+    g.touchArmedAt = performance.now() - 5000;
+    g.onClick(at.x, at.y, 0, 1);
+    const confirmed = { armed: g.touchArmed, committed: g.committed, verb: g.sentence.verb, path: g.path.length };
+    return { armed, plateUp, bounced, confirmed, id: ${JSON.stringify(pick.id)} };
+  })()`);
+  assert.equal(bounce.armed, bounce.id, "the first tap arms the thing it hit");
+  assert.ok(bounce.plateUp, "arming shows an action plate");
+  assert.equal(bounce.bounced.armed, bounce.id, "a second tap inside the window does not spend the arm");
+  assert.equal(bounce.bounced.committed, null, "a quick double tap does not confirm the armed action");
+  assert.equal(bounce.bounced.verb, null, "a quick double tap runs nothing");
+  assert.equal(bounce.bounced.path, 0, "a quick double tap does not walk Fenn");
+  assert.ok(bounce.bounced.age < 400, `the arm was inside its window (${bounce.bounced.age.toFixed(0)} ms)`);
+  assert.equal(bounce.confirmed.armed, null, "a later tap spends the arm");
+  assert.ok(bounce.confirmed.committed || bounce.confirmed.verb || bounce.confirmed.path > 0,
+    "a later tap confirms the action");
+
+  // The same grammar through the real touch events: a tap arms and shows the plate, and a
+  // later tap confirms it.
+  await resetTouchTest();
+  await tap(pick.clientX, pick.clientY);
+  await until(() => evaluate("window.__game.touchArmed !== null"), "a real tap arms the thing");
+  const armed = await evaluate(`(() => { const g = window.__game; const a = document.querySelector(".m-action");
+    return { touchArmed: g.touchArmed, hidden: a.hidden, text: a.innerText,
+      height: a.getBoundingClientRect().height }; })()`);
+  assert.equal(armed.touchArmed, pick.id, "a real tap arms the thing it hit");
   assert.equal(armed.hidden, false, "arming shows an action plate");
   assert.ok(armed.text.toLowerCase().includes(pick.name.toLowerCase()), `action plate names the thing: ${armed.text}`);
   assert.ok(armed.height >= 43.5, "the action plate is a touch target");
-  assert.equal(armed.committed, null, "a quick double tap does not confirm the armed action");
-  assert.equal(armed.verb, null, "a quick double tap runs nothing");
-  assert.ok(bounceAge < 400, `the bouncing tap arrived inside the confirmation window (${bounceAge.toFixed(0)} ms)`);
   await screenshot("armed-390x844.png");
-
-  const elapsed = await evaluate("performance.now() - window.__game.touchArmedAt");
-  await pause(Math.max(0, 460 - elapsed));
+  await pause(500);
   await tap(pick.clientX, pick.clientY);
   await until(() => evaluate("window.__game.touchArmed === null"), "delayed confirmation");
   const confirmed = await evaluate(`(() => { const g = window.__game; return { committed: g.committed, verb: g.sentence.verb, path: g.path.length, narration: g.narration?.text ?? null }; })()`);
@@ -412,9 +448,9 @@ try {
 
   // Here the visible action plate itself confirms, not just a second tap on the scene.
   await resetTouchTest();
-  pick = await pickHotspot();
-  await tap(pick.clientX, pick.clientY);
-  assert.equal(await evaluate("window.__game.touchArmed"), pick.id, "landscape first tap arms");
+  const landPick = await pickHotspot();
+  await tap(landPick.clientX, landPick.clientY);
+  assert.equal(await evaluate("window.__game.touchArmed"), landPick.id, "landscape first tap arms");
   await screenshot("armed-844x390.png");
   const plate = await buttonRect(".m-action");
   await tap(plate.x, plate.y);
@@ -426,7 +462,12 @@ try {
   // The 12 verbs must all be on screen and reachable in landscape (no hidden horizontal strip),
   // the stage must be big enough to play, and narration / Continue must stay inside their panel.
   await resetTouchTest();
-  await evaluate(`(() => { const g = window.__game; g.narration = { text: "The harbour is thick with fog tonight, and every rope on the quay is wet to the touch.", shown: 999 };  window.__ff(1); })()`);
+  await evaluate(`(() => { const g = window.__game; g.narration = { text: "The harbour is thick with fog tonight, and every rope on the quay is wet to the touch.", shown: 999 };
+    window.__ff(1);
+    // The clock helper steps the game, not the touch chrome: the panel's own state (and so its
+    // visibility) is drawn by the chrome, which has to be asked.
+    g.mobileUI.sync(g.mobileState());
+    return null; })()`);
   const landscapeLayout = await evaluate(`(() => {
     const visible = ${visible};
     const verbs = [...document.querySelectorAll(".m-verbs button")].map((b) => { const r = b.getBoundingClientRect(); return { label: b.textContent, l: r.left, r: r.right, t: r.top, b: r.bottom, vis: visible(b) }; });
@@ -444,7 +485,8 @@ try {
     const ctx = document.querySelector(".m-context").getBoundingClientRect();
     return { canvasBottom: c.bottom, contextTop: ctx.top };
   })()`);
-  assert.ok(overlap.contextTop >= overlap.canvasBottom - 0.5, "narration panel sits under the scene, not over it");
+  assert.ok(overlap.contextTop >= overlap.canvasBottom - 0.5,
+    `narration panel sits under the scene, not over it: ${JSON.stringify(overlap)}`);
   await resetTouchTest();
 
   // ---- rotating a phone updates the layout: boot portrait, turn it, turn it back.
