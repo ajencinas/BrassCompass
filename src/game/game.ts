@@ -298,10 +298,46 @@ const EXIT_CHEVRON_SHOW_R = 120;
  */
 const EXIT_CHEVRON_HIT = 36;
 const EXIT_CHEVRON_HIT_TOUCH = 52;
+/**
+ * The arrow's size is a promise to the finger, not to the frame: on a phone the scene is scaled
+ * down, so a fixed number of logical pixels becomes a hairline. These are the sizes the player
+ * actually sees, in CSS pixels, and the game converts them into logical pixels.
+ */
+const EXIT_TOUCH_PX = 44;
+/** The mark itself: the glyph has to be big enough to aim at on a small screen. */
+const EXIT_GLYPH_PX = 20;
+/**
+ * The gap between two arrows pinned to the same edge. A portrait phone can show three or four
+ * ways out at once; without a stack they would sit on top of each other and only one could be
+ * clicked.
+ */
+const EXIT_CUE_STACK = 62;
+/**
+ * The widest a thing can be and still be a thing. A band of floor, a counter, a rail or a
+ * stretch of water is scenery; a person, a crate or a well is something the player aims at.
+ */
+const EXIT_AIMABLE_MAX = 700;
+interface ExitCandidate {
+  raw: Hotspot;
+  /** Something else the player might mean to click is painted under this arrow. */
+  contested: boolean;
+  /** The threshold in world space: the identity of the way out, before any pinning. */
+  tx: number;
+  ty: number;
+  x: number;
+  y: number;
+  angle: number;
+  edge: "left" | "right" | null;
+  near: boolean;
+  arrived: number;
+  floor: number;
+}
 interface ExitChevron {
   x: number; y: number; angle: number; strength: number; edge: boolean; floor: number;
   /** The way out it stands for, so the cue can be clicked like the door it marks. */
   hs: Hotspot;
+  /** Something else the player might mean to click is painted under this arrow. */
+  contested: boolean;
 }
 /** A read line lingers this long, then its box fades away over NARRATION_FADE seconds. */
 const NARRATION_LINGER = 2.5;
@@ -1115,7 +1151,9 @@ export class Game {
         return;
       }
       this.flashBar("pause");
-      this.setPaused(true);
+      // A curtain in flight is half a room change: the pause menu would write a save of a
+      // scene that is on its way out, and it is where the reduced-motion switch lives.
+      if (!this.pauseBlocked()) this.setPaused(true);
       return;
     }
     if (k.toLowerCase() === "m") { this.audio.toggleMute(); return; }
@@ -1556,7 +1594,8 @@ export class Game {
     }
 
     // An arrow over a threshold is live too: hovering it turns the pointer into the way out's
-    // own arrow and lights the cue, so the small glyph never reads as scenery.
+    // own arrow and lights the cue, so the small glyph never reads as scenery. A contested
+    // arrow (one painted over a person) is not live: the person is what is under the finger.
     const hs = y < SCENE_H ? this.exitChevronAt(x, y) ?? this.hotspotAt(x + this.cameraX, y) : null;
     this.hoverHotspot = hs?.id ?? null;
     this.cueHover(hs ? `hotspot:${hs.id}` : null);
@@ -1742,9 +1781,12 @@ export class Game {
    * walk-off. Ties go to the exit whose stand is nearest the click.
    */
   private edgeExitAt(x: number, y: number): Hotspot | null {
-    const side = x <= EXIT_EDGE_BAND ? "left" : x >= LOGICAL_W - EXIT_EDGE_BAND ? "right" : null;
+    // The band is where the player's finger is: on a phone that is the edge of the visible
+    // crop, not the edge of the 1920 frame the camera happens to be showing.
+    const vis = this.view.visible;
+    const side = x <= vis.x + EXIT_EDGE_BAND ? "left" : x >= vis.x + vis.w - EXIT_EDGE_BAND ? "right" : null;
     if (!side || y < 0 || y >= SCENE_H) return null;
-    const edgeX = side === "left" ? this.cameraX : this.cameraX + LOGICAL_W;
+    const edgeX = side === "left" ? this.cameraX + vis.x : this.cameraX + vis.x + vis.w;
     let best: Hotspot | null = null, bestD = Infinity;
     for (const raw of this.visibleHotspots()) {
       const hs = this.hotspotState(raw);
@@ -1921,20 +1963,39 @@ export class Game {
 
     if (y >= SCENE_H) return;
 
+    // A finger is not a pixel: a small painted thing still gets a 24 CSS-pixel halo to be
+    // tapped in, without changing what a mouse hits.
+    const hs = (y < SCENE_H ? this.hotspotAt(x + this.cameraX, y) : null) ??
+      (this.touch && y < SCENE_H ? this.nearestHotspotAt(x + this.cameraX, y) : null);
+
     // The chevron over a threshold is the way out itself. Walking the arrow is walking the door:
-    // the same click, the same walk to the stand, the same passage through. Checked before the
-    // hotspot under it, because the glyph often floats just above the painted opening.
+    // the same click, the same walk to the stand, the same passage through. It is checked before
+    // the hotspot under it, because the glyph often floats just above the painted opening.
+    //
+    // An arrow painted over a person or a prop gives way to them: `exitChevronAt` already
+    // declines a contested arrow, so the tap goes to the thing the player aimed at.
     const chevron = this.exitChevronAt(x, y);
     if (chevron) {
+      if (this.touch && !this.sentence.verb) {
+        // Touch has no hover: the first tap lights the way out, a later one takes it. The same
+        // grammar as every other thing on a phone, and the only guard against a resting thumb
+        // walking Fenn out of the room.
+        this.hoverHotspot = chevron.id;
+        this.hoverDirty = false;
+        if (this.touchArmed === chevron.id) {
+          if (performance.now() - this.touchArmedAt < TOUCH_CONFIRM_MS) return;
+          this.clearTouchArm();
+          this.onHotspotClick(chevron, 1);
+          return;
+        }
+        this.armTouch(chevron);
+        return;
+      }
       this.clearTouchArm();
       this.onHotspotClick(chevron, clicks);
       return;
     }
 
-    // A finger is not a pixel: a small painted thing still gets a 24 CSS-pixel halo to be
-    // tapped in, without changing what a mouse hits.
-    const hs = (y < SCENE_H ? this.hotspotAt(x + this.cameraX, y) : null) ??
-      (this.touch && y < SCENE_H ? this.nearestHotspotAt(x + this.cameraX, y) : null);
     if (!hs) {
       // Walk-off: floor clicked in the last few pixels beside an exit that meets this edge is
       // that exit's own click. Without this, a painted path running off the frame ends in a
@@ -2421,6 +2482,7 @@ export class Game {
     this.exitAt = this.areaCentre(hs.area);
     const b = areaBox(hs.area);
     const image = this.assets.img(this.room.bg);
+    this.passageHotspot = hs;
     if (image) {
       // The plate the passage shot travels through, and the painting rectangle the player was
       // looking at when they took the way out. It must wear the same `backdrop` grade as the
@@ -2430,7 +2492,13 @@ export class Game {
       this.passagePlate = {
         image: plate, imageW: image.naturalWidth, imageH: image.naturalHeight,
         x: b.x, y: b.y, w: b.w, h: b.h,
+        scaleX: (image.naturalWidth || 1) / (this.room.width ?? LOGICAL_W),
+        scaleY: (image.naturalHeight || 1) / SCENE_H,
         viewW: LOGICAL_W, viewH: SCENE_H,
+        // The camera's own window, and where the doorway sat on screen when the curtain fell.
+        viewX: this.cameraX,
+        pivotX: Math.max(0, Math.min(LOGICAL_W, this.areaCentre(hs.area).x - this.cameraX)),
+        pivotY: Math.max(0, Math.min(SCENE_H, this.areaCentre(hs.area).y)),
       };
     }
     // The cue belongs to the room this exit leads to. A `go` may run later, out of the queue,
@@ -3135,8 +3203,24 @@ export class Game {
     // holds the curtain a little longer for a short passage shot, then swaps at the end of it.
     if (this.pendingRoom && this.fade >= 0.999) {
       const id = this.pendingRoom;
-      if (this.pendingPassage) {
+      // Reduced motion switched on mid-passage: the shot must not run, and the room must not
+      // wait for it. The plain curtain carries the cut.
+      if (this.pendingPassage && this.reduced) {
+        this.connector.end();
+        this.enterPendingRoom();
+      } else if (this.pendingPassage) {
         if (!this.connector.active) {
+          // The camera may still be easing when the door was taken. The passage has to pick
+          // the plate up where the scene finally left it, not where it was a moment earlier:
+          // otherwise the first frame of the shot is a few pixels out of step with the room.
+          if (this.passagePlate) {
+            this.passagePlate.viewX = this.cameraX;
+            const centre = this.passageHotspot
+              ? this.areaCentre(this.hotspotState(this.passageHotspot).area)
+              : { x: 0, y: 0 };
+            this.passagePlate.pivotX = Math.max(0, Math.min(LOGICAL_W, centre.x - this.cameraX));
+            this.passagePlate.pivotY = Math.max(0, Math.min(SCENE_H, centre.y));
+          }
           this.connector.begin(this.pendingPassage.kind, this.pendingPassage.side, this.room.id, id, this.passagePlate);
         }
         if (this.connector.update(dt)) {
@@ -3441,6 +3525,8 @@ export class Game {
   private pendingRoom: string | null = null;
   /** The painted threshold the player is passing through, held during the curtain (fade.ts). */
   private passagePlate: PassagePlate | null = null;
+  /** The way out the plate belongs to, so the passage can find the doorway again. */
+  private passageHotspot: Hotspot | null = null;
 
   // ------------------------------------------------------------ save
 
@@ -4197,7 +4283,8 @@ export class Game {
     else if (!this.won && y < SCENE_H && !this.sentence.verb && !this.sentence.a && !this.sentence.b &&
              this.edgeExitAt(x, y) &&
              this.room.walk.some((poly) => pointInPoly({ x: x + this.cameraX, y }, poly))) {
-      cursor = x <= LOGICAL_W / 2 ? "w-resize" : "e-resize";
+      const vis = this.view.visible;
+      cursor = x <= vis.x + vis.w / 2 ? "w-resize" : "e-resize";
     }
     if (cursor !== this.cursorStyle) {
       this.cursorStyle = cursor;
@@ -4211,8 +4298,9 @@ export class Game {
    * edge gets the same walk-off arrow (see onClick).
    */
   private exitCursor(hs: Hotspot, screenX: number): string {
-    if (screenX <= EXIT_EDGE_BAND) return "w-resize";
-    if (screenX >= LOGICAL_W - EXIT_EDGE_BAND) return "e-resize";
+    const vis = this.view.visible;
+    if (screenX <= vis.x + EXIT_EDGE_BAND) return "w-resize";
+    if (screenX >= vis.x + vis.w - EXIT_EDGE_BAND) return "e-resize";
     const sound = this.exitSound(hs);
     if (sound === "stairs" || sound === "hatch") return "ns-resize";
     if (sound === "none") {
@@ -4713,6 +4801,8 @@ export class Game {
    */
   /** Reused every frame: the way-out cues (no new array a frame). */
   private chevronOut: ExitChevron[] = [];
+  /** Reused every frame: the candidates the cues are built from. */
+  private chevronCand: ExitCandidate[] = [];
   private exitChevrons(): ExitChevron[] {
     const out = this.chevronOut;
     out.length = 0;
@@ -4725,6 +4815,33 @@ export class Game {
     const visible = this.visibleHotspots();
     const hovered = this.hoverHotspot ? visible.find((h) => h.id === this.hoverHotspot) : undefined;
     const focusedId = this.keyboardFocus?.kind === "hotspot" ? this.keyboardFocus.id : null;
+    // The window the player can actually see: on a portrait phone this is a third of the
+    // 1920 frame, and it is what an arrow has to land inside to be worth drawing.
+    const vis = this.view.visible;
+    const left = this.cameraX + vis.x;
+    const right = left + vis.w;
+    const cands = this.chevronCand;
+    cands.length = 0;
+    /**
+     * Is this point over something the player means to click? A person standing in a doorway
+     * is over the doorway too. The arrow is a cue, not a claim on whatever is painted behind
+     * it: if a distinct thing is under the pointer, the arrow gives way.
+     *
+     * A wide, flat band is scenery - the floor, a counter, a rail, a stretch of water. The
+     * player is not aiming at a particular spot of it, and an arrow standing on the boards is
+     * not competing with the boards. A person, a crate, a well, a patch of sea: those are
+     * things, and the arrow steps around them.
+     */
+    const overOther = (worldX: number, worldY: number, exitId: string): boolean => {
+      for (const other of visible) {
+        if (other.id === exitId) continue;
+        if (other.showIf && !other.showIf.every((c) => this.check(c))) continue;
+        const b = areaBox(this.hotspotState(other).area);
+        if (b.w > EXIT_AIMABLE_MAX || b.h > EXIT_AIMABLE_MAX) continue;
+        if (this.inArea(worldX, worldY, this.hotspotState(other).area)) return true;
+      }
+      return false;
+    };
     // Every way out carries a small, quiet chevron. A door, hatch, ladder or path should never
     // be visible only to a player who happens to stand close enough. No names, no signs.
     for (const raw of visible) {
@@ -4733,7 +4850,7 @@ export class Game {
       const threshold = this.exitThreshold(hs);
       const sound = this.exitSound(hs);
       let x = threshold.x;
-      const y = Math.max(76, Math.min(SCENE_H - 34, threshold.y - 26));
+      let y = Math.max(76, Math.min(SCENE_H - 34, threshold.y - 26));
       // Fenn already standing in the doorway needs no sign: it fades out as he arrives.
       const away = Math.hypot(threshold.x - this.x, threshold.y - this.y);
       const arrived = Math.max(0, Math.min(1, (away - EXIT_CHEVRON_HIDE_R) / (EXIT_CHEVRON_SHOW_R - EXIT_CHEVRON_HIDE_R)));
@@ -4743,20 +4860,83 @@ export class Game {
         const dx = threshold.x - this.x;
         angle = Math.abs(dx) < 18 ? 0 : dx < 0 ? -Math.PI / 2 : Math.PI / 2;
       }
-      let pinned = false;
-      if (x < this.cameraX + 24 || x > this.cameraX + LOGICAL_W - 24) {
-        const edge = x < this.cameraX ? "left" : "right";
-        x = edge === "left" ? this.cameraX + 30 : this.cameraX + LOGICAL_W - 30;
-        angle = edge === "left" ? -Math.PI / 2 : Math.PI / 2;
-        pinned = true;
+      // A way out that is off the visible window is pinned to the edge the player can see,
+      // not to the edge of the 1920 frame: on a portrait phone the frame is three times wider
+      // than the screen, so a frame-edge pin lands hundreds of pixels off the stage and the
+      // arrow can never be seen or tapped.
+      let edge: "left" | "right" | null = null;
+      // Only an arrow that is off the visible window is pinned: one whose door is on screen
+      // stays where the painting put it, so a neighbouring arrow can never land on top of it.
+      // A pinned arrow stands a finger's width inside the edge: on a phone the edge of the
+      // screen is exactly where a holding thumb rests, and a way out must not be one stray
+      // touch away.
+      const inset = Math.max(30, EXIT_TOUCH_PX / this.view.scale);
+      if (x < left) {
+        edge = "left";
+        x = left + inset;
+        angle = -Math.PI / 2;
+      } else if (x > right) {
+        edge = "right";
+        x = right - inset;
+        angle = Math.PI / 2;
       }
-      // The narration lower-third is painted over the scene: a chevron under it only ghosts.
-      if (this.narrationTop !== null && y + 30 > this.narrationTop) continue;
       const near = raw === hovered || raw.id === focusedId || this.pointerNear(threshold) ||
         Math.hypot(threshold.x - this.x, threshold.y - this.y) <= EXIT_CUE_RANGE;
-      // Two thresholds that share a screen spot (the dock stair foot) get one cue, not a pile.
-      if (!near && out.some((p) => Math.hypot(p.x - x, p.y - y) < 70)) continue;
-      out.push({ x, y, angle, strength: (near ? 1 : 0.72) * arrived, edge: pinned, floor: threshold.y, hs: raw });
+      // Two thresholds that share a spot (the dock stair foot) get one cue, not a pile. The
+      // comparison is in world space: two exits pinned to the same screen edge are still two
+      // different doors, and each of them needs its own arrow.
+      if (!near && cands.some((c) => Math.hypot(c.tx - threshold.x, c.ty - threshold.y) < 70)) continue;
+      // Does something else the player means to click sit under this arrow? A person in a
+      // doorway is over the doorway too. The arrow steps aside: it is a cue for the way out,
+      // and the way out does not need its arrow painted on someone's chest.
+      let contested = overOther(x, y, raw.id);
+      if (contested) {
+        // Try above and below the opening for a clear patch of the painting. A pinned arrow
+        // steps aside too: it is a synthetic cue at the frame's edge, and the edge is exactly
+        // where a person may be standing.
+        for (let dy = -34; dy >= -420; dy -= 34) {
+          const ny = y + dy;
+          if (ny < 76 || ny > SCENE_H - 34) continue;
+          if (!overOther(x, ny, raw.id)) { y = ny; contested = false; break; }
+        }
+        if (contested) {
+          for (let dy = 34; dy <= 420; dy += 34) {
+            const ny = y + dy;
+            if (ny < 76 || ny > SCENE_H - 34) continue;
+            if (!overOther(x, ny, raw.id)) { y = ny; contested = false; break; }
+          }
+        }
+      }
+      cands.push({ raw, tx: threshold.x, ty: threshold.y, x, y, angle, edge, near, arrived, floor: threshold.y, contested });
+    }
+    // The arrows pinned to one edge stack down it, so a room with three ways out to the left
+    // shows three arrows rather than one arrow and two missing doors. The gap is a finger's
+    // width on the screen, not a fixed number of frame pixels: on a phone the frame is scaled
+    // down, so a fixed gap would put two arrows inside each other's touch bubble.
+    const stackGap = Math.max(EXIT_CUE_STACK, EXIT_TOUCH_PX / this.view.scale);
+    for (const side of ["left", "right"] as const) {
+      const stack = cands.filter((c) => c.edge === side).sort((a, b) => a.ty - b.ty);
+      let last = -Infinity;
+      for (const c of stack) {
+        c.y = Math.max(c.y, last + stackGap);
+        last = c.y;
+      }
+      // The stack ran off the bottom: lift it back into the scene.
+      const over = stack.length ? last - (SCENE_H - 34) : 0;
+      if (over > 0) for (const c of stack) c.y = Math.max(76, c.y - over);
+    }
+    for (const c of cands) {
+      // The narration lower-third is painted over the scene: a chevron under it only ghosts.
+      if (this.narrationTop !== null && c.y + 30 > this.narrationTop) continue;
+      // On a phone the touch chrome sits under the scene: an arrow whose target reaches past
+      // the scene's foot would have its lower half under the panel, where taps never land.
+      const reach = Math.max(30, EXIT_TOUCH_PX / this.view.scale) * 0.5;
+      if (c.y + reach > SCENE_H) c.y = SCENE_H - reach;
+      out.push({
+        x: c.x, y: c.y, angle: c.angle,
+        strength: (c.near ? 1 : 0.72) * c.arrived * (c.contested ? 0.7 : 1),
+        edge: c.edge !== null, floor: c.floor, hs: c.raw, contested: c.contested,
+      });
     }
     return out;
   }
@@ -4770,16 +4950,48 @@ export class Game {
    */
   private exitChevronAt(x: number, y: number): Hotspot | null {
     if (y >= SCENE_H) return null;
-    const r = this.touch ? EXIT_CHEVRON_HIT_TOUCH : EXIT_CHEVRON_HIT;
+    // The target is a finger's width on the SCREEN: a phone scales the frame down, so a fixed
+    // number of logical pixels would be a fingertip on a tablet and a coin on a small phone.
+    const r = this.touch
+      ? Math.max(EXIT_CHEVRON_HIT_TOUCH, EXIT_TOUCH_PX / this.view.scale)
+      : EXIT_CHEVRON_HIT;
     // The cues are laid out in world x (they are drawn inside the camera's translate); the
-    // pointer arrives in screen x. Comparing the two directly only ever worked at cameraX 0.
+    // pointer arrives in screen x, so the cue's screen position is its world x less the camera.
+    // The whole scene leans toward the door as the curtain falls, and the cues lean with it:
+    // a click on a painted arrow has to find the arrow where it is painted, not where it was.
+    const zoom = this.transition.peekZoom(this.fade, this.cameraX, this.reduced);
+    // Is the pointer itself over something the player means to click? A person standing in a
+    // doorway is over the doorway too, and a tap on them is a tap on them, not on the way out.
     const worldX = x + this.cameraX;
+    if (this.overAThing(worldX, y)) return null;
     let best: Hotspot | null = null, bestD = r;
     for (const c of this.exitChevrons()) {
-      const d = Math.hypot(c.x - worldX, c.y - y);
-      if (d <= bestD) { bestD = d; best = c.hs; }
+      const sx = zoom ? zoom.x + (c.x - this.cameraX - zoom.x) * zoom.k : c.x - this.cameraX;
+      const sy = zoom ? zoom.y + (c.y - zoom.y) * zoom.k : c.y;
+      const d = Math.hypot(sx - x, sy - y);
+      if (d > bestD) continue;
+      // An arrow painted over a person is a cue, not a claim: the person keeps their pixels.
+      if (c.contested) continue;
+      bestD = d; best = c.hs;
     }
     return best;
+  }
+
+  /**
+   * Is this world point over a thing the player means to click - a person, a crate, a well -
+   * rather than over the floor, the counter or the rail? A wide flat band is scenery: the
+   * player is not aiming at a particular spot of it, and an arrow standing on the boards is
+   * not competing with the boards.
+   */
+  private overAThing(worldX: number, worldY: number): boolean {
+    for (const other of this.visibleHotspots()) {
+      if (this.isExit(other)) continue;
+      if (other.showIf && !other.showIf.every((c) => this.check(c))) continue;
+      const b = areaBox(this.hotspotState(other).area);
+      if (b.w > EXIT_AIMABLE_MAX || b.h > EXIT_AIMABLE_MAX) continue;
+      if (this.inArea(worldX, worldY, this.hotspotState(other).area)) return true;
+    }
+    return false;
   }
 
   /** One small, soft chevron with a dark contour so it survives a bright plate. */
@@ -4789,30 +5001,43 @@ export class Game {
     // it gets a dark halo and a higher floor so it still reads.
     const alpha = Math.min(1, (0.62 + 0.24 * pulse + (edge ? 0.14 : 0)) * strength);
     const bob = this.reduced ? 0 : Math.sin(this.time * 2) * 1.4;
+    // The mark is a promise to the finger: on a phone the frame is scaled down, so a glyph
+    // fixed in logical pixels becomes a hairline. It keeps its size on the SCREEN instead.
+    const mark = Math.max(1, EXIT_GLYPH_PX / (26.64 * this.view.scale));
     ctx.save();
     ctx.translate(x, y + bob);
     if (edge) {
-      const dark = ctx.createRadialGradient(0, 2, 0, 0, 2, 34);
+      const dark = ctx.createRadialGradient(0, 2, 0, 0, 2, 34 * mark);
       dark.addColorStop(0, `rgba(8,4,1,${0.5 * strength})`);
       dark.addColorStop(0.65, `rgba(8,4,1,${0.28 * strength})`);
       dark.addColorStop(1, "rgba(8,4,1,0)");
       ctx.fillStyle = dark;
       ctx.beginPath();
-      ctx.arc(0, 2, 34, 0, Math.PI * 2);
+      ctx.arc(0, 2, 34 * mark, 0, Math.PI * 2);
       ctx.fill();
     }
+    // A dark backing under every arrow, not just the pinned ones. On a bright plate the warm
+    // line alone is invisible (measured at 1.04:1 against the Grey Lantern's deck): the
+    // arrow is the only mark saying "this is the way out", and it has to be separable from
+    // whatever it is painted on.
+    ctx.globalAlpha = 0.5 * strength;
+    ctx.fillStyle = "rgba(10,6,2,1)";
+    ctx.beginPath();
+    ctx.ellipse(0, 3, 21 * mark, 15 * mark, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
     // A soft light behind the glyph so it sits in the pool rather than on top of it.
     ctx.globalCompositeOperation = "lighter";
-    const halo = ctx.createRadialGradient(0, 2, 0, 0, 2, 26);
+    const halo = ctx.createRadialGradient(0, 2, 0, 0, 2, 26 * mark);
     halo.addColorStop(0, `rgba(255,206,130,${0.16 * strength})`);
     halo.addColorStop(1, "rgba(255,180,90,0)");
     ctx.fillStyle = halo;
     ctx.beginPath();
-    ctx.arc(0, 2, 26, 0, Math.PI * 2);
+    ctx.arc(0, 2, 26 * mark, 0, Math.PI * 2);
     ctx.fill();
     ctx.globalCompositeOperation = "source-over";
     ctx.rotate(angle);
-    ctx.scale(1.48, 1.48);
+    ctx.scale(1.48 * mark, 1.48 * mark);
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     // A leading chevron and a fainter echo: enough motion to catch the eye, never a signpost.
@@ -4825,14 +5050,15 @@ export class Game {
         ctx.lineTo(9, dy + 4);
       };
       // A dark contour first (contrast on light plates), then the warm light itself.
-      ctx.strokeStyle = "rgba(16,8,2,0.38)";
-      ctx.lineWidth = 5;
+      ctx.strokeStyle = "rgba(12,6,2,0.92)";
+      ctx.lineWidth = 6;
       shape();
       ctx.stroke();
-      ctx.strokeStyle = `rgba(255,238,200,${alpha})`;
-      ctx.lineWidth = 2.4;
+      ctx.strokeStyle = `rgba(255,242,214,${Math.min(1, alpha + 0.28)})`;
+      ctx.lineWidth = 3.2;
       shape();
-      this.glow(ctx, "rgba(255,186,96,0.8)", 10, 2.4);
+      ctx.stroke();
+      this.glow(ctx, "rgba(255,186,96,0.9)", 12, 3.2);
       ctx.stroke();
     }
     ctx.restore();
@@ -5794,8 +6020,7 @@ export class Game {
   private renderFade(ctx: CanvasRenderingContext2D): void {
     // A cut with no shared threshold gets the short passage shot at full black.
     if (this.connector.active) {
-      const vis = this.view.visible;
-      this.connector.draw(ctx, this.reduced, vis.x + vis.w / 2);
+      this.connector.draw(ctx, this.reduced);
       return;
     }
     const vis = this.view.visible;

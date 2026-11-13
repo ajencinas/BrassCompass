@@ -132,12 +132,15 @@ export class Connector {
    * The shot is composed for the scene rectangle (the painting's own 1920 × 880) and drawn at
    * 1:1 in logical pixels, so it lands exactly where the plate it is made from was.
    */
-  draw(ctx: CanvasRenderingContext2D, reduced: boolean, centerX = W / 2): void {
+  draw(ctx: CanvasRenderingContext2D, reduced: boolean): void {
     if (!this.spec) return;
     const t = clamp01(this.elapsed / this.duration);
     const { kind, side } = this.spec;
     const look = LOOK[kind];
     ctx.save();
+    // The whole frame goes black first: the strip below the scene is the verb panel, and a
+    // cut hides the panel. Reduced motion gets no travelling shot, but the frame must still be
+    // black - the curtain is down, and the room cannot change under a live panel.
     ctx.fillStyle = "#020406";
     ctx.fillRect(0, 0, W, H);
     if (reduced) {
@@ -145,9 +148,15 @@ export class Connector {
       ctx.restore();
       return;
     }
-    // A portrait phone sees only a slice of the width: compose the shot around that slice's
-    // middle, so the doorway is where the player is looking.
-    if (centerX !== W / 2) ctx.translate(centerX - W / 2, 0);
+    // The passage itself happens in the scene's rectangle: it is the picture's own shape, and
+    // the panel below it must stay black, never a stretched piece of painting.
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(0, 0, W, SCENE_H);
+    ctx.clip();
+    // The shot is painted in the canvas's own coordinates, exactly where the scene was: a
+    // portrait phone's narrower window is a CSS crop of this canvas, so the picture and the
+    // scene it replaces stay aligned without any shifting of their own.
 
     const plate = this.plate;
     if (plate) this.through(ctx, plate, t, side, look, kind);
@@ -182,6 +191,7 @@ export class Connector {
       ctx.fillRect(0, 0, W, H);
     }
     ctx.restore();
+    ctx.restore();
   }
 
   /**
@@ -196,13 +206,17 @@ export class Connector {
     const e = easeOut(t);
     const zoom = 1.34 + PUSH[kind] * e;
     const { dx, dy } = drift(side, e);
-    // The passage fills the whole frame, HUD strip and all: the game has the screen now. The
-    // crop follows the doorway off the way we are travelling; the light below stays where the
-    // doorway actually is, because `cropScreenPoint` reads the crop that was drawn.
-    const target: PassagePlate = {
-      ...card, x: card.x + dx, y: card.y + dy, viewW: W, viewH: H,
+    // The pivot starts where the scene's own lean left it - the doorway on screen - and then
+    // slides the way the player is travelling, so the doorway recedes behind them. The crop is
+    // built from the camera's own window, so the passage's first frame is exactly the frame
+    // the room was left on.
+    const pivot = {
+      x: Math.max(0, Math.min(W, (card.pivotX ?? 0) + dx)),
+      y: Math.max(0, Math.min(SCENE_H, (card.pivotY ?? 0) + dy)),
     };
-    const crop = thresholdCrop(target, zoom);
+    const crop = thresholdCrop(card, zoom, pivot);
+    // The scene's rectangle only: the strip below it is the verb panel, and the panel is dark
+    // during a cut anyway.
     ctx.drawImage(card.image, crop.sx, crop.sy, crop.sw, crop.sh, crop.dx, crop.dy, crop.dw, crop.dh);
 
     // The light we are leaving: a warm bloom on the real threshold, receding as we go.

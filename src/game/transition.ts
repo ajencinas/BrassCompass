@@ -3,9 +3,11 @@
  * falls: the scene — painting, people, props, lamps — pushes in on the threshold, so the cut is
  * one continuous camera move rather than a cut to a magnified crop of the background alone. In the
  * next room the view starts a touch close and settles back as the curtain lifts, so a door reads
- * as a door and not a cut. The view only ever scales up (k >= 1) about a point, so no edge of the
- * painting shows, and the push is exactly where the passage shot picks the plate up. Reduced
- * motion: a plain fade.
+ * as a door and not a cut. The view only ever scales up (k >= 1) about a point, so the frame
+ * shows a sub-window of the camera's own window - and the camera's window is inside the plate
+ * (the camera is clamped to the room's width and the plate is blitted at the room's width), so
+ * no edge of the painting can ever show. The push is exactly where the passage shot picks the
+ * plate up. Reduced motion: a plain fade.
  */
 
 import { LOGICAL_W, SCENE_H } from "../engine/view";
@@ -74,6 +76,23 @@ export class Transition {
       return null;
     }
     if (reduced) return null;
+    const e = fade * fade * (3 - 2 * fade);
+    const k = 1 + (this.toward ? LEAN : SETTLE) * e;
+    return {
+      k,
+      x: Math.max(0, Math.min(LOGICAL_W, at.x - cameraX)),
+      y: Math.max(0, Math.min(SCENE_H, at.y)),
+    };
+  }
+
+  /**
+   * The same transform, without the bookkeeping: a hit test needs to know where the scene is
+   * being painted so a click lands on what the player can see, but it must not be the thing
+   * that ends the reveal.
+   */
+  peekZoom(fade: number, cameraX: number, reduced: boolean): Zoom | null {
+    const at = this.toward ?? this.from;
+    if (!at || reduced) return null;
     const e = fade * fade * (3 - 2 * fade);
     const k = 1 + (this.toward ? LEAN : SETTLE) * e;
     return {

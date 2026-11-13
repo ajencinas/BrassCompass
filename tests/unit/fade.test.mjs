@@ -59,35 +59,44 @@ test("the curtain's easing is smoothstep, with exact ends and midpoint", () => {
 });
 
 test("the passage crop is the frame the player saw, pushed in toward the door", () => {
-  // The screen is showing plate x 320..2240 of a 2560 × 880 painting; the door is at 1200,300.
+  // The camera is showing plate x 320..2240 of a 2560 x 880 painting; the door is at 1200,300.
   const wide = {
     image: { id: "room painting" }, imageW: 2560, imageH: 880,
     x: 1200, y: 300, w: 200, h: 400,
-    viewW: 1920, viewH: 880,
+    viewX: 320, viewW: 1920, viewH: 880,
   };
-  const start = thresholdCrop(wide, 1);
-  assert.deepEqual([start.sx, start.sy, start.sw, start.sh], [340, 0, 1920, 880],
-    "at 1:1 the crop is the screen's own window, settled on the door");
+  // The pivot is where the doorway sat on screen: the camera had it at 1200 - 320 = 880.
+  const pivot = { x: 880, y: 500 };
+  const start = thresholdCrop(wide, 1, pivot);
+  assert.deepEqual([start.sx, start.sy, start.sw, start.sh], [320, 0, 1920, 880],
+    "at 1:1 the crop is exactly the window the camera was showing");
   assert.deepEqual([start.dx, start.dy, start.dw, start.dh], [0, 0, 1920, 880],
-    "and it is drawn 1:1 over the scene, so nothing jumps and nothing blurs");
+    "and it fills the scene exactly: no black band, no rescale");
 
-  const pushed = thresholdCrop(wide, 1.34);
-  assert.ok(pushed.sw < start.sw && pushed.sh < start.sh, "the crop pushes in as the camera travels");
-  near(pushed.sx + pushed.sw / 2, 1300, "and its centre is on the door");
-  assert.deepEqual([pushed.dw, pushed.dh], [1920, 880], "it still fills the scene exactly");
+  // The lean: a scale about the pivot. The pivot's own pixels stay put, the edges pull in.
+  const leaned = thresholdCrop(wide, 1.34, pivot);
+  near(leaned.sw, 1920 / 1.34);
+  near(leaned.sh, 880 / 1.34);
+  near(leaned.sx, 320 + 880 - 880 / 1.34, "the left edge pulls in by 1/k");
+  near(leaned.sy, 500 - 500 / 1.34, "and so does the top");
+  // The source window is always inside the camera's window, so it can never leave the plate.
+  assert.ok(leaned.sx >= 320 && leaned.sx + leaned.sw <= 320 + 1920, "still inside the camera's window");
+  assert.ok(leaned.sy >= 0 && leaned.sy + leaned.sh <= 880, "and inside the painting's height");
 
-  // A door at the painting's edge cannot push its crop outside the plate.
-  const edge = thresholdCrop({ ...wide, x: 0, y: 0, w: 40, h: 40 }, 1.34);
-  near(edge.sx, 0, "left edge clamps");
-  near(edge.sy, 0, "top edge clamps");
-  const far = thresholdCrop({ ...wide, x: 2480, y: 780, w: 60, h: 60 }, 1.34);
-  near(far.sx, wide.imageW - far.sw, "right edge clamps");
-  near(far.sy, wide.imageH - far.sh, "bottom edge clamps");
+  // The doorway's own pixels stay where the curtain left them: that is the whole point.
+  const door = cropScreenPoint(leaned, 1200, 500);
+  const doorPlain = cropScreenPoint(start, 1200, 500);
+  near(door.x, doorPlain.x, "the door does not move on screen as the camera pushes in");
+  near(door.y, doorPlain.y);
 
-  // The doorway's own light stays on the doorway as the camera moves.
-  const at = cropScreenPoint(pushed, 1300, 500);
-  near(at.x, 960, "the door is in the middle of the travelling crop");
-  near(at.y, 440);
+  // A pivot at the frame's edge: the crop is still inside the painting.
+  const edge = thresholdCrop(wide, 1.34, { x: 0, y: 0 });
+  near(edge.sx, 320, "a pivot at the left edge does not pull the source left of the camera");
+  near(edge.sy, 0, "nor above the painting");
+  const bottom = thresholdCrop(wide, 1.34, { x: 1920, y: 880 });
+  near(bottom.sx, 320 + 1920 - 1920 / 1.34);
+  near(bottom.sy, 880 - 880 / 1.34);
+  assert.ok(bottom.sy + bottom.sh <= 880 + 1e-9, "the bottom edge never asks for unpainted rows");
 });
 
 test("the entry wash reads the exit side: direction and which end is black", () => {

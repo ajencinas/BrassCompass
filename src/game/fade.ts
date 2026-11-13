@@ -10,6 +10,7 @@
  */
 
 import { LOGICAL_W, LOGICAL_H, SCENE_H } from "../engine/view";
+import type { Pt } from "../engine/walkbox";
 import type { ExitSide } from "./connect";
 
 /**
@@ -31,6 +32,19 @@ export interface PassagePlate {
   viewW?: number;
   /** How tall a slice of the painting the screen was showing (the scene height). */
   viewH?: number;
+  /** The painting's left edge the camera was showing. */
+  viewX?: number;
+  /** Where the doorway sat on screen when the curtain fell (the lean's pivot). */
+  pivotX?: number;
+  pivotY?: number;
+  /**
+   * How many world pixels one painting pixel covers. A plate is normally the room's own width
+   * (so this is 1), but a room whose art failed to load falls back to a smaller painting
+   * stretched across the room: the crop has to follow that stretch, or it samples the wrong
+   * part of the picture.
+   */
+  scaleX?: number;
+  scaleY?: number;
 }
 
 /** Smoothstep, the one curve both the curtain and the scene's lean use. */
@@ -59,23 +73,27 @@ export interface FadeCenter { x: number; y: number }
 const DEFAULT_CENTER: FadeCenter = { x: LOGICAL_W / 2, y: LOGICAL_H / 2 };
 
 /**
- * The crop of the painting the passage shot travels through: the frame the player was looking at,
- * pushed in toward the threshold. The crop shrinks from the screen's own window and is centred on
- * the door, clamped so no unpainted edge can show; `dw`/`dh` are therefore always the screen's own
- * rectangle, and only the source moves.
+ * The crop of the painting a camera at `zoom`, pivoting on `pivot`, shows in the scene's own
+ * rectangle. This is the same arithmetic the scene's lean uses, so the passage's first frame IS
+ * the frame the room was left on: the doorway stays where the curtain found it, and the room
+ * does not jump as the picture takes over.
+ *
+ * Because the source window is always a sub-window of the camera's own window, and the camera's
+ * window is always inside the plate, the crop can never sample past the painting: there is
+ * nothing to clamp, and nothing that can go black at the edge.
  */
-export function thresholdCrop(card: PassagePlate, zoom: number): PassageCrop {
+export function thresholdCrop(card: PassagePlate, zoom: number, pivot: Pt): PassageCrop {
   const k = Math.max(1, zoom);
-  const viewW = card.viewW ?? Math.min(card.imageW, LOGICAL_W);
-  const viewH = card.viewH ?? Math.min(card.imageH, SCENE_H);
-  const sw = Math.max(1, Math.min(card.imageW, viewW / k));
-  const sh = Math.max(1, Math.min(card.imageH, viewH / k));
-  const toX = card.x + card.w / 2;
-  const toY = card.y + card.h / 2;
-  const sx = Math.max(0, Math.min(card.imageW - sw, toX - sw / 2));
-  const sy = Math.max(0, Math.min(card.imageH - sh, toY - sh / 2));
-  // Drawn 1:1 onto the scene (the crop is the scene's own aspect at k == 1).
-  return { sx, sy, sw, sh, dx: 0, dy: 0, dw: sw * k, dh: sh * k };
+  const viewW = card.viewW ?? LOGICAL_W;
+  const viewH = card.viewH ?? SCENE_H;
+  // The pivot stays put; the window's edges pull in by 1/k. The window is measured in world
+  // pixels (that is what the camera and the pivot are) and then converted into the painting's
+  // own pixels, which are wider or narrower when the art is stretched across the room.
+  const sx = ((card.viewX ?? 0) + pivot.x - pivot.x / k) / (card.scaleX ?? 1);
+  const sy = (pivot.y - pivot.y / k) / (card.scaleY ?? 1);
+  const sw = viewW / k / (card.scaleX ?? 1);
+  const sh = viewH / k / (card.scaleY ?? 1);
+  return { sx, sy, sw, sh, dx: 0, dy: 0, dw: viewW, dh: viewH };
 }
 
 /**
@@ -106,7 +124,9 @@ export interface EntryFadeBand {
  */
 export function entryFadeBand(eased: number, side: ExitSide): EntryFadeBand {
   const horizontal = side === "left" || side === "right";
-  const dim = horizontal ? LOGICAL_W : LOGICAL_H;
+  // A vertical reveal runs over the SCENE's height, not the whole frame: the strip below it is
+  // the verb panel, and a stair must not bring the panel in before the room.
+  const dim = horizontal ? LOGICAL_W : SCENE_H;
   const band = dim * 0.22;
   const fromFarEnd = side === "right" || side === "below";
   const edge = fromFarEnd ? dim * eased : dim * (1 - eased);
@@ -125,7 +145,7 @@ export function drawEntryFade(ctx: CanvasRenderingContext2D, eased: number, side
   const { horizontal, fromFarEnd, a, b } = entryFadeBand(eased, side);
   const g = horizontal
     ? ctx.createLinearGradient(0, 0, LOGICAL_W, 0)
-    : ctx.createLinearGradient(0, 0, 0, LOGICAL_H);
+    : ctx.createLinearGradient(0, 0, 0, SCENE_H);
   if (fromFarEnd) {
     g.addColorStop(0, `rgba(0,0,0,${eased})`);
     g.addColorStop(a, `rgba(0,0,0,${eased})`);
@@ -138,7 +158,13 @@ export function drawEntryFade(ctx: CanvasRenderingContext2D, eased: number, side
     g.addColorStop(1, `rgba(0,0,0,${eased})`);
   }
   ctx.fillStyle = g;
-  ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
+  // A vertical reveal washes the scene only: the verb panel below it stays black until the
+  // room has arrived, so a stair never brings the buttons in before the staircase.
+  ctx.fillRect(0, 0, LOGICAL_W, horizontal ? LOGICAL_H : SCENE_H);
+  if (!horizontal) {
+    ctx.fillStyle = "#000";
+    ctx.fillRect(0, SCENE_H, LOGICAL_W, LOGICAL_H - SCENE_H);
+  }
 }
 
 /** Seconds the curtain waits on a room's art before a small "loading" cue appears. */
