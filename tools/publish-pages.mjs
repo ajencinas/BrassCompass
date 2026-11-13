@@ -62,8 +62,9 @@ try {
   // Jekyll must not touch the build.
   writeFileSync(join(site, ".nojekyll"), "");
 
-  // A temporary index: the branch is written without the working tree ever changing.
-  const index = join(site, ".git-index");
+  // A temporary index, OUTSIDE the staged site: the branch is written without the working
+  // tree ever changing, and the index file must never end up in the published site.
+  const index = join(mkdtempSync(join(tmpdir(), "brass-index-")), "index");
   const env = { ...process.env, GIT_INDEX_FILE: index };
   git(["read-tree", "--empty"], { env });
   git(["--work-tree", site, "add", "-A", "."], { env });
