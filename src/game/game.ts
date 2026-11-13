@@ -311,6 +311,11 @@ const EXIT_TOUCH_MARGIN_PX = 10;
 /** The mark itself: the glyph has to be big enough to aim at on a small screen. */
 const EXIT_GLYPH_PX = 20;
 /**
+ * The smallest gap two arrows may have, in frame pixels. The touch target is 44 CSS pixels
+ * across, so this is the same measure in the frame's own units.
+ */
+const EXIT_CUE_STACK = 62;
+/**
  * The widest a thing can be and still be a thing. A band of floor, a counter, a rail or a
  * stretch of water is scenery; a person, a crate or a well is something the player aims at.
  */
@@ -319,8 +324,6 @@ interface ExitCandidate {
   raw: Hotspot;
   /** Something else the player might mean to click is painted under this arrow. */
   contested: boolean;
-  /** Another exit in the same direction is nearer, so this one gets no edge arrow. */
-  dropped: boolean;
   /** The threshold in world space: the identity of the way out, before any pinning. */
   tx: number;
   ty: number;
@@ -4912,22 +4915,25 @@ export class Game {
         }
       }
       cands.push({ raw, tx: threshold.x, ty: threshold.y, x, y, angle, edge, near, arrived,
-        floor: threshold.y, contested, dropped: false });
+        floor: threshold.y, contested });
     }
-    // One arrow per edge. A way out that is off the window cannot have its own mark at its
-    // threshold, so the edge carries one arrow saying "there is a way out that way" - the
-    // nearest one. Stacking them instead would need five or six finger-sized targets on an
-    // edge that is three times wider than the screen: their bubbles would sit inside each
-    // other, and a tap could belong to two doors. The other doors still have their paint.
+    // The arrows pinned to one edge stack down it, so a room with three ways out to the left
+    // shows three arrows rather than one arrow and two missing doors. The gap is the width of
+    // a finger's target ON THE SCREEN: two arrows that close enough for their bubbles to
+    // overlap would each be half a tap away from the other door.
+    const stackGap = Math.max(EXIT_CUE_STACK, EXIT_TOUCH_TARGET_PX / this.view.scale);
     for (const side of ["left", "right"] as const) {
-      const edge = cands.filter((c) => c.edge === side);
-      if (edge.length < 2) continue;
-      const nearest = edge.reduce((best, c) =>
-        (Math.abs(c.tx - (side === "left" ? left : right)) < Math.abs(best.tx - (side === "left" ? left : right)) ? c : best));
-      for (const c of edge) if (c !== nearest) c.dropped = true;
+      const stack = cands.filter((c) => c.edge === side).sort((a, b) => a.ty - b.ty);
+      let last = -Infinity;
+      for (const c of stack) {
+        c.y = Math.max(c.y, last + stackGap);
+        last = c.y;
+      }
+      // The stack ran off the bottom: lift it back into the scene.
+      const over = stack.length ? last - (SCENE_H - 34) : 0;
+      if (over > 0) for (const c of stack) c.y = Math.max(76, c.y - over);
     }
     for (const c of cands) {
-      if (c.dropped) continue;
       // The narration lower-third is painted over the scene: a chevron under it only ghosts.
       if (this.narrationTop !== null && c.y + 30 > this.narrationTop) continue;
       // On a phone the touch chrome sits under the scene: an arrow whose target reaches past
