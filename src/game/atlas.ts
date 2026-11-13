@@ -14,6 +14,7 @@
  */
 
 import { restoreFocus } from "./focus";
+import { assetUrl } from "../content/assets";
 
 export interface AtlasRoom {
   id: string;
@@ -462,7 +463,10 @@ export function atlasImageUrl(key: string): string {
     bg_area_shroud_v2: "/assets/scenes/area_shroud_v2.webp",
     bg_area_lantern_v2: "/assets/scenes/area_lantern_v2.webp",
   };
-  return images[key] ?? "";
+  // The atlas lives in the DOM, so its plates go through the same rebasing as every other
+  // asset: a root-absolute /assets/... works on a domain root and 404s one directory up,
+  // which is exactly where itch.io and a GitHub Pages project path put the game.
+  return images[key] ? assetUrl(images[key]) : "";
 }
 
 export function escapeHtml(s: string): string {

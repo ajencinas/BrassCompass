@@ -76,7 +76,9 @@ try {
   if (DRY) {
     console.log(`\nDry run: ${BRANCH} is staged (${commit.slice(0, 10)}), nothing was pushed.`);
   } else {
-    git(["push", "origin", BRANCH]);
+    // A deployment branch is replaced whole every time: the new commit is built on the tip of
+    // main, not on the last published site, so it is never a descendant of what is there.
+    git(["push", "--force", "origin", BRANCH]);
     console.log(`\nPushed ${BRANCH} (${commit.slice(0, 10)}).`);
     console.log("Point the repository's Pages at it:");
     console.log("  Settings -> Pages -> Build and deployment -> Source: Deploy from a branch");
