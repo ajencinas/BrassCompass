@@ -23,6 +23,7 @@
     "test:editor": "node tools/editor-test.mjs",
     "script:export": "node tools/export-script.mjs",
     "package:itch": "node tools/package-itch.mjs",
+    "publish:pages": "node tools/publish-pages.mjs",
     "assets": "node tools/asset-manifest.mjs --write",
     "prebuild": "node tools/asset-manifest.mjs --check",
     "postbuild": "node tools/audit-assets.mjs --dist",
