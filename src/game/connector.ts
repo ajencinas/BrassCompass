@@ -96,6 +96,8 @@ export class Connector {
   /** The painting being walked through, graded exactly as it was on screen. */
   private plate: PassagePlate | null = null;
   private elapsed = 0;
+  /** Whether the clock has ticked yet: the first tick leaves the shot where the room left it. */
+  private started = false;
   private duration = 0.65;
 
   get active(): boolean {
@@ -112,12 +114,24 @@ export class Connector {
     this.spec = { kind, side, from, to };
     this.plate = plate;
     this.elapsed = 0;
+    this.started = false;
     this.duration = DURATION[kind];
   }
 
-  /** Advance the shot. Returns true once it has run its full length. */
+  /**
+   * Advance the shot. Returns true once it has run its full length.
+   *
+   * The first tick does not move the clock: the shot has to BEGIN on the frame the room was
+   * left on - the camera at 1.34, about the doorway - and not a step further in. The curtain
+   * is down over it either way, but the shot's first drawn frame should be the continuation
+   * of the scene's last one, not a jump past it.
+   */
   update(dt: number): boolean {
     if (!this.spec) return true;
+    if (!this.started) {
+      this.started = true;
+      return false;
+    }
     this.elapsed += dt;
     return this.elapsed >= this.duration;
   }
@@ -126,6 +140,7 @@ export class Connector {
     this.spec = null;
     this.plate = null;
     this.elapsed = 0;
+    this.started = false;
   }
 
   /**

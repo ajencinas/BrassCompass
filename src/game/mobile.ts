@@ -53,6 +53,12 @@ export interface MobileRoom {
 
 export interface MobileState {
   screen: "title" | "play" | "dialogue" | "ending";
+  /**
+   * The room is changing: the curtain is down and the passage is playing. The canvas hides
+   * the verb panel on a desktop cut, and the touch chrome has to go with it - a lit grid of
+   * buttons under a black screen is the game's UI showing through a scene that is not there.
+   */
+  cut: boolean;
   blocked: boolean;
   title: { buttons: MobileButton[] };
   dialogue: {
@@ -411,8 +417,8 @@ export class MobileUI {
   sync(state: MobileState): void {
     const play = state.play;
     this.root.classList.toggle("is-blocked", state.blocked);
-    this.top.hidden = state.screen !== "play";
-    this.hud.hidden = state.screen !== "play";
+    this.top.hidden = state.screen !== "play" || state.cut;
+    this.hud.hidden = state.screen !== "play" || state.cut;
     this.title.hidden = state.screen !== "title";
     this.dialogue.hidden = state.screen !== "dialogue";
     this.ending.hidden = state.screen !== "ending";

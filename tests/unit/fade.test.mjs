@@ -83,7 +83,8 @@ test("the passage crop is the frame the player saw, pushed in toward the door", 
   assert.ok(leaned.sx >= 320 && leaned.sx + leaned.sw <= 320 + 1920, "still inside the camera's window");
   assert.ok(leaned.sy >= 0 && leaned.sy + leaned.sh <= 880, "and inside the painting's height");
 
-  // The doorway's own pixels stay where the curtain left them: that is the whole point.
+  // The doorway's own pixels stay where the curtain left them: the shot picks the painting
+  // up where the room left it and keeps going.
   const door = cropScreenPoint(leaned, 1200, 500);
   const doorPlain = cropScreenPoint(start, 1200, 500);
   near(door.x, doorPlain.x, "the door does not move on screen as the camera pushes in");

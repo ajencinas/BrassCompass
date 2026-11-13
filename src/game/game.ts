@@ -2246,6 +2246,9 @@ export class Game {
     return {
       screen: this.title ? "title" : this.won ? "ending"
         : dialogueState ? "dialogue" : "play",
+      // A cut in flight: the curtain is down, the passage is playing, and the room is about to
+      // change. The touch chrome goes with the canvas, which is already black.
+      cut: this.pendingRoom !== null || this.fade > 0.05,
       blocked: this.paused || this.cinematic.active || this.casebook.open || this.history.open ||
         this.atlas.open || this.deeds.open,
       title: { buttons: titleButtons },
@@ -2482,8 +2485,28 @@ export class Game {
     this.execute();
   }
 
-  /** Take a way out: its effects run, and the curtain leans toward the door. */
+  /**
+   * Take a way out: its effects run, and the curtain leans toward the door.
+   *
+   * Everything a way out needs for its cut is prepared here, before the effects run: where the
+   * camera leans, the plate the passage shot travels through, and the cue that says which side
+   * the exit leaves by. The same preparation is used when the player opens the door instead of
+   * walking through it, because on a way out open, use and walk all end in the same `go` and
+   * must look the same.
+   */
   private goThrough(hs: Hotspot, effects: Effect[]): void {
+    this.prepareExit(hs, effects);
+    this.runEffects(effects);
+    this.exitAt = null;
+  }
+
+  /**
+   * Everything the cut needs: where to lean, the plate to travel through, and the cue.
+   *
+   * The cue is kept by destination, so a `go` that waits in the queue still finds it.
+   */
+  private prepareExit(hs: Hotspot, effects: Effect[]): void {
+    if (!effects.some((e) => e.k === "go")) return;
     this.exitAt = this.areaCentre(hs.area);
     const b = areaBox(hs.area);
     const image = this.assets.img(this.room.bg);
@@ -2506,15 +2529,11 @@ export class Game {
         pivotY: Math.max(0, Math.min(SCENE_H, this.areaCentre(hs.area).y)),
       };
     }
-    // The cue belongs to the room this exit leads to. A `go` may run later, out of the queue,
-    // so it is kept by destination instead of on a field a second click could replace.
     const link = linkOf(this.room.id, hs.id);
     const passage = passageOf(this.room.id, hs.id);
     for (const e of effects) if (e.k === "go") {
       this.exitLinks.set(e.room, { from: this.room.id, link, passage, at: this.exitAt });
     }
-    this.runEffects(effects);
-    this.exitAt = null;
   }
 
   /** Called by the sentence line or by two-object completion. */
@@ -2596,7 +2615,13 @@ export class Game {
       if (line || effects) this.speak(line ?? fallback);
       else this.reject(fallback);
 
-      if (effects) this.runEffects(effects);
+      // A way out leaves the room whichever verb asked for it, so the cut is prepared here and
+      // not only in the walk branch: Open and Use on a door lean into it like walking does.
+      if (effects) {
+        this.prepareExit(raw, effects);
+        this.runEffects(effects);
+        this.exitAt = null;
+      }
       this.clearSentenceIfUnchanged(key);
     };
 

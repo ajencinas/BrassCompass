@@ -74,9 +74,10 @@ const DEFAULT_CENTER: FadeCenter = { x: LOGICAL_W / 2, y: LOGICAL_H / 2 };
 
 /**
  * The crop of the painting a camera at `zoom`, pivoting on `pivot`, shows in the scene's own
- * rectangle. This is the same arithmetic the scene's lean uses, so the passage's first frame IS
- * the frame the room was left on: the doorway stays where the curtain found it, and the room
- * does not jump as the picture takes over.
+ * rectangle. This is the same arithmetic the scene's lean uses, so the passage picks the
+ * painting up exactly where the curtain left it: the doorway stays where it was found, and the
+ * room does not jump as the picture takes over. The shot then keeps going, deeper into the
+ * same plate.
  *
  * Because the source window is always a sub-window of the camera's own window, and the camera's
  * window is always inside the plate, the crop can never sample past the painting: there is
