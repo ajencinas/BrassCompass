@@ -7,6 +7,10 @@ written to be pasted, not paraphrased: the tagline is under 150 characters, the 
 The game's name is **The Brass Compass**. The story is **The Father and the Fog**. The tagline is
 **a tale of Dreadwater Isle**.
 
+The game is already published on the web: **<https://ajencinas.github.io/BrassCompass/>**. The
+itch.io page is still to be filled in (the upload is the zip in `dist-itch/`; see "Package"
+below). Everything in this document is the copy for that page.
+
 ---
 
 ## 1. Tagline
